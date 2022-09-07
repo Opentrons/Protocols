@@ -1275,5 +1275,18 @@
         "protocolName": "DNA Isolation from Whole Blood",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw Eppendorf 96 Deep Well Plate 1000\u00b5L on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Eppendorf 96 Deep Well Plate 1000\u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

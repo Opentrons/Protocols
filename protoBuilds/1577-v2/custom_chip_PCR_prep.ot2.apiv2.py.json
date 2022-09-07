@@ -1547,5 +1547,18 @@
         "protocolName": "Custom Chip PCR Preparation",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw thermocycler plate on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 6 lw 2ml Eppendorf snapcap reagent tubes on Temperature Module GEN1 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "tempdeck"
+        }
+    ]
 }

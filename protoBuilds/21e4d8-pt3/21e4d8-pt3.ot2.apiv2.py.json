@@ -1504,5 +1504,12 @@
         "protocolName": "Twist Library Prep || Part 3: PCR Amplification",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 10 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN1 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

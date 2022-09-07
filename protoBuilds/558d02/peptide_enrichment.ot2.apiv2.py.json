@@ -1265,5 +1265,12 @@
         "protocolName": "Magbead-Based Peptide Enrichment",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

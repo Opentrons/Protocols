@@ -2447,5 +2447,12 @@
         "protocolName": "Nucleic Acid Purification",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 10 lw Eppendorf DWP 2000ul on Magnetic Module GEN1 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

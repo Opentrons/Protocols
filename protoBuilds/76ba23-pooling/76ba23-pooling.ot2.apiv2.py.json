@@ -126,5 +126,12 @@
         "protocolName": "Pooling and Clean Up",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

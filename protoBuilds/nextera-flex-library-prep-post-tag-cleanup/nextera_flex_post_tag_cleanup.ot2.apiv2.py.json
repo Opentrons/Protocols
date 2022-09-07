@@ -107,5 +107,12 @@
         "protocolName": "Nextera DNA Flex NGS Library Prep: Post Tagmentation Cleanup",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw 1 on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

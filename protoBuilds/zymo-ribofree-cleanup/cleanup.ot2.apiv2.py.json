@@ -146,5 +146,18 @@
         "protocolName": "Zymo-Seq RiboFree\u2122 Total RNA Library Prep Select-a-Size MagBead Clean-up (robot 2)",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 6 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 7 lw None",
+            "share": false,
+            "slot": "7",
+            "type": "tempdeck"
+        }
+    ]
 }

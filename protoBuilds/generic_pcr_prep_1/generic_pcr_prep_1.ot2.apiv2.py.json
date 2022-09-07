@@ -390,5 +390,18 @@
         "protocolName": "Generic PCR Prep part 1 - Mastermix creation",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Tube rack 1 on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 2 lw Tube rack 2 on Temperature Module GEN2 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "tempdeck"
+        }
+    ]
 }

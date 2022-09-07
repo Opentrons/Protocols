@@ -169,5 +169,12 @@
         "protocolName": "Zymo Quick-DNA/RNA Viral Kit",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

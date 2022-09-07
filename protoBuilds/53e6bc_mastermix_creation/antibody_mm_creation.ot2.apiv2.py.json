@@ -1457,5 +1457,12 @@
         "protocolName": "Mastermix Creation",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 1 lw Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }
