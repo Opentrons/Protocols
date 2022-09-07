@@ -143,25 +143,58 @@ def parse_modules(data, readme_map):
     return module_data_to_lines(module_data)
 
 
+def get_readme_slug(folder_id):
+    # structure = {
+    #     'author': ...
+    #     'description': ...
+    #     'category': ...
+    #     'subcategory': ...
+    #     'deck-setup': ...
+    #     'reagent-setup': ...
+    #     'steps': ...
+    # }
+    readme_slug_path = f'protocols/{folder_id}/supplements/readme_slug.json'
+    if Path(readme_slug_path).exists():
+        with open(readme_slug_path) as readme_slug_file:
+            readme_slug = json.load(readme_slug_file)
+    else:
+        readme_slug = {}
+    return readme_slug
+
+
 def parse(data, readme_map, folder_id):
 
+    readme_slug = get_readme_slug(folder_id)
+
     title_lines = parse_title(data)
-    author_lines = ['### Author', '[Opentrons](https://opentrons.com/)']
-    description_lines = ['## Description', 'This protocol does stuff!']
+    author_lines = [
+        '### Author',
+        readme_slug.get('author', '[Opentrons](https://opentrons.com/)')]
+    description_lines = [
+        '## Description',
+        readme_slug.get('description', 'This protocol does stuff!')]
     category_lines = [
-        '## Categories', '* Broad Category', '	* Specific Category']
+        '## Categories',
+        f"* {readme_slug.get('category', '* Broad Category')}",
+        f"	* {readme_slug.get('subcategory', 'Specific Category')}"]
     module_lines = parse_modules(data, readme_map)
     labware_lines = parse_labware(data,)
     pipette_lines = parse_pipettes(data, readme_map)
     deck_setup_lines = [
         '### Deck Setup',
-        f'![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/\
-custom-README-images/{folder_id}/deck.png)']
+        readme_slug.get(
+            'deck-setup',
+            f'![deck](https://opentrons-protocol-library-website.s3.\
+amazonaws.com/custom-README-images/{folder_id}/deck.png)')]
     reagent_setup_lines = [
         '### Reagent Setup',
-        f'![reagents](https://opentrons-protocol-library-website.s3.amazonaws.\
-com/custom-README-images/{folder_id}/reagents.png)']
-    protocol_step_lines = ['### Protocol Steps', '1. Step 1...']
+        readme_slug.get(
+            'reagent-setup',
+            f'![reagents](https://opentrons-protocol-library-website.s3.\
+amazonaws.com/custom-README-images/{folder_id}/reagents.png)')]
+    protocol_step_lines = [
+        '### Protocol Steps',
+        readme_slug.get('steps', '1. Step 1...')]
     process_lines = [
         '### Process',
         '1. Input your protocol parameters above.',
@@ -224,7 +257,6 @@ if __name__ == '__main__':
     mapPath = 'protolib/parse/readme_map.json'
     with open(mapPath) as map_file:
         readme_map = json.load(map_file)
-    # print('OT2 APIv2: parsing {} to {}'.format(sourceFilePath, destFilePath))
 
     readme_path = f'{Path(protocol_path).parent}/README.md'
     readme_content = parse(protobuilds_data, readme_map, folder_id)
