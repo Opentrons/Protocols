@@ -26,7 +26,7 @@ This protocol pools 4 plates one at a time into a fresh 384 well plate with wate
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08fd01/Screen+Shot+2022-09-06+at+11.53.06+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08fd01/deck+setup+new+version+optimization.png)
 
 
 ---
