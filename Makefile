@@ -41,9 +41,11 @@ venvs/ot2:
 	popd && \
 	deactivate
 
-.PHONY: parse-errors
-parse-errors:
-	python protolib/traverse_errors.py
+.PHONY: parse-user-submissions
+parse-user-submissions:
+	source venvs/ot2/bin/activate && \
+	python user-submissions/user_submissions.py $< $@ && \
+	deactivate
 
 .PHONY: parse-ot2
 parse-ot2: $(OT2_OUTPUT_FILES)
@@ -59,6 +61,10 @@ $(BUILD_DIR)/%.ot2.apiv2.py.json: protocols/%.ot2.apiv2.py
 	python scripts/pd-generate.py $< && \
 	python scripts/fields_mine.py $< && \
 	deactivate
+
+.PHONY: parse-errors
+parse-errors:
+	python protolib/traverse_errors.py
 
 .PHONY: parse-README
 parse-README:
