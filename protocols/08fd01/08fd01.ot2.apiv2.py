@@ -10,20 +10,24 @@ metadata = {
 
 def run(ctx):
 
-    [p20_mount] = get_values(  # noqa: F821
-        "p20_mount")
+    # [p20_mount] = get_values(  # noqa: F821
+    #     "p20_mount")
+
+    p20_mount = 'left'
 
     # labware
     pcr_plates = [ctx.load_labware(
             'custom_384_wellplate_50ul', slot)
-            for slot in [1, 4, 7, 10]]
+            for slot in [1, 4, 8, 10]]
     pool_plate = ctx.load_labware(
-                'custom_384_wellplate_50ul', 9)
+                'custom_384_wellplate_50ul', 7)
 
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)
 
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                for slot in [2, 3, 5, 8, 11]]
+                for slot in [2, 5, 9, 11]]
+
+    water_tiprack = ctx.load_labware('opentrons_96_filtertiprack_20ul', 3)
 
     # instruments
     p20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)
@@ -61,7 +65,7 @@ def run(ctx):
     pool_schemes = [p1_pool_match, p2_pool_match, p3_pool_match, p4_pool_match]
 
     ctx.comment('\nADDING WATER\n\n')
-    p20.pick_up_tip()
+    p20.pick_up_tip(water_tiprack.wells()[0])
     for i in range(2):
         for col in pool_plate.rows()[i]:
             p20.aspirate(12, reservoir.wells()[0])
@@ -77,7 +81,7 @@ def run(ctx):
 
             if i % 4 == 0:
                 if p20.has_tip:
-                    p20.drop_tip()
+                    p20.return_tip()
                 p20.pick_up_tip()
 
             source_well = plate.rows()[pcr_row_start][pcr_col_start]
