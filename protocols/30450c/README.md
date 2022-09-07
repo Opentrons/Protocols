@@ -9,7 +9,7 @@
 	* Plate Filling
 
 ## Description
-This protocol uses an 8-channel P300 pipette to add 100 or 200 uL of reagent to a batch of 1-5 ELISA plates for steps of the attached BioLegend Human IL-2 ELISA. User-determined parameters are available to specify which step of the ELISA process is being performed (coating, blocking, detection antibody, avidin HRP, TMB substrate or stop step), the number of ELISA plates (1-5), to optionally pause the robot with the P300 above the reagent reservoir to wait for off-deck plate washing steps, and to include or not include a tip touch following reagent dispenses.
+This protocol uses an 8-channel P300 pipette to add 100 or 200 uL of reagent to a batch of 1-5 ELISA plates for steps of the attached BioLegend Human IL-2 ELISA. User-determined parameters are available to specify which step of the ELISA process is being performed (coating, blocking, detection antibody, avidin HRP, TMB substrate or stop step), the number of ELISA plates (1-5), the aspiration position in the large reservoir (in millimeters above the labware bottom), to optionally pause the robot with the P300 above the reagent reservoir to wait for off-deck plate washing steps, and to include or not include a tip touch following reagent dispenses.
 
 Links:
 * [BioLegend Human IL-2 ELISA MAX Deluxe Set - user manual](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/431804_R7_Human_IL-2_Deluxe+1.pdf)
