@@ -1,15 +1,9 @@
 [
   {
-    "type": "int",
-    "label": "number of samples (1-8)",
-    "name": "num_samples",
-    "default": 4
-  },
-  {
-    "type": "int",
-    "label": "number of subsamples (1-8)",
-    "name": "num_subsamples",
-    "default": 6
+    "type": "textFile",
+    "label": "sample/subsample format",
+    "name": "sample_csv",
+    "default": "samples index,# subsamples\n1,6\n2,6\n3,6\n4,6"
   },
   {
     "type": "dropDown",
