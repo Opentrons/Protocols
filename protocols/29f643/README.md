@@ -11,7 +11,10 @@
 
 
 ## Description
-This protocol automates the Alpco Insulin ELISA protocol. The protocol begins by transferring aliquots of samples, standards, and controls. The rest of the protocol can be automated or include manual interventions (for wash steps and off-deck incubations). Please note this protocol is currently being optimized.
+This protocol automates the Alpco Insulin ELISA protocol. The protocol begins by transferring aliquots of samples, standards, and controls. The rest of the protocol can be automated or include manual interventions (for wash steps and off-deck incubations). Please note this protocol is currently being optimized.</br>
+</br>
+**Update:** This protocol was updated on September 8, 2022</br>
+</br>
 
 Explanation of complex parameters below:
 * **Number of Samples**: Specify the number of samples
