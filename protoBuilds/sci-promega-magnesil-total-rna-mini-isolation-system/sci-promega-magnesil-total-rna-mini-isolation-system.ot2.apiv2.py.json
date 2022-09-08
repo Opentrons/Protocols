@@ -209,5 +209,18 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "MagneSil Total RNA Promega"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 6 lw deepwell plate on Magnetic Module GEN1 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

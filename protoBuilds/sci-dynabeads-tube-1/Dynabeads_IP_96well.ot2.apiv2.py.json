@@ -69,5 +69,12 @@
         "protocolName": "DYNABEADS FOR IP - 96 well",
         "source": ""
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

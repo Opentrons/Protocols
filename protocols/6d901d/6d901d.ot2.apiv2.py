@@ -128,7 +128,8 @@ def run(ctx: protocol_api.ProtocolContext):
         pipette = m20 if vol <= 20 else m300
         if not pipette.has_tip:
             pick_up(pipette)
-        pipette.aspirate(vol, source)
-        pipette.dispense(vol, source_plate.wells()[i])
+        if vol != 0:
+            pipette.aspirate(vol, source)
+            pipette.dispense(vol, source_plate.wells()[i])
         if tip_reuse == 'never':
             pipette.drop_tip()
