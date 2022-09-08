@@ -1140,7 +1140,7 @@
             "options": [
                 {
                     "label": "Yes",
-                    "value": false
+                    "value": true
                 },
                 {
                     "label": "No",
@@ -1172,6 +1172,12 @@
             "share": false,
             "slot": "2",
             "type": "customabnest_96_wellplate_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
             "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 4",
