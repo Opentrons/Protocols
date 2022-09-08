@@ -621,5 +621,12 @@
         "protocolName": "Dilution with CSV File and Custom Tube Rack",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Thermofisher 40 Tube Rack with Thermofisher  2 mL on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

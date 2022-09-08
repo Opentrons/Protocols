@@ -160,5 +160,18 @@
         "protocolName": "Swift 2S Turbo DNA Library Kit Protocol: Part 2/3 -     Ligation Clean-Up & PCR Prep",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 3 lw Opentrons 24-Well Aluminum Block on Temperature Module GEN1 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 4 lw NEST 96-Well Plate on Magnetic Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }
