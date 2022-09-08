@@ -134,17 +134,16 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     p20.drop_tip()
 
     # add samples to dilute
-    ctx.clear_commands()
     vol_sample = 1
     for source_set, dest_set in zip(source_sets, dilution_sets):
-        pick_up(p20, num_pickups)
         for s, d in zip(source_set, dest_set):
+            pick_up(p20, num_pickups)
             p20.aspirate(vol_sample, s)
             p20.dispense(vol_sample, d.bottom(2))
             p20.mix(5, 8, d.bottom(2))
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-        p20.drop_tip()
+            p20.drop_tip()
 
     """ PCR1 PREP """
 
