@@ -10,14 +10,26 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_subsamples, perform_normalization, pipette_p20,
+    [sample_csv, perform_normalization, pipette_p20,
      pipette_p300, mount_p20, mount_p300] = get_values(  # noqa: F821
-        'num_samples', 'num_subsamples', 'perform_normalization',
+        'sample_csv', 'perform_normalization',
         'pipette_p20', 'pipette_p300', 'mount_p20', 'mount_p300')
 
-    if num_samples * num_subsamples * 2 > 96:
+    sample_info = [
+        [int(val) for val in line.split(',')[:2]]
+        for line in sample_csv.splitlines()[1:]
+        if line and line.split(',')[0].strip()]
+    sample_map = {
+        line[0]: line[1]
+        for line in sample_info
+    }
+    max_subsamples = max(sample_map.values())
+    num_samples = len(sample_info)
+    subsample_list = [sample_map[key] for key in sorted(sample_map.keys())]
+
+    if num_samples * max_subsamples * 2 > 96:
         raise Exception(f'Invalid number of samples ({num_samples}) and \
-subsamples ({num_subsamples}). Exceeds plate capacity.')
+max subsamples ({max_subsamples}). Exceeds plate capacity.')
 
     # labware
     sample_plate = ctx.load_labware('agilent_96_wellplate_200ul', '1',
@@ -74,15 +86,15 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     """ DILUTION """
 
-    rows_per_sample = 2 if num_subsamples > 6 else 1
+    rows_per_sample = 2 if max_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = [
-            sample_plate.rows()[0][0] for _ in range(num_subsamples)], \
+            sample_plate.rows()[0][0] for _ in range(max_subsamples)], \
             num_samples
         source_sets = [
-            [sample_plate.rows()[0][i]] for i in range(num_subsamples)]
+            [sample_plate.rows()[0][i]] for i in range(max_subsamples)]
         dilution_sets = [
-            [dilution_plate.rows()[0][i]] for i in range(num_subsamples)]
+            [dilution_plate.rows()[0][i]] for i in range(max_subsamples)]
     else:
         sources, num_pickups = samples_single, 1
         sets = []
@@ -92,7 +104,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
                     i*rows_per_sample:(i+1)*rows_per_sample]
                 for well in row]
             sets.append(rows_flat)
-        dilution_sets = [set[:num_subsamples] for set in sets]
+        dilution_sets = [
+            set[:num_subsamples]
+            for set, num_subsamples in zip(sets, subsample_list)]
         source_sets = [
             [sample_plate.wells()[dilution_plate.wells().index(well)]
              for well in set]
@@ -107,7 +121,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             for well in row]
         sets.append(rows_flat)
     dests_water_all = [
-        well for set in sets
+        well for set, num_subsamples in zip(sets, subsample_list)
         for well in set[:num_subsamples]]
 
     vol_water = 9
@@ -131,8 +145,6 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
         p20.drop_tip()
-    for c in ctx.commands():
-        print(c)
 
     """ PCR1 PREP """
 
@@ -145,9 +157,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, primer_well in zip(
-            tuberack.wells()[:num_subsamples],
+            tuberack.wells()[:max_subsamples],
             # use max 5 primers. loop back around for subsamples 6-8
-            [tuberack.wells()[8+(i % 5)] for i in range(num_subsamples)])
+            [tuberack.wells()[8+(i % 5)] for i in range(max_subsamples)])
     ]
 
     # add all constant reagents to each mix tube
@@ -197,13 +209,13 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             for well in row]
         sets.append(rows_flat)
 
-    if num_subsamples <= 6:
-        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples:2]
+    if max_subsamples <= 4:
+        locs_ntc = pcr1_plate.columns()[-1][:2*max_subsamples:2]
     else:
-        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples]
+        locs_ntc = pcr1_plate.columns()[-1][:2*max_subsamples]
 
     pcr1_mix_dest_sets = []
-    for i in range(num_subsamples):
+    for i in range(max_subsamples):
         temp = []
         for set in sets:
             wells = set[i*2:(i+1)*2]
@@ -222,7 +234,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     # add DNA template to mix
     pcr1_sample_sets = []
-    for set in sets:
+    for set, num_subsamples in zip(sets, subsample_list):
         for i in range(num_subsamples):
             wells = set[i*2:(i+1)*2]
             pcr1_sample_sets.append(wells)
@@ -244,9 +256,11 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     all_normalization_wells = [
         normalization_plate.wells()[pcr1_plate.wells().index(well)]
         for well in all_pcr1_wells]
-    wells_per_pool = num_subsamples*2
+    wells_per_pool_list = [
+        num_subsamples*2 for num_subsamples in subsample_list]
     pool_source_sets = [
-        all_normalization_wells[i*wells_per_pool:(i+1)*wells_per_pool]
+        all_normalization_wells[
+            i*wells_per_pool_list[i]:(i+1)*wells_per_pool_list[i]]
         for i in range(num_samples)]
     vol_sample_per_pool = 15
 
