@@ -14,9 +14,9 @@
 
 
 ## Description
-![Macherey-Nagal](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo.jpg)
+![Macherey-Nagal](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo_50.jpeg)
 
-This protocol automates the NucleoMag kit for clean up and size selection of NGS library prep reactions.
+This protocol automates the NucleoMag RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples. Please access the application note here: [Application Note](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20App%20Note.pdf)
 
 Before beginning the protocol on the OT-2, the following preparation steps are needed.
 1. Perform the lysis accoding to the NucleoMag® RNA user manual.
@@ -26,7 +26,7 @@ Before beginning the protocol on the OT-2, the following preparation steps are n
 5. Load the instrument deck according to the displayed positions.
 6. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
-You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/Protocol+Information+NucleoMag+RNA+on+OT2+Rev01.pdf)
+You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20Protocol%20Info.pdf)
 
 
 ### Modules
@@ -34,12 +34,12 @@ You can access the full descripition of this workflow on the OT-2 by visiting th
 
 
 ### Labware
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
+* 96 Well PCR Plate
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Opentrons 24 Tube Rack with Generic 2 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * [USA Scientific 12 Well Reservoir 22 mL #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * [Opentrons 96 Tip Rack 1000 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
-* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
+* 96 Deepwell Plate 2mL
 * [Agilent 1 Well Reservoir 290 mL #201252-100](https://www.agilent.com/store/en_US/Prod-201252-100/201252-100)
 
 
