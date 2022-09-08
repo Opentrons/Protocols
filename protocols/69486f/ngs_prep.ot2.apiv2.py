@@ -10,14 +10,26 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_subsamples, perform_normalization, pipette_p20,
+    [sample_csv, perform_normalization, pipette_p20,
      pipette_p300, mount_p20, mount_p300] = get_values(  # noqa: F821
-        'num_samples', 'num_subsamples', 'perform_normalization',
+        'sample_csv', 'perform_normalization',
         'pipette_p20', 'pipette_p300', 'mount_p20', 'mount_p300')
 
-    if num_samples * num_subsamples * 2 > 96:
+    sample_info = [
+        [int(val) for val in line.split(',')[:2]]
+        for line in sample_csv.splitlines()[1:]
+        if line and line.split(',')[0].strip()]
+    sample_map = {
+        line[0]: line[1]
+        for line in sample_info
+    }
+    max_subsamples = max(sample_map.values())
+    num_samples = len(sample_info)
+    subsample_list = [sample_map[key] for key in sorted(sample_map.keys())]
+
+    if num_samples * max_subsamples * 2 > 96:
         raise Exception(f'Invalid number of samples ({num_samples}) and \
-subsamples ({num_subsamples}). Exceeds plate capacity.')
+max subsamples ({max_subsamples}). Exceeds plate capacity.')
 
     # labware
     sample_plate = ctx.load_labware('agilent_96_wellplate_200ul', '1',
@@ -74,15 +86,15 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     """ DILUTION """
 
-    rows_per_sample = 2 if num_subsamples > 6 else 1
+    rows_per_sample = 2 if max_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = [
-            sample_plate.rows()[0][0] for _ in range(num_subsamples)], \
+            sample_plate.rows()[0][0] for _ in range(max_subsamples)], \
             num_samples
         source_sets = [
-            [sample_plate.rows()[0][i]] for i in range(num_subsamples)]
+            [sample_plate.rows()[0][i]] for i in range(max_subsamples)]
         dilution_sets = [
-            [dilution_plate.rows()[0][i]] for i in range(num_subsamples)]
+            [dilution_plate.rows()[0][i]] for i in range(max_subsamples)]
     else:
         sources, num_pickups = samples_single, 1
         sets = []
@@ -92,7 +104,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
                     i*rows_per_sample:(i+1)*rows_per_sample]
                 for well in row]
             sets.append(rows_flat)
-        dilution_sets = [set[:num_subsamples] for set in sets]
+        dilution_sets = [
+            set[:num_subsamples]
+            for set, num_subsamples in zip(sets, subsample_list)]
         source_sets = [
             [sample_plate.wells()[dilution_plate.wells().index(well)]
              for well in set]
@@ -107,7 +121,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             for well in row]
         sets.append(rows_flat)
     dests_water_all = [
-        well for set in sets
+        well for set, num_subsamples in zip(sets, subsample_list)
         for well in set[:num_subsamples]]
 
     vol_water = 9
@@ -120,19 +134,16 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     p20.drop_tip()
 
     # add samples to dilute
-    ctx.clear_commands()
     vol_sample = 1
     for source_set, dest_set in zip(source_sets, dilution_sets):
-        pick_up(p20, num_pickups)
         for s, d in zip(source_set, dest_set):
+            pick_up(p20, num_pickups)
             p20.aspirate(vol_sample, s)
             p20.dispense(vol_sample, d.bottom(2))
-            p20.mix(5, 8, d.bottom(2))
+            p20.mix(5, 8, d.bottom(2), rate=2.0)
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-        p20.drop_tip()
-    for c in ctx.commands():
-        print(c)
+            p20.drop_tip()
 
     """ PCR1 PREP """
 
@@ -145,9 +156,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, primer_well in zip(
-            tuberack.wells()[:num_subsamples],
+            tuberack.wells()[:max_subsamples],
             # use max 5 primers. loop back around for subsamples 6-8
-            [tuberack.wells()[8+(i % 5)] for i in range(num_subsamples)])
+            [tuberack.wells()[8+(i % 5)] for i in range(max_subsamples)])
     ]
 
     # add all constant reagents to each mix tube
@@ -182,7 +193,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
         for _ in range(num_transfers):
             pip.aspirate(vol_per_transfer, primer)
             pip.dispense(vol_per_transfer, mix_dest.bottom(5))
-        pip.mix(10, 20, mix_dest.bottom(5))
+        pip.mix(10, 20, mix_dest.bottom(5), rate=2.0)
         pip.drop_tip()
 
     # pre-transfer mix to wellplate
@@ -197,13 +208,13 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             for well in row]
         sets.append(rows_flat)
 
-    if num_subsamples <= 6:
-        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples:2]
+    if max_subsamples <= 4:
+        locs_ntc = pcr1_plate.columns()[-1][:2*max_subsamples:2]
     else:
-        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples]
+        locs_ntc = pcr1_plate.columns()[-1][:2*max_subsamples]
 
     pcr1_mix_dest_sets = []
-    for i in range(num_subsamples):
+    for i in range(max_subsamples):
         temp = []
         for set in sets:
             wells = set[i*2:(i+1)*2]
@@ -222,7 +233,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     # add DNA template to mix
     pcr1_sample_sets = []
-    for set in sets:
+    for set, num_subsamples in zip(sets, subsample_list):
         for i in range(num_subsamples):
             wells = set[i*2:(i+1)*2]
             pcr1_sample_sets.append(wells)
@@ -234,7 +245,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
         for d in dest_set:
             p20.aspirate(vol_template, source)
             p20.dispense(vol_template, d.bottom(2))
-            p20.mix(1, 10, d.bottom(2))
+            p20.mix(1, 10, d.bottom(2), rate=2.0)
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
         p20.drop_tip()
 
@@ -244,9 +255,11 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     all_normalization_wells = [
         normalization_plate.wells()[pcr1_plate.wells().index(well)]
         for well in all_pcr1_wells]
-    wells_per_pool = num_subsamples*2
+    wells_per_pool_list = [
+        num_subsamples*2 for num_subsamples in subsample_list]
     pool_source_sets = [
-        all_normalization_wells[i*wells_per_pool:(i+1)*wells_per_pool]
+        all_normalization_wells[
+            i*wells_per_pool_list[i]:(i+1)*wells_per_pool_list[i]]
         for i in range(num_samples)]
     vol_sample_per_pool = 15
 
@@ -274,7 +287,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             pick_up(p20, 1)
             p20.aspirate(vol_pcr1_product, s)
             p20.dispense(vol_pcr1_product, d.bottom(2))
-            p20.mix(10, 10, d.bottom(2))
+            p20.mix(10, 10, d.bottom(2), rate=2.0)
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
             p20.drop_tip()
 
@@ -291,7 +304,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             pick_up(p300, 1)
             p300.aspirate(vol_wash_buffer, wash_buffer)
             p300.dispense(vol_wash_buffer, d.bottom(2))
-            p300.mix(2, 10, d.bottom(2))
+            p300.mix(2, 10, d.bottom(2), rate=2.0)
             p300.aspirate(vol_wash_buffer, d.bottom(0.5))
             p300.drop_tip()
 
@@ -300,7 +313,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             pick_up(p20, 1)
             p20.aspirate(vol_elution, elution_buffer)
             p20.dispense(vol_elution, d.bottom(2))
-            p20.mix(5, 10, d.bottom(2))
+            p20.mix(5, 10, d.bottom(2), rate=2.0)
             p20.drop_tip()
 
         ctx.delay(minutes=5, msg='Incubating 5 minutes.')
@@ -329,20 +342,21 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     pcr2_map = [
         {
             'forward-primer-tube': forward_primer_well,
-            'reverse-primer-tube': reverse_primer_well,
             'creation-tube': creation_well,
             'volume': 0.1*num_samples_mm_creation
         }
-        for creation_well, forward_primer_well, reverse_primer_well in zip(
-            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples],
-            tuberack.wells()[16:16+num_samples])
+        for creation_well, forward_primer_well in zip(
+            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples])
     ]
 
     # add all constant reagents to each mix tube
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_water_mm = 4.8*num_samples_mm_creation
+    vol_primer_mm = 0.1*num_samples_mm_creation
+    reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
-            [mm2, water], [vol_pcr_mm, vol_water_mm]):
+            [mm2, water, reverse_primer2],
+            [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
         num_transfers = math.ceil(vol/tip_capacity)
@@ -358,21 +372,19 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     # add unique forward/reverse primers to mix and homogenize
     vol_primer_mm = 0.1*num_samples_mm_creation
     for item in pcr2_map:
-        for i, primer_type in enumerate(
-                ['forward-primer-tube', 'reverse-primer-tube']):
-            primer = item[primer_type]
-            pip = p300 if vol_primer_mm > 20 else p20
-            tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-            num_transfers = math.ceil(vol_primer_mm/tip_capacity)
-            vol_per_transfer = vol_forward_primer_mm/num_transfers
-            pick_up(pip, 1)
-            mix_dest = item['creation-tube']
-            for _ in range(num_transfers):
-                pip.aspirate(vol_per_transfer, primer)
-                pip.dispense(vol_per_transfer, mix_dest.bottom(5))
-            if i == 1:
-                pip.mix(1, 20, mix_dest.bottom(5))
-            pip.drop_tip()
+        primer = item['forward-primer-tube']
+        pip = p300 if vol_primer_mm > 20 else p20
+        tip_capacity = pip.tip_racks[0].wells()[0].max_volume
+        num_transfers = math.ceil(vol_primer_mm/tip_capacity)
+        vol_per_transfer = vol_forward_primer_mm/num_transfers
+        pick_up(pip, 1)
+        mix_dest = item['creation-tube']
+        for _ in range(num_transfers):
+            pip.aspirate(vol_per_transfer, primer)
+            pip.dispense(vol_per_transfer, mix_dest.bottom(5))
+        if i == 1:
+            pip.mix(1, 20, mix_dest.bottom(5), rate=2.0)
+        pip.drop_tip()
 
     # plate PCR mixes
     pcr2_mix_sources = [item['creation-tube'] for item in pcr2_map]
@@ -402,9 +414,9 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             pick_up(p20, 1)
             for i, r in enumerate(replicate_set):
                 if i == 0:
-                    p20.mix(10, 10, pool.bottom(3))
+                    p20.mix(10, 10, pool.bottom(3), rate=2.0)
                 p20.aspirate(5, pool)
                 p20.dispense(5, r.bottom(2))
-                p20.mix(1, 5, r.bottom(2))
+                p20.mix(1, 5, r.bottom(2), rate=2.0)
                 p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
             p20.drop_tip()

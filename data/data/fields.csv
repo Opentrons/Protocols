@@ -796,7 +796,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,126
+num_samples,125
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1107,7 +1107,7 @@ sample_container,1
 sample_count,39
 sample_count_1,1
 sample_count_2,1
-sample_csv,1
+sample_csv,2
 sample_deck_slots,1
 sample_disp_height,1
 sample_height,1
