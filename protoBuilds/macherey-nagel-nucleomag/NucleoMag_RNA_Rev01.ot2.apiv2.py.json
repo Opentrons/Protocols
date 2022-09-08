@@ -4,97 +4,97 @@
     "fields": [
         {
             "default": 48,
-            "label": "Number of Samples",
+            "label": "Number of Samples [1-48]",
             "name": "num_samples",
             "type": "int"
         },
         {
             "default": 350,
-            "label": "Starting Volume",
+            "label": "Starting Volume [Scale this volume proportionally to other volumes]",
             "name": "starting_vol",
             "type": "int"
         },
         {
             "default": 100,
-            "label": "Elution Volume",
+            "label": "Elution Volume [50-200\u00b5L]",
             "name": "elution_vol",
             "type": "int"
         },
         {
             "default": 350,
-            "label": "Binding Buffer Volume",
+            "label": "Binding Buffer Volume [Scale this volume proportionally to other volumes]",
             "name": "binding_buffer_vol",
             "type": "int"
         },
         {
             "default": 300,
-            "label": "rDNase Volume",
+            "label": "rDNase Volume [Scale this volume proportionally to other volumes]",
             "name": "rDNase_vol",
             "type": "int"
         },
         {
             "default": 28,
-            "label": "Bead Volume",
+            "label": "Bead Volume [Scale this volume proportionally to other volumes]",
             "name": "bead_vol",
             "type": "int"
         },
         {
             "default": 600,
-            "label": "Wash 1 Volume",
+            "label": "Wash 1 Volume [Scale this volume proportionally to other volumes]",
             "name": "wash1_vol",
             "type": "int"
         },
         {
             "default": 900,
-            "label": "Wash 2 Volume",
+            "label": "Wash 2 Volume [Scale this volume proportionally to other volumes]",
             "name": "wash2_vol",
             "type": "int"
         },
         {
             "default": 900,
-            "label": "Wash 3 Volume",
+            "label": "Wash 3 Volume [Scale this volume proportionally to other volumes]",
             "name": "wash3_vol",
             "type": "int"
         },
         {
             "default": 25,
-            "label": "Mix Repetitions during Binding",
+            "label": "Mix Repetitions during Binding [pretested default, changing is not recommended]",
             "name": "mix_reps_bind",
             "type": "int"
         },
         {
             "default": 20,
-            "label": "Mix Repetitions during Wash",
+            "label": "Mix Repetitions during Wash [pretested default, changing is not recommended]",
             "name": "mix_reps_wash",
             "type": "int"
         },
         {
             "default": 25,
-            "label": "Mix Repetitions during Elution",
+            "label": "Mix Repetitions during Elution [pretested default, changing is not recommended]",
             "name": "mix_reps_elu",
             "type": "int"
         },
         {
             "default": 5,
-            "label": "Incubation Time during Binding",
+            "label": "Separation Time during Binding [pretested default, changing is not recommended]",
             "name": "sep_time_bind",
             "type": "int"
         },
         {
             "default": 2,
-            "label": "Incubation Time during Wash",
+            "label": "Separation Time during Wash [pretested default, changing is not recommended]",
             "name": "sep_time_wash",
             "type": "int"
         },
         {
-            "default": 5,
-            "label": "Time for Air Dry",
+            "default": 30,
+            "label": "Time for Air Dry [pretested default, changing is not recommended]",
             "name": "dry_time",
             "type": "int"
         },
         {
-            "default": 30,
-            "label": "Incubation Time during Elution",
+            "default": 5,
+            "label": "Separation Time during Elution [pretested default, changing is not recommended]",
             "name": "sep_time_elu",
             "type": "int"
         },

@@ -1268,5 +1268,12 @@
         "protocolName": "Generic qPCR Setup Protocol (Station C)",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Applied Biosystems 96 Aluminum Block 200 \u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }
