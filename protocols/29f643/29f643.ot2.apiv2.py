@@ -107,6 +107,9 @@ def run(ctx: protocol_api.ProtocolContext):
         if m300.current_volume == 0:
             m300.aspirate(200, src)
         m300.dispense(100, col.top(-1))
+        if m300.current_volume == 0:
+            m300.touch_tip(col)
+            m300.blow_out(col.top(-1))
     if m300.current_volume > 0:
         m300.dispense(m300.current_volume, src)
     m300.drop_tip()
@@ -124,6 +127,9 @@ def run(ctx: protocol_api.ProtocolContext):
         if m300.current_volume == 0:
             m300.aspirate(200, src)
         m300.dispense(100, col.top(-1))
+        if m300.current_volume == 0:
+            m300.touch_tip(col)
+            m300.blow_out(col.top(-1))
     if m300.current_volume > 0:
         m300.dispense(m300.current_volume, src)
     m300.drop_tip()
@@ -140,6 +146,9 @@ def run(ctx: protocol_api.ProtocolContext):
         if m300.current_volume == 0:
             m300.aspirate(200, src)
         m300.dispense(100, col.top(-1))
+        if m300.current_volume == 0:
+            m300.touch_tip(col)
+            m300.blow_out(col.top(-1))
     if m300.current_volume > 0:
         m300.dispense(m300.current_volume, src)
     m300.drop_tip()
