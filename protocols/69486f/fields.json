@@ -6,12 +6,6 @@
     "default": "samples index,# subsamples\n1,6\n2,6\n3,6\n4,6"
   },
   {
-    "type": "int",
-    "label": "number of subsamples (1-8)",
-    "name": "num_subsamples",
-    "default": 6
-  },
-  {
     "type": "dropDown",
     "label": "normalization scheme",
     "name": "perform_normalization",
