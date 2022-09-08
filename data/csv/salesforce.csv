@@ -1,5 +1,5 @@
 ,id,created,delivered,tat,sf_category,sf_status,sf_assignee
-0,,2022-06-30T15:42:16.000+0000,,,"PCR/qPCR prep,Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",On-Site Performed,0052S00000B3aPPQAZ
+0,,2022-06-30T15:42:16.000+0000,,,"PCR/qPCR prep,Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Post-Visit Optimization,0052S00000B3aPPQAZ
 1,4b4a80,2021-02-16T06:46:12.000+0000,2021-03-12,24.0,NGS library prep,Closed,StevenPlonk
 2,,2022-07-07T20:57:40.000+0000,,,Nucleic acid purification,SoW in Review,
 3,6d901d,2022-06-17T19:35:17.000+0000,2022-06-29,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,eskila
@@ -17,551 +17,568 @@
 15,,2022-03-31T17:45:54.000+0000,2022-01-05,-85.0,,Closed,ramifarawi
 16,4f7a6f,2022-04-06T10:41:08.000+0000,2022-04-13,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Protein purification - Dialysis",Closed,ramifarawi
 17,08aeaa,2021-02-23T17:12:37.000+0000,2021-03-04,9.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
-18,211a24,2021-05-18T16:10:54.000+0000,2021-05-28,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-19,6f2d9b,2021-04-02T15:15:25.000+0000,2021-04-15,13.0,Patient sample liquid extraction,Closed,sakibh
-20,3d942d,2021-07-06T15:22:00.000+0000,2021-07-21,15.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-21,7b7f08,2021-07-06T19:39:33.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Canceled,ramifarawi
-22,,2021-06-28T04:23:43.000+0000,2021-08-16,50.0,,Closed,StevenPlonk
-23,,2021-06-28T04:24:42.000+0000,,,,Closed,ncdiehl11
-24,,2021-06-28T04:25:52.000+0000,,,,Closed,sakibh
-25,,2021-06-28T04:26:40.000+0000,,,,Closed,ramifarawi
-26,,2022-03-31T17:39:54.000+0000,2022-05-02,32.0,,Closed,ramifarawi
-27,019a7d,2022-03-18T14:41:15.000+0000,2022-05-04,47.0,"Nucleic acid purification,Cloning",Closed,0052S00000B3aPPQAZ
-28,6d2e65,2021-06-01T16:12:30.000+0000,2021-06-15,14.0,Nucleic acid purification,Closed,StevenPlonk
-29,0b46fb,2021-06-01T15:24:29.000+0000,,,Pipetting automation,Canceled,ramifarawi
-30,53fec2,2021-03-16T07:28:33.000+0000,2021-04-20,35.0,PCR Clean up,Closed,ncdiehl11
-31,010526,2021-07-01T14:54:33.000+0000,2021-07-14,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Molecular Cloning",Closed,sakibh
-32,022548,2022-03-14T02:25:16.000+0000,2022-04-14,-26.0,"Nucleic acid purification,Sterile workflows (cell culture and related assays),PCR/qPCR prep",Closed,eskila
-33,49b828,2022-03-14T04:05:58.000+0000,2022-03-18,5.0,PCR/qPCR prep,Closed,ramifarawi
-34,69db93,2021-03-16T18:37:53.000+0000,2021-03-26,10.0,Nucleic acid purification,Closed,ramifarawi
-35,6ec4dd,2021-07-01T22:33:49.000+0000,2021-07-14,13.0,"PCR/qPCR prep,NGS library prep,Nucleic acid purification",Closed,ncdiehl11
-36,118e8c,2021-04-02T17:11:16.000+0000,2021-04-15,13.0,PCR/qPCR prep,Closed,StevenPlonk
-37,750b73,2022-03-23T02:33:06.000+0000,2022-03-31,9.0,plasmid DNA linearization by restriction enzymes,Closed,StevenPlonk
-38,1a6741,2022-03-23T02:50:44.000+0000,2022-04-04,13.0,In vitro transcription,Closed,StevenPlonk
-39,7628fd,2021-10-04T21:58:34.000+0000,2022-05-25,233.0,PCR/qPCR prep,Closed,ramifarawi
-40,,2021-07-06T16:00:00.000+0000,,,Other,Closed,ncdiehl11
-41,2b3642,2021-05-28T21:43:52.000+0000,2021-06-10,13.0,NGS library prep,Closed,sakibh
-42,780fb8,2022-04-07T14:39:08.000+0000,2022-05-09,32.0,Nucleic DNA extraction and library construction,Closed,StevenPlonk
-43,2df9f8,2021-05-18T00:24:15.000+0000,2021-06-23,37.0,"Pooling samples 2, 4, 5 samples  100ul per sample for swabs only",Closed,ramifarawi
-44,2905a4,2021-05-18T09:25:09.000+0000,2021-05-26,8.0,Nucleic acid purification,Closed,sakibh
-45,3662e6,2021-03-15T21:28:41.000+0000,2021-03-19,4.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
-46,384b23,2021-02-25T14:24:57.000+0000,2021-05-10,74.0,sampling of VTM,Closed,ramifarawi
-47,5eee17,2022-03-17T19:53:33.000+0000,2022-04-26,40.0,Automated dilutions,Closed,ncdiehl11
-48,1fcf02,2022-03-02T09:52:21.000+0000,2022-03-08,-63.0,Chemical denaturation,Closed,ramifarawi
-49,4883fc,2021-06-28T17:34:01.000+0000,2021-06-28,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-50,6af807,2021-05-27T00:16:37.000+0000,2021-06-02,7.0,PCR/qPCR prep,Closed,ramifarawi
-51,243973,2021-05-17T20:31:53.000+0000,2021-05-28,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-52,7663a6,2021-06-25T14:18:50.000+0000,2021-07-01,6.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),PCR/qPCR prep",Closed,ramifarawi
-53,,2022-06-01T17:36:20.000+0000,,,"PCR/qPCR prep,sample reformatting",Canceled / On-Site Removed from Scope,
-54,,2022-06-03T16:32:28.000+0000,,,NGS library prep,On-Site Scheduled,ramifarawi
-55,,2022-06-06T15:07:52.000+0000,,,Nucleic acid purification,Post-Visit Optimization,0052S00000B3aPPQAZ
-56,,2022-06-06T15:17:36.000+0000,,,Compound Dilutions,Complete,ramifarawi
-57,2bba96,2022-06-10T23:16:40.000+0000,2022-06-22,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-58,,2022-08-04T14:15:45.000+0000,,,Nucleic acid purification,SoW Completed,
-59,62077e,2022-06-24T17:30:47.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",In Progress,ncdiehl11
-60,277a3d,2022-02-22T19:32:42.000+0000,2022-04-01,38.0,"NGS library prep,ONT - Library Prep",Closed,ncdiehl11
-61,74b303,2021-02-20T00:51:58.000+0000,2021-03-03,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-62,,2022-06-03T16:01:37.000+0000,,,Serial dilution,SoW Completed,
-63,39bbbb,2021-06-27T00:21:57.000+0000,2021-07-14,18.0,ELISA,Closed,StevenPlonk
-64,04fed3,2022-06-03T18:28:23.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",In Progress,StevenPlonk
-65,3dbe0d,2022-07-28T07:46:09.000+0000,,,Sterile workflows (cell culture and related assays),New,ramifarawi
-66,649b67,2022-05-23T17:58:17.000+0000,2022-06-10,18.0,"Sterile workflows (cell culture and related assays),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Magbead-based peptide enrichment",Closed,eskila
-67,,2022-06-02T19:54:06.000+0000,,,PCR/qPCR prep,SoW Completed,
-68,4920bc,2022-05-25T07:26:24.000+0000,2022-05-31,-49.0,Nucleic acid purification,Closed,ncdiehl11
-69,1c3fe8,2022-05-24T07:23:25.000+0000,2022-08-05,73.0,Dispensing Biological Suspension Onto Printed Electrode Sheet,Closed,ramifarawi
-70,,2022-07-20T19:06:47.000+0000,,,NGS library prep,SoW Completed,ncdiehl11
-71,,2022-07-05T18:26:14.000+0000,,,Nucleic acid purification,On-Site Performed,ncdiehl11
-72,74750e,2021-02-01T23:57:49.000+0000,2021-02-16,15.0,Serial dilutions,Closed,ramifarawi
-73,74312c,2021-02-02T16:28:53.000+0000,2021-02-19,17.0,deposit ion selective membrane,Closed,sakibh
-74,7f0f89,2021-03-01T16:39:24.000+0000,2021-03-05,4.0,Unsure,Closed,ramifarawi
-75,58d57d,2021-03-02T20:18:47.000+0000,2021-03-12,10.0,Kinase Assay,Closed,sakibh
-76,2d7126,2021-03-03T02:47:12.000+0000,2021-03-18,16.0,Use of an 8-pin replicator to transfer samples from 96 well plate to a slide,Closed,ncdiehl11
-77,441cc8,2021-04-29T17:36:33.000+0000,2021-05-13,14.0,NGS library prep,Closed,StevenPlonk
-78,,2021-07-08T16:50:26.000+0000,,,,Closed,chazmanc
-79,1bcd67,2021-07-08T20:01:34.000+0000,2021-07-09,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-80,0d2950,2021-06-02T21:46:05.000+0000,2021-06-08,6.0,Nucleic acid purification,In Optimization,ramifarawi
-81,3308b4,2022-03-22T02:33:57.000+0000,,,PCR/qPCR prep,Closed,0052S00000B3aPPQAZ
-82,0175a4,2021-02-05T21:43:15.000+0000,2021-02-19,14.0,Specimen Pooling 3:1 and 2:1,Closed,StevenPlonk
-83,234495,2021-05-12T18:30:45.000+0000,2021-05-26,14.0,Custom Protocol,Closed,StevenPlonk
-84,3b0db0,2021-05-05T18:46:36.000+0000,2021-05-18,13.0,PCR/qPCR prep,Closed,ramifarawi
-85,,2021-06-04T16:52:41.000+0000,2021-06-04,0.0,,Closed,chazmanc
-86,38ef94,2021-07-12T17:04:56.000+0000,2021-07-27,15.0,"Protein crystallization screens,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-87,04eeb1,2021-06-04T20:29:16.000+0000,2021-06-17,13.0,NGS library prep,Closed,sakibh
-88,44981c,2021-01-13T08:00:00.000+0000,2021-02-19,37.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-89,68ce98,2021-01-14T08:00:00.000+0000,2021-01-22,8.0,Lipid analysis,Closed,sakibh
-90,0add76,2021-01-22T08:00:00.000+0000,2021-02-19,28.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-91,3e3c9d,2021-01-25T08:00:00.000+0000,2021-02-13,19.0,General Lab,Closed,ramifarawi
-92,5a5767,2020-12-22T08:00:00.000+0000,2020-12-22,0.0,Simple Transfer Protocol,Closed,ncdiehl11
-93,5a3797,2020-12-23T08:00:00.000+0000,2021-01-15,23.0,PCR/qPCR prep,Closed,sakibh
-94,5654c0,2021-01-04T08:00:00.000+0000,2021-01-20,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
-95,235fbd,2021-01-04T08:00:00.000+0000,2021-02-05,32.0,NGS library prep,Closed,sakibh
-96,400b8e,2021-01-07T08:00:00.000+0000,2021-01-07,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-97,1d6d1b,2021-01-25T08:00:00.000+0000,,,Slide array spotting,Closed,ncdiehl11
-98,6151af,2021-01-26T08:00:00.000+0000,2021-02-19,24.0,PCR/qPCR prep,Closed,ncdiehl11
-99,796af8,2021-01-27T08:00:00.000+0000,2021-02-05,9.0,NGS library prep,Closed,sakibh
-100,48648f,2021-01-27T08:00:00.000+0000,2021-02-16,20.0,Nucleic acid purification,Closed,StevenPlonk
-101,642c73,2021-01-27T08:00:00.000+0000,2021-02-05,9.0,PCR/qPCR prep,Closed,chazmanc
-102,7e4c3e,2020-10-28T07:00:00.000+0000,2020-12-15,48.0,"cDNA dilution, plate preparation, etc",Closed,
-103,29effa,2020-11-03T08:00:00.000+0000,2021-01-07,65.0,PCR/qPCR prep,Closed,chazmanc
-104,315f79,2020-11-05T08:00:00.000+0000,2022-07-06,608.0,Nucleic acid purification,Closed,ncdiehl11
-105,1ccd23,2020-11-06T08:00:00.000+0000,2020-11-12,6.0,PCR/qPCR prep,Closed,ncdiehl11
-106,3fb582,2020-11-06T08:00:00.000+0000,2020-12-10,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-107,747d99,2020-11-06T08:00:00.000+0000,2020-11-16,10.0,,Closed,ncdiehl11
-108,5191b6,2020-11-11T08:00:00.000+0000,2020-12-07,26.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
-109,688033,2020-11-11T08:00:00.000+0000,2022-07-06,602.0,NGS library prep,Closed,chazmanc
-110,4bdd14,2020-11-24T08:00:00.000+0000,2020-12-07,13.0,Simple Transfer Protocol,Closed,ncdiehl11
-111,2c19aa,2020-11-24T08:00:00.000+0000,2020-12-08,14.0,Simple Transfer Protocol,Closed,ncdiehl11
-112,6ff9e9,2020-11-25T08:00:00.000+0000,2020-12-16,21.0,Nucleic acid purification,Closed,ncdiehl11
-113,5c7384,2020-12-01T08:00:00.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-114,4471ba,2020-12-02T08:00:00.000+0000,2020-12-16,14.0,PCR/qPCR prep,Closed,chazmanc
-115,3cf31f,2020-12-04T08:00:00.000+0000,2020-12-22,18.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,sakibh
-116,35269b,2020-12-04T08:00:00.000+0000,2020-12-14,10.0,Nucleic acid purification,Closed,sakibh
-117,5fb07b,2020-12-07T08:00:00.000+0000,2022-07-06,576.0,Nucleic acid purification,Closed,ncdiehl11
-118,18d6a1,2020-12-08T08:00:00.000+0000,2021-01-28,51.0,Nucleic acid purification,Closed,chazmanc
-119,4fa62e,2020-12-08T08:00:00.000+0000,2020-12-16,8.0,PCR/qPCR prep,Closed,sakibh
-120,6e1085,2020-12-09T08:00:00.000+0000,2021-01-26,48.0,PCR/qPCR prep,Closed,
-121,0556be,2020-12-15T08:00:00.000+0000,2021-01-12,28.0,Manufacturing,Closed,sakibh
-122,25e716,2020-12-17T08:00:00.000+0000,2021-01-08,22.0,Pooling NGS libraries for Sequencing,Closed,ncdiehl11
-123,6faa1e,2020-12-17T08:00:00.000+0000,2020-12-28,11.0,PCR/qPCR prep,Closed,sakibh
-124,470d8c,2020-12-18T08:00:00.000+0000,2020-12-29,11.0,PCR/qPCR prep,Closed,sakibh
-125,7d95a9,2020-12-22T08:00:00.000+0000,,,PCR/qPCR prep,Closed,sakibh
-126,1649b1,2021-01-20T08:00:00.000+0000,2021-02-01,12.0,Nucleic acid purification,Closed,sakibh
-127,751127,2021-01-21T08:00:00.000+0000,2021-02-02,12.0,"Dispensing drops of radioactive liquid on flat surfaces, to enable spreading the liquid (by other tools) evenly.",Closed,ncdiehl11
-128,2ee5be,2021-01-21T08:00:00.000+0000,2021-01-30,9.0,PCR/qPCR prep,Closed,sakibh
-129,1d37e5,2021-01-22T08:00:00.000+0000,2021-02-02,11.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
-130,2e84cc,2020-10-20T07:00:00.000+0000,2020-12-10,51.0,NGS library prep,Closed,
-131,6fe477,2020-10-23T07:00:00.000+0000,2020-11-25,33.0,Nucleic acid purification,Closed,sakibh
-132,3f53ad,2020-10-27T07:00:00.000+0000,2020-12-02,36.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-133,1601a9,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,Illumina Beadchip-Amplification,Closed,chazmanc
-134,5c5155,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,DNA quantification,Closed,
-135,343001,2020-01-09T08:00:00.000+0000,2020-03-04,55.0,Nucleic acid purification,Closed,chazmanc
-136,6c7447,2020-01-10T08:00:00.000+0000,2020-01-17,7.0,PCR/qPCR prep,Closed,chazmanc
-137,6f4e2c,2020-01-10T08:00:00.000+0000,2020-02-10,31.0,Nucleic acid purification,Closed,chazmanc
-138,33900b,2020-01-14T08:00:00.000+0000,2020-01-28,14.0,MagneHis™ Protein Purification System (Promega),Closed,ncdiehl11
-139,0ef96f,2020-01-14T08:00:00.000+0000,2020-01-17,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-140,19fc32,2020-01-14T08:00:00.000+0000,2020-01-22,8.0,Nucleic acid purification,Closed,chazmanc
-141,65cdca,2020-01-16T08:00:00.000+0000,2020-01-17,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-142,13c0b8,2020-01-17T08:00:00.000+0000,2020-02-04,18.0,non-sterile cell analysis (for flow cytometry),Closed,chazmanc
-143,269b21,2020-01-18T08:00:00.000+0000,2020-02-14,27.0,PCR/qPCR prep,Closed,ncdiehl11
-144,2c81c0,2020-01-19T08:00:00.000+0000,2020-02-11,23.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-145,459a55,2020-01-21T08:00:00.000+0000,2020-01-22,1.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-146,141a1a,2020-02-14T08:00:00.000+0000,2020-07-02,139.0,Cell-free gene expression tests (TXTL test),Closed,chazmanc
-147,32e702,2020-02-20T08:00:00.000+0000,2020-06-29,130.0,Surface chemistry preparation,Closed,
-148,1a2343,2020-02-05T08:00:00.000+0000,2020-02-18,13.0,PCR/qPCR prep,Closed,ncdiehl11
-149,73c1aa,2020-02-11T08:00:00.000+0000,2020-09-04,206.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-150,245eb2,2020-03-03T08:00:00.000+0000,2020-08-27,177.0,Nucleic acid purification,Closed,chazmanc
-151,51df08,2020-03-03T08:00:00.000+0000,2020-07-28,147.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-152,453b5a,2020-02-11T08:00:00.000+0000,2020-02-20,9.0,Combination of nucleic acid purification and PCR prep,Closed,ncdiehl11
-153,09cdbe,2020-03-06T08:00:00.000+0000,2020-04-09,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-154,2b9486,2020-03-10T07:00:00.000+0000,2020-05-18,69.0,NGS library prep,Closed,ncdiehl11
-155,77344d,2020-03-18T07:00:00.000+0000,2020-06-25,99.0,PCR/qPCR prep,Closed,chazmanc
-156,44b43c,2020-04-21T07:00:00.000+0000,2020-05-01,10.0,PCR/qPCR prep,Closed,ncdiehl11
-157,53134e,2020-05-18T07:00:00.000+0000,2020-06-09,22.0,Aliquoting main media sample into small cryotubes.,Closed,ncdiehl11
-158,422b1e,2020-06-15T07:00:00.000+0000,2020-06-23,8.0,Titration procedure,Closed,chazmanc
-159,08e3eb,2020-06-19T07:00:00.000+0000,2020-07-15,26.0,PCR/qPCR prep,Closed,chazmanc
-160,060c4f,2020-02-12T08:00:00.000+0000,2020-07-07,146.0,tranfer liquids from a 96 well plate to a 384 well plate,Closed,chazmanc
-161,7a1ae8,2020-07-24T07:00:00.000+0000,2020-07-31,7.0,Nucleic acid purification,Closed,chazmanc
-162,2c83f7,2020-07-24T07:00:00.000+0000,2020-08-03,10.0,Nucleic acid purification,Closed,chazmanc
-163,272c63,2020-07-26T07:00:00.000+0000,2020-09-10,46.0,Oil Sub sampling with custom labware made by opentrons,Closed,ncdiehl11
-164,12213d,2020-07-28T07:00:00.000+0000,2020-08-03,6.0,NGS library prep,Closed,chazmanc
-165,3633ca,2020-07-28T07:00:00.000+0000,2020-08-03,6.0,NGS library prep,Closed,chazmanc
-166,17cb2d,2020-08-06T07:00:00.000+0000,2020-08-14,8.0,PCR/qPCR prep,Closed,chazmanc
-167,5c24e2,2020-08-06T07:00:00.000+0000,2020-08-14,8.0,PCR/qPCR prep,Closed,chazmanc
-168,300b16,2020-08-19T07:00:00.000+0000,2020-09-09,21.0,"Sample transfer and pooling protocol. Want to pool sample from multiple input tubes into a receiving tube. Want to be able to change the sample number. Also, the input tubes and receiving tubes are different sizes.",Canceled,
-169,199721,2020-08-27T07:00:00.000+0000,2020-09-09,13.0,Submission ID: 5f3d6b1e3a50873cb9300b16- this is an update to the first submission request.,Closed,ncdiehl11
-170,7992,2020-09-18T07:00:00.000+0000,2020-10-22,34.0,PCR/qPCR prep,Closed,ncdiehl11
-171,0a23c6,2020-09-21T07:00:00.000+0000,2020-12-09,79.0,PCR/qPCR prep,Closed,
-172,3359a5,2020-09-24T07:00:00.000+0000,2020-10-01,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-173,30174a,2020-09-28T07:00:00.000+0000,2020-11-09,42.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-174,567d10,2020-10-02T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,sakibh
-175,4fe613,2020-10-02T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,sakibh
-176,3bc25d,2020-10-03T07:00:00.000+0000,2020-12-09,67.0,NGS library prep,Closed,
-177,6aee6e,2020-10-05T07:00:00.000+0000,2020-12-09,65.0,mixing liquids,Closed,
-178,40c4a6,2020-10-05T07:00:00.000+0000,2020-12-16,72.0,Nucleic acid purification,Closed,
-179,3b3f1c,2020-10-06T07:00:00.000+0000,2020-11-11,36.0,Solution Mixing,Closed,ncdiehl11
-180,57b6fd,2020-10-09T07:00:00.000+0000,2020-11-18,40.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-181,57b6fd,2020-10-12T07:00:00.000+0000,2020-11-24,43.0,PCR/qPCR prep,Closed,sakibh
-182,4175de,2020-10-14T07:00:00.000+0000,2020-11-23,40.0,PCR/qPCR prep,Closed,sakibh
-183,797dee,2020-10-19T07:00:00.000+0000,2020-11-18,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-184,4c4650,2019-08-29T07:00:00.000+0000,2019-09-10,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-185,5b7a97,2019-09-03T07:00:00.000+0000,2019-10-04,31.0,Clean reagent handling and partial nucleic acid purification,Closed,chazmanc
-186,2.29E+,2019-09-03T07:00:00.000+0000,2019-07-04,-61.0,Simply transfer bio-fluids and add solutions and mix.,Closed,chazmanc
-187,716efb,2019-09-10T07:00:00.000+0000,2019-10-10,30.0,Nucleic acid purification,Closed,ncdiehl11
-188,221441,2019-08-29T07:00:00.000+0000,2019-09-12,14.0,cell digestion and labeling,Closed,ncdiehl11
-189,1f8b55,2020-08-06T07:00:00.000+0000,2020-10-12,67.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,chazmanc
-190,6b9ee3,2020-08-07T07:00:00.000+0000,2020-10-02,56.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-191,0fa015,2020-08-19T07:00:00.000+0000,2020-09-25,37.0,PCR/qPCR prep,Closed,chazmanc
-192,0a25f2,2020-09-03T07:00:00.000+0000,2020-09-23,20.0,Capsule Filling,Closed,ncdiehl11
-193,7d4139,2020-09-10T07:00:00.000+0000,2020-10-16,36.0,PCR/qPCR prep,Closed,
-194,6f23bf,2020-02-25T08:00:00.000+0000,2022-07-06,862.0,Magbead-based peptide enrichment,Closed,ncdiehl11
-195,76c562,2020-07-29T07:00:00.000+0000,2020-10-02,65.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-196,503103,2020-08-06T07:00:00.000+0000,2020-10-02,57.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-197,7fc7b1,2020-09-04T07:00:00.000+0000,2020-10-07,33.0,PCR/qPCR prep,Closed,ncdiehl11
-198,03e2a7,2020-09-08T07:00:00.000+0000,2022-07-06,666.0,PCR/qPCR prep,Closed,ncdiehl11
-199,21e4d8,2020-05-22T07:00:00.000+0000,2020-11-09,171.0,NGS library prep,Closed,chazmanc
-200,776039,2020-06-15T07:00:00.000+0000,2020-07-15,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-201,002af3,2020-07-17T07:00:00.000+0000,,,PCR/qPCR prep,Closed,
-202,49de51,2020-08-25T07:00:00.000+0000,,,Nucleic acid purification,Closed,
-203,387961,2020-08-27T07:00:00.000+0000,2020-11-18,83.0,PCR/qPCR prep,Closed,chazmanc
-204,62506a,2020-02-10T08:00:00.000+0000,2022-07-06,877.0,SELEX experiment,Closed,ncdiehl11
-205,431b3c,2020-03-26T07:00:00.000+0000,2020-11-18,237.0,We are using this protocol to build toxicity experiments with nanomaterials. Nanosheets will be dried onto a microplate and then solutions of bacteria will be allowed to contact the nanosheet coating.,Closed,
-206,1980cd,2020-07-30T07:00:00.000+0000,,,ELISA,Closed,
-207,6d3eda,2020-08-11T07:00:00.000+0000,2020-11-18,99.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,
-208,14b685,2020-08-28T07:00:00.000+0000,2020-12-04,98.0,NGS library prep,Closed,chazmanc
-209,376373,2020-01-06T08:00:00.000+0000,2020-10-19,287.0,Nucleic acid purification,Closed,
-210,4e7772,2020-06-24T07:00:00.000+0000,2020-11-09,138.0,preparing 384 plate,Closed,
-211,5157d6,2019-08-21T07:00:00.000+0000,2019-09-10,20.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-212,599d38,2019-08-22T07:00:00.000+0000,2019-09-10,19.0,Nucleic acid purification,Closed,chazmanc
-213,08878b,2019-08-23T07:00:00.000+0000,2019-05-16,-99.0,Heparin,Closed,chazmanc
-214,41968f,2019-08-26T07:00:00.000+0000,2019-09-13,18.0,Magbead-based peptide enrichment,Closed,chazmanc
-215,5001b8,2019-08-27T07:00:00.000+0000,2019-09-12,16.0,Enzymatic assay,Closed,ncdiehl11
-216,62f96f,2020-07-08T07:00:00.000+0000,2022-07-06,728.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-217,226d24,2020-09-02T07:00:00.000+0000,2021-01-13,133.0,PCR/qPCR prep,Closed,chazmanc
-218,1c89b6,2020-09-02T07:00:00.000+0000,2020-12-04,93.0,NGS library prep,Closed,
-219,66aa48,2019-07-08T07:00:00.000+0000,2019-07-24,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-220,724bf4,2019-07-09T07:00:00.000+0000,2019-07-09,0.0,PCR/qPCR prep,Closed,ncdiehl11
-221,8084f6,2019-07-09T07:00:00.000+0000,2019-08-12,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-222,57dda9,2019-07-11T07:00:00.000+0000,2019-07-29,18.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-223,39e61b,2019-07-17T07:00:00.000+0000,2019-07-24,7.0,Sample transfer,Closed,ncdiehl11
-224,4c464f,2019-07-17T07:00:00.000+0000,2019-08-02,16.0,PCR/qPCR prep,Closed,ncdiehl11
-225,8249aa,2019-07-23T07:00:00.000+0000,2019-08-05,13.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-226,67314,2019-09-10T07:00:00.000+0000,2019-09-19,9.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,chazmanc
-227,222360,2019-09-11T07:00:00.000+0000,2019-10-08,27.0,Nucleic acid purification,Closed,chazmanc
-228,5c8926,2019-09-17T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-229,5c8942,2019-09-17T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-230,5c6979,2019-09-23T07:00:00.000+0000,2019-10-03,10.0,Magnetic beads for nucleic acids,Closed,ncdiehl11
-231,65dc68,2019-09-23T07:00:00.000+0000,2019-10-10,17.0,Protein purification,Closed,chazmanc
-232,4ce987,2019-09-24T07:00:00.000+0000,2019-10-24,30.0,nucleic acid polymerization validation protocol,Closed,chazmanc
-233,6413df,2019-07-23T07:00:00.000+0000,2019-08-12,20.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-234,64a0f9,2019-07-26T07:00:00.000+0000,2019-08-23,28.0,NGS library prep,Closed,ncdiehl11
-235,2a4397,2019-07-30T07:00:00.000+0000,2019-08-23,24.0,NGS library prep,Closed,ncdiehl11
-236,0cb5e5,2019-07-31T07:00:00.000+0000,2019-08-14,14.0,NGS library prep,Closed,ncdiehl11
-237,569d34,2019-08-01T07:00:00.000+0000,2019-09-03,33.0,Nucleic acid purification,Closed,ncdiehl11
-238,56a6a1,2019-08-02T07:00:00.000+0000,2019-08-14,12.0,Custom Protein Array Protocol (see Attached Word Document),Closed,ncdiehl11
-239,3f3a7d,2019-08-09T07:00:00.000+0000,2019-09-10,32.0,Synthesis of Hybrid Perovskite Nanocrystals,Closed,ncdiehl11
-240,1f9218,2019-08-12T07:00:00.000+0000,2019-09-03,22.0,Capsule filling cbd,Closed,ncdiehl11
-241,65b27d,2019-08-13T07:00:00.000+0000,2019-08-19,6.0,Nucleic acid purification,Closed,ncdiehl11
-242,4a0be6,2019-08-13T07:00:00.000+0000,2019-08-30,17.0,Simple fills: transfer of liquid bulk into microtubes,Closed,
-243,50486f,2019-08-13T07:00:00.000+0000,2019-09-11,29.0,PCR/qPCR prep,Closed,chazmanc
-244,5842cf,2019-08-13T07:00:00.000+0000,2019-09-12,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-245,67aee3,2019-08-13T07:00:00.000+0000,,,Serial dilution,Closed,chazmanc
-246,0f1aa5,2019-08-15T07:00:00.000+0000,2019-10-04,50.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-247,0f30a4,2019-08-16T07:00:00.000+0000,2019-08-23,7.0,Please see below,Closed,ncdiehl11
-248,509b5d,2019-08-16T07:00:00.000+0000,2019-09-12,27.0,Nucleic acid purification,Closed,chazmanc
-249,3391c4,2019-08-20T07:00:00.000+0000,2019-09-03,14.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-250,68b326,2019-08-20T07:00:00.000+0000,2019-09-10,21.0,NGS library prep,Closed,ncdiehl11
-251,9.44E+,2019-09-26T07:00:00.000+0000,2019-10-15,19.0,NGS library prep,Closed,ncdiehl11
-252,05a30c,2019-09-27T07:00:00.000+0000,2019-10-17,20.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-253,53e6bc,2019-09-27T07:00:00.000+0000,2019-11-12,46.0,"making Antibody Mastermix from multiple wells of a deepwell plate, and adding buffers",Closed,ncdiehl11
-254,47645d,2019-09-30T07:00:00.000+0000,2019-10-10,10.0,Protein crystallization screens,Closed,chazmanc
-255,1ef67e,2019-10-10T07:00:00.000+0000,2020-01-31,113.0,Primary Antibody/Reagent set dilution and serial dilution,Closed,chazmanc
-256,7d113b,2019-10-15T07:00:00.000+0000,2019-11-14,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-257,131de0,2019-10-16T07:00:00.000+0000,2020-03-04,140.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-258,3188ad,2019-10-20T07:00:00.000+0000,2019-10-21,1.0,Micro -arrays,Closed,ncdiehl11
-259,1b83fa,2019-10-21T07:00:00.000+0000,2019-10-24,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-260,4e4778,2019-10-21T07:00:00.000+0000,2019-10-25,4.0,Colorimetric assay,Closed,chazmanc
-261,563624,2019-10-22T07:00:00.000+0000,2019-10-31,9.0,Protein purification,Closed,ncdiehl11
-262,1a6463,2019-10-23T07:00:00.000+0000,2019-11-05,13.0,PCR/qPCR prep,Closed,ncdiehl11
-263,55f974,2019-10-25T07:00:00.000+0000,2019-11-20,26.0,Nucleic acid purification,Closed,chazmanc
-264,0bdecb,2019-10-28T07:00:00.000+0000,2019-11-11,14.0,Nucleic acid purification,Closed,ncdiehl11
-265,637687,2019-10-29T07:00:00.000+0000,2019-11-08,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-266,26a414,2019-10-29T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-267,31e49d,2019-10-31T07:00:00.000+0000,2020-01-22,83.0,NGS library prep,Closed,
-268,584171,2019-11-01T07:00:00.000+0000,2019-11-11,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-269,44306d,2019-11-01T07:00:00.000+0000,2019-11-12,11.0,Nucleic acid purification,Closed,ncdiehl11
-270,5fe7a2,2019-11-04T08:00:00.000+0000,2020-01-27,84.0,Nucleic acid purification,Closed,chazmanc
-271,0d4a0f,2019-11-04T08:00:00.000+0000,2019-11-11,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-272,14f205,2019-11-06T08:00:00.000+0000,2019-11-18,12.0,Biofilm Assay,Closed,ncdiehl11
-273,5c14ad,2019-11-06T08:00:00.000+0000,2020-01-07,62.0,PCR/qPCR prep,Closed,chazmanc
-274,757f00,2019-11-06T08:00:00.000+0000,2020-01-07,62.0,PCR/qPCR prep,Closed,
-275,4ca4bd,2019-11-07T08:00:00.000+0000,2019-11-07,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-276,1ce6aa,2019-11-07T08:00:00.000+0000,2020-01-07,61.0,PCR/qPCR prep,Closed,
-277,35b1a9,2019-11-07T08:00:00.000+0000,2020-01-07,61.0,PCR/qPCR prep,Closed,chazmanc
-278,29414b,2019-11-08T08:00:00.000+0000,,,Pipette Calibration Protocol,Closed,chazmanc
-279,178868,2019-11-08T08:00:00.000+0000,2019-12-11,33.0,Pipette Calibration Protocol,Closed,
-280,7a3e4b,2019-11-11T08:00:00.000+0000,2019-12-04,23.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-281,2d7790,2019-11-11T08:00:00.000+0000,2019-11-14,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-282,2780d4,2019-10-02T07:00:00.000+0000,2019-10-18,16.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-283,4a1bbf,2019-10-03T07:00:00.000+0000,2019-10-29,26.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-284,7ca571,2019-10-05T07:00:00.000+0000,2019-10-10,5.0,"Transformation, upgrading the attached protocol below, as it was used for OT-one http://protocol-delivery.protocols.opentrons.com/protocol/heat_shock_transformation",Closed,ncdiehl11
-285,77032e,2019-10-07T07:00:00.000+0000,2019-10-15,8.0,HCP ELISA assay,Closed,ncdiehl11
-286,6e8459,2019-10-07T07:00:00.000+0000,2019-10-15,8.0,Protein A ELISA assay,Closed,ncdiehl11
-287,32b6ed,2019-10-09T07:00:00.000+0000,2019-10-10,1.0,Production of biological products,Closed,ncdiehl11
-288,3c12b0,2019-10-10T07:00:00.000+0000,2019-10-16,6.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-289,1b4f0b,2020-01-21T08:00:00.000+0000,2020-01-07,-14.0,Aliquoting,Canceled,
-290,657ca8,2019-11-15T08:00:00.000+0000,2019-11-18,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-291,59f50b,2019-11-19T08:00:00.000+0000,2019-11-26,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-292,211fe1,2019-11-20T08:00:00.000+0000,2019-12-13,23.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-293,7aa3fd,2019-11-29T08:00:00.000+0000,2019-12-13,14.0,NGS library prep,Closed,ncdiehl11
-294,139815,2019-12-02T08:00:00.000+0000,2019-12-13,11.0,Pooling and consolidation,Closed,ncdiehl11
-295,085af6,2019-12-04T08:00:00.000+0000,2019-12-17,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-296,6030b7,2019-12-09T08:00:00.000+0000,2020-01-02,24.0,NGS library prep,Closed,ncdiehl11
-297,0961d2,2019-12-09T08:00:00.000+0000,2019-12-19,10.0,NGS library prep,Closed,chazmanc
-298,18050b,2019-12-13T08:00:00.000+0000,2019-12-18,5.0,"Drug screening , plate mapping",Closed,ncdiehl11
-299,640a85,2019-12-18T08:00:00.000+0000,2019-12-19,1.0,PCR/qPCR prep,Closed,ncdiehl11
-300,56b4ec,2019-12-19T08:00:00.000+0000,2019-12-23,4.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
-301,2082dd,2019-12-20T08:00:00.000+0000,2020-01-06,17.0,NGS library prep,Closed,ncdiehl11
-302,0ada67,2020-01-06T08:00:00.000+0000,2020-01-30,24.0,NGS library prep,Closed,
-303,42d27b,2020-01-08T08:00:00.000+0000,2020-02-05,28.0,DNA quantification,Closed,chazmanc
-304,06ab09,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,DNA tansfer,Closed,chazmanc
-305,4b76c0,2020-01-09T08:00:00.000+0000,2020-02-18,40.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-306,298069,2020-01-31T08:00:00.000+0000,2020-02-04,4.0,Simple aliquoting protocol.,Closed,ncdiehl11
-307,0bd707,2020-06-29T07:00:00.000+0000,2020-06-29,0.0,"Production, transferring solution into cryotubes",Closed,chazmanc
-308,13fd88,2020-06-29T07:00:00.000+0000,2020-07-15,16.0,Protein purification,Closed,chazmanc
-309,8nhsa0,2020-07-17T07:00:00.000+0000,2020-07-17,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-310,203136,2019-12-04T08:00:00.000+0000,2020-01-22,49.0,Nucleic acid purification,Closed,chazmanc
-311,558d02,2019-12-07T08:00:00.000+0000,2019-12-19,12.0,Magbead-based peptide enrichment,Closed,ncdiehl11
-312,3593f0,2019-08-23T07:00:00.000+0000,2019-07-24,-30.0,NGS library prep,Canceled,chazmanc
-313,6a1a64,2020-02-25T08:00:00.000+0000,,,fluorescence polarization reaction,Canceled,ncdiehl11
-314,00a214,2020-03-18T07:00:00.000+0000,,,Sterile workflows (cell culture and related assays),Closed,chazmanc
-315,7517d5,2020-04-09T07:00:00.000+0000,,,Nucleic acid purification,Canceled,ncdiehl11
-316,6.14E+,2020-08-09T07:00:00.000+0000,2022-07-06,696.0,Nucleic acid purification,Closed,ncdiehl11
-317,4dd4a1,2019-09-30T07:00:00.000+0000,2022-07-06,1010.0,NGS library prep,Closed,ncdiehl11
-318,407d5e,2020-02-17T08:00:00.000+0000,,,Protein Labelling,Closed,chazmanc
-319,1185d3,2020-05-27T07:00:00.000+0000,2020-11-18,175.0,Nucleic acid purification,Closed,
-320,5242d2,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-321,548a44,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-322,337bdd,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
-323,785865,2020-07-08T07:00:00.000+0000,2022-07-06,728.0,Dispensing Protocols,Closed,chazmanc
-324,15933a,2020-03-05T08:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Stuck,ncdiehl11
-325,085bfe,2020-02-25T08:00:00.000+0000,,,Nucleic acid purification,Canceled,chazmanc
-326,124098,2020-08-28T07:00:00.000+0000,2022-07-06,677.0,Nucleic acid purification,Closed,chazmanc
-327,728914,2019-10-03T07:00:00.000+0000,2022-07-06,1007.0,ELISA,Closed,ncdiehl11
-328,3029d8,2020-03-02T08:00:00.000+0000,2022-07-06,856.0,Replica plate,Closed,chazmanc
-329,33b12a,2020-09-03T07:00:00.000+0000,2020-11-18,76.0,PCR/qPCR prep,Closed,
-330,31fd68,2020-06-24T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,chazmanc
-331,3cdc4d,2020-07-16T07:00:00.000+0000,,,NGS library prep,Canceled,
-332,499472,2019-09-23T07:00:00.000+0000,2020-11-19,423.0,Magnetic beads for nucleic acid,Canceled,chazmanc
-333,6c27ee,2021-01-05T08:00:00.000+0000,2021-02-22,48.0,Building block for ELISA protocol,Closed,chazmanc
-334,4fc750,2021-01-08T08:00:00.000+0000,,,Nucleic acid purification,Closed,ncdiehl11
-335,71381b,2021-01-11T08:00:00.000+0000,2021-02-25,45.0,Nucleic acid purification,Closed,chazmanc
-336,274d2a,2021-02-08T21:35:31.000+0000,2021-02-24,16.0,PCR/qPCR prep,Closed,ncdiehl11
-337,280ea4,2021-03-23T15:11:48.000+0000,2021-04-09,17.0,PCR/qPCR prep,Closed,ncdiehl11
-338,3e5697,2021-10-05T15:49:04.000+0000,2021-11-09,35.0,"ELISA, Serial Dilution",Closed,StevenPlonk
-339,7855ef,2021-03-23T16:50:52.000+0000,2021-04-08,16.0,NGS library prep,In Optimization,ramifarawi
-340,5b8174,2021-07-15T02:28:20.000+0000,2021-07-22,8.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
-341,,2022-06-29T17:04:57.000+0000,,,,New,ramifarawi
-342,1dbc24,2022-05-18T20:22:41.000+0000,2022-05-23,5.0,Laboratory Sample Prep,Closed,ncdiehl11
-343,0bf4f4,2021-07-14T18:20:56.000+0000,2021-07-20,6.0,NGS library prep,Closed,ramifarawi
-344,6be1f8,2021-06-08T09:18:21.000+0000,2021-06-18,10.0,Elisa calibrants,Closed,ramifarawi
-345,26c304,2021-06-08T09:00:24.000+0000,2021-06-18,10.0,Elisa calibrants,Closed,ramifarawi
-346,5414fa,2021-07-16T17:31:38.000+0000,2021-07-29,13.0,Plate Preparation,Closed,sakibh
-347,516336,2021-05-09T07:41:58.000+0000,2021-05-21,12.0,NGS library prep,Closed,sakibh
-348,1477ea,2021-06-09T12:07:07.000+0000,2021-06-23,14.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-349,6a77d9,2021-03-28T08:13:24.000+0000,2021-04-13,16.0,Liquid deposition onto flat surfaces,Closed,ncdiehl11
-350,7805de,2021-05-20T20:48:39.000+0000,2021-06-03,14.0,NGS library prep,Closed,StevenPlonk
-351,743f54,2021-05-20T20:10:44.000+0000,2021-06-09,20.0,Nucleic acid purification,Closed,chazmanc
-352,18e62e,2021-05-20T20:44:39.000+0000,2021-07-14,55.0,PCR/qPCR prep,Closed,chazmanc
-353,788dca,2021-02-10T22:00:49.000+0000,2021-02-26,16.0,General Lab Procedures,Closed,sakibh
-354,2c62b7,2021-03-24T11:44:17.000+0000,2021-05-03,40.0,Nucleic acid purification,Closed,sakibh
-355,1c8468,2021-03-04T12:10:32.000+0000,2021-03-15,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-356,2d9a0c,2021-03-04T10:20:41.000+0000,2021-03-12,8.0,PCR/qPCR prep,Closed,ramifarawi
-357,4ee4d6,2021-03-24T18:27:58.000+0000,2021-04-14,21.0,NGS library prep,Closed,StevenPlonk
-358,315118,2021-03-25T13:08:39.000+0000,2021-04-06,12.0,mock pooling,Closed,StevenPlonk
-359,,2022-07-12T21:06:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sample/reagent handling",SoW Completed,
-360,6a93a2,2021-03-25T18:28:37.000+0000,2021-05-11,47.0,NGS library prep,Closed,ramifarawi
-361,701319,2021-03-05T21:33:00.000+0000,2021-03-12,7.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,sakibh
-362,1eeb01,2021-03-17T16:46:50.000+0000,2021-04-13,27.0,Nucleic acid purification,Closed,chazmanc
-363,51b9a5,2021-06-14T14:16:55.000+0000,2021-06-15,1.0,,Closed,ncdiehl11
-364,5f7d18,2021-03-10T00:22:12.000+0000,2021-03-24,15.0,PCR/qPCR prep,Closed,ramifarawi
-365,2d7d86,2022-06-01T14:38:18.000+0000,2022-06-07,6.0,PCR/qPCR prep,Closed,ramifarawi
-366,76ba23,2021-03-04T04:20:45.000+0000,2021-03-30,27.0,NGS library prep,Closed,StevenPlonk
-367,3955db,2021-03-25T21:56:29.000+0000,2021-04-04,10.0,Sample Prep for PoC COVID-19 Device,Closed,chazmanc
-368,4d9b8b,2021-04-10T18:03:50.000+0000,2021-04-20,10.0,Drop Casting Polymer Solutions with Varying solvent/additive concecntrations,Closed,ramifarawi
-369,0b98cc,2021-03-26T00:20:58.000+0000,2021-04-06,12.0,Viral titration (serial dilution) protocol,Closed,sakibh
-370,41ece2,2021-03-26T20:49:34.000+0000,2021-04-01,6.0,Drug Dilution +/- Addition of Cells,Closed,chazmanc
-371,6b8c90,2021-03-05T16:51:32.000+0000,2021-03-17,12.0,Simple aliquot transfer,Closed,chazmanc
-372,559aa0,2021-03-08T18:20:36.000+0000,2021-03-18,10.0,PCR/qPCR prep,Closed,StevenPlonk
-373,165a77,2021-03-08T18:31:58.000+0000,2021-03-18,10.0,PCR/qPCR prep,Closed,StevenPlonk
-374,3a49b6,2021-03-09T16:38:44.000+0000,2021-03-30,21.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-375,3ad2a2,2021-03-10T23:25:24.000+0000,,,PCR/qPCR prep,Canceled,ramifarawi
-376,0e696e,2021-03-11T15:18:04.000+0000,,,PCR/qPCR prep,Closed,ncdiehl11
-377,11beaa,2021-04-19T11:49:53.000+0000,2021-04-26,7.0,PCR/qPCR prep,Closed,ramifarawi
-378,5fa647,2021-03-30T18:00:37.000+0000,2021-04-20,21.0,PCR/qPCR prep,Closed,ramifarawi
-379,3d02be,2021-04-19T16:53:58.000+0000,2021-04-29,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-380,,2021-07-21T14:08:02.000+0000,,,,Closed,sakibh
-381,,2021-07-21T14:09:01.000+0000,,,,Closed,ramifarawi
-382,115d98,2021-03-30T19:11:09.000+0000,2021-04-04,5.0,Volume transfers & dispensing sample into COVID-19 PoC Testing Device,Closed,chazmanc
-383,,2021-07-21T14:06:59.000+0000,,,,Canceled,chazmanc
-384,,2021-07-21T14:07:29.000+0000,,,,Closed,ncdiehl11
-385,,2021-07-21T14:08:27.000+0000,2021-08-04,14.0,,Closed,StevenPlonk
-386,19313a,2021-07-21T13:29:53.000+0000,2021-07-26,5.0,Nucleic acid purification,In Optimization,ramifarawi
-387,1c086c,2021-03-31T18:18:00.000+0000,2021-04-06,6.0,Flexible distribution of solution into wellplates,Closed,sakibh
-388,39b4c7,2021-04-19T17:46:36.000+0000,2021-04-26,7.0,PCR/qPCR prep,Closed,sakibh
-389,6bc986,2021-04-19T19:02:55.000+0000,2021-05-03,14.0,PCR/qPCR prep,Closed,StevenPlonk
-390,0e8e3,2021-07-21T17:54:58.000+0000,2021-07-27,6.0,PCR/qPCR prep,Closed,ncdiehl11
-391,45a320,2021-07-21T18:15:20.000+0000,2021-08-02,-281.0,"Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays),PCR/qPCR prep",Closed,ramifarawi
-392,50c11b,2021-04-06T18:59:07.000+0000,2021-05-05,29.0,PCR/qPCR prep,Closed,chazmanc
-393,6401f1,2021-07-21T19:08:40.000+0000,2021-08-04,-279.0,PCR/qPCR prep,Closed,StevenPlonk
-394,05f673,2021-07-21T21:10:32.000+0000,2021-09-24,-228.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
-395,44b1ac,2021-07-21T23:53:00.000+0000,2021-08-18,-265.0,NGS library prep,Closed,sakibh
-396,2bdff3,2021-04-16T07:57:40.000+0000,2021-04-22,6.0,NGS library prep,Closed,sakibh
-397,1f96ca,2021-04-16T19:13:41.000+0000,2021-04-29,13.0,NGS library prep,Closed,StevenPlonk
-398,1adec6,2021-04-26T14:28:28.000+0000,2022-04-06,345.0,"Protein quantification (BCA, Bradford, etc)",Closed,chazmanc
-399,111210,2021-07-21T23:46:59.000+0000,2021-08-14,-269.0,NGS library prep,Closed,sakibh
-400,6d7fc3,2021-07-21T23:38:17.000+0000,2021-08-02,-281.0,NGS library prep,Closed,sakibh
-401,5520f0,2021-05-03T22:21:46.000+0000,2021-05-11,8.0,Fixing and staining cell-based 384-well assay plates.,Closed,sakibh
-402,543bf9,2021-04-23T20:43:16.000+0000,2021-05-05,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
-403,698b9e,2021-04-26T16:25:31.000+0000,2021-05-06,10.0,PCR/qPCR prep,Closed,ramifarawi
-404,,2021-07-23T04:28:03.000+0000,,,,Closed,chazmanc
-405,3fad82,2021-05-07T13:43:43.000+0000,2021-05-21,14.0,NGS library prep,Closed,StevenPlonk
-406,313086,2021-05-07T20:00:22.000+0000,2021-07-09,63.0,PCR/qPCR prep,Closed,ncdiehl11
-407,6cd9d6,2021-06-21T18:55:58.000+0000,2021-07-02,11.0,NGS library prep,Closed,sakibh
-408,13ea1e,2021-05-13T21:35:05.000+0000,2021-05-26,13.0,PCR/qPCR prep,Closed,ramifarawi
-409,7f9595,2021-05-13T20:54:37.000+0000,2021-05-17,4.0,Serial dilution ( 1:10),Closed,sakibh
-410,3b3d2f,2021-06-22T12:06:58.000+0000,2021-07-06,14.0,PCR/qPCR prep,Closed,StevenPlonk
-411,5713b2,2021-08-02T19:18:00.000+0000,,,Reagent refill,Closed,ramifarawi
-412,74841a,2021-08-05T16:07:54.000+0000,2021-08-17,12.0,NGS library prep,Closed,ncdiehl11
-413,,2021-10-11T14:09:48.000+0000,,,,Closed,ramifarawi
-414,,2021-08-09T14:11:11.000+0000,,,,Closed,sakibh
-415,,2021-08-09T14:11:36.000+0000,2021-08-23,14.0,,Closed,StevenPlonk
-416,,2021-08-09T14:12:02.000+0000,,,,Closed,ramifarawi
-417,00bbd7,2021-08-09T21:44:40.000+0000,2021-08-20,11.0,PCR/qPCR prep,Closed,ramifarawi
-418,581011,2021-08-10T18:28:34.000+0000,2021-08-20,10.0,Sterile workflows (cell culture and related assays),Closed,ramifarawi
-419,2a370c,2021-08-12T12:52:41.000+0000,2021-08-26,14.0,Nucleic acid purification,Closed,sakibh
-420,,2022-06-28T12:54:54.000+0000,,,ELISA,On-Site Performed,0052S00000B3aPPQAZ
-421,5a2a35,2021-08-10T16:23:58.000+0000,2021-08-12,2.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-422,,2021-10-13T13:48:29.000+0000,,,,Canceled,StevenPlonk
-423,1dfebe,2021-10-13T17:57:20.000+0000,2021-10-20,7.0,Urine toxicology using enzyme hydrolysis,Closed,ramifarawi
-424,4b7268,2021-08-13T13:38:21.000+0000,2021-08-26,13.0,Nucleic acid purification,Closed,StevenPlonk
-425,063611,2021-08-13T17:20:50.000+0000,2021-08-19,6.0,Sample Fill,Closed,StevenPlonk
-426,29225e,2021-08-16T23:31:00.000+0000,2021-10-26,-196.0,"PCR/qPCR prep,RNA concentration normalization",Closed,StevenPlonk
-427,5c50d9,2021-08-18T14:53:24.000+0000,2021-08-27,9.0,PCR/qPCR prep,Closed,ramifarawi
-428,17d210,2021-08-18T15:15:54.000+0000,2021-09-23,36.0,NGS library prep,Closed,ncdiehl11
-429,5dcd88,2021-10-18T18:24:47.000+0000,2021-10-29,11.0,NGS library prep,Closed,ramifarawi
-430,563624,2021-10-18T16:15:43.000+0000,2021-10-27,9.0,Other,Closed,ncdiehl11
-431,00b562,2021-10-19T13:33:57.000+0000,2021-11-26,38.0,PCR/qPCR prep,Closed,StevenPlonk
-432,75cfa6,2021-10-19T14:48:46.000+0000,2021-12-03,45.0,PCR/qPCR prep,Closed,ncdiehl11
-433,355b30,2022-04-05T20:05:47.000+0000,2022-06-28,84.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),1. Preparation of DNA mixture (mixing two or more plasmids), which also involves SCV/Excel File input. 2. Aliquoting",Closed,StevenPlonk
-434,,2022-05-06T14:17:43.000+0000,,,,Awaiting Customer Response,0052S00000B3aPPQAZ
-435,,2022-05-04T15:49:46.000+0000,,,"PCR/qPCR prep,Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays),NGS library prep,Protein quantification (BCA, Bradford, etc)",Complete,0052S00000B3aPPQAZ
-436,04f4e7,2021-08-26T21:14:41.000+0000,2021-09-03,-249.0,Sterile workflows (cell culture and related assays),Closed,ramifarawi
-437,3d5475,2021-08-30T12:36:15.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Canceled,StevenPlonk
-438,154ec5,2021-09-02T16:35:28.000+0000,2021-09-21,-231.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-439,5829d7,2021-09-02T16:27:57.000+0000,2021-09-24,22.0,PCR/qPCR prep,Closed,ramifarawi
-440,11bb6a,2022-06-01T11:53:57.000+0000,,,"NGS library prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",In Progress,StevenPlonk
-441,,2022-08-03T16:11:03.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",SoW Completed,ncdiehl11
-442,459cc2,2021-08-30T19:03:28.000+0000,2021-09-09,10.0,"Mass spec sample prep (MALDI spotting, gel digests, etc),LC and GC analysis",Closed,sakibh
-443,37de37,2021-09-20T12:39:48.000+0000,2021-09-24,4.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-444,2ed4de,2021-10-22T22:21:24.000+0000,2021-11-15,24.0,Ribogreen Assay,Closed,ncdiehl11
-445,714f71,2022-02-23T18:19:49.000+0000,2022-03-03,8.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-446,,2022-07-13T21:52:30.000+0000,,,Drug testing,Kick Off Call Needs Scheduled,0052S00000B3aPPQAZ
-447,0045f1,2021-10-25T19:20:51.000+0000,2021-11-10,16.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
-448,7062c9,2021-10-25T18:00:32.000+0000,2021-10-28,3.0,Magnetic beads purification,Closed,ncdiehl11
-449,209634,2021-09-14T21:29:30.000+0000,,,Chemistry lab,Awaiting Customer Response,ramifarawi
-450,25a03d,2021-09-15T15:32:50.000+0000,2021-09-30,-222.0,PCR/qPCR prep,Closed,ramifarawi
-451,7363e4,2021-09-17T17:27:54.000+0000,2021-10-05,-217.0,Aliquoting and Pooling,Closed,StevenPlonk
-452,,2021-10-27T13:53:26.000+0000,,,,Closed,chazmanc
-453,6cb818,2021-09-21T18:24:33.000+0000,2021-10-29,-193.0,Sterile workflows (cell culture and related assays),Closed,StevenPlonk
-454,714b42,2022-03-25T18:33:28.000+0000,,,Nucleic acid purification,New,StevenPlonk
-455,7bdd70,2022-03-25T17:02:03.000+0000,,,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",New,StevenPlonk
-456,2663c9,2022-03-09T16:52:38.000+0000,2022-03-18,-53.0,"Mass spec sample prep (MALDI spotting, gel digests, etc),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-457,64c54a,2022-06-21T13:57:52.000+0000,2022-07-05,14.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
-458,7cbda5,2022-06-21T21:45:13.000+0000,2022-07-07,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-459,29f643,2022-07-05T02:59:52.000+0000,2022-08-15,33.0,ELISA,Closed,chazmanc
-460,,2022-07-07T17:00:33.000+0000,,,Cell staining,SoW Completed,
-461,,2022-07-07T17:57:34.000+0000,,,Nucleic acid purification,SoW in Review,
-462,0636b9,2021-09-14T14:41:40.000+0000,,,PCR/qPCR prep,Closed,sakibh
-463,24b132,2021-10-26T10:12:25.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Awaiting Customer Response,StevenPlonk
-464,4568fa,2021-10-26T20:24:22.000+0000,2021-11-11,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),FA assay protocol attached.",Closed,ncdiehl11
-465,1440ad,2021-06-23T04:39:53.000+0000,2021-07-07,15.0,reaction assembling + nucleic acid purification,Closed,ramifarawi
-466,295c73,2021-02-12T13:36:25.000+0000,2021-03-04,20.0,NGS library prep,Closed,StevenPlonk
-467,52d238,2021-02-12T20:15:49.000+0000,2021-02-19,7.0,NGS library prep,Closed,sakibh
-468,4c8861,2021-09-23T18:22:12.000+0000,2021-09-29,6.0,"Nucleic acid purification,Protein quantification (BCA, Bradford, etc),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-469,469c70,2021-10-28T18:31:39.000+0000,2021-11-11,14.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
-470,6b51bd,2021-09-24T01:43:05.000+0000,2021-10-26,-196.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-471,63530f,2022-01-12T18:33:49.000+0000,,,Sample Prep-Plate Filling,Canceled,eskila
-472,2aee74,2021-10-28T20:51:58.000+0000,2021-10-31,3.0,"Protein quantification (BCA, Bradford, etc)",Closed,ncdiehl11
-473,60d861,2022-01-12T21:09:05.000+0000,,,PCR/qPCR prep,Closed,ncdiehl11
-474,300073,2022-01-12T19:34:34.000+0000,2022-02-04,23.0,PCR/qPCR prep,Closed,eskila
-475,7da6a6,2022-01-14T07:04:28.000+0000,2022-04-07,83.0,Nucleic acid purification,Closed,StevenPlonk
-476,659888,2021-09-24T21:42:05.000+0000,2021-10-05,11.0,Liquid spotting assay onto solid media,Closed,ramifarawi
-477,3c9aec,2022-01-13T19:23:12.000+0000,2022-01-24,11.0,"Sterile workflows (cell culture and related assays),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-478,1914e9,2021-09-30T18:12:51.000+0000,,,"Magbead-based peptide enrichment,Mass spec sample prep (MALDI spotting, gel digests, etc)",Canceled,
-479,6d7eb7,2021-09-30T20:34:57.000+0000,2021-10-01,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),PCR/qPCR prep",Closed,ncdiehl11
-480,69cf81,2021-10-01T16:40:37.000+0000,2021-10-01,0.0,PCR/qPCR prep,Closed,ncdiehl11
-481,,2022-07-06T17:52:18.000+0000,,,ELISA,SoW Completed,
-482,,2022-07-06T17:15:26.000+0000,,,,On-Site Scheduled,ncdiehl11
-483,6e160e,2022-03-10T04:54:20.000+0000,2022-03-15,-56.0,PCR/qPCR prep,Closed,ramifarawi
-484,78dfe9,2021-11-02T17:25:31.000+0000,2021-12-09,37.0,Magbead-based peptide enrichment,Closed,StevenPlonk
-485,00a6e5,2021-11-02T19:23:30.000+0000,2021-11-15,13.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
-486,,2021-11-05T16:41:46.000+0000,,,,Closed,chazmanc
-487,,2021-11-08T14:17:51.000+0000,,,,Closed,eskila
-488,017860,2022-02-23T21:20:54.000+0000,2022-03-03,8.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,eskila
-489,,2021-11-08T14:18:22.000+0000,,,,Closed,eskila
-490,1dec68,2022-01-21T00:35:41.000+0000,2022-02-22,33.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-491,,2021-11-08T14:20:08.000+0000,,,,Closed,eskila
-492,4a5f32,2021-05-24T10:11:42.000+0000,2021-06-04,11.0,Nucleic acid purification,Closed,sakibh
-493,7cfbde,2021-02-12T21:10:22.000+0000,2021-02-25,13.0,Magbead-based peptide enrichment,Closed,chazmanc
-494,AB3A5D,2022-03-14T15:12:11.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
-495,03BB56,2022-03-14T15:12:56.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
-496,979D28,2022-03-14T15:13:45.000+0000,2022-06-10,31.0,,Closed,ncdiehl11
-497,,2022-04-12T22:30:33.000+0000,,,NGS library prep,Complete,0052S00000B3aPPQAZ
-498,4897c3,2021-06-23T16:01:59.000+0000,,,"NGS library prep,Proprietary.",Stuck,ncdiehl11
-499,65ed01,2021-02-13T08:54:46.000+0000,2021-02-26,13.0,Nucleic acid purification,Closed,ramifarawi
-500,33a449,2022-01-21T15:01:31.000+0000,2022-02-03,13.0,Nucleic acid purification,Closed,ramifarawi
-501,7b1ce4,2021-11-09T20:01:34.000+0000,,,Nucleic acid purification,Awaiting Customer Response,StevenPlonk
-502,33e96a,2021-11-10T08:24:40.000+0000,2021-11-19,9.0,"PCR/qPCR prep,Magbead-based peptide enrichment",Closed,ramifarawi
-503,,2022-07-06T14:44:23.000+0000,,,,On-Site Scheduled,0052S00000B3aPPQAZ
-504,0f5985,2022-01-24T16:27:35.000+0000,,,Nucleic acid purification,Closed,eskila
-505,5cdffb,2022-03-17T19:32:56.000+0000,2022-03-22,5.0,Nucleic acid purification,Closed,StevenPlonk
-506,657ee9,2022-01-27T11:30:24.000+0000,2022-03-16,-55.0,NGS library prep,Closed,chazmanc
-507,02eba5,2022-05-02T13:19:06.000+0000,2022-05-09,7.0,"The application is similar to endotoxin measurement, requiring extreme freedom from contamination due to ubiquitous environmental presence of the analyte, (1,3)_beta-glucan.",Closed,ramifarawi
-508,70567f,2021-02-14T19:42:34.000+0000,2021-02-18,4.0,Nucleic acid purification,Closed,ncdiehl11
-509,6786f0,2021-11-19T17:46:26.000+0000,,,NGS library prep,Canceled,ramifarawi
-510,121d15,2022-01-27T22:13:37.000+0000,2022-02-02,6.0,PCR/qPCR prep,Closed,ncdiehl11
-511,0aa181,2021-11-19T16:52:43.000+0000,,,NGS library prep,In Progress,ramifarawi
-512,1e744e,2021-11-19T19:42:25.000+0000,2021-11-29,10.0,"PCR/qPCR prep,Nucleic acid purification",Closed,StevenPlonk
-513,1a8202,2021-11-19T17:48:20.000+0000,,,NGS library prep,Canceled,
-514,7015a4,2021-11-19T18:04:25.000+0000,,,NGS library prep,Canceled,
-515,0e13ba,2021-11-25T17:45:21.000+0000,2022-01-16,52.0,Kinase Activity Assay using radioactive [g-P32]ATP,Closed,StevenPlonk
-516,,2021-11-29T16:18:07.000+0000,,,,Closed,ramifarawi
-517,1b2788,2022-03-27T17:17:23.000+0000,2022-03-29,2.0,Nucleic acid purification,Closed,ramifarawi
-518,925d07,2021-12-03T14:42:57.000+0000,2021-12-05,2.0,PCR/qPCR prep,Closed,ncdiehl11
-519,466f93,2021-12-03T11:44:42.000+0000,,,NGS library prep,Closed,eskila
-520,85b0dc,2021-12-06T16:12:00.000+0000,2021-12-28,22.0,,Closed,ncdiehl11
-521,6eca1d,2021-12-06T16:13:43.000+0000,,,,Awaiting Customer Response,ncdiehl11
-522,66e60f,2021-12-06T16:51:39.000+0000,2021-12-27,21.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,eskila
-523,632bd0,2021-12-07T16:36:01.000+0000,2021-12-15,8.0,Drug solution transfer from reservoir to caps,Closed,StevenPlonk
-524,7e3b31,2021-12-08T18:22:22.000+0000,2022-01-06,29.0,"NGS library prep,Nucleic acid purification,PCR/qPCR prep",Closed,StevenPlonk
-525,62679a,2022-04-14T22:10:50.000+0000,2022-05-12,28.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-526,0117ed,2021-12-10T19:21:58.000+0000,,,Protein Purification and Assay Setup,Canceled,ncdiehl11
-527,1A421C,2022-03-14T15:11:17.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
-528,60feec,2022-02-05T04:22:58.000+0000,2022-02-17,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-529,2cc59d,2022-04-23T21:28:25.000+0000,2022-04-29,3.0,ELISA Assay,Closed,ramifarawi
-530,,2022-04-29T15:53:45.000+0000,,,"Sterile workflows (cell culture and related assays),sample prep, PBMC prep.",SoW Completed,
-531,3e0bef,2021-12-14T22:10:21.000+0000,2021-12-29,15.0,Nucleic acid purification,Closed,chazmanc
-532,7ada78,2021-12-15T17:27:55.000+0000,2021-12-27,12.0,"Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-533,37190e,2021-12-21T03:12:52.000+0000,2022-07-25,217.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
-534,13ac78,2021-12-21T20:38:43.000+0000,2022-01-21,31.0,PCR/qPCR prep,Closed,ncdiehl11
-535,1f62ba,2021-12-22T18:44:46.000+0000,2021-12-30,8.0,PCR/qPCR prep,Closed,ramifarawi
-536,76ab0e,2022-02-11T03:05:05.000+0000,2022-02-16,6.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Normalization (for RNA and Protein)",Closed,eskila
-537,528c16,2021-12-24T01:11:22.000+0000,2022-01-18,26.0,Sample preparation in analytical validations under GLP standards following FDA guidelines for bioanalysis (mass spectrometry for metabolomics and proteomics in biological matrices).,Closed,ramifarawi
-538,650ec3,2021-12-28T12:37:34.000+0000,2022-01-18,21.0,"Nucleic acid purification,liquid transfer of sample from tube to a 96 well deep plate",Closed,StevenPlonk
-539,459cc2,2021-12-30T15:45:12.000+0000,2021-12-30,-131.0,,Closed,ramifarawi
-540,,2022-01-03T16:21:18.000+0000,,,,In Progress,StevenPlonk
-541,,2022-01-03T16:19:57.000+0000,,,,Canceled,eskila
-542,1584d2,2022-01-05T16:49:27.000+0000,2022-01-14,9.0,PCR/qPCR prep,Closed,ramifarawi
-543,78d33c,2022-01-05T17:18:41.000+0000,2022-03-09,63.0,NGS library prep,Closed,StevenPlonk
-544,412ec7,2022-03-07T21:43:13.000+0000,,,Serial dilution,Closed,0052S00000B3aPPQAZ
-545,5e722c,2022-03-11T18:30:59.000+0000,2022-03-14,-57.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
-546,3607d5,2022-03-15T22:28:29.000+0000,2022-03-15,0.0,,Closed,ncdiehl11
-547,43d313,2022-01-06T15:44:08.000+0000,2022-03-23,76.0,NGS library prep,Closed,StevenPlonk
-548,772041,2022-02-15T21:10:41.000+0000,2022-02-24,9.0,PCR/qPCR prep,Closed,eskila
-549,2942dd,2022-02-15T23:35:31.000+0000,2022-02-23,8.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
-550,5f791f,2022-06-23T14:34:43.000+0000,2022-07-05,12.0,"PCR/qPCR prep,NGS library prep,Nucleic acid purification",Closed,ncdiehl11
-551,,2022-08-11T16:53:35.000+0000,,,Bead based ELISA,SoW Completed,
-552,32207e,2022-03-24T20:29:13.000+0000,2022-03-31,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
-553,357404,2022-02-17T23:55:41.000+0000,2022-03-01,12.0,Immunofluorescence,Closed,eskila
-554,7aad4e,2022-02-18T00:10:34.000+0000,2022-02-28,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Closed,ramifarawi
-555,0f4405,2022-05-02T15:12:32.000+0000,2022-05-11,9.0,NGS library prep,Closed,ncdiehl11
-556,6f0903,2022-06-15T00:53:43.000+0000,2022-06-24,10.0,NGS library prep,Awaiting Customer Response,0052S00000B3aPPQAZ
-557,,2022-07-07T19:10:14.000+0000,,,NGS library prep,SoW Completed,
-558,1af856,2022-07-05T13:26:43.000+0000,2022-07-20,15.0,NGS library prep,Closed,StevenPlonk
-559,,2022-07-08T19:08:39.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),reagent transfer/sample handling",SoW Completed,
-560,,2022-07-07T20:50:10.000+0000,,,Nucleic acid purification,Canceled / On-Site Removed from Scope,
-561,,2022-07-07T19:27:02.000+0000,,,"Protein quantification (BCA, Bradford, etc)",SoW Completed,
-562,,2022-07-07T20:08:09.000+0000,,,"NGS library prep,PCR/qPCR prep",SoW Completed,
-563,,2022-08-01T15:28:43.000+0000,,,,In Progress,StevenPlonk
-564,,2022-08-03T16:19:53.000+0000,,,NGS library prep,SoW Completed,
-565,,2022-08-03T16:27:12.000+0000,,,Microbial spot plating,SoW Completed,
+18,00f7b1,2022-08-30T13:52:47.000+0000,,,NGS library prep,SoW Completed,
+19,211a24,2021-05-18T16:10:54.000+0000,2021-05-28,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+20,6f2d9b,2021-04-02T15:15:25.000+0000,2021-04-15,13.0,Patient sample liquid extraction,Closed,sakibh
+21,3d942d,2021-07-06T15:22:00.000+0000,2021-07-21,15.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+22,7b7f08,2021-07-06T19:39:33.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Canceled,ramifarawi
+23,08fd01,2022-08-31T11:46:43.000+0000,2022-09-07,7.0,"PCR/qPCR prep,NGS library prep",Closed,ramifarawi
+24,,2021-06-28T04:23:43.000+0000,2021-08-16,50.0,,Closed,StevenPlonk
+25,,2021-06-28T04:24:42.000+0000,,,,Closed,ncdiehl11
+26,,2021-06-28T04:25:52.000+0000,,,,Closed,sakibh
+27,,2021-06-28T04:26:40.000+0000,,,,Closed,ramifarawi
+28,0a1784,2022-09-02T01:33:24.000+0000,,,NGS library prep,New,
+29,,2022-09-02T00:19:54.000+0000,,,,Kick Off Call Planned,0052S00000B3aPPQAZ
+30,,2022-09-02T00:21:30.000+0000,,,,Kick Off Call Needs Scheduled,0052S00000B3aPPQAZ
+31,06c1a8,2022-09-02T18:49:09.000+0000,,,Slide spotting,SoW Completed,
+32,,2022-03-31T17:39:54.000+0000,2022-05-02,32.0,,Closed,ramifarawi
+33,019a7d,2022-03-18T14:41:15.000+0000,2022-05-04,47.0,"Nucleic acid purification,Cloning",Closed,0052S00000B3aPPQAZ
+34,6d2e65,2021-06-01T16:12:30.000+0000,2021-06-15,14.0,Nucleic acid purification,Closed,StevenPlonk
+35,0b46fb,2021-06-01T15:24:29.000+0000,,,Pipetting automation,Canceled,ramifarawi
+36,53fec2,2021-03-16T07:28:33.000+0000,2021-04-20,35.0,PCR Clean up,Closed,ncdiehl11
+37,06cbd5,2022-09-07T18:11:16.000+0000,,,NGS library prep,SoW Completed,
+38,010526,2021-07-01T14:54:33.000+0000,2021-07-14,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Molecular Cloning",Closed,sakibh
+39,022548,2022-03-14T02:25:16.000+0000,2022-04-14,-26.0,"Nucleic acid purification,Sterile workflows (cell culture and related assays),PCR/qPCR prep",Closed,eskila
+40,49b828,2022-03-14T04:05:58.000+0000,2022-03-18,5.0,PCR/qPCR prep,Closed,ramifarawi
+41,69db93,2021-03-16T18:37:53.000+0000,2021-03-26,10.0,Nucleic acid purification,Closed,ramifarawi
+42,6ec4dd,2021-07-01T22:33:49.000+0000,2021-07-14,13.0,"PCR/qPCR prep,NGS library prep,Nucleic acid purification",Closed,ncdiehl11
+43,118e8c,2021-04-02T17:11:16.000+0000,2021-04-15,13.0,PCR/qPCR prep,Closed,StevenPlonk
+44,750b73,2022-03-23T02:33:06.000+0000,2022-03-31,9.0,plasmid DNA linearization by restriction enzymes,Closed,StevenPlonk
+45,1a6741,2022-03-23T02:50:44.000+0000,2022-04-04,13.0,In vitro transcription,Closed,StevenPlonk
+46,7628fd,2021-10-04T21:58:34.000+0000,2022-05-25,233.0,PCR/qPCR prep,Closed,ramifarawi
+47,,2021-07-06T16:00:00.000+0000,,,Other,Closed,ncdiehl11
+48,2b3642,2021-05-28T21:43:52.000+0000,2021-06-10,13.0,NGS library prep,Closed,sakibh
+49,0656e4,2022-08-23T14:02:32.000+0000,,,Tube Serial Dilution,SoW in Review,
+50,780fb8,2022-04-07T14:39:08.000+0000,2022-05-09,32.0,Nucleic DNA extraction and library construction,Closed,StevenPlonk
+51,2df9f8,2021-05-18T00:24:15.000+0000,2021-06-23,37.0,"Pooling samples 2, 4, 5 samples  100ul per sample for swabs only",Closed,ramifarawi
+52,089108,2022-08-23T18:41:42.000+0000,,,Nucleic acid purification,New,ramifarawi
+53,2905a4,2021-05-18T09:25:09.000+0000,2021-05-26,8.0,Nucleic acid purification,Closed,sakibh
+54,0bb9ff,2022-08-23T14:05:08.000+0000,,,PCR/qPCR prep,In Progress,StevenPlonk
+55,3662e6,2021-03-15T21:28:41.000+0000,2021-03-19,4.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
+56,384b23,2021-02-25T14:24:57.000+0000,2021-05-10,74.0,sampling of VTM,Closed,ramifarawi
+57,097a49,2022-08-22T12:45:46.000+0000,,,Fe content determination using the o-phenanthroline assay.,Canceled / On-Site Removed from Scope,
+58,5eee17,2022-03-17T19:53:33.000+0000,2022-04-26,40.0,Automated dilutions,Closed,ncdiehl11
+59,1fcf02,2022-03-02T09:52:21.000+0000,2022-03-08,-63.0,Chemical denaturation,Closed,ramifarawi
+60,4883fc,2021-06-28T17:34:01.000+0000,2021-06-28,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+61,6af807,2021-05-27T00:16:37.000+0000,2021-06-02,7.0,PCR/qPCR prep,Closed,ramifarawi
+62,243973,2021-05-17T20:31:53.000+0000,2021-05-28,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+63,072463,2022-08-26T13:00:18.000+0000,,,Fe quantification assay.,New,0052S00000B3aPPQAZ
+64,7663a6,2021-06-25T14:18:50.000+0000,2021-07-01,6.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),PCR/qPCR prep",Closed,ramifarawi
+65,,2022-06-01T17:36:20.000+0000,,,"PCR/qPCR prep,sample reformatting",Canceled / On-Site Removed from Scope,
+66,,2022-06-03T16:32:28.000+0000,,,NGS library prep,On-Site Scheduled,ramifarawi
+67,,2022-06-06T15:07:52.000+0000,,,Nucleic acid purification,Post-Visit Optimization,0052S00000B3aPPQAZ
+68,,2022-06-06T15:17:36.000+0000,,,Compound Dilutions,Complete,ramifarawi
+69,2bba96,2022-06-10T23:16:40.000+0000,2022-06-22,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+70,,2022-08-04T14:15:45.000+0000,,,Nucleic acid purification,SoW Completed,
+71,62077e,2022-06-24T17:30:47.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",In Progress,ncdiehl11
+72,277a3d,2022-02-22T19:32:42.000+0000,2022-04-01,38.0,"NGS library prep,ONT - Library Prep",Closed,ncdiehl11
+73,74b303,2021-02-20T00:51:58.000+0000,2021-03-03,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+74,,2022-06-03T16:01:37.000+0000,,,Serial dilution,SoW Completed,
+75,39bbbb,2021-06-27T00:21:57.000+0000,2021-07-14,18.0,ELISA,Closed,StevenPlonk
+76,04fed3,2022-06-03T18:28:23.000+0000,2022-08-04,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Closed,StevenPlonk
+77,3dbe0d,2022-07-28T07:46:09.000+0000,,,Sterile workflows (cell culture and related assays),New,ramifarawi
+78,649b67,2022-05-23T17:58:17.000+0000,2022-06-10,18.0,"Sterile workflows (cell culture and related assays),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Magbead-based peptide enrichment",Closed,eskila
+79,,2022-06-02T19:54:06.000+0000,,,PCR/qPCR prep,Canceled / On-Site Removed from Scope,
+80,4920bc,2022-05-25T07:26:24.000+0000,2022-05-31,-49.0,Nucleic acid purification,Closed,ncdiehl11
+81,1c3fe8,2022-05-24T07:23:25.000+0000,2022-08-05,73.0,Dispensing Biological Suspension Onto Printed Electrode Sheet,Closed,ramifarawi
+82,,2022-07-20T19:06:47.000+0000,,,NGS library prep,On-Site Scheduled,ncdiehl11
+83,,2022-07-05T18:26:14.000+0000,,,Nucleic acid purification,On-Site Performed,ncdiehl11
+84,74750e,2021-02-01T23:57:49.000+0000,2021-02-16,15.0,Serial dilutions,Closed,ramifarawi
+85,74312c,2021-02-02T16:28:53.000+0000,2021-02-19,17.0,deposit ion selective membrane,Closed,sakibh
+86,7f0f89,2021-03-01T16:39:24.000+0000,2021-03-05,4.0,Unsure,Closed,ramifarawi
+87,58d57d,2021-03-02T20:18:47.000+0000,2021-03-12,10.0,Kinase Assay,Closed,sakibh
+88,2d7126,2021-03-03T02:47:12.000+0000,2021-03-18,16.0,Use of an 8-pin replicator to transfer samples from 96 well plate to a slide,Closed,ncdiehl11
+89,441cc8,2021-04-29T17:36:33.000+0000,2021-05-13,14.0,NGS library prep,Closed,StevenPlonk
+90,,2021-07-08T16:50:26.000+0000,,,,Closed,chazmanc
+91,1bcd67,2021-07-08T20:01:34.000+0000,2021-07-09,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+92,0d2950,2021-06-02T21:46:05.000+0000,2021-06-08,6.0,Nucleic acid purification,In Optimization,ramifarawi
+93,3308b4,2022-03-22T02:33:57.000+0000,,,PCR/qPCR prep,Closed,0052S00000B3aPPQAZ
+94,0175a4,2021-02-05T21:43:15.000+0000,2021-02-19,14.0,Specimen Pooling 3:1 and 2:1,Closed,StevenPlonk
+95,234495,2021-05-12T18:30:45.000+0000,2021-05-26,14.0,Custom Protocol,Closed,StevenPlonk
+96,3b0db0,2021-05-05T18:46:36.000+0000,2021-05-18,13.0,PCR/qPCR prep,Closed,ramifarawi
+97,,2021-06-04T16:52:41.000+0000,2021-06-04,0.0,,Closed,chazmanc
+98,38ef94,2021-07-12T17:04:56.000+0000,2021-07-27,15.0,"Protein crystallization screens,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+99,04eeb1,2021-06-04T20:29:16.000+0000,2021-06-17,13.0,NGS library prep,Closed,sakibh
+100,44981c,2021-01-13T08:00:00.000+0000,2021-02-19,37.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+101,68ce98,2021-01-14T08:00:00.000+0000,2021-01-22,8.0,Lipid analysis,Closed,sakibh
+102,0add76,2021-01-22T08:00:00.000+0000,2021-02-19,28.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+103,3e3c9d,2021-01-25T08:00:00.000+0000,2021-02-13,19.0,General Lab,Closed,ramifarawi
+104,5a5767,2020-12-22T08:00:00.000+0000,2020-12-22,0.0,Simple Transfer Protocol,Closed,ncdiehl11
+105,5a3797,2020-12-23T08:00:00.000+0000,2021-01-15,23.0,PCR/qPCR prep,Closed,sakibh
+106,5654c0,2021-01-04T08:00:00.000+0000,2021-01-20,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
+107,235fbd,2021-01-04T08:00:00.000+0000,2021-02-05,32.0,NGS library prep,Closed,sakibh
+108,400b8e,2021-01-07T08:00:00.000+0000,2021-01-07,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+109,1d6d1b,2021-01-25T08:00:00.000+0000,,,Slide array spotting,Closed,ncdiehl11
+110,6151af,2021-01-26T08:00:00.000+0000,2021-02-19,24.0,PCR/qPCR prep,Closed,ncdiehl11
+111,796af8,2021-01-27T08:00:00.000+0000,2021-02-05,9.0,NGS library prep,Closed,sakibh
+112,48648f,2021-01-27T08:00:00.000+0000,2021-02-16,20.0,Nucleic acid purification,Closed,StevenPlonk
+113,642c73,2021-01-27T08:00:00.000+0000,2021-02-05,9.0,PCR/qPCR prep,Closed,chazmanc
+114,7e4c3e,2020-10-28T07:00:00.000+0000,2020-12-15,48.0,"cDNA dilution, plate preparation, etc",Closed,
+115,29effa,2020-11-03T08:00:00.000+0000,2021-01-07,65.0,PCR/qPCR prep,Closed,chazmanc
+116,315f79,2020-11-05T08:00:00.000+0000,2022-07-06,608.0,Nucleic acid purification,Closed,ncdiehl11
+117,1ccd23,2020-11-06T08:00:00.000+0000,2020-11-12,6.0,PCR/qPCR prep,Closed,ncdiehl11
+118,3fb582,2020-11-06T08:00:00.000+0000,2020-12-10,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+119,747d99,2020-11-06T08:00:00.000+0000,2020-11-16,10.0,,Closed,ncdiehl11
+120,5191b6,2020-11-11T08:00:00.000+0000,2020-12-07,26.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
+121,688033,2020-11-11T08:00:00.000+0000,2022-07-06,602.0,NGS library prep,Closed,chazmanc
+122,4bdd14,2020-11-24T08:00:00.000+0000,2020-12-07,13.0,Simple Transfer Protocol,Closed,ncdiehl11
+123,2c19aa,2020-11-24T08:00:00.000+0000,2020-12-08,14.0,Simple Transfer Protocol,Closed,ncdiehl11
+124,6ff9e9,2020-11-25T08:00:00.000+0000,2020-12-16,21.0,Nucleic acid purification,Closed,ncdiehl11
+125,5c7384,2020-12-01T08:00:00.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+126,4471ba,2020-12-02T08:00:00.000+0000,2020-12-16,14.0,PCR/qPCR prep,Closed,chazmanc
+127,3cf31f,2020-12-04T08:00:00.000+0000,2020-12-22,18.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,sakibh
+128,35269b,2020-12-04T08:00:00.000+0000,2020-12-14,10.0,Nucleic acid purification,Closed,sakibh
+129,5fb07b,2020-12-07T08:00:00.000+0000,2022-07-06,576.0,Nucleic acid purification,Closed,ncdiehl11
+130,18d6a1,2020-12-08T08:00:00.000+0000,2021-01-28,51.0,Nucleic acid purification,Closed,chazmanc
+131,4fa62e,2020-12-08T08:00:00.000+0000,2020-12-16,8.0,PCR/qPCR prep,Closed,sakibh
+132,6e1085,2020-12-09T08:00:00.000+0000,2021-01-26,48.0,PCR/qPCR prep,Closed,
+133,0556be,2020-12-15T08:00:00.000+0000,2021-01-12,28.0,Manufacturing,Closed,sakibh
+134,25e716,2020-12-17T08:00:00.000+0000,2021-01-08,22.0,Pooling NGS libraries for Sequencing,Closed,ncdiehl11
+135,6faa1e,2020-12-17T08:00:00.000+0000,2020-12-28,11.0,PCR/qPCR prep,Closed,sakibh
+136,470d8c,2020-12-18T08:00:00.000+0000,2020-12-29,11.0,PCR/qPCR prep,Closed,sakibh
+137,7d95a9,2020-12-22T08:00:00.000+0000,,,PCR/qPCR prep,Closed,sakibh
+138,1649b1,2021-01-20T08:00:00.000+0000,2021-02-01,12.0,Nucleic acid purification,Closed,sakibh
+139,751127,2021-01-21T08:00:00.000+0000,2021-02-02,12.0,"Dispensing drops of radioactive liquid on flat surfaces, to enable spreading the liquid (by other tools) evenly.",Closed,ncdiehl11
+140,2ee5be,2021-01-21T08:00:00.000+0000,2021-01-30,9.0,PCR/qPCR prep,Closed,sakibh
+141,1d37e5,2021-01-22T08:00:00.000+0000,2021-02-02,11.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
+142,2e84cc,2020-10-20T07:00:00.000+0000,2020-12-10,51.0,NGS library prep,Closed,
+143,6fe477,2020-10-23T07:00:00.000+0000,2020-11-25,33.0,Nucleic acid purification,Closed,sakibh
+144,3f53ad,2020-10-27T07:00:00.000+0000,2020-12-02,36.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+145,1601a9,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,Illumina Beadchip-Amplification,Closed,chazmanc
+146,5c5155,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,DNA quantification,Closed,
+147,343001,2020-01-09T08:00:00.000+0000,2020-03-04,55.0,Nucleic acid purification,Closed,chazmanc
+148,6c7447,2020-01-10T08:00:00.000+0000,2020-01-17,7.0,PCR/qPCR prep,Closed,chazmanc
+149,6f4e2c,2020-01-10T08:00:00.000+0000,2020-02-10,31.0,Nucleic acid purification,Closed,chazmanc
+150,33900b,2020-01-14T08:00:00.000+0000,2020-01-28,14.0,MagneHis™ Protein Purification System (Promega),Closed,ncdiehl11
+151,0ef96f,2020-01-14T08:00:00.000+0000,2020-01-17,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+152,19fc32,2020-01-14T08:00:00.000+0000,2020-01-22,8.0,Nucleic acid purification,Closed,chazmanc
+153,65cdca,2020-01-16T08:00:00.000+0000,2020-01-17,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+154,13c0b8,2020-01-17T08:00:00.000+0000,2020-02-04,18.0,non-sterile cell analysis (for flow cytometry),Closed,chazmanc
+155,269b21,2020-01-18T08:00:00.000+0000,2020-02-14,27.0,PCR/qPCR prep,Closed,ncdiehl11
+156,2c81c0,2020-01-19T08:00:00.000+0000,2020-02-11,23.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+157,459a55,2020-01-21T08:00:00.000+0000,2020-01-22,1.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+158,141a1a,2020-02-14T08:00:00.000+0000,2020-07-02,139.0,Cell-free gene expression tests (TXTL test),Closed,chazmanc
+159,32e702,2020-02-20T08:00:00.000+0000,2020-06-29,130.0,Surface chemistry preparation,Closed,
+160,1a2343,2020-02-05T08:00:00.000+0000,2020-02-18,13.0,PCR/qPCR prep,Closed,ncdiehl11
+161,73c1aa,2020-02-11T08:00:00.000+0000,2020-09-04,206.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+162,245eb2,2020-03-03T08:00:00.000+0000,2020-08-27,177.0,Nucleic acid purification,Closed,chazmanc
+163,51df08,2020-03-03T08:00:00.000+0000,2020-07-28,147.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+164,453b5a,2020-02-11T08:00:00.000+0000,2020-02-20,9.0,Combination of nucleic acid purification and PCR prep,Closed,ncdiehl11
+165,09cdbe,2020-03-06T08:00:00.000+0000,2020-04-09,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+166,2b9486,2020-03-10T07:00:00.000+0000,2020-05-18,69.0,NGS library prep,Closed,ncdiehl11
+167,77344d,2020-03-18T07:00:00.000+0000,2020-06-25,99.0,PCR/qPCR prep,Closed,chazmanc
+168,44b43c,2020-04-21T07:00:00.000+0000,2020-05-01,10.0,PCR/qPCR prep,Closed,ncdiehl11
+169,53134e,2020-05-18T07:00:00.000+0000,2020-06-09,22.0,Aliquoting main media sample into small cryotubes.,Closed,ncdiehl11
+170,422b1e,2020-06-15T07:00:00.000+0000,2020-06-23,8.0,Titration procedure,Closed,chazmanc
+171,08e3eb,2020-06-19T07:00:00.000+0000,2020-07-15,26.0,PCR/qPCR prep,Closed,chazmanc
+172,060c4f,2020-02-12T08:00:00.000+0000,2020-07-07,146.0,tranfer liquids from a 96 well plate to a 384 well plate,Closed,chazmanc
+173,7a1ae8,2020-07-24T07:00:00.000+0000,2020-07-31,7.0,Nucleic acid purification,Closed,chazmanc
+174,2c83f7,2020-07-24T07:00:00.000+0000,2020-08-03,10.0,Nucleic acid purification,Closed,chazmanc
+175,272c63,2020-07-26T07:00:00.000+0000,2020-09-10,46.0,Oil Sub sampling with custom labware made by opentrons,Closed,ncdiehl11
+176,12213d,2020-07-28T07:00:00.000+0000,2020-08-03,6.0,NGS library prep,Closed,chazmanc
+177,3633ca,2020-07-28T07:00:00.000+0000,2020-08-03,6.0,NGS library prep,Closed,chazmanc
+178,17cb2d,2020-08-06T07:00:00.000+0000,2020-08-14,8.0,PCR/qPCR prep,Closed,chazmanc
+179,5c24e2,2020-08-06T07:00:00.000+0000,2020-08-14,8.0,PCR/qPCR prep,Closed,chazmanc
+180,300b16,2020-08-19T07:00:00.000+0000,2020-09-09,21.0,"Sample transfer and pooling protocol. Want to pool sample from multiple input tubes into a receiving tube. Want to be able to change the sample number. Also, the input tubes and receiving tubes are different sizes.",Canceled,
+181,199721,2020-08-27T07:00:00.000+0000,2020-09-09,13.0,Submission ID: 5f3d6b1e3a50873cb9300b16- this is an update to the first submission request.,Closed,ncdiehl11
+182,7992,2020-09-18T07:00:00.000+0000,2020-10-22,34.0,PCR/qPCR prep,Closed,ncdiehl11
+183,0a23c6,2020-09-21T07:00:00.000+0000,2020-12-09,79.0,PCR/qPCR prep,Closed,
+184,3359a5,2020-09-24T07:00:00.000+0000,2020-10-01,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+185,30174a,2020-09-28T07:00:00.000+0000,2020-11-09,42.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+186,567d10,2020-10-02T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,sakibh
+187,4fe613,2020-10-02T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,sakibh
+188,3bc25d,2020-10-03T07:00:00.000+0000,2020-12-09,67.0,NGS library prep,Closed,
+189,6aee6e,2020-10-05T07:00:00.000+0000,2020-12-09,65.0,mixing liquids,Closed,
+190,40c4a6,2020-10-05T07:00:00.000+0000,2020-12-16,72.0,Nucleic acid purification,Closed,
+191,3b3f1c,2020-10-06T07:00:00.000+0000,2020-11-11,36.0,Solution Mixing,Closed,ncdiehl11
+192,57b6fd,2020-10-09T07:00:00.000+0000,2020-11-18,40.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+193,57b6fd,2020-10-12T07:00:00.000+0000,2020-11-24,43.0,PCR/qPCR prep,Closed,sakibh
+194,4175de,2020-10-14T07:00:00.000+0000,2020-11-23,40.0,PCR/qPCR prep,Closed,sakibh
+195,797dee,2020-10-19T07:00:00.000+0000,2020-11-18,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+196,4c4650,2019-08-29T07:00:00.000+0000,2019-09-10,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+197,5b7a97,2019-09-03T07:00:00.000+0000,2019-10-04,31.0,Clean reagent handling and partial nucleic acid purification,Closed,chazmanc
+198,2.29E+,2019-09-03T07:00:00.000+0000,2019-07-04,-61.0,Simply transfer bio-fluids and add solutions and mix.,Closed,chazmanc
+199,716efb,2019-09-10T07:00:00.000+0000,2019-10-10,30.0,Nucleic acid purification,Closed,ncdiehl11
+200,221441,2019-08-29T07:00:00.000+0000,2019-09-12,14.0,cell digestion and labeling,Closed,ncdiehl11
+201,1f8b55,2020-08-06T07:00:00.000+0000,2020-10-12,67.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,chazmanc
+202,6b9ee3,2020-08-07T07:00:00.000+0000,2020-10-02,56.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+203,0fa015,2020-08-19T07:00:00.000+0000,2020-09-25,37.0,PCR/qPCR prep,Closed,chazmanc
+204,0a25f2,2020-09-03T07:00:00.000+0000,2020-09-23,20.0,Capsule Filling,Closed,ncdiehl11
+205,7d4139,2020-09-10T07:00:00.000+0000,2020-10-16,36.0,PCR/qPCR prep,Closed,
+206,6f23bf,2020-02-25T08:00:00.000+0000,2022-07-06,862.0,Magbead-based peptide enrichment,Closed,ncdiehl11
+207,76c562,2020-07-29T07:00:00.000+0000,2020-10-02,65.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+208,503103,2020-08-06T07:00:00.000+0000,2020-10-02,57.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+209,7fc7b1,2020-09-04T07:00:00.000+0000,2020-10-07,33.0,PCR/qPCR prep,Closed,ncdiehl11
+210,03e2a7,2020-09-08T07:00:00.000+0000,2022-07-06,666.0,PCR/qPCR prep,Closed,ncdiehl11
+211,21e4d8,2020-05-22T07:00:00.000+0000,2020-11-09,171.0,NGS library prep,Closed,chazmanc
+212,776039,2020-06-15T07:00:00.000+0000,2020-07-15,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+213,002af3,2020-07-17T07:00:00.000+0000,,,PCR/qPCR prep,Closed,
+214,49de51,2020-08-25T07:00:00.000+0000,,,Nucleic acid purification,Closed,
+215,387961,2020-08-27T07:00:00.000+0000,2020-11-18,83.0,PCR/qPCR prep,Closed,chazmanc
+216,62506a,2020-02-10T08:00:00.000+0000,2022-07-06,877.0,SELEX experiment,Closed,ncdiehl11
+217,431b3c,2020-03-26T07:00:00.000+0000,2020-11-18,237.0,We are using this protocol to build toxicity experiments with nanomaterials. Nanosheets will be dried onto a microplate and then solutions of bacteria will be allowed to contact the nanosheet coating.,Closed,
+218,1980cd,2020-07-30T07:00:00.000+0000,,,ELISA,Closed,
+219,6d3eda,2020-08-11T07:00:00.000+0000,2020-11-18,99.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,
+220,14b685,2020-08-28T07:00:00.000+0000,2020-12-04,98.0,NGS library prep,Closed,chazmanc
+221,376373,2020-01-06T08:00:00.000+0000,2020-10-19,287.0,Nucleic acid purification,Closed,
+222,4e7772,2020-06-24T07:00:00.000+0000,2020-11-09,138.0,preparing 384 plate,Closed,
+223,5157d6,2019-08-21T07:00:00.000+0000,2019-09-10,20.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+224,599d38,2019-08-22T07:00:00.000+0000,2019-09-10,19.0,Nucleic acid purification,Closed,chazmanc
+225,08878b,2019-08-23T07:00:00.000+0000,2019-05-16,-99.0,Heparin,Closed,chazmanc
+226,41968f,2019-08-26T07:00:00.000+0000,2019-09-13,18.0,Magbead-based peptide enrichment,Closed,chazmanc
+227,5001b8,2019-08-27T07:00:00.000+0000,2019-09-12,16.0,Enzymatic assay,Closed,ncdiehl11
+228,62f96f,2020-07-08T07:00:00.000+0000,2022-07-06,728.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+229,226d24,2020-09-02T07:00:00.000+0000,2021-01-13,133.0,PCR/qPCR prep,Closed,chazmanc
+230,1c89b6,2020-09-02T07:00:00.000+0000,2020-12-04,93.0,NGS library prep,Closed,
+231,66aa48,2019-07-08T07:00:00.000+0000,2019-07-24,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+232,724bf4,2019-07-09T07:00:00.000+0000,2019-07-09,0.0,PCR/qPCR prep,Closed,ncdiehl11
+233,8084f6,2019-07-09T07:00:00.000+0000,2019-08-12,34.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+234,57dda9,2019-07-11T07:00:00.000+0000,2019-07-29,18.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+235,39e61b,2019-07-17T07:00:00.000+0000,2019-07-24,7.0,Sample transfer,Closed,ncdiehl11
+236,4c464f,2019-07-17T07:00:00.000+0000,2019-08-02,16.0,PCR/qPCR prep,Closed,ncdiehl11
+237,8249aa,2019-07-23T07:00:00.000+0000,2019-08-05,13.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+238,67314,2019-09-10T07:00:00.000+0000,2019-09-19,9.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,chazmanc
+239,222360,2019-09-11T07:00:00.000+0000,2019-10-08,27.0,Nucleic acid purification,Closed,chazmanc
+240,5c8926,2019-09-17T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+241,5c8942,2019-09-17T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+242,5c6979,2019-09-23T07:00:00.000+0000,2019-10-03,10.0,Magnetic beads for nucleic acids,Closed,ncdiehl11
+243,65dc68,2019-09-23T07:00:00.000+0000,2019-10-10,17.0,Protein purification,Closed,chazmanc
+244,4ce987,2019-09-24T07:00:00.000+0000,2019-10-24,30.0,nucleic acid polymerization validation protocol,Closed,chazmanc
+245,6413df,2019-07-23T07:00:00.000+0000,2019-08-12,20.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+246,64a0f9,2019-07-26T07:00:00.000+0000,2019-08-23,28.0,NGS library prep,Closed,ncdiehl11
+247,2a4397,2019-07-30T07:00:00.000+0000,2019-08-23,24.0,NGS library prep,Closed,ncdiehl11
+248,0cb5e5,2019-07-31T07:00:00.000+0000,2019-08-14,14.0,NGS library prep,Closed,ncdiehl11
+249,569d34,2019-08-01T07:00:00.000+0000,2019-09-03,33.0,Nucleic acid purification,Closed,ncdiehl11
+250,56a6a1,2019-08-02T07:00:00.000+0000,2019-08-14,12.0,Custom Protein Array Protocol (see Attached Word Document),Closed,ncdiehl11
+251,3f3a7d,2019-08-09T07:00:00.000+0000,2019-09-10,32.0,Synthesis of Hybrid Perovskite Nanocrystals,Closed,ncdiehl11
+252,1f9218,2019-08-12T07:00:00.000+0000,2019-09-03,22.0,Capsule filling cbd,Closed,ncdiehl11
+253,65b27d,2019-08-13T07:00:00.000+0000,2019-08-19,6.0,Nucleic acid purification,Closed,ncdiehl11
+254,4a0be6,2019-08-13T07:00:00.000+0000,2019-08-30,17.0,Simple fills: transfer of liquid bulk into microtubes,Closed,
+255,50486f,2019-08-13T07:00:00.000+0000,2019-09-11,29.0,PCR/qPCR prep,Closed,chazmanc
+256,5842cf,2019-08-13T07:00:00.000+0000,2019-09-12,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+257,67aee3,2019-08-13T07:00:00.000+0000,,,Serial dilution,Closed,chazmanc
+258,0f1aa5,2019-08-15T07:00:00.000+0000,2019-10-04,50.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+259,0f30a4,2019-08-16T07:00:00.000+0000,2019-08-23,7.0,Please see below,Closed,ncdiehl11
+260,509b5d,2019-08-16T07:00:00.000+0000,2019-09-12,27.0,Nucleic acid purification,Closed,chazmanc
+261,3391c4,2019-08-20T07:00:00.000+0000,2019-09-03,14.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+262,68b326,2019-08-20T07:00:00.000+0000,2019-09-10,21.0,NGS library prep,Closed,ncdiehl11
+263,9.44E+,2019-09-26T07:00:00.000+0000,2019-10-15,19.0,NGS library prep,Closed,ncdiehl11
+264,05a30c,2019-09-27T07:00:00.000+0000,2019-10-17,20.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+265,53e6bc,2019-09-27T07:00:00.000+0000,2019-11-12,46.0,"making Antibody Mastermix from multiple wells of a deepwell plate, and adding buffers",Closed,ncdiehl11
+266,47645d,2019-09-30T07:00:00.000+0000,2019-10-10,10.0,Protein crystallization screens,Closed,chazmanc
+267,1ef67e,2019-10-10T07:00:00.000+0000,2020-01-31,113.0,Primary Antibody/Reagent set dilution and serial dilution,Closed,chazmanc
+268,7d113b,2019-10-15T07:00:00.000+0000,2019-11-14,30.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+269,131de0,2019-10-16T07:00:00.000+0000,2020-03-04,140.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+270,3188ad,2019-10-20T07:00:00.000+0000,2019-10-21,1.0,Micro -arrays,Closed,ncdiehl11
+271,1b83fa,2019-10-21T07:00:00.000+0000,2019-10-24,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+272,4e4778,2019-10-21T07:00:00.000+0000,2019-10-25,4.0,Colorimetric assay,Closed,chazmanc
+273,563624,2019-10-22T07:00:00.000+0000,2019-10-31,9.0,Protein purification,Closed,ncdiehl11
+274,1a6463,2019-10-23T07:00:00.000+0000,2019-11-05,13.0,PCR/qPCR prep,Closed,ncdiehl11
+275,55f974,2019-10-25T07:00:00.000+0000,2019-11-20,26.0,Nucleic acid purification,Closed,chazmanc
+276,0bdecb,2019-10-28T07:00:00.000+0000,2019-11-11,14.0,Nucleic acid purification,Closed,ncdiehl11
+277,637687,2019-10-29T07:00:00.000+0000,2019-11-08,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+278,26a414,2019-10-29T07:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+279,31e49d,2019-10-31T07:00:00.000+0000,2020-01-22,83.0,NGS library prep,Closed,
+280,584171,2019-11-01T07:00:00.000+0000,2019-11-11,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+281,44306d,2019-11-01T07:00:00.000+0000,2019-11-12,11.0,Nucleic acid purification,Closed,ncdiehl11
+282,5fe7a2,2019-11-04T08:00:00.000+0000,2020-01-27,84.0,Nucleic acid purification,Closed,chazmanc
+283,0d4a0f,2019-11-04T08:00:00.000+0000,2019-11-11,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+284,14f205,2019-11-06T08:00:00.000+0000,2019-11-18,12.0,Biofilm Assay,Closed,ncdiehl11
+285,5c14ad,2019-11-06T08:00:00.000+0000,2020-01-07,62.0,PCR/qPCR prep,Closed,chazmanc
+286,757f00,2019-11-06T08:00:00.000+0000,2020-01-07,62.0,PCR/qPCR prep,Closed,
+287,4ca4bd,2019-11-07T08:00:00.000+0000,2019-11-07,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+288,1ce6aa,2019-11-07T08:00:00.000+0000,2020-01-07,61.0,PCR/qPCR prep,Closed,
+289,35b1a9,2019-11-07T08:00:00.000+0000,2020-01-07,61.0,PCR/qPCR prep,Closed,chazmanc
+290,29414b,2019-11-08T08:00:00.000+0000,,,Pipette Calibration Protocol,Closed,chazmanc
+291,178868,2019-11-08T08:00:00.000+0000,2019-12-11,33.0,Pipette Calibration Protocol,Closed,
+292,7a3e4b,2019-11-11T08:00:00.000+0000,2019-12-04,23.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+293,2d7790,2019-11-11T08:00:00.000+0000,2019-11-14,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+294,2780d4,2019-10-02T07:00:00.000+0000,2019-10-18,16.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+295,4a1bbf,2019-10-03T07:00:00.000+0000,2019-10-29,26.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+296,7ca571,2019-10-05T07:00:00.000+0000,2019-10-10,5.0,"Transformation, upgrading the attached protocol below, as it was used for OT-one http://protocol-delivery.protocols.opentrons.com/protocol/heat_shock_transformation",Closed,ncdiehl11
+297,77032e,2019-10-07T07:00:00.000+0000,2019-10-15,8.0,HCP ELISA assay,Closed,ncdiehl11
+298,6e8459,2019-10-07T07:00:00.000+0000,2019-10-15,8.0,Protein A ELISA assay,Closed,ncdiehl11
+299,32b6ed,2019-10-09T07:00:00.000+0000,2019-10-10,1.0,Production of biological products,Closed,ncdiehl11
+300,3c12b0,2019-10-10T07:00:00.000+0000,2019-10-16,6.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+301,1b4f0b,2020-01-21T08:00:00.000+0000,2020-01-07,-14.0,Aliquoting,Canceled,
+302,657ca8,2019-11-15T08:00:00.000+0000,2019-11-18,3.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+303,59f50b,2019-11-19T08:00:00.000+0000,2019-11-26,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+304,211fe1,2019-11-20T08:00:00.000+0000,2019-12-13,23.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+305,7aa3fd,2019-11-29T08:00:00.000+0000,2019-12-13,14.0,NGS library prep,Closed,ncdiehl11
+306,139815,2019-12-02T08:00:00.000+0000,2019-12-13,11.0,Pooling and consolidation,Closed,ncdiehl11
+307,085af6,2019-12-04T08:00:00.000+0000,2019-12-17,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+308,6030b7,2019-12-09T08:00:00.000+0000,2020-01-02,24.0,NGS library prep,Closed,ncdiehl11
+309,0961d2,2019-12-09T08:00:00.000+0000,2019-12-19,10.0,NGS library prep,Closed,chazmanc
+310,18050b,2019-12-13T08:00:00.000+0000,2019-12-18,5.0,"Drug screening , plate mapping",Closed,ncdiehl11
+311,640a85,2019-12-18T08:00:00.000+0000,2019-12-19,1.0,PCR/qPCR prep,Closed,ncdiehl11
+312,56b4ec,2019-12-19T08:00:00.000+0000,2019-12-23,4.0,Sterile workflows (cell culture and related assays),Closed,chazmanc
+313,2082dd,2019-12-20T08:00:00.000+0000,2020-01-06,17.0,NGS library prep,Closed,ncdiehl11
+314,0ada67,2020-01-06T08:00:00.000+0000,2020-01-30,24.0,NGS library prep,Closed,
+315,42d27b,2020-01-08T08:00:00.000+0000,2020-02-05,28.0,DNA quantification,Closed,chazmanc
+316,06ab09,2020-01-09T08:00:00.000+0000,2020-02-19,41.0,DNA tansfer,Closed,chazmanc
+317,4b76c0,2020-01-09T08:00:00.000+0000,2020-02-18,40.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+318,298069,2020-01-31T08:00:00.000+0000,2020-02-04,4.0,Simple aliquoting protocol.,Closed,ncdiehl11
+319,0bd707,2020-06-29T07:00:00.000+0000,2020-06-29,0.0,"Production, transferring solution into cryotubes",Closed,chazmanc
+320,13fd88,2020-06-29T07:00:00.000+0000,2020-07-15,16.0,Protein purification,Closed,chazmanc
+321,8nhsa0,2020-07-17T07:00:00.000+0000,2020-07-17,0.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+322,203136,2019-12-04T08:00:00.000+0000,2020-01-22,49.0,Nucleic acid purification,Closed,chazmanc
+323,558d02,2019-12-07T08:00:00.000+0000,2019-12-19,12.0,Magbead-based peptide enrichment,Closed,ncdiehl11
+324,3593f0,2019-08-23T07:00:00.000+0000,2019-07-24,-30.0,NGS library prep,Canceled,chazmanc
+325,6a1a64,2020-02-25T08:00:00.000+0000,,,fluorescence polarization reaction,Canceled,ncdiehl11
+326,00a214,2020-03-18T07:00:00.000+0000,,,Sterile workflows (cell culture and related assays),Closed,chazmanc
+327,7517d5,2020-04-09T07:00:00.000+0000,,,Nucleic acid purification,Canceled,ncdiehl11
+328,6.14E+,2020-08-09T07:00:00.000+0000,2022-07-06,696.0,Nucleic acid purification,Closed,ncdiehl11
+329,4dd4a1,2019-09-30T07:00:00.000+0000,2022-07-06,1010.0,NGS library prep,Closed,ncdiehl11
+330,407d5e,2020-02-17T08:00:00.000+0000,,,Protein Labelling,Closed,chazmanc
+331,1185d3,2020-05-27T07:00:00.000+0000,2020-11-18,175.0,Nucleic acid purification,Closed,
+332,5242d2,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+333,548a44,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+334,337bdd,2019-10-16T07:00:00.000+0000,2022-07-06,994.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,
+335,785865,2020-07-08T07:00:00.000+0000,2022-07-06,728.0,Dispensing Protocols,Closed,chazmanc
+336,15933a,2020-03-05T08:00:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Stuck,ncdiehl11
+337,085bfe,2020-02-25T08:00:00.000+0000,,,Nucleic acid purification,Canceled,chazmanc
+338,124098,2020-08-28T07:00:00.000+0000,2022-07-06,677.0,Nucleic acid purification,Closed,chazmanc
+339,728914,2019-10-03T07:00:00.000+0000,2022-07-06,1007.0,ELISA,Closed,ncdiehl11
+340,3029d8,2020-03-02T08:00:00.000+0000,2022-07-06,856.0,Replica plate,Closed,chazmanc
+341,33b12a,2020-09-03T07:00:00.000+0000,2020-11-18,76.0,PCR/qPCR prep,Closed,
+342,31fd68,2020-06-24T07:00:00.000+0000,,,PCR/qPCR prep,Canceled,chazmanc
+343,3cdc4d,2020-07-16T07:00:00.000+0000,,,NGS library prep,Canceled,
+344,499472,2019-09-23T07:00:00.000+0000,2020-11-19,423.0,Magnetic beads for nucleic acid,Canceled,chazmanc
+345,6c27ee,2021-01-05T08:00:00.000+0000,2021-02-22,48.0,Building block for ELISA protocol,Closed,chazmanc
+346,4fc750,2021-01-08T08:00:00.000+0000,,,Nucleic acid purification,Closed,ncdiehl11
+347,71381b,2021-01-11T08:00:00.000+0000,2021-02-25,45.0,Nucleic acid purification,Closed,chazmanc
+348,274d2a,2021-02-08T21:35:31.000+0000,2021-02-24,16.0,PCR/qPCR prep,Closed,ncdiehl11
+349,280ea4,2021-03-23T15:11:48.000+0000,2021-04-09,17.0,PCR/qPCR prep,Closed,ncdiehl11
+350,3e5697,2021-10-05T15:49:04.000+0000,2021-11-09,35.0,"ELISA, Serial Dilution",Closed,StevenPlonk
+351,7855ef,2021-03-23T16:50:52.000+0000,2021-04-08,16.0,NGS library prep,In Optimization,ramifarawi
+352,5b8174,2021-07-15T02:28:20.000+0000,2021-07-22,8.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
+353,,2022-06-29T17:04:57.000+0000,,,,New,ramifarawi
+354,1dbc24,2022-05-18T20:22:41.000+0000,2022-05-23,5.0,Laboratory Sample Prep,Closed,ncdiehl11
+355,0bf4f4,2021-07-14T18:20:56.000+0000,2021-07-20,6.0,NGS library prep,Closed,ramifarawi
+356,6be1f8,2021-06-08T09:18:21.000+0000,2021-06-18,10.0,Elisa calibrants,Closed,ramifarawi
+357,26c304,2021-06-08T09:00:24.000+0000,2021-06-18,10.0,Elisa calibrants,Closed,ramifarawi
+358,5414fa,2021-07-16T17:31:38.000+0000,2021-07-29,13.0,Plate Preparation,Closed,sakibh
+359,516336,2021-05-09T07:41:58.000+0000,2021-05-21,12.0,NGS library prep,Closed,sakibh
+360,1477ea,2021-06-09T12:07:07.000+0000,2021-06-23,14.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+361,6a77d9,2021-03-28T08:13:24.000+0000,2021-04-13,16.0,Liquid deposition onto flat surfaces,Closed,ncdiehl11
+362,7805de,2021-05-20T20:48:39.000+0000,2021-06-03,14.0,NGS library prep,Closed,StevenPlonk
+363,743f54,2021-05-20T20:10:44.000+0000,2021-06-09,20.0,Nucleic acid purification,Closed,chazmanc
+364,18e62e,2021-05-20T20:44:39.000+0000,2021-07-14,55.0,PCR/qPCR prep,Closed,chazmanc
+365,788dca,2021-02-10T22:00:49.000+0000,2021-02-26,16.0,General Lab Procedures,Closed,sakibh
+366,2c62b7,2021-03-24T11:44:17.000+0000,2021-05-03,40.0,Nucleic acid purification,Closed,sakibh
+367,1c8468,2021-03-04T12:10:32.000+0000,2021-03-15,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+368,2d9a0c,2021-03-04T10:20:41.000+0000,2021-03-12,8.0,PCR/qPCR prep,Closed,ramifarawi
+369,4ee4d6,2021-03-24T18:27:58.000+0000,2021-04-14,21.0,NGS library prep,Closed,StevenPlonk
+370,315118,2021-03-25T13:08:39.000+0000,2021-04-06,12.0,mock pooling,Closed,StevenPlonk
+371,,2022-07-12T21:06:00.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sample/reagent handling",SoW Completed,
+372,6a93a2,2021-03-25T18:28:37.000+0000,2021-05-11,47.0,NGS library prep,Closed,ramifarawi
+373,701319,2021-03-05T21:33:00.000+0000,2021-03-12,7.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,sakibh
+374,1eeb01,2021-03-17T16:46:50.000+0000,2021-04-13,27.0,Nucleic acid purification,Closed,chazmanc
+375,51b9a5,2021-06-14T14:16:55.000+0000,2021-06-15,1.0,,Closed,ncdiehl11
+376,5f7d18,2021-03-10T00:22:12.000+0000,2021-03-24,15.0,PCR/qPCR prep,Closed,ramifarawi
+377,2d7d86,2022-06-01T14:38:18.000+0000,2022-06-07,6.0,PCR/qPCR prep,Closed,ramifarawi
+378,76ba23,2021-03-04T04:20:45.000+0000,2021-03-30,27.0,NGS library prep,Closed,StevenPlonk
+379,3955db,2021-03-25T21:56:29.000+0000,2021-04-04,10.0,Sample Prep for PoC COVID-19 Device,Closed,chazmanc
+380,4d9b8b,2021-04-10T18:03:50.000+0000,2021-04-20,10.0,Drop Casting Polymer Solutions with Varying solvent/additive concecntrations,Closed,ramifarawi
+381,0b98cc,2021-03-26T00:20:58.000+0000,2021-04-06,12.0,Viral titration (serial dilution) protocol,Closed,sakibh
+382,41ece2,2021-03-26T20:49:34.000+0000,2021-04-01,6.0,Drug Dilution +/- Addition of Cells,Closed,chazmanc
+383,6b8c90,2021-03-05T16:51:32.000+0000,2021-03-17,12.0,Simple aliquot transfer,Closed,chazmanc
+384,559aa0,2021-03-08T18:20:36.000+0000,2021-03-18,10.0,PCR/qPCR prep,Closed,StevenPlonk
+385,165a77,2021-03-08T18:31:58.000+0000,2021-03-18,10.0,PCR/qPCR prep,Closed,StevenPlonk
+386,3a49b6,2021-03-09T16:38:44.000+0000,2021-03-30,21.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+387,3ad2a2,2021-03-10T23:25:24.000+0000,,,PCR/qPCR prep,Canceled,ramifarawi
+388,0e696e,2021-03-11T15:18:04.000+0000,,,PCR/qPCR prep,Closed,ncdiehl11
+389,11beaa,2021-04-19T11:49:53.000+0000,2021-04-26,7.0,PCR/qPCR prep,Closed,ramifarawi
+390,5fa647,2021-03-30T18:00:37.000+0000,2021-04-20,21.0,PCR/qPCR prep,Closed,ramifarawi
+391,3d02be,2021-04-19T16:53:58.000+0000,2021-04-29,10.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+392,,2021-07-21T14:08:02.000+0000,,,,Closed,sakibh
+393,,2021-07-21T14:09:01.000+0000,,,,Closed,ramifarawi
+394,115d98,2021-03-30T19:11:09.000+0000,2021-04-04,5.0,Volume transfers & dispensing sample into COVID-19 PoC Testing Device,Closed,chazmanc
+395,,2021-07-21T14:06:59.000+0000,,,,Canceled,chazmanc
+396,,2021-07-21T14:07:29.000+0000,,,,Closed,ncdiehl11
+397,,2021-07-21T14:08:27.000+0000,2021-08-04,14.0,,Closed,StevenPlonk
+398,19313a,2021-07-21T13:29:53.000+0000,2021-07-26,5.0,Nucleic acid purification,In Optimization,ramifarawi
+399,1c086c,2021-03-31T18:18:00.000+0000,2021-04-06,6.0,Flexible distribution of solution into wellplates,Closed,sakibh
+400,39b4c7,2021-04-19T17:46:36.000+0000,2021-04-26,7.0,PCR/qPCR prep,Closed,sakibh
+401,6bc986,2021-04-19T19:02:55.000+0000,2021-05-03,14.0,PCR/qPCR prep,Closed,StevenPlonk
+402,0e8e3,2021-07-21T17:54:58.000+0000,2021-07-27,6.0,PCR/qPCR prep,Closed,ncdiehl11
+403,45a320,2021-07-21T18:15:20.000+0000,2021-08-02,-281.0,"Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays),PCR/qPCR prep",Closed,ramifarawi
+404,50c11b,2021-04-06T18:59:07.000+0000,2021-05-05,29.0,PCR/qPCR prep,Closed,chazmanc
+405,6401f1,2021-07-21T19:08:40.000+0000,2021-08-04,-279.0,PCR/qPCR prep,Closed,StevenPlonk
+406,05f673,2021-07-21T21:10:32.000+0000,2021-09-24,-228.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,chazmanc
+407,44b1ac,2021-07-21T23:53:00.000+0000,2021-08-18,-265.0,NGS library prep,Closed,sakibh
+408,2bdff3,2021-04-16T07:57:40.000+0000,2021-04-22,6.0,NGS library prep,Closed,sakibh
+409,1f96ca,2021-04-16T19:13:41.000+0000,2021-04-29,13.0,NGS library prep,Closed,StevenPlonk
+410,1adec6,2021-04-26T14:28:28.000+0000,2022-04-06,345.0,"Protein quantification (BCA, Bradford, etc)",Closed,chazmanc
+411,111210,2021-07-21T23:46:59.000+0000,2021-08-14,-269.0,NGS library prep,Closed,sakibh
+412,6d7fc3,2021-07-21T23:38:17.000+0000,2021-08-02,-281.0,NGS library prep,Closed,sakibh
+413,5520f0,2021-05-03T22:21:46.000+0000,2021-05-11,8.0,Fixing and staining cell-based 384-well assay plates.,Closed,sakibh
+414,543bf9,2021-04-23T20:43:16.000+0000,2021-05-05,12.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,sakibh
+415,698b9e,2021-04-26T16:25:31.000+0000,2021-05-06,10.0,PCR/qPCR prep,Closed,ramifarawi
+416,,2021-07-23T04:28:03.000+0000,,,,Closed,chazmanc
+417,3fad82,2021-05-07T13:43:43.000+0000,2021-05-21,14.0,NGS library prep,Closed,StevenPlonk
+418,313086,2021-05-07T20:00:22.000+0000,2021-07-09,63.0,PCR/qPCR prep,Closed,ncdiehl11
+419,6cd9d6,2021-06-21T18:55:58.000+0000,2021-07-02,11.0,NGS library prep,Closed,sakibh
+420,13ea1e,2021-05-13T21:35:05.000+0000,2021-05-26,13.0,PCR/qPCR prep,Closed,ramifarawi
+421,7f9595,2021-05-13T20:54:37.000+0000,2021-05-17,4.0,Serial dilution ( 1:10),Closed,sakibh
+422,3b3d2f,2021-06-22T12:06:58.000+0000,2021-07-06,14.0,PCR/qPCR prep,Closed,StevenPlonk
+423,5713b2,2021-08-02T19:18:00.000+0000,,,Reagent refill,Closed,ramifarawi
+424,74841a,2021-08-05T16:07:54.000+0000,2021-08-17,12.0,NGS library prep,Closed,ncdiehl11
+425,,2021-10-11T14:09:48.000+0000,,,,Closed,ramifarawi
+426,,2021-08-09T14:11:11.000+0000,,,,Closed,sakibh
+427,,2021-08-09T14:11:36.000+0000,2021-08-23,14.0,,Closed,StevenPlonk
+428,,2021-08-09T14:12:02.000+0000,,,,Closed,ramifarawi
+429,00bbd7,2021-08-09T21:44:40.000+0000,2021-08-20,11.0,PCR/qPCR prep,Closed,ramifarawi
+430,581011,2021-08-10T18:28:34.000+0000,2021-08-20,10.0,Sterile workflows (cell culture and related assays),Closed,ramifarawi
+431,2a370c,2021-08-12T12:52:41.000+0000,2021-08-26,14.0,Nucleic acid purification,Closed,sakibh
+432,,2022-06-28T12:54:54.000+0000,,,ELISA,Complete,0052S00000B3aPPQAZ
+433,5a2a35,2021-08-10T16:23:58.000+0000,2021-08-12,2.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+434,,2021-10-13T13:48:29.000+0000,,,,Canceled,StevenPlonk
+435,1dfebe,2021-10-13T17:57:20.000+0000,2021-10-20,7.0,Urine toxicology using enzyme hydrolysis,Closed,ramifarawi
+436,4b7268,2021-08-13T13:38:21.000+0000,2021-08-26,13.0,Nucleic acid purification,Closed,StevenPlonk
+437,063611,2021-08-13T17:20:50.000+0000,2021-08-19,6.0,Sample Fill,Closed,StevenPlonk
+438,29225e,2021-08-16T23:31:00.000+0000,2021-10-26,-196.0,"PCR/qPCR prep,RNA concentration normalization",Closed,StevenPlonk
+439,5c50d9,2021-08-18T14:53:24.000+0000,2021-08-27,9.0,PCR/qPCR prep,Closed,ramifarawi
+440,17d210,2021-08-18T15:15:54.000+0000,2021-09-23,36.0,NGS library prep,Closed,ncdiehl11
+441,5dcd88,2021-10-18T18:24:47.000+0000,2021-10-29,11.0,NGS library prep,Closed,ramifarawi
+442,563624,2021-10-18T16:15:43.000+0000,2021-10-27,9.0,Other,Closed,ncdiehl11
+443,00b562,2021-10-19T13:33:57.000+0000,2021-11-26,38.0,PCR/qPCR prep,Closed,StevenPlonk
+444,75cfa6,2021-10-19T14:48:46.000+0000,2021-12-03,45.0,PCR/qPCR prep,Closed,ncdiehl11
+445,355b30,2022-04-05T20:05:47.000+0000,2022-06-28,84.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),1. Preparation of DNA mixture (mixing two or more plasmids), which also involves SCV/Excel File input. 2. Aliquoting",Closed,StevenPlonk
+446,,2022-05-06T14:17:43.000+0000,,,,Awaiting Customer Response,0052S00000B3aPPQAZ
+447,,2022-05-04T15:49:46.000+0000,,,"PCR/qPCR prep,Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays),NGS library prep,Protein quantification (BCA, Bradford, etc)",Complete,0052S00000B3aPPQAZ
+448,04f4e7,2021-08-26T21:14:41.000+0000,2021-09-03,-249.0,Sterile workflows (cell culture and related assays),Closed,ramifarawi
+449,3d5475,2021-08-30T12:36:15.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Canceled,StevenPlonk
+450,154ec5,2021-09-02T16:35:28.000+0000,2021-09-21,-231.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+451,5829d7,2021-09-02T16:27:57.000+0000,2021-09-24,22.0,PCR/qPCR prep,Closed,ramifarawi
+452,11bb6a,2022-06-01T11:53:57.000+0000,,,"NGS library prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",In Progress,StevenPlonk
+453,,2022-08-03T16:11:03.000+0000,,,"Mass spec sample prep (MALDI spotting, gel digests, etc)",On-Site Scheduled,ncdiehl11
+454,459cc2,2021-08-30T19:03:28.000+0000,2021-09-09,10.0,"Mass spec sample prep (MALDI spotting, gel digests, etc),LC and GC analysis",Closed,sakibh
+455,37de37,2021-09-20T12:39:48.000+0000,2021-09-24,4.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+456,2ed4de,2021-10-22T22:21:24.000+0000,2021-11-15,24.0,Ribogreen Assay,Closed,ncdiehl11
+457,714f71,2022-02-23T18:19:49.000+0000,2022-03-03,8.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+458,,2022-07-13T21:52:30.000+0000,,,Drug testing,On-Site Scheduled,StevenPlonk
+459,0045f1,2021-10-25T19:20:51.000+0000,2021-11-10,16.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
+460,7062c9,2021-10-25T18:00:32.000+0000,2021-10-28,3.0,Magnetic beads purification,Closed,ncdiehl11
+461,209634,2021-09-14T21:29:30.000+0000,,,Chemistry lab,Awaiting Customer Response,ramifarawi
+462,25a03d,2021-09-15T15:32:50.000+0000,2021-09-30,-222.0,PCR/qPCR prep,Closed,ramifarawi
+463,7363e4,2021-09-17T17:27:54.000+0000,2021-10-05,-217.0,Aliquoting and Pooling,Closed,StevenPlonk
+464,,2021-10-27T13:53:26.000+0000,,,,Closed,chazmanc
+465,6cb818,2021-09-21T18:24:33.000+0000,2021-10-29,-193.0,Sterile workflows (cell culture and related assays),Closed,StevenPlonk
+466,714b42,2022-03-25T18:33:28.000+0000,,,Nucleic acid purification,New,StevenPlonk
+467,7bdd70,2022-03-25T17:02:03.000+0000,,,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",New,StevenPlonk
+468,2663c9,2022-03-09T16:52:38.000+0000,2022-03-18,-53.0,"Mass spec sample prep (MALDI spotting, gel digests, etc),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+469,64c54a,2022-06-21T13:57:52.000+0000,2022-07-05,14.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ncdiehl11
+470,7cbda5,2022-06-21T21:45:13.000+0000,2022-07-07,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+471,29f643,2022-07-05T02:59:52.000+0000,2022-08-15,33.0,ELISA,In Optimization,chazmanc
+472,,2022-07-07T17:00:33.000+0000,,,Cell staining,SoW Completed,
+473,,2022-07-07T17:57:34.000+0000,,,Nucleic acid purification,SoW in Review,
+474,,2022-08-17T17:01:36.000+0000,,,NGS library prep,New,
+475,,2022-08-17T15:38:14.000+0000,,,Sample Handling,SoW Completed,
+476,0636b9,2021-09-14T14:41:40.000+0000,,,PCR/qPCR prep,Closed,sakibh
+477,24b132,2021-10-26T10:12:25.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Awaiting Customer Response,StevenPlonk
+478,4568fa,2021-10-26T20:24:22.000+0000,2021-11-11,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),FA assay protocol attached.",Closed,ncdiehl11
+479,1440ad,2021-06-23T04:39:53.000+0000,2021-07-07,15.0,reaction assembling + nucleic acid purification,Closed,ramifarawi
+480,295c73,2021-02-12T13:36:25.000+0000,2021-03-04,20.0,NGS library prep,Closed,StevenPlonk
+481,52d238,2021-02-12T20:15:49.000+0000,2021-02-19,7.0,NGS library prep,Closed,sakibh
+482,4c8861,2021-09-23T18:22:12.000+0000,2021-09-29,6.0,"Nucleic acid purification,Protein quantification (BCA, Bradford, etc),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+483,469c70,2021-10-28T18:31:39.000+0000,2021-11-11,14.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
+484,6b51bd,2021-09-24T01:43:05.000+0000,2021-10-26,-196.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+485,63530f,2022-01-12T18:33:49.000+0000,,,Sample Prep-Plate Filling,Canceled,eskila
+486,2aee74,2021-10-28T20:51:58.000+0000,2021-10-31,3.0,"Protein quantification (BCA, Bradford, etc)",Closed,ncdiehl11
+487,60d861,2022-01-12T21:09:05.000+0000,,,PCR/qPCR prep,Closed,ncdiehl11
+488,300073,2022-01-12T19:34:34.000+0000,2022-02-04,23.0,PCR/qPCR prep,Closed,eskila
+489,7da6a6,2022-01-14T07:04:28.000+0000,2022-04-07,83.0,Nucleic acid purification,Closed,StevenPlonk
+490,659888,2021-09-24T21:42:05.000+0000,2021-10-05,11.0,Liquid spotting assay onto solid media,Closed,ramifarawi
+491,3c9aec,2022-01-13T19:23:12.000+0000,2022-01-24,11.0,"Sterile workflows (cell culture and related assays),CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+492,1914e9,2021-09-30T18:12:51.000+0000,,,"Magbead-based peptide enrichment,Mass spec sample prep (MALDI spotting, gel digests, etc)",Canceled,
+493,6d7eb7,2021-09-30T20:34:57.000+0000,2021-10-01,1.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),PCR/qPCR prep",Closed,ncdiehl11
+494,69cf81,2021-10-01T16:40:37.000+0000,2021-10-01,0.0,PCR/qPCR prep,Closed,ncdiehl11
+495,,2022-07-06T17:52:18.000+0000,,,ELISA,SoW Completed,
+496,,2022-07-06T17:15:26.000+0000,,,,Complete,ncdiehl11
+497,6e160e,2022-03-10T04:54:20.000+0000,2022-03-15,-56.0,PCR/qPCR prep,Closed,ramifarawi
+498,78dfe9,2021-11-02T17:25:31.000+0000,2021-12-09,37.0,Magbead-based peptide enrichment,Closed,StevenPlonk
+499,00a6e5,2021-11-02T19:23:30.000+0000,2021-11-15,13.0,"Mass spec sample prep (MALDI spotting, gel digests, etc)",Closed,ramifarawi
+500,,2021-11-05T16:41:46.000+0000,,,,Closed,chazmanc
+501,,2021-11-08T14:17:51.000+0000,,,,Closed,eskila
+502,017860,2022-02-23T21:20:54.000+0000,2022-03-03,8.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,eskila
+503,,2021-11-08T14:18:22.000+0000,,,,Closed,eskila
+504,1dec68,2022-01-21T00:35:41.000+0000,2022-02-22,33.0,"PCR/qPCR prep,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+505,,2021-11-08T14:20:08.000+0000,,,,Closed,eskila
+506,4a5f32,2021-05-24T10:11:42.000+0000,2021-06-04,11.0,Nucleic acid purification,Closed,sakibh
+507,7cfbde,2021-02-12T21:10:22.000+0000,2021-02-25,13.0,Magbead-based peptide enrichment,Closed,chazmanc
+508,AB3A5D,2022-03-14T15:12:11.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
+509,03BB56,2022-03-14T15:12:56.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
+510,979D28,2022-03-14T15:13:45.000+0000,2022-06-10,31.0,,Closed,ncdiehl11
+511,,2022-04-12T22:30:33.000+0000,,,NGS library prep,Complete,0052S00000B3aPPQAZ
+512,4897c3,2021-06-23T16:01:59.000+0000,,,"NGS library prep,Proprietary.",Stuck,ncdiehl11
+513,65ed01,2021-02-13T08:54:46.000+0000,2021-02-26,13.0,Nucleic acid purification,Closed,ramifarawi
+514,33a449,2022-01-21T15:01:31.000+0000,2022-02-03,13.0,Nucleic acid purification,Closed,ramifarawi
+515,7b1ce4,2021-11-09T20:01:34.000+0000,,,Nucleic acid purification,Awaiting Customer Response,StevenPlonk
+516,33e96a,2021-11-10T08:24:40.000+0000,2021-11-19,9.0,"PCR/qPCR prep,Magbead-based peptide enrichment",Closed,ramifarawi
+517,,2022-07-06T14:44:23.000+0000,,,,Complete,0052S00000B3aPPQAZ
+518,0479ad,2022-08-18T19:29:33.000+0000,,,NGS library prep,On-Site Scheduled,StevenPlonk
+519,0f5985,2022-01-24T16:27:35.000+0000,,,Nucleic acid purification,Closed,eskila
+520,5cdffb,2022-03-17T19:32:56.000+0000,2022-03-22,5.0,Nucleic acid purification,Closed,StevenPlonk
+521,657ee9,2022-01-27T11:30:24.000+0000,2022-03-16,-55.0,NGS library prep,Closed,chazmanc
+522,02eba5,2022-05-02T13:19:06.000+0000,2022-05-09,7.0,"The application is similar to endotoxin measurement, requiring extreme freedom from contamination due to ubiquitous environmental presence of the analyte, (1,3)_beta-glucan.",Closed,ramifarawi
+523,70567f,2021-02-14T19:42:34.000+0000,2021-02-18,4.0,Nucleic acid purification,Closed,ncdiehl11
+524,6786f0,2021-11-19T17:46:26.000+0000,,,NGS library prep,Canceled,ramifarawi
+525,121d15,2022-01-27T22:13:37.000+0000,2022-02-02,6.0,PCR/qPCR prep,Closed,ncdiehl11
+526,0aa181,2021-11-19T16:52:43.000+0000,,,NGS library prep,In Progress,ramifarawi
+527,1e744e,2021-11-19T19:42:25.000+0000,2021-11-29,10.0,"PCR/qPCR prep,Nucleic acid purification",Closed,StevenPlonk
+528,1a8202,2021-11-19T17:48:20.000+0000,,,NGS library prep,Canceled,
+529,7015a4,2021-11-19T18:04:25.000+0000,,,NGS library prep,Canceled,
+530,0e13ba,2021-11-25T17:45:21.000+0000,2022-01-16,52.0,Kinase Activity Assay using radioactive [g-P32]ATP,Closed,StevenPlonk
+531,,2021-11-29T16:18:07.000+0000,,,,Closed,ramifarawi
+532,1b2788,2022-03-27T17:17:23.000+0000,2022-03-29,2.0,Nucleic acid purification,Closed,ramifarawi
+533,925d07,2021-12-03T14:42:57.000+0000,2021-12-05,2.0,PCR/qPCR prep,Closed,ncdiehl11
+534,466f93,2021-12-03T11:44:42.000+0000,,,NGS library prep,Closed,eskila
+535,85b0dc,2021-12-06T16:12:00.000+0000,2021-12-28,22.0,,Closed,ncdiehl11
+536,6eca1d,2021-12-06T16:13:43.000+0000,,,,Awaiting Customer Response,ncdiehl11
+537,66e60f,2021-12-06T16:51:39.000+0000,2021-12-27,21.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,eskila
+538,632bd0,2021-12-07T16:36:01.000+0000,2021-12-15,8.0,Drug solution transfer from reservoir to caps,Closed,StevenPlonk
+539,7e3b31,2021-12-08T18:22:22.000+0000,2022-01-06,29.0,"NGS library prep,Nucleic acid purification,PCR/qPCR prep",Closed,StevenPlonk
+540,62679a,2022-04-14T22:10:50.000+0000,2022-05-12,28.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+541,0117ed,2021-12-10T19:21:58.000+0000,,,Protein Purification and Assay Setup,Canceled,ncdiehl11
+542,1A421C,2022-03-14T15:11:17.000+0000,2022-06-21,42.0,,Closed,ncdiehl11
+543,60feec,2022-02-05T04:22:58.000+0000,2022-02-17,13.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+544,2cc59d,2022-04-23T21:28:25.000+0000,2022-04-29,3.0,ELISA Assay,Closed,ramifarawi
+545,,2022-04-29T15:53:45.000+0000,,,"Sterile workflows (cell culture and related assays),sample prep, PBMC prep.",SoW Completed,
+546,3e0bef,2021-12-14T22:10:21.000+0000,2021-12-29,15.0,Nucleic acid purification,Closed,chazmanc
+547,7ada78,2021-12-15T17:27:55.000+0000,2021-12-27,12.0,"Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+548,37190e,2021-12-21T03:12:52.000+0000,2022-07-25,217.0,Sterile workflows (cell culture and related assays),Closed,ncdiehl11
+549,13ac78,2021-12-21T20:38:43.000+0000,2022-01-21,31.0,PCR/qPCR prep,Closed,ncdiehl11
+550,1f62ba,2021-12-22T18:44:46.000+0000,2021-12-30,8.0,PCR/qPCR prep,Closed,ramifarawi
+551,76ab0e,2022-02-11T03:05:05.000+0000,2022-02-16,6.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Normalization (for RNA and Protein)",Closed,eskila
+552,528c16,2021-12-24T01:11:22.000+0000,2022-01-18,26.0,Sample preparation in analytical validations under GLP standards following FDA guidelines for bioanalysis (mass spectrometry for metabolomics and proteomics in biological matrices).,Closed,ramifarawi
+553,650ec3,2021-12-28T12:37:34.000+0000,2022-01-18,21.0,"Nucleic acid purification,liquid transfer of sample from tube to a 96 well deep plate",Closed,StevenPlonk
+554,459cc2,2021-12-30T15:45:12.000+0000,2021-12-30,-131.0,,Closed,ramifarawi
+555,,2022-01-03T16:21:18.000+0000,,,,In Progress,StevenPlonk
+556,,2022-01-03T16:19:57.000+0000,,,,Canceled,eskila
+557,1584d2,2022-01-05T16:49:27.000+0000,2022-01-14,9.0,PCR/qPCR prep,Closed,ramifarawi
+558,78d33c,2022-01-05T17:18:41.000+0000,2022-03-09,63.0,NGS library prep,Closed,StevenPlonk
+559,412ec7,2022-03-07T21:43:13.000+0000,,,Serial dilution,Closed,0052S00000B3aPPQAZ
+560,5e722c,2022-03-11T18:30:59.000+0000,2022-03-14,-57.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ncdiehl11
+561,3607d5,2022-03-15T22:28:29.000+0000,2022-03-15,0.0,,Closed,ncdiehl11
+562,43d313,2022-01-06T15:44:08.000+0000,2022-03-23,76.0,NGS library prep,Closed,StevenPlonk
+563,772041,2022-02-15T21:10:41.000+0000,2022-02-24,9.0,PCR/qPCR prep,Closed,eskila
+564,2942dd,2022-02-15T23:35:31.000+0000,2022-02-23,8.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,StevenPlonk
+565,5f791f,2022-06-23T14:34:43.000+0000,2022-07-05,12.0,"PCR/qPCR prep,NGS library prep,Nucleic acid purification",Closed,ncdiehl11
+566,,2022-08-11T16:53:35.000+0000,,,Bead based ELISA,SoW Completed,
+567,32207e,2022-03-24T20:29:13.000+0000,2022-03-31,7.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",Closed,ramifarawi
+568,357404,2022-02-17T23:55:41.000+0000,2022-03-01,12.0,Immunofluorescence,Closed,eskila
+569,7aad4e,2022-02-18T00:10:34.000+0000,2022-02-28,11.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Closed,ramifarawi
+570,0f4405,2022-05-02T15:12:32.000+0000,2022-05-11,9.0,NGS library prep,Closed,ncdiehl11
+571,6f0903,2022-06-15T00:53:43.000+0000,2022-06-24,10.0,NGS library prep,Awaiting Customer Response,0052S00000B3aPPQAZ
+572,,2022-07-07T19:10:14.000+0000,,,NGS library prep,SoW Completed,
+573,0754f4,2022-08-17T22:47:58.000+0000,,,"PCR/qPCR prep,Protein quantification (BCA, Bradford, etc),Magbead-based peptide enrichment,Sterile workflows (cell culture and related assays),other workflow cateogry",Canceled / On-Site Removed from Scope,
+574,02f7dc,2022-08-18T17:15:51.000+0000,,,Staining,Red Flag,
+575,1af856,2022-07-05T13:26:43.000+0000,2022-07-20,15.0,NGS library prep,Closed,StevenPlonk
+576,,2022-07-08T19:08:39.000+0000,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),reagent transfer/sample handling",SoW Completed,
+577,,2022-07-07T20:50:10.000+0000,,,Nucleic acid purification,Canceled / On-Site Removed from Scope,
+578,,2022-07-07T19:27:02.000+0000,,,"Protein quantification (BCA, Bradford, etc)",SoW Completed,
+579,,2022-07-07T20:08:09.000+0000,,,"NGS library prep,PCR/qPCR prep",SoW Completed,
+580,,2022-08-01T15:28:43.000+0000,2022-08-15,14.0,,Closed,StevenPlonk
+581,,2022-08-03T16:19:53.000+0000,,,NGS library prep,SoW Completed,
+582,,2022-08-03T16:27:12.000+0000,,,Microbial spot plating,SoW Completed,
