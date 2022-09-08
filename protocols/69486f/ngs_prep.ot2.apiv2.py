@@ -329,20 +329,21 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     pcr2_map = [
         {
             'forward-primer-tube': forward_primer_well,
-            'reverse-primer-tube': reverse_primer_well,
             'creation-tube': creation_well,
             'volume': 0.1*num_samples_mm_creation
         }
-        for creation_well, forward_primer_well, reverse_primer_well in zip(
-            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples],
-            tuberack.wells()[16:16+num_samples])
+        for creation_well, forward_primer_well in zip(
+            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples])
     ]
 
     # add all constant reagents to each mix tube
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_water_mm = 4.8*num_samples_mm_creation
+    vol_primer_mm = 0.1*num_samples_mm_creation
+    reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
-            [mm2, water], [vol_pcr_mm, vol_water_mm]):
+            [mm2, water, reverse_primer2],
+            [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
         num_transfers = math.ceil(vol/tip_capacity)
@@ -358,21 +359,19 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     # add unique forward/reverse primers to mix and homogenize
     vol_primer_mm = 0.1*num_samples_mm_creation
     for item in pcr2_map:
-        for i, primer_type in enumerate(
-                ['forward-primer-tube', 'reverse-primer-tube']):
-            primer = item[primer_type]
-            pip = p300 if vol_primer_mm > 20 else p20
-            tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-            num_transfers = math.ceil(vol_primer_mm/tip_capacity)
-            vol_per_transfer = vol_forward_primer_mm/num_transfers
-            pick_up(pip, 1)
-            mix_dest = item['creation-tube']
-            for _ in range(num_transfers):
-                pip.aspirate(vol_per_transfer, primer)
-                pip.dispense(vol_per_transfer, mix_dest.bottom(5))
-            if i == 1:
-                pip.mix(1, 20, mix_dest.bottom(5))
-            pip.drop_tip()
+        primer = item['forward-primer-tube']
+        pip = p300 if vol_primer_mm > 20 else p20
+        tip_capacity = pip.tip_racks[0].wells()[0].max_volume
+        num_transfers = math.ceil(vol_primer_mm/tip_capacity)
+        vol_per_transfer = vol_forward_primer_mm/num_transfers
+        pick_up(pip, 1)
+        mix_dest = item['creation-tube']
+        for _ in range(num_transfers):
+            pip.aspirate(vol_per_transfer, primer)
+            pip.dispense(vol_per_transfer, mix_dest.bottom(5))
+        if i == 1:
+            pip.mix(1, 20, mix_dest.bottom(5))
+        pip.drop_tip()
 
     # plate PCR mixes
     pcr2_mix_sources = [item['creation-tube'] for item in pcr2_map]
