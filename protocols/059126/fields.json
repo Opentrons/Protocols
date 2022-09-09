@@ -1,21 +1,15 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples in 384 Well Plate (max 384)",
-    "name": "num_samples",
-    "default": 96
-  },
-  {
-    "type": "int",
-    "label": "Transfer Volume (1-20uL)",
-    "name": "vol_transfer",
-    "default": 10
-  },
-  {
-    "type": "int",
-    "label": "Number of Vials (1-12)",
-    "name": "num_vials",
+    "label": "Number of Columns in 384 Well Plate (max 24)",
+    "name": "num_384_cols",
     "default": 2
+  },
+  {
+    "type": "int",
+    "label": "Starting Tip Column (1-12)",
+    "name": "starting_tip_col",
+    "default": 12
   },
   {
     "type": "dropDown",
@@ -25,5 +19,11 @@
        { "label": "right", "value": "right" },
        { "label": "left", "value": "left" }
      ]
+  },
+  {
+    "type": "textFile",
+    "label": "Transfer .csv File",
+    "name": "file_input",
+    "default": ",Vial,Volume from Vial to 96 Well Plate,Volume from 96 to 384 Well Plate,A1,150,5,B1,151,5,C1,152,5"
   }
 ]

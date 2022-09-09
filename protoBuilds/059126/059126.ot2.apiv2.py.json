@@ -1,5 +1,5 @@
 {
-    "content": "\"\"\"OPENTRONS.\"\"\"\nfrom opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Reagent Addition',\n    'author': 'John C. Lynch <john.lynch@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    \"\"\"PROTOCOL.\"\"\"\n    [\n     num_samples,\n     vol_transfer,\n     num_vials,\n     m20_mount\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"num_samples\",\n        \"vol_transfer\",\n        \"num_vials\",\n        \"m20_mount\")\n\n    # define all custom variables above here with descriptions:\n    if m20_mount == 'right':\n        m300_mount = 'left'\n    else:\n        m300_mount = 'right'\n\n    num_384_cols = math.ceil(num_samples/16)\n    # load labware\n\n    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '4')\n    plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')\n    vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '7')\n\n    # load tipracks\n    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                   for slot in '8']\n    tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n                  for slot in '9']\n    single_tip_loc = tiprack_300[0].wells()[:num_vials:-1]\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack_20)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack_300)\n\n    # reagents\n    row_a_384 = plate_384.rows()[0][:num_384_cols]\n    row_b_384 = plate_384.rows()[1][:num_384_cols]\n    vial_list = vials.wells()[:num_vials]\n    plate_96_cols = plate_96.rows()[0][:num_vials]\n    rows_384 = [row_a_384, row_b_384]\n\n    pre_air_gap = 5\n    # BEGIN PROTOCOL\n\n    # Transfer to 96 Plate\n    ctx.comment('\\n\\n~~~~~~~~~~~~~~ADDING TO 96 WELL PLATE~~~~~~~~~~~~~~\\n\\n')\n    for i, (tip, src) in enumerate(zip(single_tip_loc, vial_list)):\n        m300.pick_up_tip(tip)\n        for dest in plate_96.columns()[i][:8]:\n            m300.aspirate(150, src, rate=0.5)\n            m300.dispense(150, dest, rate=0.5)\n        m300.drop_tip()\n\n    # Transfer to 384 Well Plate\n    ctx.comment('\\n\\n~~~~~~~~~~~~~~ADDING TO 384 WELL PLATE~~~~~~~~~~~~~~\\n\\n')\n    for src in plate_96_cols:\n        m20.pick_up_tip()\n        for plate_384 in rows_384:\n            for dest in plate_384:\n                m20.aspirate(pre_air_gap, src.top())\n                m20.aspirate(vol_transfer, src, rate=0.5)\n                m20.dispense(vol_transfer+pre_air_gap, dest.top(), rate=2)\n                m20.blow_out()\n                m20.touch_tip()\n        m20.drop_tip()\n\n    for c in ctx.commands():\n        print(c)\n",
+    "content": "\"\"\"OPENTRONS.\"\"\"\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Reagent Addition',\n    'author': 'John C. Lynch <john.lynch@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    \"\"\"PROTOCOL.\"\"\"\n    [\n     num_384_cols,\n     starting_tip_col,\n     m20_mount,\n     file_input\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"num_384_cols\",\n        \"starting_tip_col\",\n        \"m20_mount\",\n        \"file_input\")\n\n    # define all custom variables above here with descriptions:\n    if m20_mount == 'right':\n        m300_mount = 'left'\n    else:\n        m300_mount = 'right'\n\n    # load labware\n\n    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '1')\n    plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')\n    vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '7')\n\n    # load tipracks\n    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                   for slot in '8']\n    tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n                  for slot in '9']\n\n    # List Creation\n    csv_rows = [val.strip() for val in file_input.split(',')]\n    header_removed = csv_rows[4:]\n    well_list = header_removed[::3]\n    vol_trans_96 = [eval(i) for i in header_removed[1::3]]\n    vol_trans_384 = [eval(i) for i in header_removed[2::3]]\n\n    # Tip Logic\n    starting_tip = 8*starting_tip_col\n    final_tip = starting_tip-len(well_list)\n    single_tip_loc = tiprack_300[0].wells()[final_tip:starting_tip][::-1]\n    if final_tip < 0:\n        raise Exception('Invalid starting tip column for specified number of'\n                        ' vials. Not enough tips.')\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack_20)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack_300)\n\n    # reagents\n    row_a_384 = plate_384.rows()[0][:num_384_cols]\n    row_b_384 = plate_384.rows()[1][:num_384_cols]\n    vial_list = []\n    vial_list.append(well_list)\n    plate_96_cols = plate_96.rows()[0][:len(well_list)]\n    rows_384 = [row_a_384, row_b_384]\n\n    pre_air_gap = 5\n    # BEGIN PROTOCOL\n\n    # Transfer to 96 Plate\n    ctx.comment('\\n\\n~~~~~~~~~~~~~~ADDING TO 96 WELL PLATE~~~~~~~~~~~~~~\\n\\n')\n    for i, (tip, well, vol) in enumerate(zip(single_tip_loc,\n                                         vial_list[0], vol_trans_96)):\n        m300.pick_up_tip(tip)\n        for dest in plate_96.columns()[i][:8]:\n            m300.aspirate(vol, vials.wells_by_name()[well], rate=0.5)\n            m300.dispense(vol, dest, rate=0.5)\n        m300.drop_tip()\n\n    # Transfer to 384 Well Plate\n    ctx.comment('\\n\\n~~~~~~~~~~~~~~ADDING TO 384 WELL PLATE~~~~~~~~~~~~~~\\n\\n')\n    for src, vol in zip(plate_96_cols, vol_trans_384):\n        m20.pick_up_tip()\n        for plate_384 in rows_384:\n            for i, dest in enumerate(plate_384):\n                if i == 0:\n                    m20.aspirate(pre_air_gap, src.top())\n                m20.aspirate(vol, src, rate=0.5)\n                m20.dispense(vol+pre_air_gap, dest.top(), rate=2)\n                m20.aspirate(pre_air_gap, src.top())\n        m20.drop_tip()\n\n    for c in ctx.commands():\n        print(c)\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -5771,21 +5771,15 @@
     ],
     "fields": [
         {
-            "default": 96,
-            "label": "Number of Samples in 384 Well Plate (max 384)",
-            "name": "num_samples",
-            "type": "int"
-        },
-        {
-            "default": 10,
-            "label": "Transfer Volume (1-20uL)",
-            "name": "vol_transfer",
-            "type": "int"
-        },
-        {
             "default": 2,
-            "label": "Number of Vials (1-12)",
-            "name": "num_vials",
+            "label": "Number of Columns in 384 Well Plate (max 24)",
+            "name": "num_384_cols",
+            "type": "int"
+        },
+        {
+            "default": 12,
+            "label": "Starting Tip Column (1-12)",
+            "name": "starting_tip_col",
             "type": "int"
         },
         {
@@ -5802,6 +5796,12 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": ",Vial,Volume from Vial to 96 Well Plate,Volume from 96 to 384 Well Plate,A1,150,5,B1,151,5,C1,152,5",
+            "label": "Transfer .csv File",
+            "name": "file_input",
+            "type": "textFile"
         }
     ],
     "instruments": [
@@ -5816,16 +5816,16 @@
     ],
     "labware": [
         {
+            "name": "Greiner 96 Well Plate 340 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "greiner_96_wellplate_340ul"
+        },
+        {
             "name": "Greiner 384 Well Plate 50 \u00b5L on 2",
             "share": false,
             "slot": "2",
             "type": "greiner_384_wellplate_50ul"
-        },
-        {
-            "name": "Greiner 96 Well Plate 340 \u00b5L on 4",
-            "share": false,
-            "slot": "4",
-            "type": "greiner_96_wellplate_340ul"
         },
         {
             "name": "Cytiva 24 Well Plate 2000 \u00b5L on 7",
