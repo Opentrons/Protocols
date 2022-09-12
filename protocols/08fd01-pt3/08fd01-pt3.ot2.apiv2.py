@@ -10,10 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    # [p20_mount] = get_values(  # noqa: F821
-    #     "p20_mount")
-
-    p20_mount = "left"
+    [p20_mount] = get_values(  # noqa: F821
+        "p20_mount")
 
     # labware
     pcr_plate_384 = ctx.load_labware(

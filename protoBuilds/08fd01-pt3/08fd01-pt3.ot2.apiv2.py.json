@@ -1,5 +1,5 @@
 {
-    "content": "# flake8: noqa\n\nmetadata = {\n    'protocolName': 'PCR Prep and Pooling with 384 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [p20_mount] = get_values(  # noqa: F821\n        \"p20_mount\")\n\n    # labware\n    pcr_plates = [ctx.load_labware(\n            'custom_384_wellplate_50ul', slot)\n            for slot in [1, 4, 8, 10]]\n    pool_plate = ctx.load_labware(\n                'custom_384_wellplate_50ul', 7)\n\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)\n\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in [2, 5, 9, 11]]\n\n    water_tiprack = ctx.load_labware('opentrons_96_filtertiprack_20ul', 3)\n\n    # instruments\n    p20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)\n\n    # protocol\n    pcr_row_nums = [0, 0, 1, 1]*3\n    pcr_col_nums = []\n\n    for i in range(0, 24, 2):\n        for _ in range(2):\n            pcr_col_nums.append(i)\n            pcr_col_nums.append(i+1)\n\n    plate_1_pool_wells = pool_plate.rows()[0][:24:2]\n    p1_pool_match = []\n    plate_2_pool_wells = pool_plate.rows()[0][1:24:2]\n    p2_pool_match = []\n    plate_3_pool_wells = pool_plate.rows()[1][:24:2]\n    p3_pool_match = []\n    plate_4_pool_wells = pool_plate.rows()[1][1:24:2]\n    p4_pool_match = []\n\n    for ele in plate_1_pool_wells:\n        p1_pool_match.extend([ele, ele, ele, ele])\n\n    for ele in plate_2_pool_wells:\n        p2_pool_match.extend([ele, ele, ele, ele])\n\n    for ele in plate_3_pool_wells:\n        p3_pool_match.extend([ele, ele, ele, ele])\n\n    for ele in plate_4_pool_wells:\n        p4_pool_match.extend([ele, ele, ele, ele])\n\n    pool_schemes = [p1_pool_match, p2_pool_match, p3_pool_match, p4_pool_match]\n\n    ctx.comment('\\nADDING WATER\\n\\n')\n    p20.pick_up_tip(water_tiprack.wells()[0])\n    for i in range(2):\n        for col in pool_plate.rows()[i]:\n            p20.aspirate(12, reservoir.wells()[0])\n            p20.dispense(12, col)\n            p20.blow_out()\n        ctx.comment('\\n')\n    p20.drop_tip()\n\n    ctx.comment('\\nADDING SAMPLE\\n\\n')\n    for plate, pool_scheme in zip(pcr_plates, pool_schemes):\n\n        for i, (pcr_row_start, pcr_col_start, pool) in enumerate(zip(pcr_row_nums*4, pcr_col_nums, pool_scheme)):\n\n            if i % 4 == 0:\n                if p20.has_tip:\n                    p20.return_tip()\n                p20.pick_up_tip()\n\n            source_well = plate.rows()[pcr_row_start][pcr_col_start]\n            p20.aspirate(3, source_well)\n            p20.dispense(3, pool)\n            p20.blow_out()\n\n        ctx.comment('\\n')\n",
+    "content": "# flake8: noqa\n\nmetadata = {\n    'protocolName': 'PCR Prep and Pooling with 384 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    # [p20_mount] = get_values(  # noqa: F821\n    #     \"p20_mount\")\n\n    p20_mount = \"left\"\n\n    # labware\n    pcr_plate_384 = ctx.load_labware(\n                'custom_384_wellplate_50ul', 8)\n    pool_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 5)\n\n\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in [11]]\n\n    # instruments\n    p20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)\n\n    # protocol\n    pool_wells = pool_plate.rows()[0][::2][:4]\n    row_starts = [0, 0, 1, 1]\n    col_starts = [0, 1, 0, 1]\n    col_ctr = 0\n    airgap = 3\n\n\n\n    for row_start, col_start, pool_well in zip(row_starts,\n                                               col_starts,\n                                               pool_wells):\n        p20.pick_up_tip()\n        col_ctr = 0\n\n        for _ in range(4):\n            for _ in range(3):\n                source_well = pcr_plate_384.rows()[row_start][col_start+col_ctr]\n                p20.aspirate(3, source_well)\n                p20.air_gap(airgap)\n                col_ctr += 2\n            p20.dispense(3*3+airgap*3, pool_well)\n\n        p20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -4344,63 +4344,15 @@
     ],
     "labware": [
         {
-            "name": "Custom 384 Well Plate 50 \u00b5L on 1",
-            "share": false,
-            "slot": "1",
-            "type": "custom_384_wellplate_50ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
-            "share": false,
-            "slot": "2",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
-            "share": false,
-            "slot": "3",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "Custom 384 Well Plate 50 \u00b5L on 4",
-            "share": false,
-            "slot": "4",
-            "type": "custom_384_wellplate_50ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "NEST 12 Well Reservoir 15 mL on 6",
-            "share": false,
-            "slot": "6",
-            "type": "nest_12_reservoir_15ml"
-        },
-        {
-            "name": "Custom 384 Well Plate 50 \u00b5L on 7",
-            "share": false,
-            "slot": "7",
-            "type": "custom_384_wellplate_50ul"
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
             "name": "Custom 384 Well Plate 50 \u00b5L on 8",
             "share": false,
             "slot": "8",
-            "type": "custom_384_wellplate_50ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 9",
-            "share": false,
-            "slot": "9",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "Custom 384 Well Plate 50 \u00b5L on 10",
-            "share": false,
-            "slot": "10",
             "type": "custom_384_wellplate_50ul"
         },
         {
