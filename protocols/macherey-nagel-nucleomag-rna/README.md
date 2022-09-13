@@ -16,7 +16,7 @@
 ## Description
 ![Macherey-Nagal](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo_50.jpeg)
 
-This protocol automates the NucleoMag RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples. Please access the application note here: [Application Note](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20App%20Note.pdf)
+This protocol automates the NucleoMag RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples.
 
 Before beginning the protocol on the OT-2, the following preparation steps are needed.
 1. Perform the lysis accoding to the NucleoMag® RNA user manual.
@@ -26,7 +26,7 @@ Before beginning the protocol on the OT-2, the following preparation steps are n
 5. Load the instrument deck according to the displayed positions.
 6. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
-You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20Protocol%20Info.pdf)
+You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20RNA%20on%20OT-2%20Protocol%20Info.pdf)
 
 
 ### Modules
@@ -83,4 +83,4 @@ All mentioned trademarks are protected by law. All used names and denotations ca
 
 
 ###### Internal
-macherey-nagal-nucleomag
+macherey-nagal-nucleomag-rna

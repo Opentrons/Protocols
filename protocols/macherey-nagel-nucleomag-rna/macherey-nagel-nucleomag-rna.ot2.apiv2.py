@@ -1,39 +1,30 @@
+# flake8: noqa
 from opentrons.types import Point
 import json
 import os
 import math
 
-metadata = {
-    'protocolName': 'NucleoMag_RNA_Rev00b',
-    'author': 'Macherey-Nagel <automation-bio@mn-net.com>',
-    'apiLevel': '2.9'
-}
-
+metadata = {'protocolName': 'NucleoMag_RNA_Rev01', 'author': 'Macherey-Nagel <automation-bio@mn-net.com>', 'apiLevel': '2.9'}
 
 def run(ctx):
 
     '''
     Variable definition
     '''
-    [num_samples, starting_vol, elution_vol, binding_buffer_vol, rDNase_vol,
-     bead_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps_bind, mix_reps_wash,
-     mix_reps_elu, sep_time_bind, sep_time_wash, sep_time_elu, dry_time,
-     tip_track] = get_values(  # noqa: F821
-     "num_samples", "starting_vol", "elution_vol", "binding_buffer_vol",
-     "rDNase_vol", "bead_vol", "wash1_vol", "wash2_vol", "wash3_vol",
-     "mix_reps_bind", "mix_reps_wash", "mix_reps_elu", "sep_time_bind",
-     "sep_time_wash", "sep_time_elu", "dry_time", "tip_track")
+    [num_samples, starting_vol, elution_vol, binding_buffer_vol, rDNase_vol, bead_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps_bind, mix_reps_wash, mix_reps_elu, sep_time_bind, sep_time_wash, sep_time_elu, dry_time, tip_track] = [48, 350, 100, 350, 300, 28, 600, 900, 900, 25, 20, 25, 5, 2, 5, 30, False]
 
-    total_vol_per_sample = starting_vol + (2*binding_buffer_vol) + \
-        rDNase_vol + wash1_vol + wash2_vol + wash3_vol
+    total_vol_per_sample = starting_vol + (2*binding_buffer_vol) + rDNase_vol + wash1_vol + wash2_vol + wash3_vol
     run_liq_waste_vol = num_samples * total_vol_per_sample
 
-    # Mag_height_elution_plate = 8.5
+    Mag_height_elution_plate = 8.5
 
     Mag_height_SQW = 5.5
 
     bottom_tolerance = 2.8
     # Bottom tolerance for aspriation from 12 Well Buffer Reserovir
+
+    max_num_sample = 48
+    max_num_columns = max_num_sample/8
 
     '''
     End of Variable Definition
@@ -47,11 +38,9 @@ def run(ctx):
     if not 50 <= elution_vol <= 200:
         raise Exception('Elution volume should be from 50 - 200µl.')
     if not run_liq_waste_vol <= 290000:
-        raise Exception('Number of samples exceeds maximum liquid waste \
-        volume of 400mL.')
-    if not num_samples <= 48:
-        raise Exception('Number of samples exceeds maximum number of \
-        48 samples.')
+        raise Exception('Number of samples exceeds maximum liquid waste volume of 400mL.')
+    if not num_samples <= max_num_sample:
+        raise Exception('Number of samples exceeds maximum number of 48 samples.')
     '''
     End of defining minimum & maximum volumes
     '''
@@ -61,42 +50,25 @@ def run(ctx):
     '''
     magdeck = ctx.load_module('magnetic module gen2', '10')
     magdeck.disengage()
-    # sep_plate = magdeck.load_labware(
-    #     '96_squarewell_block_macherey_nagel', 'Separation Plate')
-    sep_plate = magdeck.load_labware(
-        'nest_96_wellplate_2ml_deep', 'Separation Plate')
+    sep_plate = magdeck.load_labware('96_squarewell_block_macherey_nagel', 'Separation Plate')
 
-    liquid_waste = ctx.load_labware(
-        'agilent_1_reservoir_290ml', '11', 'Liquid Waste').wells()[0].top()
+    liquid_waste = ctx.load_labware('agilent_1_reservoir_290ml', '11', 'Liquid Waste').wells()[0].top()
 
-    # elution_plate = ctx.load_labware(
-    #     '96_elutionplate_ubottom_by_macherey_nagel', '1', 'Elution Plate')
-    elution_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'Elution Plate')
+    elution_plate = ctx.load_labware('96_elutionplate_ubottom_by_macherey_nagel', '1', 'Elution Plate')
 
-    tips300 = [
-        ctx.load_labware(
-            'opentrons_96_tiprack_300ul',
-            slot,
-            '300µl tiprack') for slot in ['2', '3', '5', '6']]
-    tips1000 = ctx.load_labware(
-        'opentrons_96_tiprack_1000ul', '9', '1000µl tiprack')
+    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,'300µl tiprack') for slot in ['2', '3', '5', '6']]
+    tips1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '9','1000µl tiprack')
 
     num_cols = math.ceil(num_samples/8)
 
-    parkingrack = ctx.load_labware(
-        'opentrons_96_tiprack_300ul', '8', 'empty tiprack for parking')
+    parkingrack = ctx.load_labware('opentrons_96_tiprack_300ul', '8', 'empty tiprack for parking')
     parking_spots = parkingrack.rows()[0][:num_cols]
 
-    buffers = ctx.load_labware(
-        'usascientific_12_reservoir_22ml', '7', 'NucleoMag Buffers')
+    buffers = ctx.load_labware('usascientific_12_reservoir_22ml', '7', 'NucleoMag Buffers')
 
-    beads = ctx.load_labware(
-        'opentrons_24_tuberack_generic_2ml_screwcap', '4',
-        'NucleoMag B-Beads').wells()[0]
+    beads = ctx.load_labware('opentrons_24_tuberack_generic_2ml_screwcap', '4', 'NucleoMag B-Beads').wells()[0]
     # Beads are placed in a single 2mL screwcap tube at A1
-    # Make sure to use max. 1.6mL beads to prevent the tip
-    # from spilling beads when driving down into the tube
+    # Make sure to use max. 1.6mL beads to prevent the tip from spilling beads when driving down into the tube
     # because of to high amount in the tube
 
     '''
@@ -130,8 +102,7 @@ def run(ctx):
     tool configuration
     '''
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tips300)
-    s1000 = ctx.load_instrument(
-        'p1000_single_gen2', 'right', tip_racks=[tips1000])
+    s1000 = ctx.load_instrument('p1000_single_gen2', 'right', tip_racks=[tips1000])
     '''
     End of tool configuration
     '''
@@ -146,7 +117,7 @@ def run(ctx):
     End of Calculations
     '''
 
-    # sets initial pipetting speeds
+    #sets initial pipetting speeds
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 200
@@ -154,7 +125,7 @@ def run(ctx):
     s1000.flow_rate.aspirate = 750
     s1000.flow_rate.dispense = 900
 
-    # define initial pipetting clearance
+    #define initial pipetting clearance
     m300.well_bottom_clearance.aspirate = 5
     m300.well_bottom_clearance.dispense = 25
 
@@ -185,9 +156,7 @@ def run(ctx):
     def _pick_up(pip, loc=None):
         nonlocal tip_log
         if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
-            ctx.pause(
-                'Replace ' + str(pip.max_volume) + 'µl tipracks before \
-                resuming.')
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \ resuming.')
             pip.reset_tipracks()
             tip_log['count'][pip] = 0
         if loc:
@@ -219,41 +188,34 @@ def run(ctx):
             drop_count = 0
 
     waste_vol = 0
-    waste_threshold = 300000
+    waste_threshold = 300000 #this would need to be changed since we use a dedicated liquid waste reservoir
 
     '''
     End of tip logging and wase handling
     '''
 
-    def remove_supernatant(
-            vol, reuse=False, restore=False, last=False, blowout=True):
+    def remove_supernatant(vol, reuse=False, restore=False, last=False, blowout=True):
 
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
         :param vol (float): The amount of volume to aspirate from all deepwell
                             sample wells and dispense in the liquid waste.
-        :param reuse (boolean): Whether to pick up previously restored
-                                sample-corresponding tips from the
-                                'parking rack' or to pick up new tips.
-        :param restore (boolean): Whether to park used tips in the
-                                  'parking rack' or discard them to waste.
-        :param last (boolean): Does perform the supernatant removal at the
-                               lowest hight possible with an extra over
-                               aspiration volume for the last wash step to
-                               optimize drying performance
+        :param reuse (boolean): Whether to pick up previously restored sample-corresponding tips
+                               from the 'parking rack' or to pick up new tips.
+        :param restore (boolean): Whether to park used tips in the 'parking rack' or discard them to waste.
+        :param last (boolean): Does perform the supernatant removal at the lowest hight possible with an extra over aspiration volume for the last wash step to optimize drying performance
         """
 
         def _waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
-                ctx.pause('Please empty liquid waste (slot 11) before \
-                resuming.')
+                ctx.pause('Please empty liquid waste (slot 11) before \ resuming.')
                 ctx.home()
                 waste_vol = 0
             waste_vol += vol
         if last:
-            vol = vol + 60
+            vol=vol+60
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         m300.flow_rate.aspirate = 24
@@ -265,7 +227,7 @@ def run(ctx):
             else:
                 _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
-            # position modifier to aspirate away from the bead pellet
+            #position modifier to aspirate away from the bead pellet
             for _ in range(num_trans):
                 _waste_track(vol_per_trans*8)
                 if m300.current_volume > 0:
@@ -279,9 +241,8 @@ def run(ctx):
                 else:
                     loc = m.bottom(1.0).move(Point(x=side*1))
 
-                m300.transfer(
-                    vol_per_trans, loc, liquid_waste, new_tip='never',
-                    air_gap=20)
+                m300.transfer(vol_per_trans, loc, liquid_waste, new_tip='never',
+                              air_gap=20)
 
                 if _ == num_trans-1:
                     if blowout:
@@ -310,21 +271,16 @@ def run(ctx):
         """
         `bind` will perform magnetic bead binding on each sample in the
         deepwell plate. The binding beads will be mixed before
-        transfer (with s1000 tool), and the samples will be mixed
-        with the binding beads after the transfer (with m300 tool).
-        The magnetic deck activates after the addition to all
+        transfer (with s1000 tool), and the samples will be mixed with the binding beads after
+        the transfer (with m300 tool). The magnetic deck activates after the addition to all
         samples, and the supernatant is removed after bead binding.
-        :param vol (float): Amount of volume of Binding Buffer
-        to add to each well.
-        :param bead_vol (float): The amount of volume of NucleoMag B-Beads
-        to dispense to each well.
+        :param vol (float): Amount of volume of Binding Buffer to add to each well.
+        :param bead_vol (float): The amount of volume of NucleoMag B-Beads to dispense to each well.
         :param reuse (boolean): Whether to save sample-corresponding tips
-                               between adding binding buffer and
-                               removing the supernatant
-        :param restore (boolean): Whether to save sample-corresponding tips for
-        reuse in the next stepre
+                               between adding binding buffer and removing the supernatant
+        :param restore (boolean): Whether to save sample-corresponding tips for reuse in the next stepre
         """
-        if magdeck.status == 'engaged':
+        if magdeck.status== 'engaged':
             magdeck.disengage()
 
         # Multidispense loop for distributing beads
@@ -335,6 +291,7 @@ def run(ctx):
         else:
             bead_aspirate_vol = bead_aspirate_vol_total
 
+
         bead_mix_vol_temp = num_samples * bead_vol
         if bead_mix_vol_temp >= 900:
             bead_mix_vol = 900
@@ -344,7 +301,7 @@ def run(ctx):
         air_gap_vol = 20
         bead_dispense_vol = bead_vol + air_gap_vol
 
-        # Mix loop to resuspend beads
+        #Mix loop to resuspend beads
         s1000.pick_up_tip()
         for x in range(3):
             s1000.aspirate(bead_mix_vol, beads.bottom(5))
@@ -372,7 +329,7 @@ def run(ctx):
             vol_per_trans = vol/num_trans
             m300.flow_rate.aspirate = 100
             for t in range(num_trans):
-                # src = binding_buffer[i//(10//len(binding_buffer))]
+                #src = binding_buffer[i//(max_num_columns//len(binding_buffer))]
                 src = binding_buffer
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
@@ -380,13 +337,11 @@ def run(ctx):
                 m300.aspirate(20, src.top(2))
                 ctx.delay(seconds=5, msg='drop delay')
                 m300.dispense(vol_per_trans+20, well.top(-3))
-                # m300.transfer(
-                #     vol_per_trans, src.bottom(bottom_tolerance),
-                #     well.top(-3), air_gap=20, new_tip='never')
+                # m300.transfer(vol_per_trans, src.bottom(bottom_tolerance), well.top(-3), air_gap=20, new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
             side = 1 if i % 2 == 0 else -1
-            # l oc_mix = well.bottom(1.5).move(Point(x=side*0.8))
+            #loc_mix = well.bottom(1.5).move(Point(x=side*0.8))
             loc_mix_asp_bottom = well.bottom(2)
             loc_mix_asp_top = well.bottom(5)
             loc_mix_dis_bottom = well.bottom(1)
@@ -394,8 +349,7 @@ def run(ctx):
             loc_mix_dis_top = well.bottom(15)
             # maybe split into two mix pos.
             # one directly over the bead pellet for the first 4-5 cycles
-            # a second one higher in the liquid column to
-            # distribute the beads during the later mix cycles)
+            # a second one higher in the liquid column to distribute the beads during the later mix cycles)
             # m300.mix(mix_reps_bind, 200, loc_mix)
             ''' optimized mix '''
 
@@ -416,8 +370,7 @@ def run(ctx):
             m300.flow_rate.aspirate = 100
             m300.flow_rate.dispense = 200
             ''' end of optimized mix '''
-            # aspirate and dispense 1µL at top(-10),
-            # is there a ctx.move command?
+            # aspirate and dispense 1µL at top(-10), is there a ctx.move command?
             m300.aspirate(15, well.top(-10))
             ctx.delay(seconds=3, msg='Blow out delay')
             m300.dispense(15, well.top(-10))
@@ -430,31 +383,22 @@ def run(ctx):
 
         ctx.delay(minutes=2, msg='Incubate for 2 minutes')
         magdeck.engage(height=Mag_height_SQW)
-        ctx.delay(
-            minutes=sep_time_bind,
-            msg='Incubating on MagDeck for '+str(sep_time_bind)+' minutes.')
+        ctx.delay(minutes=sep_time_bind, msg='Incubating on MagDeck for ' + str(sep_time_bind) + ' minutes.')
 
         # remove initial supernatant
-        remove_supernatant(
-            vol+bead_vol+starting_vol,
-            reuse=reuse, restore=restore, last=True)
+        remove_supernatant(vol+bead_vol+starting_vol, reuse=reuse, restore=restore, last=True)
 
     def rDNase_digest(rDNase_vol, rebind_vol, reuse=True, restore=False):
         """
-        `rDNase_digest` will perform a DNase digestion of the DNA bound to the
-        magnetic beads followed by a rebinding auf RNA to the magnetic beads.
-        :param rDNase_vol (float): Amount of volume of rDNase reaction mix to
-        add to each well.
-        :param rebind_vol (float): The amount of MR2 buffer to dispense to each
-        well. Typically equal to initial binding volume of MR2
+        `rDNase_digest` will perform a DNase digestion of the DNA bound to the magnetic beads followed by a rebinding auf RNA to the magnetic beads.
+        :param rDNase_vol (float): Amount of volume of rDNase reaction mix to add to each well.
+        :param rebind_vol (float): The amount of MR2 buffer to dispense to each well. Typically equal to initial binding volume of MR2
         :param reuse (boolean): Whether to save sample-corresponding tips
-                               between adding binding buffer and removing
-                               the supernatant
-        :param restore (boolean): Whether to save sample-corresponding tips for
-        reuse in the next stepre
+                               between adding binding buffer and removing the supernatant
+        :param restore (boolean): Whether to save sample-corresponding tips for reuse in the next stepre
         """
         ctx.delay(minutes=20, msg='Dr before rDNase digest')
-        if magdeck.status == 'engaged':
+        if magdeck.status== 'engaged':
             magdeck.disengage()
 
         working_vol = rDNase_vol + rebind_vol
@@ -467,20 +411,17 @@ def run(ctx):
             for t in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, rDNase_mix.top())
-                m300.aspirate(
-                    vol_per_trans, rDNase_mix.bottom(bottom_tolerance))
+                m300.aspirate(vol_per_trans, rDNase_mix.bottom(bottom_tolerance))
                 m300.aspirate(20, rDNase_mix.top(2))
                 ctx.delay(seconds=5, msg='drop delay')
                 m300.dispense(vol_per_trans+20, well.top(-3))
-                # m300.transfer(
-                #     vol_per_trans, src.bottom(bottom_tolerance),
-                #     well.top(-3), air_gap=20, new_tip='never')
+                # m300.transfer(vol_per_trans, src.bottom(bottom_tolerance), well.top(-3), air_gap=20, new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
             side = 1 if i % 2 == 0 else -1
             loc_mix_asp_bottom = well.bottom(2)
             loc_mix_asp_top = well.bottom(3)
-            # loc_mix_dis_bottom = well.bottom(1)
+            loc_mix_dis_bottom = well.bottom(1)
             loc_mix_dis_pellet = well.bottom(1.5).move(Point(x=side*0.8))
             loc_mix_dis_top = well.bottom(15)
             ''' optimized mix '''
@@ -507,7 +448,7 @@ def run(ctx):
 
         ctx.delay(minutes=15, msg='Incubate for 15 minutes DNase digest')
 
-        # start rebinding
+        #start rebinding
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             num_trans = math.ceil(rebind_vol/200)
@@ -516,20 +457,17 @@ def run(ctx):
             for t in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, rDNase_mix.top())
-                m300.aspirate(
-                    vol_per_trans, rebind_buffer.bottom(bottom_tolerance))
+                m300.aspirate(vol_per_trans, rebind_buffer.bottom(bottom_tolerance))
                 m300.aspirate(20, rebind_buffer.top(2))
                 ctx.delay(seconds=5, msg='drop delay')
                 m300.dispense(vol_per_trans+20, well.top(-3))
-                # m300.transfer(
-                #     vol_per_trans, src.bottom(bottom_tolerance),
-                #     well.top(-3), air_gap=20, new_tip='never')
+                # m300.transfer(vol_per_trans, src.bottom(bottom_tolerance), well.top(-3), air_gap=20, new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
             side = 1 if i % 2 == 0 else -1
             loc_mix_asp_bottom = well.bottom(2)
             loc_mix_asp_top = well.bottom(5)
-            # loc_mix_dis_bottom = well.bottom(1)
+            loc_mix_dis_bottom = well.bottom(1)
             loc_mix_dis_pellet = well.bottom(1.5).move(Point(x=side*0.8))
             loc_mix_dis_top = well.bottom(15)
             ''' optimized mix '''
@@ -559,17 +497,13 @@ def run(ctx):
 
         ctx.delay(minutes=2, msg='Incubate for 2 minutes')
         magdeck.engage(height=Mag_height_SQW)
-        ctx.delay(
-            minutes=sep_time_bind,
-            msg='Incubating on MagDeck for '+str(sep_time_bind)+' minutes.')
+        ctx.delay(minutes=sep_time_bind, msg='Incubating on MagDeck for ' + str(sep_time_bind) + ' minutes.')
 
         # remove initial supernatant
-        remove_supernatant(
-            working_vol, reuse=reuse, restore=restore, last=False)
+        remove_supernatant(working_vol, reuse=reuse, restore=restore, last=False)
 
-    def wash(
-            vol, source, mix_reps=mix_reps_wash, reuse=True, restore=True,
-            resuspend=True, last=False, blowout=True):
+
+    def wash(vol, source, mix_reps=mix_reps_wash, reuse=True, restore=True, resuspend=True, last=False, blowout=True):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -582,10 +516,9 @@ def run(ctx):
         :param mix_reps (int): The number of repititions to mix the beads with
                                specified wash buffer (ignored if resuspend is
                                False).
-        :param reuse (boolean): Whether to pick-up sample-corresponding tips
-        for mixing and supernatant removal that were restored in previous steps
-        :param restore (boolean): Whether to park sample-corresponding tips for
-        reuse in a later step
+        :param reuse (boolean): Whether to pick-up sample-corresponding tips for mixing and supernatant removal
+                                that were restored in a previous step.
+        :param restore (boolean): Whether to park sample-corresponding tips for reuse in a later step
         :param resuspend (boolean): Whether to resuspend beads in wash buffer.
         """
 
@@ -595,11 +528,10 @@ def run(ctx):
         num_trans = math.ceil(vol/250)
         vol_per_trans = vol/num_trans
 
-        # Dispense with fresh tips & mix with restored tips from previous step
-        if reuse:
+        if reuse: #Dispense with fresh tips & mix with restored tips from previous step
             _pick_up(m300)
             for i, (m) in enumerate(mag_samples_m):
-                src = source[i//(10//len(source))]
+                src = source[i//(max_num_columns//len(source))]
                 for n in range(num_trans):
                     if m300.current_volume > 0:
                         m300.dispense(m300.current_volume, src.top())
@@ -607,17 +539,14 @@ def run(ctx):
                     m300.aspirate(20, src.top(2))
                     ctx.delay(seconds=5, msg='drop delay')
                     m300.dispense(vol_per_trans+20, m.top())
-                    # m300.transfer(
-                    #     vol_per_trans, src.bottom(bottom_tolerance),
-                    #     m.top(), air_gap=20, new_tip='never')
-                    if n < num_trans - 1:  # only air_gap if going back to src
+                    # m300.transfer(vol_per_trans, src.bottom(bottom_tolerance), m.top(), air_gap=20, new_tip='never')
+                    if n < num_trans - 1:  # only air_gap if going back to source
                         m300.air_gap(20)
             _drop(m300)
             if resuspend:
                 m300.flow_rate.aspirate = 220
                 m300.flow_rate.dispense = 300
-                for i, (m, spot) in enumerate(
-                        zip(mag_samples_m, parking_spots)):
+                for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
                     _pick_up(m300, spot)
                     side = 1 if i % 2 == 0 else -1
                     # loc_mix = m.bottom(2).move(Point(x=side*1.5))
@@ -646,11 +575,11 @@ def run(ctx):
                     m300.drop_tip(spot)
                 m300.flow_rate.aspirate = 100
                 m300.flow_rate.dispense = 200
-        else:  # Dispense & mix with fresh tips
+        else: # Dispense & mix with fresh tips
             for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
                 _pick_up(m300)
                 side = 1 if i % 2 == 0 else -1
-                # loc_mix = m.bottom(2).move(Point(x=side*1.5))
+                #loc_mix = m.bottom(2).move(Point(x=side*1.5))
                 ''' new mix locations '''
                 loc_mix_asp_bottom = m.bottom(1.5)
                 loc_mix_asp_top = m.bottom(5)
@@ -662,10 +591,8 @@ def run(ctx):
                 for n in range(num_trans):
                     if m300.current_volume > 0:
                         m300.dispense(m300.current_volume, src.top())
-                    m300.transfer(
-                        vol_per_trans, src.bottom(bottom_tolerance),
-                        m.top(), air_gap=20, new_tip='never')
-                    if n < num_trans - 1:  # only air_gap if going back to src
+                    m300.transfer(vol_per_trans, src.bottom(bottom_tolerance), m.top(), air_gap=20, new_tip='never')
+                    if n < num_trans - 1:  # only air_gap if going back to source
                         m300.air_gap(20)
                 if resuspend:
                     m300.flow_rate.aspirate = 80
@@ -692,15 +619,15 @@ def run(ctx):
                 m300.air_gap(20)
                 m300.drop_tip(spot)
 
+
+
+
         if magdeck.status == 'disengaged':
             magdeck.engage(height=Mag_height_SQW)
 
-        ctx.delay(
-            minutes=sep_time_wash,
-            msg='Incubating on MagDeck for '+str(sep_time_wash)+' minutes.')
+        ctx.delay(minutes=sep_time_wash, msg='Incubating on MagDeck for ' + str(sep_time_wash) + ' minutes.')
 
-        remove_supernatant(
-            vol, reuse=True, restore=restore, last=last, blowout=blowout)
+        remove_supernatant(vol, reuse=True, restore=restore, last=last, blowout=blowout)
 
     def elute(vol):
         """
@@ -732,9 +659,7 @@ def run(ctx):
             _drop(m300)
 
         magdeck.engage(height=Mag_height_SQW)
-        ctx.delay(
-            minutes=sep_time_elu,
-            msg='Incubating on MagDeck for '+str(sep_time_elu)+' minutes.')
+        ctx.delay(minutes=sep_time_elu, msg='Incubating on MagDeck for ' + str(sep_time_elu) + ' minutes.')
 
         m300.flow_rate.aspirate = 30
 
@@ -750,6 +675,7 @@ def run(ctx):
 
         magdeck.disengage()
 
+
     """
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
@@ -757,15 +683,9 @@ def run(ctx):
     bind(binding_buffer_vol, bead_vol, reuse=True, restore=False)
     rDNase_digest(rDNase_vol, binding_buffer_vol, reuse=True, restore=False)
 
-    wash(
-        wash1_vol, wash1, reuse=False,
-        restore=False, resuspend=True, last=False, blowout=False)
-    wash(
-        wash2_vol, wash2, reuse=False,
-        restore=False, resuspend=True, last=False, blowout=False)
-    wash(
-        wash3_vol, wash3, reuse=False,
-        restore=False, resuspend=True, last=True, blowout=False)
+    wash(wash1_vol, wash1, reuse=False, restore=False, resuspend=True, last=False, blowout=False)
+    wash(wash2_vol, wash2, reuse=False, restore=False, resuspend=True, last=False, blowout=False)
+    wash(wash3_vol, wash3, reuse=False, restore=False, resuspend=True, last=True, blowout=False)
 
     ctx.delay(minutes=dry_time, msg='Air dry')
 
