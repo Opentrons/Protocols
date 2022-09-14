@@ -64,7 +64,7 @@ You can access the full descripition of this workflow on the OT-2 by visiting th
 5. Wash 3
 6. Elution
 
-### Note
+* Note
 The default values for all volumes, incubation times and mix repetitions were pretested and validated.
 We do not recommend to change them. If you still decide to change them please scale all volumes proportionally.
 For change recommendations please contact automation-bio@mn-net.de"
@@ -77,6 +77,7 @@ For change recommendations please contact automation-bio@mn-net.de"
 5. Set up your deck according to the deck map.
 6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 7. Hit "Run".
+
 
 ### Additional Notes
 
