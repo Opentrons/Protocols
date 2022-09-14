@@ -64,17 +64,10 @@ You can access the full descripition of this workflow on the OT-2 by visiting th
 5. Wash 3
 6. Elution
 
-### Additional Notes
+* Note
 The default values for all volumes, incubation times and mix repetitions were pretested and validated.
 We do not recommend to change them. If you still decide to change them please scale all volumes proportionally.
 For change recommendations please contact automation-bio@mn-net.de"
-
-If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
-
-**Disclaimer**: MACHEREY-NAGEL GmbH & Co. KG makes every effort to include accurate and up-to-date information within this publication; however, it is possible that omissions or errors might have occurred. MACHEREY-NAGEL GmbH & Co. KG cannot, therefore, make any representations or warranties, expressed or implied, as to the accuracy or completeness of the information provided in this publication. Changes in this publication can be made at any time without notice. For technical details and detailed procedures of the specifications provided in this document please contact your MACHEREY-NAGEL representative. This publication may contain reference to applications and products which are not available in all markets. Please check with your local sales representative.
-All mentioned trademarks are protected by law. All used names and denotations can be brands, trademarks, or registered labels of their respective owner – also if they are not special denotation. To mention products and brands is only a kind of information (i.e., it does not offend against trademarks and brands and can not be seen as a kind of recommendation or assessment). Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement, recommendation, or support by MACHEREY-NAGEL GmbH & Co. KG or Opentrons. Any views or opinions expressed herein by the authors' do not necessarily state or reflect those of MACHEREY-NAGEL or the Eppendorf AG. NucleoMag® is a registered trademark of MACHEREY-NAGEL GmbH & Co. KG, Düren, Germany. Opentrons OT-2 is a device from Opentrons, New York, USA.
-
-* The Download links includes all Protocols in their respective sub folders as well as the .json files for the two labware files.
 
 ### Process
 1. Input your protocol parameters above.
@@ -84,6 +77,16 @@ All mentioned trademarks are protected by law. All used names and denotations ca
 5. Set up your deck according to the deck map.
 6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 7. Hit "Run".
+
+
+### Additional Notes
+
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
+
+**Disclaimer**: MACHEREY-NAGEL GmbH & Co. KG makes every effort to include accurate and up-to-date information within this publication; however, it is possible that omissions or errors might have occurred. MACHEREY-NAGEL GmbH & Co. KG cannot, therefore, make any representations or warranties, expressed or implied, as to the accuracy or completeness of the information provided in this publication. Changes in this publication can be made at any time without notice. For technical details and detailed procedures of the specifications provided in this document please contact your MACHEREY-NAGEL representative. This publication may contain reference to applications and products which are not available in all markets. Please check with your local sales representative.
+All mentioned trademarks are protected by law. All used names and denotations can be brands, trademarks, or registered labels of their respective owner – also if they are not special denotation. To mention products and brands is only a kind of information (i.e., it does not offend against trademarks and brands and can not be seen as a kind of recommendation or assessment). Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement, recommendation, or support by MACHEREY-NAGEL GmbH & Co. KG or Opentrons. Any views or opinions expressed herein by the authors' do not necessarily state or reflect those of MACHEREY-NAGEL or the Eppendorf AG. NucleoMag® is a registered trademark of MACHEREY-NAGEL GmbH & Co. KG, Düren, Germany. Opentrons OT-2 is a device from Opentrons, New York, USA.
+
+* The Download links includes all Protocols in their respective sub folders as well as the .json files for the two labware files.
 
 
 ###### Internal
