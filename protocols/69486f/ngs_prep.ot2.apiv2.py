@@ -408,16 +408,14 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     num_pickups = 1
 
     # distribute replicates
-    for source_set, pool, replicate_set in zip(
-            pool_source_sets, pool_dests, pool_replicate_sets):
-        for pool, replicate_set in zip(pool_dests, pool_replicate_sets):
-            # transfer replicates
-            pick_up(p20, 1)
-            for i, r in enumerate(replicate_set):
-                if i == 0:
-                    p20.mix(10, 10, pool.bottom(3), rate=2.0)
-                p20.aspirate(5, pool)
-                p20.dispense(5, r.bottom(2))
-                p20.mix(1, 5, r.bottom(2), rate=2.0)
-                p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
-            p20.drop_tip()
+    for pool, replicate_set in zip(pool_dests, pool_replicate_sets):
+        # transfer replicates
+        pick_up(p20, 1)
+        for i, r in enumerate(replicate_set):
+            if i == 0:
+                p20.mix(10, 10, pool.bottom(3), rate=2.0)
+            p20.aspirate(5, pool)
+            p20.dispense(5, r.bottom(2))
+            p20.mix(1, 5, r.bottom(2), rate=2.0)
+            p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
+        p20.drop_tip()
