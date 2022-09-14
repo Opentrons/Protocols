@@ -7,7 +7,7 @@
     },
     {
         "type": "int",
-        "label": "Starting Volume [Scale this volume proportionally to other volumes]",
+        "label": "Starting Volume",
         "name": "starting_vol",
         "default": 350
     },
@@ -19,37 +19,37 @@
     },
     {
         "type": "int",
-        "label": "Binding Buffer Volume [Scale this volume proportionally to other volumes]",
+        "label": "Binding Buffer Volume",
         "name": "binding_buffer_vol",
         "default": 350
     },
     {
         "type": "int",
-        "label": "rDNase Volume [Scale this volume proportionally to other volumes]",
+        "label": "rDNase Volume",
         "name": "rDNase_vol",
         "default": 300
     },
     {
         "type": "int",
-        "label": "Bead Volume [Scale this volume proportionally to other volumes]",
+        "label": "Bead Volume",
         "name": "bead_vol",
         "default": 28
     },
     {
         "type": "int",
-        "label": "Wash 1 Volume [Scale this volume proportionally to other volumes]",
+        "label": "Wash 1 Volume",
         "name": "wash1_vol",
         "default": 600
     },
     {
         "type": "int",
-        "label": "Wash 2 Volume [Scale this volume proportionally to other volumes]",
+        "label": "Wash 2 Volume",
         "name": "wash2_vol",
         "default": 900
     },
     {
         "type": "int",
-        "label": "Wash 3 Volume [Scale this volume proportionally to other volumes]",
+        "label": "Wash 3 Volume",
         "name": "wash3_vol",
         "default": 900
     },
