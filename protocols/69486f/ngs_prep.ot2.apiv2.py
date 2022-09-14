@@ -250,7 +250,7 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
         p20.drop_tip()
 
     """ NORMALIZATION """
-    pool_dests = tuberack2.wells()[4:4+num_samples]
+    pool_dests = dilution_plate.columns()[-1][:num_samples]
     all_pcr1_wells = [well for set in pcr1_sample_sets for well in set]
     all_normalization_wells = [
         normalization_plate.wells()[pcr1_plate.wells().index(well)]
