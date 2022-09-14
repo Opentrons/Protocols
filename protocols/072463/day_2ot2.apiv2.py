@@ -35,9 +35,15 @@ def run(ctx: protocol_api.ProtocolContext):
     # load modules
 
     temp_mod = ctx.load_module('temperature module gen2', '3')
+    temp_mod.set_temperature(95)
 
     # load labware
     temp_plate = temp_mod.load_labware('nest_96_wellplate_2ml_deep')
+    reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '1')
+    std_plate = ctx.load_labware('opentrons_24_tuberack_generic_2ml_screwcap',
+                                 '2')
+    sample_plate = ctx.load_labware('opentrons_24_tuberack_generic_'
+                                    '2ml_screwcap', '6')
 
     # load tipracks
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -46,64 +52,12 @@ def run(ctx: protocol_api.ProtocolContext):
                   for slot in ['7', '10']]
 
     # load instrument
-    p300 = load_instrument('p300_single_gen2' p300_mount,
+    p300 = load_instrument('p300_single_gen2', p300_mount,
                            tip_racks=tiprack_300)
     p20 = load_instrument('p20_single_gen2', p20_mount,
                           tip_racks=tiprack_20)
-    '''
-    Nomenclature for pipette:
-
-    use 'p'  for single-channel, 'm' for multi-channel,
-    followed by number of microliters.
-
-    p20, p300, p1000 (single channel pipettes)
-    m20, m300 (multi-channel pipettes)
-
-    If loading pipette, load with:
-
-    ctx.load_instrument(
-                        '{pipette api load name}',
-                        pipette_mount ("left", or "right"),
-                        tip_racks=tiprack
-                        )
-    '''
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
-    '''
-
-    Define all pipette functions, and class extensions here.
-    These may include but are not limited to:
-
-    - Custom pickup functions
-    - Custom drop tip functions
-    - Custom Tip tracking functions
-    - Custom Trash tracking functions
-    - Slow tip withdrawal
-
-    For any functions in your protocol, describe the function as well as
-    describe the parameters which are to be passed in as a docstring below
-    the function (see below).
-
-    def pick_up(pipette):
-        """`pick_up()` will pause the protocol when all tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
-
-        :param pipette: The pipette desired to pick up tip
-        as definited earlier in the protocol (e.g. p300, m20).
-        """
-        try:
-            pipette.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
-            pipette.pick_up_tip()
-
-    '''
 
     # helper functions
     '''
@@ -125,7 +79,13 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # reagents
-
+    std_plate_well_list = [item for sublist in std_plate.rows()
+                           for item in sublist]
+    std_wells = std_plate_well_list[:21]
+    reag_a = std_plate.rows()[3][3]
+    reag_b = std_plate.rows()[3][4]
+    reag_c = std_plate.rows()[3][5]
+    sample_list = sample_plate.wells()[:4]+sample_plate.wells()[12:16]
     '''
     Define where all reagents are on the deck using the labware defined above.
 
@@ -149,27 +109,22 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    # protocol
+    # BEGIN PROTOCOL
 
-    '''
+    # Transfer X uL from starting vials slot 6 to slot 3 in triplicate
 
-    Include header sections as follows for each "section" of your protocol.
+    # Transfer 36 uL DI from slot 1 well 1 to all 7 standards in triplicate
 
-    Section can be defined as a step in a bench protocol.
+    # Wait 1 hour
 
-    e.g.
+    # Add 46 uL to samples
 
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
+    # Reagent A, add 30 uL to all samples and standards
 
-    for .... in ...:
-        ...
-        ...
+    # Turn off temp module
 
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
+    # 1 hour wait
 
-    ...
-    ...
-    ...
+    # 49 uL Reagent B added to all samples/standards
 
-
-    '''
+    # 75 uL Reagent C added to all samples/standards
