@@ -346,7 +346,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, forward_primer_well in zip(
-            tuberack.wells()[16:16+num_samples],
+            tuberack2.wells()[12:12+num_samples],
             tuberack.wells()[8:8+num_samples])
     ]
 
