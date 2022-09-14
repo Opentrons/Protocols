@@ -355,7 +355,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     vol_primer_mm = 0.1*num_samples_mm_creation
     reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
-            [mm2, water, reverse_primer2],
+            [mm1, water, reverse_primer2],
             [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
