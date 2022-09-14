@@ -21,7 +21,6 @@ Explanation of complex parameters below:
 
 ### Labware
 * [Opentrons 4-in-1 Tube Racks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
-* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/universal-filter-tips/?_gl=1*1j3fcfo*_ga*MTM2NTEwNjE0OS4xNjIxMzYxMzU4*_ga_GNSMNLW4RY*MTY0NTAyNjkwOC43MTUuMC4xNjQ1MDI2OTA4LjA.&_ga=2.189248875.1378610984.1644865280-1365106149.1621361358)
 * [Opentrons 20ul Filter Tips](https://shop.opentrons.com/universal-filter-tips/?_gl=1*1j3fcfo*_ga*MTM2NTEwNjE0OS4xNjIxMzYxMzU4*_ga_GNSMNLW4RY*MTY0NTAyNjkwOC43MTUuMC4xNjQ1MDI2OTA4LjA.&_ga=2.189248875.1378610984.1644865280-1365106149.1621361358)
 * Custom 0.12 and 0.2mL 96 well plates
 

@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "NucleoMag_RNA_Rev01.ot2.apiv2.py"
+            "08fd01-pt3.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/macherey-nagel-nucleomag",
-    "slug": "macherey-nagel-nucleomag",
+    "path": "protocols/08fd01-pt3",
+    "slug": "08fd01-pt3",
     "status": "ok"
 }

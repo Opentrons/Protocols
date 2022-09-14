@@ -216,10 +216,11 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     pcr1_mix_dest_sets = []
     for i in range(max_subsamples):
         temp = []
-        for set in sets:
-            wells = set[i*2:(i+1)*2]
-            for well in wells:
-                temp.append(well)
+        for num_subsamples, set in zip(subsample_list, sets):
+            if num_subsamples >= i+1:
+                wells = set[i*2:(i+1)*2]
+                for well in wells:
+                    temp.append(well)
         temp.append(locs_ntc[i])
         pcr1_mix_dest_sets.append(temp)
 
@@ -250,7 +251,7 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
         p20.drop_tip()
 
     """ NORMALIZATION """
-    pool_dests = tuberack2.wells()[4:4+num_samples]
+    pool_dests = dilution_plate.columns()[-1][:num_samples]
     all_pcr1_wells = [well for set in pcr1_sample_sets for well in set]
     all_normalization_wells = [
         normalization_plate.wells()[pcr1_plate.wells().index(well)]
@@ -346,7 +347,8 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, forward_primer_well in zip(
-            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples])
+            tuberack2.wells()[12:12+num_samples],
+            tuberack.wells()[8:8+num_samples])
     ]
 
     # add all constant reagents to each mix tube
@@ -355,7 +357,7 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     vol_primer_mm = 0.1*num_samples_mm_creation
     reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
-            [mm2, water, reverse_primer2],
+            [mm1, water, reverse_primer2],
             [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
@@ -407,16 +409,14 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     num_pickups = 1
 
     # distribute replicates
-    for source_set, pool, replicate_set in zip(
-            pool_source_sets, pool_dests, pool_replicate_sets):
-        for pool, replicate_set in zip(pool_dests, pool_replicate_sets):
-            # transfer replicates
-            pick_up(p20, 1)
-            for i, r in enumerate(replicate_set):
-                if i == 0:
-                    p20.mix(10, 10, pool.bottom(3), rate=2.0)
-                p20.aspirate(5, pool)
-                p20.dispense(5, r.bottom(2))
-                p20.mix(1, 5, r.bottom(2), rate=2.0)
-                p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
-            p20.drop_tip()
+    for pool, replicate_set in zip(pool_dests, pool_replicate_sets):
+        # transfer replicates
+        pick_up(p20, 1)
+        for i, r in enumerate(replicate_set):
+            if i == 0:
+                p20.mix(10, 10, pool.bottom(3), rate=2.0)
+            p20.aspirate(5, pool)
+            p20.dispense(5, r.bottom(2))
+            p20.mix(1, 5, r.bottom(2), rate=2.0)
+            p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
+        p20.drop_tip()

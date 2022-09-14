@@ -16,7 +16,7 @@
 ## Description
 ![Macherey-Nagal](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo_50.jpeg)
 
-This protocol automates the NucleoMag RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples. Please access the application note here: [Application Note](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20App%20Note.pdf)
+This protocol automates the NucleoMag RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples.
 
 Before beginning the protocol on the OT-2, the following preparation steps are needed.
 1. Perform the lysis accoding to the NucleoMag® RNA user manual.
@@ -26,7 +26,7 @@ Before beginning the protocol on the OT-2, the following preparation steps are n
 5. Load the instrument deck according to the displayed positions.
 6. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
-You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20on%20OT-2%20Protocol%20Info.pdf)
+You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20RNA%20on%20OT-2%20Protocol%20Info.pdf)
 
 
 ### Modules
@@ -81,6 +81,8 @@ If you have any questions about this protocol, please contact the Protocol Devel
 **Disclaimer**: MACHEREY-NAGEL GmbH & Co. KG makes every effort to include accurate and up-to-date information within this publication; however, it is possible that omissions or errors might have occurred. MACHEREY-NAGEL GmbH & Co. KG cannot, therefore, make any representations or warranties, expressed or implied, as to the accuracy or completeness of the information provided in this publication. Changes in this publication can be made at any time without notice. For technical details and detailed procedures of the specifications provided in this document please contact your MACHEREY-NAGEL representative. This publication may contain reference to applications and products which are not available in all markets. Please check with your local sales representative.
 All mentioned trademarks are protected by law. All used names and denotations can be brands, trademarks, or registered labels of their respective owner – also if they are not special denotation. To mention products and brands is only a kind of information (i.e., it does not offend against trademarks and brands and can not be seen as a kind of recommendation or assessment). Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement, recommendation, or support by MACHEREY-NAGEL GmbH & Co. KG or Opentrons. Any views or opinions expressed herein by the authors' do not necessarily state or reflect those of MACHEREY-NAGEL or the Eppendorf AG. NucleoMag® is a registered trademark of MACHEREY-NAGEL GmbH & Co. KG, Düren, Germany. Opentrons OT-2 is a device from Opentrons, New York, USA.
 
+* The Download links includes all Protocols in their respective sub folders as well as the .json files for the two labware files.
+
 
 ###### Internal
-macherey-nagal-nucleomag
+macherey-nagal-nucleomag-rna
