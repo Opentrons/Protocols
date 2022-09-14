@@ -216,10 +216,11 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     pcr1_mix_dest_sets = []
     for i in range(max_subsamples):
         temp = []
-        for set in sets:
-            wells = set[i*2:(i+1)*2]
-            for well in wells:
-                temp.append(well)
+        for num_subsamples, set in zip(subsample_list, sets):
+            if num_subsamples >= i+1:
+                wells = set[i*2:(i+1)*2]
+                for well in wells:
+                    temp.append(well)
         temp.append(locs_ntc[i])
         pcr1_mix_dest_sets.append(temp)
 

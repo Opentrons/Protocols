@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "sample/subsample format",
     "name": "sample_csv",
-    "default": "samples index,# subsamples\n1,6\n2,6\n3,6\n4,6"
+    "default": "samples index,# subsamples\n1,1\n2,2"
   },
   {
     "type": "dropDown",
