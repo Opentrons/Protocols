@@ -55,7 +55,7 @@
     },
     {
         "type": "int",
-        "label": "Mix Repetitions during Binding [pretested default, changing is not recommended]",
+        "label": "Mix Repetitions During Binding [pretested default, changing is not recommended]",
         "name": "mix_reps_bind",
         "default": 25
     },
