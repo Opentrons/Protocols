@@ -65,6 +65,11 @@ def run(ctx):
 
     pcr_samples = pcr_plate.rows()[0][:num_cols]
 
+    def bead_premix(reps, vol, pip):
+        for _ in range(reps):
+            pip.aspirate(vol, beads.bottom(1))
+            pip.dispense(vol, beads.bottom(5))
+
     if 'pcr_prep' in steps:
         for source, dest in zip(source_samples, pcr_samples):
             m20.flow_rate.aspirate /= m20_speed_mod
@@ -88,7 +93,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
 (slot 2) with clean plate for elution.')
         elution_samples = source_plate.rows()[0][:num_cols]
 
-        def bead_mixing(well, pip, vol, reps=10):
+        def bead_wellmix(well, pip, vol, reps=10):
             pip.move_to(well.center())
             for _ in range(reps):
                 pip.aspirate(vol, well.bottom(1))
@@ -100,11 +105,13 @@ complete, replace plate on magnetic module, and replace source sample plate \
             pip_beads.flow_rate.aspirate /= 4
             pip_beads.flow_rate.dispense /= 4
             pip_beads.pick_up_tip()
+            bead_premix(5, pip_beads.tip_racks[0].wells()[0].max_volume,
+                        pip_beads)
             pip_beads.aspirate(vol_beads, beads)
             pip_beads.dispense(vol_beads, dest)
             pip_beads.flow_rate.aspirate *= 2
             pip_beads.flow_rate.dispense *= 2
-            bead_mixing(dest, pip_beads, vol_beads)
+            bead_wellmix(dest, pip_beads, vol_beads)
             pip_beads.flow_rate.aspirate *= 2
             pip_beads.flow_rate.dispense *= 2
             pip_beads.drop_tip()
