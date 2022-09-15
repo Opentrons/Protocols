@@ -35,8 +35,8 @@ This protocol is Stage 1 of a 3 part PCR Prep protocol. Parts 2 and 3 can be fou
 ---
 
 ### Protocol Steps
-1. 12ul of water is added to all wells in pool plate (same tip)
-2. 3ul of sample is pooled onto pool plate one plate at a time beginning in slot 1 (fresh tip)
+1. 12ul of water is added to all wells in pool plate (same tip).
+2. 3ul of sample is pooled onto pool plate one plate at a time beginning in slot 1 (fresh tip).
 
 ### Process
 1. Input your protocol parameters above.
