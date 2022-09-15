@@ -80,6 +80,7 @@ def run(ctx):
             m20.mix(1, 5, dest)
             ctx.max_speeds['A'] = 100
             ctx.max_speeds['Z'] = 100
+            m20.air_gap(5)
             m20.drop_tip()
             del ctx.max_speeds['A']
             del ctx.max_speeds['Z']
@@ -114,6 +115,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
             bead_wellmix(dest, pip_beads, vol_beads)
             pip_beads.flow_rate.aspirate *= 2
             pip_beads.flow_rate.dispense *= 2
+            pip_beads.air_gap(pip_beads.min_volume)
             pip_beads.drop_tip()
 
         ctx.delay(minutes=5, msg='Incubating off magnet')
@@ -138,6 +140,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, waste[0])
+            m300.air_gap(20)
             m300.drop_tip()
 
         # 3x EtOH wash
@@ -185,6 +188,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] *= supernatant_headspeed_modulator
                 m300.dispense(m300.current_volume, waste[waste_ind])
+                m300.air_gap(20)
                 m300.drop_tip()
 
         ctx.delay(minutes=5, msg='Air drying')
@@ -198,6 +202,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
             m300.dispense(vol_elution, bead_loc)
             m300.mix(10, 10, dest.bottom(1))
             m300.move_to(dest.bottom().move(Point(x=-2, z=3)))
+            m300.air_gap(20)
             m300.drop_tip()
 
         ctx.delay(minutes=3, msg='Incubating off magnet')
@@ -216,6 +221,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, d.bottom(0.5))
             m300.move_to(d.bottom().move(Point(x=-2, z=3)))
+            m300.air_gap(20)
             m300.drop_tip()
         m300.flow_rate.aspirate *= 5
 
