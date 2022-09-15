@@ -111,3 +111,6 @@ smoketest/*.py
 
 # supplementary protocol bundle files
 protocols/**/supplements
+
+# credentials
+data/salesforce/credentials.json
