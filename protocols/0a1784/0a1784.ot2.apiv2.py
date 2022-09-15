@@ -11,9 +11,9 @@ metadata = {
 def run(ctx):
 
     [num_plates, num_samp_p1,
-        num_samp_p2, p300_mount] = get_values(  # noqa: F821
+        num_samp_p2, m300_mount] = get_values(  # noqa: F821
         "num_plates", "num_samp_p1",
-            "num_samp_p2", "p300_mount")
+            "num_samp_p2", "m300_mount")
 
     num_plates = int(num_plates)
     num_samp_p1 = int(num_samp_p1)
