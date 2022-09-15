@@ -1,12 +1,6 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples (1-14)",
-    "name": "num_samp",
-    "default": 14
-  },
-  {
-    "type": "int",
     "label": "Tip pickup starting column (1-12)",
     "name": "tip_start",
     "default": 1
