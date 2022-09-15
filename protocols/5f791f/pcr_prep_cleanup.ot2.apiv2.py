@@ -65,6 +65,11 @@ def run(ctx):
 
     pcr_samples = pcr_plate.rows()[0][:num_cols]
 
+    def bead_premix(reps, vol, pip):
+        for _ in range(reps):
+            pip.aspirate(vol, beads.bottom(1))
+            pip.dispense(vol, beads.bottom(5))
+
     if 'pcr_prep' in steps:
         for source, dest in zip(source_samples, pcr_samples):
             m20.flow_rate.aspirate /= m20_speed_mod
@@ -75,6 +80,7 @@ def run(ctx):
             m20.mix(1, 5, dest)
             ctx.max_speeds['A'] = 100
             ctx.max_speeds['Z'] = 100
+            m20.air_gap(5)
             m20.drop_tip()
             del ctx.max_speeds['A']
             del ctx.max_speeds['Z']
@@ -88,7 +94,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
 (slot 2) with clean plate for elution.')
         elution_samples = source_plate.rows()[0][:num_cols]
 
-        def bead_mixing(well, pip, vol, reps=10):
+        def bead_wellmix(well, pip, vol, reps=10):
             pip.move_to(well.center())
             for _ in range(reps):
                 pip.aspirate(vol, well.bottom(1))
@@ -100,13 +106,16 @@ complete, replace plate on magnetic module, and replace source sample plate \
             pip_beads.flow_rate.aspirate /= 4
             pip_beads.flow_rate.dispense /= 4
             pip_beads.pick_up_tip()
+            bead_premix(5, pip_beads.tip_racks[0].wells()[0].max_volume,
+                        pip_beads)
             pip_beads.aspirate(vol_beads, beads)
             pip_beads.dispense(vol_beads, dest)
             pip_beads.flow_rate.aspirate *= 2
             pip_beads.flow_rate.dispense *= 2
-            bead_mixing(dest, pip_beads, vol_beads)
+            bead_wellmix(dest, pip_beads, vol_beads)
             pip_beads.flow_rate.aspirate *= 2
             pip_beads.flow_rate.dispense *= 2
+            pip_beads.air_gap(pip_beads.min_volume)
             pip_beads.drop_tip()
 
         ctx.delay(minutes=5, msg='Incubating off magnet')
@@ -118,19 +127,20 @@ complete, replace plate on magnetic module, and replace source sample plate \
         for i, source in enumerate(pcr_samples):
             side = -1 if i % 2 == 0 else 1
             m300.pick_up_tip()
-            m300.flow_rate.aspirate /= 5
+            m300.flow_rate.aspirate /= 10
             m300.move_to(source.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
             m300.aspirate(
                 vol_sample+vol_beads+5, source.bottom().move(
-                    Point(x=side, y=0, z=0.2)))
+                    Point(x=side*2, y=0, z=0.2)))
             m300.move_to(source.top())
             m300.air_gap(20)
-            m300.flow_rate.aspirate *= 5
+            m300.flow_rate.aspirate *= 10
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, waste[0])
+            m300.air_gap(20)
             m300.drop_tip()
 
         # 3x EtOH wash
@@ -160,7 +170,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
                 side = -1 if i % 2 == 0 else 1
                 if not m300.has_tip:
                     m300.pick_up_tip()
-                m300.flow_rate.aspirate /= 5
+                m300.flow_rate.aspirate /= 10
                 m300.move_to(source.top())
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
@@ -170,12 +180,15 @@ complete, replace plate on magnetic module, and replace source sample plate \
                     waste_ind += 1
                 for asp_ind in reversed(range(num_aspirations)):
                     asp_height = source.depth/4*asp_ind+0.2
-                    m300.aspirate(50, source.bottom(asp_height))
+                    m300.aspirate(50,
+                                  source.bottom().move(
+                                    Point(x=2*side, z=asp_height)))
                 m300.move_to(source.top())
-                m300.flow_rate.aspirate *= 5
+                m300.flow_rate.aspirate *= 10
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] *= supernatant_headspeed_modulator
                 m300.dispense(m300.current_volume, waste[waste_ind])
+                m300.air_gap(20)
                 m300.drop_tip()
 
         ctx.delay(minutes=5, msg='Air drying')
@@ -189,25 +202,28 @@ complete, replace plate on magnetic module, and replace source sample plate \
             m300.dispense(vol_elution, bead_loc)
             m300.mix(10, 10, dest.bottom(1))
             m300.move_to(dest.bottom().move(Point(x=-2, z=3)))
+            m300.air_gap(20)
             m300.drop_tip()
 
         ctx.delay(minutes=3, msg='Incubating off magnet')
         magdeck.engage()
         ctx.delay(minutes=time_settling, msg='Incubating on magnet')
 
-        m300.flow_rate.aspirate /= 5
-        for s, d in zip(pcr_samples, elution_samples):
+        m300.flow_rate.aspirate /= 10
+        for i, (s, d) in enumerate(zip(pcr_samples, elution_samples)):
+            side = -1 if i % 2 == 0 else 1
             m300.pick_up_tip()
             m300.move_to(s.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(vol_elution, s.bottom(0.2))
+            m300.aspirate(vol_elution, s.bottom().move(Point(x=side*2, z=0.2)))
             m300.move_to(s.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, d.bottom(0.5))
             m300.move_to(d.bottom().move(Point(x=-2, z=3)))
+            m300.air_gap(20)
             m300.drop_tip()
-        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.aspirate *= 10
 
         magdeck.disengage()
