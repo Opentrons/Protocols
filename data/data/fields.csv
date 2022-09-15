@@ -627,7 +627,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,68
-m300_mount,73
+m300_mount,74
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -784,7 +784,7 @@ num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,25
+num_plates,26
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -793,6 +793,8 @@ num_row,1
 num_rows_a,1
 num_rows_b,1
 num_samp,52
+num_samp_p1,1
+num_samp_p2,1
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
