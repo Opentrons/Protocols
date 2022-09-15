@@ -42,7 +42,7 @@ def run(ctx):
             m300.pick_up_tip()
 
     # pipettes
-    m300 = ctx.load_instrument('p300_multi_gen2', p300_mount, tip_racks=tips)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips)
 
     # mapping
     buffer = reservoir.wells()[0]
