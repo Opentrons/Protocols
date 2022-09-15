@@ -1,7 +1,7 @@
 [
   {
     "type": "dropDown",
-    "label": "P20 Multi-Channel Mount",
+    "label": "P20 Multi-Channel Pipette Mount",
     "name": "p20_mount",
     "options": [
       {"label": "Left", "value": "left"},

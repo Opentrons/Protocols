@@ -8,10 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, tip_start, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "tip_start", "m20_mount")
+    [tip_start, m20_mount] = get_values(  # noqa: F821
+        "tip_start", "m20_mount")
 
-    if not 1 <= num_samp <= 14:
+    if not 1 <= tip_start <= 12:
         raise Exception("Enter a column number between 1-12")
 
     # load labware
@@ -22,34 +22,13 @@ def run(ctx):
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=[tips])
 
-    tip_count = int(tip_start) - 1
+    tip_cols = [col for col in tips.rows()[0]][tip_start-1:]
 
-    def pick_up(num_tips):
-        num_channels_per_pickup = num_tips
-        tips_ordered = [
-            tip for row in tips.rows()[
-                len(tips.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]  # noqa: E501
-            for tip in row]
-        nonlocal tip_count
-        m20.pick_up_tip(tips_ordered[tip_count])
-        tip_count += 1
-
-    # mapping
-    if num_samp > 7:
-        tip_pickup_first_col = 8
-        tip_pickup_second_col = num_samp - 6
-    if num_samp == 7:
-        tip_pickup_first_col = 8
-        tip_pickup_second_col = 1
-    if num_samp < 7:
-        tip_pickup_first_col = num_samp + 1
-        tip_pickup_second_col = 1
-
-    tip_pickups_by_col = [tip_pickup_first_col, tip_pickup_second_col]
+    tip_pickups_by_col = [8, 8]
 
     for i, pickup in enumerate(tip_pickups_by_col):
         if pickup > 0:
-            pick_up(pickup)
+            m20.pick_up_tip(tip_cols[i])
             for dest in dest_plate.rows()[i]:
                 m20.aspirate(10, source_plate.rows()[0][i])
                 m20.dispense(10, dest)
