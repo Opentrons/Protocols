@@ -209,13 +209,14 @@ complete, replace plate on magnetic module, and replace source sample plate \
         magdeck.engage()
         ctx.delay(minutes=time_settling, msg='Incubating on magnet')
 
-        m300.flow_rate.aspirate /= 5
-        for s, d in zip(pcr_samples, elution_samples):
+        m300.flow_rate.aspirate /= 10
+        for i, (s, d) in enumerate(zip(pcr_samples, elution_samples)):
+            side = -1 if i % 2 == 0 else 1
             m300.pick_up_tip()
             m300.move_to(s.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(vol_elution, s.bottom(0.2))
+            m300.aspirate(vol_elution, s.bottom().move(Point(x=side*2, z=0.2)))
             m300.move_to(s.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
@@ -223,6 +224,6 @@ complete, replace plate on magnetic module, and replace source sample plate \
             m300.move_to(d.bottom().move(Point(x=-2, z=3)))
             m300.air_gap(20)
             m300.drop_tip()
-        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.aspirate *= 10
 
         magdeck.disengage()
