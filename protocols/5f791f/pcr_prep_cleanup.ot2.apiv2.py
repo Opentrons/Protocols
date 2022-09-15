@@ -125,16 +125,16 @@ complete, replace plate on magnetic module, and replace source sample plate \
         for i, source in enumerate(pcr_samples):
             side = -1 if i % 2 == 0 else 1
             m300.pick_up_tip()
-            m300.flow_rate.aspirate /= 5
+            m300.flow_rate.aspirate /= 10
             m300.move_to(source.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
             m300.aspirate(
                 vol_sample+vol_beads+5, source.bottom().move(
-                    Point(x=side, y=0, z=0.2)))
+                    Point(x=side*2, y=0, z=0.2)))
             m300.move_to(source.top())
             m300.air_gap(20)
-            m300.flow_rate.aspirate *= 5
+            m300.flow_rate.aspirate *= 10
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, waste[0])
@@ -167,7 +167,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
                 side = -1 if i % 2 == 0 else 1
                 if not m300.has_tip:
                     m300.pick_up_tip()
-                m300.flow_rate.aspirate /= 5
+                m300.flow_rate.aspirate /= 10
                 m300.move_to(source.top())
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
@@ -177,9 +177,11 @@ complete, replace plate on magnetic module, and replace source sample plate \
                     waste_ind += 1
                 for asp_ind in reversed(range(num_aspirations)):
                     asp_height = source.depth/4*asp_ind+0.2
-                    m300.aspirate(50, source.bottom(asp_height))
+                    m300.aspirate(50,
+                                  source.bottom().move(
+                                    Point(x=2*side, z=asp_height)))
                 m300.move_to(source.top())
-                m300.flow_rate.aspirate *= 5
+                m300.flow_rate.aspirate *= 10
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] *= supernatant_headspeed_modulator
                 m300.dispense(m300.current_volume, waste[waste_ind])
