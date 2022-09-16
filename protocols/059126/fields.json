@@ -24,6 +24,6 @@
     "type": "textFile",
     "label": "Transfer .csv File",
     "name": "file_input",
-    "default": ",Vial,Volume from Vial to 96 Well Plate,Volume from 96 to 384 Well Plate,A1,150,5,B1,151,5,C1,152,5"
+    "default": "Vial,Volume from Vial to 96 Well Plate,Volume from 96 to 384 Well Plate\\nA1,150,5\\nB1,151,5\\nC1,152,5\\nD1,153,5\\nA2,154,5\\nB2,155,5\\nC2,156,5\\nD2,157,5\\nA3,158,5\\nB3,159,5\\nC3,160,5\\nD3,161,5"
   }
 ]
