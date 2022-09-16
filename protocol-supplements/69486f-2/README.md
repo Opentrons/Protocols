@@ -11,40 +11,41 @@
 
 
 ## Description
+This custom protocol performs part 1 of the KAPA HiFi NGS Library Prep kit. The operator is prompted to perform manual steps throughout the protocol.
 
-This custom protocol performs part 1 of the [KAPA HiFi NGS Library Prep kit](https://sequencing.roche.com/en/products-solutions/products/sample-preparation/library-amplification/kapa-hifi-kits.html). The operator is prompted to perform manual steps throughout the protocol.
 
 ### Modules
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
 
 
 ### Labware
+* Thermo Scientific Nunc 96 Well Plate 2000 µL #278743
 * Agilent 3 Reservoir 94630 µL #204249-100
+* Thermo Scientific Nunc 96 Well Plate 2000 µL Bioshake #278743
 * KingFisher 96 Deep Well Plate #95040450
 * Agilent 96 Well Plate 200 µL #401490
-* Opentrons 96 Filter Tip Rack 20 µL
-* Opentrons 96 Filter Tip Rack 200 µL
 * [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
+* Opentrons 96 Filter Tip Rack 20 µL
+* [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 
 
 ### Pipettes
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 * [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f-2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f-2/deck2.png)
 
 
 ### Reagent Setup
-Tuberack:  
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f-2/reagents.png)  
-* A1: mastermix tube
-* B1: water
-* C1: buffer 3
-* D1: buffer 4
-* A2: primer 1
-* B2: primer 4
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f-2/reagents.png)
+* A1: mastermix tube  
+* B1: water  
+* C1: buffer 3  
+* D1: buffer 4  
+* A2: primer 1  
+* B2: primer 4  
 
 
 ### Process
