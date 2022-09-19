@@ -57,7 +57,7 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
 
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
-    water, mm1, reverse_primer1 = tuberack2.columns()[0][:3]
+    water, mm1, reverse_primer1, reverse_primer2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
         def look():
@@ -361,7 +361,6 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_water_mm = 4.8*num_samples_mm_creation
     vol_primer_mm = 0.1*num_samples_mm_creation
-    reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
             [mm1, water, reverse_primer2],
             [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
