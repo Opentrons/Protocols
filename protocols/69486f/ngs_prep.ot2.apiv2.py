@@ -57,7 +57,7 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
 
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
-    water, mm1, reverse_primer1, mm2 = tuberack2.columns()[0][:4]
+    water, mm1, reverse_primer1, reverse_primer2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
         def look():
@@ -272,8 +272,13 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
         vol_elution = 20
-        [binding_buffer, wash_buffer,
-         elution_buffer] = tuberack2.columns()[-1][:3]
+        binding_buffer = tuberack2.columns()[-1][0]
+        wash_buffer = tuberack2.columns()[-1][1:3]
+        elution_buffer = tuberack2.columns()[-1][3]
+        wells_per_wash_tube = math.floor(1450/vol_wash_buffer)
+        if num_samples > wells_per_wash_tube * 2:
+            raise Exception(f'{len(all_normalization_wells)} samples exceeds \
+capacity of 2x 1.5mL tubes for normalization wash buffer.')
 
         # transfer binding buffer, mix, incubate
         pick_up(p20, 1)
@@ -301,9 +306,10 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             p300.drop_tip()
 
         # wash
-        for d in all_normalization_wells:
+        for i, d in enumerate(all_normalization_wells):
+            source_tube = wash_buffer[i//wells_per_wash_tube]
             pick_up(p300, 1)
-            p300.aspirate(vol_wash_buffer, wash_buffer)
+            p300.aspirate(vol_wash_buffer, source_tube)
             p300.dispense(vol_wash_buffer, d.bottom(2))
             p300.mix(2, 10, d.bottom(2), rate=2.0)
             p300.aspirate(vol_wash_buffer, d.bottom(0.5))
@@ -355,7 +361,6 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_water_mm = 4.8*num_samples_mm_creation
     vol_primer_mm = 0.1*num_samples_mm_creation
-    reverse_primer2 = reverse_primer1
     for reagent, vol in zip(
             [mm1, water, reverse_primer2],
             [vol_pcr_mm, vol_water_mm, vol_reverse_primer_mm]):
