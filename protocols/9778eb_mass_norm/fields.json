@@ -37,6 +37,6 @@
     "type": "textFile",
     "label": "Transfer .csv File",
     "name": "file_input",
-    "default": ",Well,nanograms,sample volume,goal concentration,normalized volume,A1,20,30,30,30,B1,6,30,5,30,C1,7,30,6,30"
+    "default": "Well,nanograms,sample volume,goal concentration,normalized volume\\nA1,20,30,30,30\\nB1,6,30,5,30\\nC1,7,30,6,30"
   }
 ]
