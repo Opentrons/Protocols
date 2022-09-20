@@ -11,10 +11,11 @@ metadata = {
 def run(ctx):
 
     [num_extracts, lw_hplc, mixreps_dilution, height_source,
-     height_intermediate_asp, height_intermediate_disp,
-     height_final] = get_values(  # noqa: F821
+     height_intermediate_low, height_intermediate_middle,
+     height_intermediate_high, height_final] = get_values(  # noqa: F821
         'num_extracts', 'lw_hplc', 'mixreps_dilution', 'height_source',
-        'height_intermediate_asp', 'height_intermediate_disp', 'height_final')
+        'height_intermediate_low', 'height_intermediate_middle',
+        'height_intermediate_high', 'height_final')
 
     tuberacks_50 = [
         ctx.load_labware('bd_24_tuberack_50ml_green', slot, '50ml tubes')
@@ -40,10 +41,15 @@ def run(ctx):
             tip_count += 1
             pip.pick_up_tip()
 
+    mix_height_list = [height_intermediate_low, height_intermediate_middle,
+                       height_intermediate_high]
+
     def mix(pip, reps, vol, loc):
-        for _ in range(reps):
-            pip.aspirate(vol, loc.bottom(height_intermediate_asp))
-            pip.dispense(vol, loc.bottom(height_intermediate_disp))
+        for rep_ind in range(reps):
+            asp_ind = (rep_ind*2) % 3
+            disp_ind = (rep_ind*2+1) % 3
+            pip.aspirate(vol, loc.bottom(mix_height_list[asp_ind]))
+            pip.dispense(vol, loc.bottom(mix_height_list[disp_ind]))
 
     refill_map = {
         'source': len(
@@ -106,9 +112,9 @@ resuming.')
         for pip, i_tube, f_tube in zip(pips, intermediate_set, final_set):
             pip.dispense(100, i_tube.top())
             pip.dispense(pip.current_volume,
-                         i_tube.bottom(height_intermediate_disp))
+                         i_tube.bottom(height_intermediate_middle))
             mix(pip, mixreps_dilution, 1000, i_tube)
-            pip.transfer(800, i_tube.bottom(height_intermediate_asp),
+            pip.transfer(800, i_tube.bottom(height_intermediate_low),
                          f_tube.bottom(height_final),
                          new_tip='never')
         [pip.drop_tip() for pip in [p1000l, p1000r] if pip.has_tip]
