@@ -458,8 +458,9 @@ height_after_disp,1
 height_dispense,2
 height_engage,14
 height_final,1
-height_intermediate_asp,1
-height_intermediate_disp,1
+height_intermediate_high,1
+height_intermediate_low,1
+height_intermediate_middle,1
 height_source,1
 htp_csv,1
 i5_volume,1
