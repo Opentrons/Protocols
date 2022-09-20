@@ -49,5 +49,14 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "track tips across protocols",
+    "name": "tip_track",
+    "options": [
+      { "label": "no", "value": false },
+      { "label": "yes", "value": true }
+    ]
   }
 ]

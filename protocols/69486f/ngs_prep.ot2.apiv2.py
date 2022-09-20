@@ -1,5 +1,7 @@
 import math
 from opentrons.types import Point
+import os
+import json
 
 metadata = {
     'title': 'NGS Library Prep',
@@ -10,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [sample_csv, perform_normalization, pipette_p20,
-     pipette_p300, mount_p20, mount_p300] = get_values(  # noqa: F821
-        'sample_csv', 'perform_normalization',
-        'pipette_p20', 'pipette_p300', 'mount_p20', 'mount_p300')
+    [sample_csv, perform_normalization, pipette_p20, pipette_p300, mount_p20,
+     mount_p300, tip_track] = get_values(  # noqa: F821
+        'sample_csv', 'perform_normalization', 'pipette_p20', 'pipette_p300',
+        'mount_p20', 'mount_p300', 'tip_track')
 
     sample_info = [
         [int(val) for val in line.split(',')[:2]]
@@ -58,6 +60,26 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
     water, mm1, reverse_primer1, reverse_primer2 = tuberack2.columns()[0][:4]
+
+    # read tip data
+    tip_log = None
+    if ctx.is_simulating():
+        folder_path = 'protocols/69486f/supplements'
+        tip_file_path = folder_path + '/tip_log.json'
+    else:
+        folder_path = '/data/ngs'
+    tip_file_path = folder_path + '/tip_log.json'
+    if tip_track and not ctx.is_simulating():
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
+                tip_log = json.load(json_file)
+
+    # flip has_tip booleans based on tip log if it exists
+    if tip_log:
+        for slot, well_map in tip_log.items():
+            tiprack = ctx.loaded_labwares()[int(slot)]
+            for well_name, tip_val in well_map.items():
+                tiprack.wells_by_name()[well_name].has_tip = tip_val
 
     def pick_up(pip=p20, channels=p20.channels):
         def look():
@@ -439,3 +461,18 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             p20.mix(1, 5, r.bottom(2), rate=2.0)
             p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
         p20.drop_tip()
+
+    # write tip data to dictionary
+    tip_log = {}
+    for slot, lw in ctx.loaded_labwares.items():
+        if lw.is_tiprack:
+            tiprack_info = {
+                well.display_name.split(' ')[0]: well.has_tip
+                for well in lw.wells()
+            }
+            tip_log[slot] = tiprack_info
+
+    if not os.path.isdir(folder_path):
+        os.mkdir(folder_path)
+    with open(tip_file_path, 'w') as outfile:
+        json.dump(tip_log, outfile, indent=4)
