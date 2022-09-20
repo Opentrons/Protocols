@@ -1,5 +1,5 @@
 metadata = {
-    'apiLevel': '2.5',
+    'apiLevel': '2.12',
     'protocolName': 'Rapid Barcoding Kit (SQK-RBK004)',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
@@ -24,7 +24,7 @@ def run(ctx):
         'temperature module gen2',
         '1')  # update to gen2
     temp_plate = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap')
+        'opentrons_24_aluminumblock_nest_0.5ml_screwcap')
 
     RAP = temp_plate.wells_by_name()["A1"]
     AMPure_beads = temp_plate.wells_by_name()["A2"]
