@@ -40,8 +40,8 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
                                   'PCR 1 plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]
-    normalization_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
-                                           'normalization plate')
+    normalization_plate = ctx.load_labware('sequalprep_96_wellplate_200ul',
+                                           '6', 'normalization plate')
     pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '9',
                                   'PCR 2 plate')
     tuberack = ctx.load_labware(
