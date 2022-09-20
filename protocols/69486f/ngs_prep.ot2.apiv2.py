@@ -13,9 +13,9 @@ metadata = {
 def run(ctx):
 
     [sample_csv, perform_normalization, pipette_p20, pipette_p300, mount_p20,
-     mount_p300, tip_track] = get_values(  # noqa: F821
+     mount_p300, lw_tiprack300, tip_track] = get_values(  # noqa: F821
         'sample_csv', 'perform_normalization', 'pipette_p20', 'pipette_p300',
-        'mount_p20', 'mount_p300', 'tip_track')
+        'mount_p20', 'mount_p300', 'lw_tiprack300', 'tip_track')
 
     sample_info = [
         [int(val) for val in line.split(',')[:2]]
@@ -41,7 +41,7 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     pcr1_plate = ctx.load_labware('agilent_96_wellplate_200ul', '3',
                                   'PCR 1 plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]
+    tipracks300 = [ctx.load_labware(lw_tiprack300, '5')]
     normalization_plate = ctx.load_labware('sequalprep_96_wellplate_200ul',
                                            '6', 'normalization plate')
     pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '9',
