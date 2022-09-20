@@ -268,17 +268,21 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
         ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
 CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
 
+        if len(all_normalization_wells) > 28:
+            reservoir = ctx.load_labware('agilent_3_reservoir_95ml', '11',
+                                         'normalization buffers reservoir')
+            binding_buffer = reservoir.rows()[0][0]
+            wash_buffer = [reservoir.rows()[0][1] for _ in range(2)]
+            elution_buffer = tuberack2.rows()[0][2]
+        else:
+            binding_buffer = tuberack2.columns()[-1][0]
+            wash_buffer = tuberack2.columns()[-1][1:3]
+            elution_buffer = tuberack2.columns()[-1][3]
         vol_pcr1_product = 15
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
         vol_elution = 20
-        binding_buffer = tuberack2.columns()[-1][0]
-        wash_buffer = tuberack2.columns()[-1][1:3]
-        elution_buffer = tuberack2.columns()[-1][3]
         wells_per_wash_tube = math.floor(1450/vol_wash_buffer)
-        if num_samples > wells_per_wash_tube * 2:
-            raise Exception(f'{len(all_normalization_wells)} samples exceeds \
-capacity of 2x 1.5mL tubes for normalization wash buffer.')
 
         # transfer binding buffer, mix, incubate
         pick_up(p20, 1)
