@@ -1,5 +1,7 @@
 import math
 from opentrons.types import Point
+import os
+import json
 
 metadata = {
     'title': 'NGS Library Prep',
@@ -10,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [sample_csv, perform_normalization, pipette_p20,
-     pipette_p300, mount_p20, mount_p300] = get_values(  # noqa: F821
-        'sample_csv', 'perform_normalization',
-        'pipette_p20', 'pipette_p300', 'mount_p20', 'mount_p300')
+    [sample_csv, perform_normalization, pipette_p20, pipette_p300, mount_p20,
+     mount_p300, lw_tiprack300, tip_track] = get_values(  # noqa: F821
+        'sample_csv', 'perform_normalization', 'pipette_p20', 'pipette_p300',
+        'mount_p20', 'mount_p300', 'lw_tiprack300', 'tip_track')
 
     sample_info = [
         [int(val) for val in line.split(',')[:2]]
@@ -39,9 +41,9 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     pcr1_plate = ctx.load_labware('agilent_96_wellplate_200ul', '3',
                                   'PCR 1 plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]
-    normalization_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
-                                           'normalization plate')
+    tipracks300 = [ctx.load_labware(lw_tiprack300, '5')]
+    normalization_plate = ctx.load_labware('sequalprep_96_wellplate_200ul',
+                                           '6', 'normalization plate')
     pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '9',
                                   'PCR 2 plate')
     tuberack = ctx.load_labware(
@@ -58,6 +60,26 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
     water, mm1, reverse_primer1, reverse_primer2 = tuberack2.columns()[0][:4]
+
+    # read tip data
+    tip_log = None
+    if ctx.is_simulating():
+        folder_path = 'protocols/69486f/supplements'
+        tip_file_path = folder_path + '/tip_log.json'
+    else:
+        folder_path = '/data/ngs'
+    tip_file_path = folder_path + '/tip_log.json'
+    if tip_track and not ctx.is_simulating():
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
+                tip_log = json.load(json_file)
+
+    # flip has_tip booleans based on tip log if it exists
+    if tip_log:
+        for slot, well_map in tip_log.items():
+            tiprack = ctx.loaded_labwares()[int(slot)]
+            for well_name, tip_val in well_map.items():
+                tiprack.wells_by_name()[well_name].has_tip = tip_val
 
     def pick_up(pip=p20, channels=p20.channels):
         def look():
@@ -268,21 +290,35 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
         ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
 CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
 
+        if len(all_normalization_wells) > 28:
+            reservoir = ctx.load_labware('agilent_3_reservoir_95ml', '11',
+                                         'normalization buffers reservoir')
+            binding_buffer = reservoir.rows()[0][0]
+            wash_buffer = [reservoir.rows()[0][1] for _ in range(2)]
+            elution_buffer = tuberack2.rows()[0][2]
+            all_normalization_cols = []
+            for well in all_normalization_wells:
+                col_ind = normalization_plate.wells().index(well) // 8
+                col = normalization_plate.rows()[0][col_ind]
+                if col not in all_normalization_cols:
+                    all_normalization_cols.append(col)
+            normalization_locs = all_normalization_cols
+            buffer_channels = 8
+        else:
+            binding_buffer = tuberack2.columns()[-1][0]
+            wash_buffer = tuberack2.columns()[-1][1:3]
+            elution_buffer = tuberack2.columns()[-1][3]
+            normalization_locs = all_normalization_wells
+            buffer_channels = 1
         vol_pcr1_product = 15
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
         vol_elution = 20
-        binding_buffer = tuberack2.columns()[-1][0]
-        wash_buffer = tuberack2.columns()[-1][1:3]
-        elution_buffer = tuberack2.columns()[-1][3]
         wells_per_wash_tube = math.floor(1450/vol_wash_buffer)
-        if num_samples > wells_per_wash_tube * 2:
-            raise Exception(f'{len(all_normalization_wells)} samples exceeds \
-capacity of 2x 1.5mL tubes for normalization wash buffer.')
 
         # transfer binding buffer, mix, incubate
-        pick_up(p20, 1)
-        for d in all_normalization_wells:
+        pick_up(p20, buffer_channels)
+        for d in normalization_locs:
             p20.aspirate(vol_binding_buffer, binding_buffer)
             p20.dispense(vol_binding_buffer, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
@@ -300,15 +336,15 @@ capacity of 2x 1.5mL tubes for normalization wash buffer.')
         ctx.delay(minutes=60, msg='Incubating 1 hour.')
 
         # remove liquid
-        for d in all_normalization_wells:
-            pick_up(p300, 1)
+        for d in normalization_locs:
+            pick_up(p300, buffer_channels)
             p300.aspirate(vol_pcr1_product+vol_binding_buffer, d.bottom(0.5))
             p300.drop_tip()
 
         # wash
-        for i, d in enumerate(all_normalization_wells):
+        for i, d in enumerate(normalization_locs):
             source_tube = wash_buffer[i//wells_per_wash_tube]
-            pick_up(p300, 1)
+            pick_up(p300, buffer_channels)
             p300.aspirate(vol_wash_buffer, source_tube)
             p300.dispense(vol_wash_buffer, d.bottom(2))
             p300.mix(2, 10, d.bottom(2), rate=2.0)
@@ -316,8 +352,8 @@ capacity of 2x 1.5mL tubes for normalization wash buffer.')
             p300.drop_tip()
 
         # elute
-        for d in all_normalization_wells:
-            pick_up(p20, 1)
+        for d in normalization_locs:
+            pick_up(p20, buffer_channels)
             p20.aspirate(vol_elution, elution_buffer)
             p20.dispense(vol_elution, d.bottom(2))
             p20.mix(5, 10, d.bottom(2), rate=2.0)
@@ -425,3 +461,18 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             p20.mix(1, 5, r.bottom(2), rate=2.0)
             p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
         p20.drop_tip()
+
+    # write tip data to dictionary
+    tip_log = {}
+    for slot, lw in ctx.loaded_labwares.items():
+        if lw.is_tiprack:
+            tiprack_info = {
+                well.display_name.split(' ')[0]: well.has_tip
+                for well in lw.wells()
+            }
+            tip_log[slot] = tiprack_info
+
+    if not os.path.isdir(folder_path):
+        os.mkdir(folder_path)
+    with open(tip_file_path, 'w') as outfile:
+        json.dump(tip_log, outfile, indent=4)
