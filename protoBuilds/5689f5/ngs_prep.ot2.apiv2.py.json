@@ -1,0 +1,133 @@
+{
+    "content": "from opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': 'Zymo Quick-DNA HMW MagBead Kit',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.12'\n}\n\nTEST_MODE_BEADS = False\nTEST_MODE_TEMP = False\nTEST_MODE_BIND_INCUBATE = False\nTEST_MODE_AIRDRY = False\n\n\ndef run(ctx):\n\n    [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821\n        'num_samples', 'mount_m20', 'mount_m300')\n\n    if TEST_MODE_BEADS:\n        mixreps = 1\n    else:\n        mixreps = 10\n    z_offset_resuspension = 2.0\n    z_offset_supernatant = 0.5\n    radial_offset_fraction_resuspension = 0.6\n    radial_offset_fraction_supernatant = 0.4\n    time_incubation_minutes = 5\n    time_settling_minutes = 5\n    time_incubation_elution_minutes = 3\n    time_settling_minutes_elution = 3\n    vol_starting = 7\n    vol_binding_buffer = 5\n    vol_ampure_beads = 8\n    vol_ethanol = 50\n    vol_elution_buffer = 7.6\n    vol_elution_final = 6.6\n\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n\n    magdeck = ctx.load_module('magnetic module gen2', '4')\n    magdeck.disengage()\n    magplate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                    'sample plate')\n    elution_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                     '1', 'elution plate')\n    res1 = ctx.load_labware('nest_12_reservoir_15ml', '5',\n                            'reagent reservoir (ethanol and waste)')\n    res2 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',\n                            'reagent plate')\n    tips200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,\n                         '200\u00b5l filtertiprack')\n        for slot in ['3', '6'][:math.ceil(num_samples/48)]]\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '200\u00b5l filtertiprack')\n        for slot in ['7', '8', '9', '11'][:math.ceil(num_samples/24)]]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument('p20_multi_gen2', mount_m20, tip_racks=tips20)\n    m300 = ctx.load_instrument('p300_multi_gen2', mount_m300,\n                               tip_racks=tips200)\n\n    \"\"\"\n    Here is where you can define the locations of your reagents.\n    \"\"\"\n    etoh = res1.rows()[0][0]\n    waste = res1.rows()[0][-1].top()\n    dna_binding_buffer = res2.rows()[0][0]\n    ampure_beads = res2.rows()[0][1]\n    elution_buffer = res2.rows()[0][2]\n\n    num_cols = math.ceil(num_samples/8)\n    mag_samples = magplate.rows()[0][:num_cols]\n    elution_samples = elution_plate.rows()[0][:num_cols]\n\n    parking_sets20 = [\n        [tip for rack in m20.tip_racks\n         for tip in rack.wells()][i*num_cols:(i+1)*num_cols]\n        for i in range(4)]\n    parking_sets300 = [\n        [tip for rack in m300.tip_racks\n         for tip in rack.wells()][i*num_cols:(i+1)*num_cols]\n        for i in range(2)]\n\n    waste_vol = 0\n    waste_threshold = waste.labware.as_well().max_volume * 0.95  # 95% cap\n\n    def remove_supernatant(pip, vol, parking_spots=None):\n        \"\"\"\n        `remove_supernatant` will transfer supernatant from the deepwell\n        extraction plate to the liquid waste reservoir.\n        :param vol (float): The amount of volume to aspirate from all deepwell\n                            sample wells and dispense in the liquid waste.\n        :param park (boolean): Whether to pick up sample-corresponding tips\n                               in the 'parking rack' or to pick up new tips.\n        \"\"\"\n\n        def _waste_track(vol):\n            nonlocal waste_vol\n            if waste_vol + vol >= waste_threshold:\n                # Setup for flashing lights notification to empty liquid waste\n                ctx.home()\n                ctx.pause('Please empty liquid waste before resuming.')\n                waste_vol = 0\n            waste_vol += vol\n\n        if not parking_spots:\n            parking_spots = [None for _ in range(num_cols)]\n\n        pip.flow_rate.aspirate /= 5\n        for m, spot in zip(mag_samples, parking_spots):\n            if not pip.has_tip:\n                pip.pick_up_tip(spot)\n            _waste_track(vol)\n            asp_loc = m.bottom().move(Point(\n                x=m.diameter/2*radial_offset_fraction_supernatant,\n                z=z_offset_supernatant))\n            pip.move_to(m.center())\n            pip.transfer(vol, asp_loc, waste, new_tip='never')\n            pip.air_gap(5)\n            pip.drop_tip()\n        m300.flow_rate.aspirate *= 5\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))\n\n    # transfer binding buffer\n    parking_set = parking_sets20.pop(0)\n    for m, p in zip(mag_samples, parking_set):\n        m20.pick_up_tip(p)\n        m20.transfer(vol_binding_buffer, dna_binding_buffer, m.bottom(1),\n                     mix_after=(mixreps, vol_binding_buffer), new_tip='never')\n        wick(m20, m)\n        m20.drop_tip()\n\n    if not TEST_MODE_BIND_INCUBATE:\n        ctx.delay(minutes=time_incubation_minutes, msg=f'Incubating off magnet \\\nfor {time_incubation_minutes} minutes.')\n\n    # transfer ampure beads\n    parking_set = parking_sets20.pop(0)\n    for m, p in zip(mag_samples, parking_set):\n        m20.pick_up_tip(p)\n        m20.transfer(vol_ampure_beads, ampure_beads, m.bottom(1),\n                     mix_after=(mixreps, vol_ampure_beads), new_tip='never')\n        wick(m20, m)\n        m20.drop_tip(p)\n\n    if not TEST_MODE_BIND_INCUBATE:\n        ctx.delay(minutes=time_incubation_minutes, msg=f'Incubating off magnet \\\nfor {time_incubation_minutes} minutes.')\n\n    magdeck.engage()\n    if not TEST_MODE_BEADS:\n        ctx.delay(minutes=time_settling_minutes, msg=f'Incubating on magnet \\\nfor {time_settling_minutes} minutes.')\n\n    remove_supernatant(m20, vol_starting+vol_binding_buffer+vol_ampure_beads,\n                       parking_spots=parking_set)\n\n    # etoh washes\n    for _ in range(2):\n        parking_set = parking_sets300.pop(0)\n        m300.pick_up_tip(parking_set[0])\n        m300.distribute(vol_ethanol, etoh, m.top(), new_tip='never')\n        m300.move_to(etoh.top())\n        remove_supernatant(m300, 50, parking_spots=parking_set)\n\n    ctx.pause('Centrifuge the plate on the magnetic module, and replace before \\\nresuming.')\n\n    # remove residual ethanol\n    parking_set = parking_sets20.pop(0)\n    remove_supernatant(m20, 20, parking_spots=parking_set)\n\n    magdeck.disengage()\n\n    # elute\n    parking_set = parking_sets20.pop()\n    for m, p in zip(mag_samples, parking_set):\n        side_beads = 1 if magplate.rows()[0].index(m) % 2 == 0 else -1\n        side_elution = -1 if magplate.rows()[0].index(m) % 2 == 0 else 1\n        m20.pick_up_tip(p)\n        m20.aspirate(vol_elution_buffer, elution_buffer)\n        m20.move_to(m.center())\n\n        # custom bead resuspension\n        asp_loc = m.bottom(0.5)\n        disp_loc = m.bottom().move(Point(\n            x=m.diameter/2*side_beads*radial_offset_fraction_resuspension,\n            z=z_offset_resuspension))\n        m20.dispense(vol_elution_buffer, disp_loc)\n        for _ in range(mixreps):\n            m20.aspirate(vol_elution_buffer*0.8, asp_loc)\n            m20.dispense(vol_elution_buffer*0.8, disp_loc)\n\n        wick(m20, m)\n        m20.drop_tip(p)\n\n    if not TEST_MODE_BIND_INCUBATE:\n        ctx.delay(minutes=time_incubation_elution_minutes, msg=f'Incubating \\\noff magnet for {time_incubation_elution_minutes} minutes.')\n\n    magdeck.engage()\n    if not TEST_MODE_BEADS:\n        ctx.delay(minutes=time_settling_minutes_elution, msg=f'Incubating on \\\nmagnet for {time_settling_minutes_elution} minutes.')\n\n    for m, e, p in zip(mag_samples, elution_samples, parking_set):\n        side_elution = -1 if magplate.rows()[0].index(m) % 2 == 0 else 1\n        m20.pick_up_tip(p)\n        m20.move_to(m.center())\n        m20.aspirate(vol_elution_final, m.bottom().move(Point(\n            x=side_elution*m.diameter/2*radial_offset_fraction_supernatant,\n            z=z_offset_supernatant)))\n        m20.dispense(vol_elution_final, e.bottom(1))\n        wick(m20, e)\n        m20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "label": "P20 8-channel GEN2 pipette mount",
+            "name": "mount_m20",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 8-channel GEN2 pipette mount",
+            "name": "mount_m300",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "elution plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "reagent plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "sample plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "reagent reservoir (ethanol and waste) on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.12",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Zymo Quick-DNA HMW MagBead Kit"
+    },
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw sample plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
+}
