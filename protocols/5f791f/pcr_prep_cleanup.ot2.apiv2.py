@@ -219,7 +219,8 @@ complete, replace plate on magnetic module, and replace source sample plate \
             m300.move_to(s.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(vol_elution, s.bottom().move(Point(x=side*3, z=0.5)))
+            m300.aspirate(vol_elution-5,
+                          s.bottom().move(Point(x=side*3, z=0.5)))
             m300.move_to(s.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
