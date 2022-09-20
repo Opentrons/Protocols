@@ -41,11 +41,14 @@ def run(ctx: protocol_api.ProtocolContext):
                   for slot in '9']
 
     # List Creation
-    csv_rows = [val.strip() for val in file_input.split(',')]
-    header_removed = csv_rows[4:]
-    well_list = header_removed[::3]
-    vol_trans_96 = [eval(i) for i in header_removed[1::3]]
-    vol_trans_384 = [eval(i) for i in header_removed[2::3]]
+    csv_1 = file_input.split('\\n')
+    csv_2 = [val.split(',') for val in csv_1]
+    header_removed = csv_2[1:]
+    flattened_list = [item for sublist in header_removed
+                      for item in sublist]
+    well_list = flattened_list[::3]
+    vol_trans_96 = [eval(i) for i in flattened_list[1::3]]
+    vol_trans_384 = [eval(i) for i in flattened_list[2::3]]
 
     # Tip Logic
     starting_tip = 8*starting_tip_col
