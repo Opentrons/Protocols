@@ -274,10 +274,20 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             binding_buffer = reservoir.rows()[0][0]
             wash_buffer = [reservoir.rows()[0][1] for _ in range(2)]
             elution_buffer = tuberack2.rows()[0][2]
+            all_normalization_cols = []
+            for well in all_normalization_wells:
+                col_ind = normalization_plate.wells().index(well) // 8
+                col = normalization_plate.rows()[0][col_ind]
+                if col not in all_normalization_cols:
+                    all_normalization_cols.append(col)
+            normalization_locs = all_normalization_cols
+            buffer_channels = 8
         else:
             binding_buffer = tuberack2.columns()[-1][0]
             wash_buffer = tuberack2.columns()[-1][1:3]
             elution_buffer = tuberack2.columns()[-1][3]
+            normalization_locs = all_normalization_wells
+            buffer_channels = 1
         vol_pcr1_product = 15
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
@@ -285,8 +295,8 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         wells_per_wash_tube = math.floor(1450/vol_wash_buffer)
 
         # transfer binding buffer, mix, incubate
-        pick_up(p20, 1)
-        for d in all_normalization_wells:
+        pick_up(p20, buffer_channels)
+        for d in normalization_locs:
             p20.aspirate(vol_binding_buffer, binding_buffer)
             p20.dispense(vol_binding_buffer, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
@@ -304,15 +314,15 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         ctx.delay(minutes=60, msg='Incubating 1 hour.')
 
         # remove liquid
-        for d in all_normalization_wells:
-            pick_up(p300, 1)
+        for d in normalization_locs:
+            pick_up(p300, buffer_channels)
             p300.aspirate(vol_pcr1_product+vol_binding_buffer, d.bottom(0.5))
             p300.drop_tip()
 
         # wash
-        for i, d in enumerate(all_normalization_wells):
+        for i, d in enumerate(normalization_locs):
             source_tube = wash_buffer[i//wells_per_wash_tube]
-            pick_up(p300, 1)
+            pick_up(p300, buffer_channels)
             p300.aspirate(vol_wash_buffer, source_tube)
             p300.dispense(vol_wash_buffer, d.bottom(2))
             p300.mix(2, 10, d.bottom(2), rate=2.0)
@@ -320,8 +330,8 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             p300.drop_tip()
 
         # elute
-        for d in all_normalization_wells:
-            pick_up(p20, 1)
+        for d in normalization_locs:
+            pick_up(p20, buffer_channels)
             p20.aspirate(vol_elution, elution_buffer)
             p20.dispense(vol_elution, d.bottom(2))
             p20.mix(5, 10, d.bottom(2), rate=2.0)
