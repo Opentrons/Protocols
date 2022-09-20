@@ -45,11 +45,19 @@ def run(ctx):
                        height_intermediate_high]
 
     def mix(pip, reps, vol, loc):
+        p1000r.flow_rate.aspirate *= 6
+        p1000l.flow_rate.aspirate *= 6
+        p1000r.flow_rate.dispense *= 3
+        p1000l.flow_rate.dispense *= 3
         for rep_ind in range(reps):
             asp_ind = (rep_ind*2) % 3
             disp_ind = (rep_ind*2+1) % 3
             pip.aspirate(vol, loc.bottom(mix_height_list[asp_ind]))
             pip.dispense(vol, loc.bottom(mix_height_list[disp_ind]))
+        p1000r.flow_rate.aspirate /= 6
+        p1000l.flow_rate.aspirate /= 6
+        p1000r.flow_rate.dispense /= 3
+        p1000l.flow_rate.dispense /= 3
 
     refill_map = {
         'source': len(
