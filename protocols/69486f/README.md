@@ -42,7 +42,7 @@ You can also access a template file [here](https://opentrons-protocol-library-we
 
 Note that these deck states depict a combination of the maximum number of PCR 1 forward primers.
 
-Starting state:  
+Starting state (showing normalization for <= 28 sample + subsample product):  
 ![deck1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck1-5.png)  
 * green on slot 1: starting samples according to above example .csv
 * clear on slot 7 (tubes A1-D2): empty tubes for PCR 1 mix creation
@@ -57,6 +57,22 @@ Starting state:
 * light blue on slot 8 (A6): normalization binding buffer
 * light purple on slot 8 (B6-C6): normalization wash buffer
 * green on slot 8 (D6): normalization elution buffer
+
+Starting state (showing normalization for <= 28 sample + subsample product):  
+![deck2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck2-4.png)
+* green on slot 1: starting samples according to above example .csv
+* clear on slot 7 (tubes A1-D2): empty tubes for PCR 1 mix creation
+* orange on slot 7 (A3-D4): unique PCR 1 forward primers (in column order)
+* clear on slot 7 (tubes A5-D6): empty tubes for PCR 2 mix creation
+* blue on slot 8 (A1): water
+* pink on slot 8 (B1): PCR mastermix
+* purple on slot 8 (C1): PCR 1 reverse primer
+* purple on slot 8 (D1): PCR 2 reverse primer
+* dark blue on slot 8 (A2-D3): tubes for normalized pools
+* orange on slot 8 (A4-D5): unique PCR 1 forward primers (in column order)
+* light blue on slot 11 (A1): normalization binding buffer
+* light purple on slot 11 (A2): normalization wash buffer
+* green on slot 11 (A3): normalization elution buffer
 
 ---
 

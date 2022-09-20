@@ -158,13 +158,13 @@ complete, replace plate on magnetic module, and replace source sample plate \
                 vol_counter_etoh += vol_wash*8
                 etoh_source = etoh[etoh_ind]
                 m300.dispense(m300.current_volume, etoh_source.top())
-                m300.aspirate(200, etoh_source)
+                m300.aspirate(vol_wash, etoh_source)
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
                 m300.move_to(etoh_source.top())
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-                m300.dispense(200, dest.top(1))
+                m300.dispense(vol_wash, dest.top(1))
                 m300.air_gap(20)
             m300.move_to(etoh_source.top())
             m300.dispense(m300.current_volume, etoh_source.top())
@@ -219,7 +219,8 @@ complete, replace plate on magnetic module, and replace source sample plate \
             m300.move_to(s.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(vol_elution, s.bottom().move(Point(x=side*3, z=0.5)))
+            m300.aspirate(vol_elution-5,
+                          s.bottom().move(Point(x=side*3, z=0.5)))
             m300.move_to(s.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator

@@ -1,4 +1,4 @@
-"""OPENTRONS."""
+"""OPEN TRONS."""
 import math
 
 metadata = {
@@ -24,16 +24,19 @@ def run(ctx):
                                      'falcon_50ml_conical', '4')
 
     # parse
-    csv_rows = [val.strip() for val in file_input.split(',')]
-    header_removed = csv_rows[6:]
-    well_list = header_removed[::5]
-    sample_mass = [eval(i) for i in header_removed[1::5]]
-    sample_vol = [eval(i) for i in header_removed[2::5]]
-    final_mass = [eval(i) for i in header_removed[3::5]]
-    final_vol = [eval(i) for i in header_removed[4::5]]
+    csv_1 = file_input.split('\\n')
+    csv_2 = [val.split(',') for val in csv_1]
+    header_removed = csv_2[1:]
+    flat_list = [item for sublist in header_removed for item in sublist]
+    well_list = flat_list[::5]
+    sample_mass = [eval(i) for i in flat_list[1::5]]
+    sample_vol = [eval(i) for i in flat_list[2::5]]
+    final_mass = [eval(i) for i in flat_list[3::5]]
+    final_vol = [eval(i) for i in flat_list[4::5]]
     start_conc = []
     final_conc = []
     bad_wells = []
+    print(well_list)
 
     for mass, vol in zip(sample_mass, sample_vol):
         start_conc.append(mass/vol)

@@ -49,5 +49,23 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 pipette tip type",
+    "name": "lw_tiprack300",
+    "options": [
+      { "label": "Opentrons filter", "value": "opentrons_96_filtertiprack_200ul" },
+      { "label": "Opentrons standard", "value": "opentrons_96_tiprack_300ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "track tips across protocols",
+    "name": "tip_track",
+    "options": [
+      { "label": "no", "value": false },
+      { "label": "yes", "value": true }
+    ]
   }
 ]

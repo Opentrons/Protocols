@@ -28,14 +28,20 @@
   },
   {
     "type": "int",
-    "label": "dilution 15ml tube aspiration mix height (in mm above bottom)",
-    "name": "height_intermediate_asp",
+    "label": "dilution 15ml tube low mix height (in mm above bottom)",
+    "name": "height_intermediate_low",
     "default": 5.0
   },
   {
     "type": "int",
-    "label": "dilution 15ml tube dispense mix height (in mm above bottom)",
-    "name": "height_intermediate_disp",
+    "label": "dilution 15ml tube middle mix height (in mm above bottom)",
+    "name": "height_intermediate_middle",
+    "default": 30.0
+  },
+  {
+    "type": "int",
+    "label": "dilution 15ml tube high mix height (in mm above bottom)",
+    "name": "height_intermediate_high",
     "default": 60.0
   },
   {
