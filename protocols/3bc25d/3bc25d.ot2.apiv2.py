@@ -1,5 +1,5 @@
 metadata = {
-    'apiLevel': '2.5',
+    'apiLevel': '2.12',
     'protocolName': 'Rapid Barcoding Kit (SQK-RBK004)',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
