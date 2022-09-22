@@ -47,6 +47,7 @@ def run(ctx):
 
     # Sample Wells
     tc_plate_wells = tc_plate.rows()[0][:cols]
+    tc_plate_wells_all = tc_plate.wells()[:samples]
     mag_plate_wells = mag_plate.rows()[0][:cols]
     final_plate_wells = final_plate.rows()[0][:cols]
 
@@ -135,7 +136,7 @@ def run(ctx):
     temp_mod.set_temperature(6)
 
     # Transfer End Prep Mix to Samples on PCR Plate (1)
-    p300.transfer(12, mm, tc_plate_wells, new_tip='always',
+    p300.transfer(12, mm, tc_plate_wells_all, new_tip='always',
                   mix_after=(3, 30))
 
     # Pause for Spin Down (2)

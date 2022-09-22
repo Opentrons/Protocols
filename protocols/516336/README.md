@@ -8,7 +8,10 @@
 	* Oxford Nanopore Ligation Sequencing Kit
 
 ## Description
-This protocol automates the DNA Repair and End Prep portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. There is a second part of this protocol for the Adapter Ligation and Clean-up which will be published soon.
+This protocol automates the DNA Repair and End Prep portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. The second part of this protocol can be found here: [Adapter Ligation and Clean-Up](https://protocols.opentrons.com/protocol/516336-part-2)</br>
+</br>
+**Note**: The protocol was updated on September 22nd, 2022
+</br>
 
 Explanation of parameters below:
 * `Number of Samples`: Specify the number of samples in multiples of 8 (Max: 96).
