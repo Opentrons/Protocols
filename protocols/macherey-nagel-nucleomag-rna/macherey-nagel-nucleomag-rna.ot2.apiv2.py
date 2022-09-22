@@ -4,14 +4,25 @@ import json
 import os
 import math
 
-metadata = {'protocolName': 'NucleoMag_RNA_Rev01', 'author': 'Macherey-Nagel <automation-bio@mn-net.com>', 'apiLevel': '2.9'}
+metadata = {
+    'protocolName': 'NucleoMag_RNA_Rev01',
+    'author': 'Macherey-Nagel <automation-bio@mn-net.com>',
+    'apiLevel': '2.9'
+    }
 
 def run(ctx):
 
     '''
     Variable definition
     '''
-    [num_samples, starting_vol, elution_vol, binding_buffer_vol, rDNase_vol, bead_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps_bind, mix_reps_wash, mix_reps_elu, sep_time_bind, sep_time_wash, sep_time_elu, dry_time, tip_track] = [48, 350, 100, 350, 300, 28, 600, 900, 900, 25, 20, 25, 5, 2, 5, 30, False]
+    [num_samples, starting_vol, elution_vol, binding_buffer_vol, rDNase_vol,
+     bead_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps_bind, mix_reps_wash,
+     mix_reps_elu, sep_time_bind, sep_time_wash, sep_time_elu, dry_time,
+     tip_track] = get_values(  # noqa: F821
+     'num_samples', 'starting_vol', 'elution_vol', 'binding_buffer_vol',
+     'rDNase_vol', 'bead_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
+     'mix_reps_bind', 'mix_reps_wash', 'mix_reps_elu', 'sep_time_bind',
+     'sep_time_wash', 'sep_time_elu', 'dry_time', 'tip_track')
 
     total_vol_per_sample = starting_vol + (2*binding_buffer_vol) + rDNase_vol + wash1_vol + wash2_vol + wash3_vol
     run_liq_waste_vol = num_samples * total_vol_per_sample
