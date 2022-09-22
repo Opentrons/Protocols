@@ -24,7 +24,7 @@ Before beginning the protocol on the OT-2, the following preparation steps are n
 3. Load the instrument deck according to the displayed positions.
 4. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
-You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20double-size%20select%20on%20OT-2%20Protocol%20Info.pdf)
+You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20clean-up%20on%20OT-2%20Protocol%20Info.pdf)
 
 
 ### Modules
