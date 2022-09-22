@@ -1,4 +1,4 @@
-# MACHEREY-NAGEL NucleoMag® RNA
+# MACHEREY-NAGEL Double-Size Select
 
 
 ### Author
@@ -9,24 +9,22 @@
 
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-	* MACHEREY-NAGEL NucleoMag® RNA
+* NGS Library Prep
+	* MACHEREY-NAGEL Double-Size Select
 
 
 ## Description
 ![MACHEREY-NAGEL](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo_50.jpeg)
 
-This protocol automates the NucleoMag® RNA kit for flexible magnetic bead based isolation of RNA from tissue and cell samples.
+This protocol automates the MACHEREY-NAGEL NucleoMag® NGS double-size selection for flexible size selection.
 
-Before beginning the protocol on the OT-2, the following preparation steps are needed.
-1. Perform the lysis accoding to the NucleoMag® RNA user manual.
-2. Prepare the rDNase reaction mixture according to the NucleoMag® RNA user manual.
-3. Fill the 12-Well Buffer Reservoir according to the table below.
-4. Resuspend the NucleoMag B-Beads by vortexing and place them in Position A1 of the 2mL Tube Rack.
-5. Load the instrument deck according to the displayed positions.
-6. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
+Before beginning the protocol on the OT-2, the following preparation steps are needed:</br>
+1. Fill the 12-Well Buffer Reservoir according to the table below.
+2. Resuspend the NucleoMag® NGS Bead suspension by vortexing.
+3. Load the instrument deck according to the displayed positions.
+4. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
-You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20RNA%20on%20OT-2%20Protocol%20Info.pdf)
+You can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20double-size%20select%20on%20OT-2%20Protocol%20Info.pdf)
 
 
 ### Modules
@@ -45,24 +43,22 @@ You can access the full descripition of this workflow on the OT-2 by visiting th
 
 ### Pipettes
 * [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
-* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/mn-size-select-deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/mn-ngs-reagents.png)
 
 
 ### Protocol Steps
-1. Binding Step
-2. rDNase Digestion
+1. Removal of large fragments
+2. Removal of small fragments
 3. Wash 1
 4. Wash 2
-5. Wash 3
-6. Elution
+5. Elution
 </br>
 </br>
 * Note
@@ -93,4 +89,4 @@ All mentioned trademarks are protected by law. All used names and denotations ca
 
 
 ###### Internal
-macherey-nagal-nucleomag-rna
+macherey-nagel-nucleomag-size-select

@@ -1,6 +1,6 @@
-import math
 from opentrons.types import Point
 import os
+import math
 import json
 
 metadata = {
@@ -63,16 +63,15 @@ max subsamples ({max_subsamples}). Exceeds plate capacity.')
 
     # read tip data
     tip_log = None
-    if ctx.is_simulating():
-        folder_path = 'protocols/69486f/supplements'
-        tip_file_path = folder_path + '/tip_log.json'
-    else:
+    if not ctx.is_simulating():
+        # folder_path = 'protocols/69486f/supplements'
+        # tip_file_path = folder_path + '/tip_log.json'
         folder_path = '/data/ngs'
-    tip_file_path = folder_path + '/tip_log.json'
-    if tip_track and not ctx.is_simulating():
-        if os.path.isfile(tip_file_path):
-            with open(tip_file_path) as json_file:
-                tip_log = json.load(json_file)
+        tip_file_path = folder_path + '/tip_log.json'
+        if tip_track and not ctx.is_simulating():
+            if os.path.isfile(tip_file_path):
+                with open(tip_file_path) as json_file:
+                    tip_log = json.load(json_file)
 
     # flip has_tip booleans based on tip log if it exists
     if tip_log:
@@ -472,7 +471,8 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
             }
             tip_log[slot] = tiprack_info
 
-    if not os.path.isdir(folder_path):
-        os.mkdir(folder_path)
-    with open(tip_file_path, 'w') as outfile:
-        json.dump(tip_log, outfile, indent=4)
+    if not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        with open(tip_file_path, 'w') as outfile:
+            json.dump(tip_log, outfile, indent=4)

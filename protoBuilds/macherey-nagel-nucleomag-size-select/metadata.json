@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "macherey-nagel-nucleomag-rna.ot2.apiv2.py"
+            "macherey-nagel-nucleomag-size-select.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/macherey-nagel-nucleomag-rna",
-    "slug": "macherey-nagel-nucleomag-rna",
+    "path": "protocols/macherey-nagel-nucleomag-size-select",
+    "slug": "macherey-nagel-nucleomag-size-select",
     "status": "ok"
 }
