@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "macherey-nagel-nucleomag-cleanup.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": true,
+        "skip-tests": false
+    },
+    "path": "protocols/macherey-nagel-nucleomag-clean-up",
+    "slug": "macherey-nagel-nucleomag-clean-up",
+    "status": "ok"
+}

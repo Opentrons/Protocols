@@ -350,7 +350,7 @@ dp_type,2
 dplate,1
 drop_threshold,1
 dry_on_temperature_module,1
-dry_time,17
+dry_time,18
 drying_time,2
 drying_time_in_minutes,2
 dryrun,6
@@ -381,7 +381,7 @@ elution_slot_scan,2
 elution_time,1
 elution_transfer_vol,2
 elution_type,1
-elution_vol,34
+elution_vol,35
 em,1
 empty_vial_well,3
 end_col,1
@@ -680,11 +680,11 @@ mix_repetitions,2
 mix_reps,26
 mix_reps1,1
 mix_reps2,1
-mix_reps_bind,2
-mix_reps_elu,2
+mix_reps_bind,3
+mix_reps_elu,3
 mix_reps_elution1,1
 mix_reps_elution2,1
-mix_reps_wash,2
+mix_reps_wash,3
 mix_reps_wash1,1
 mix_reps_wash2,1
 mix_sources,1
@@ -758,6 +758,7 @@ na_oh_volume,1
 na_oh_wash_yn,1
 nc,1
 new_tip,1
+ngs_bead_ratio,1
 ngs_bead_ratio1,1
 ngs_bead_ratio2,1
 ngsmag,1
@@ -803,7 +804,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,126
+num_samples,127
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1140,7 +1141,7 @@ sds_buffer_vol,1
 sec_ex,1
 sec_plate,1
 second_media_y,1
-sep_time,1
+sep_time,2
 sep_time_bind,1
 sep_time_elu,1
 sep_time_wash,1
@@ -1216,7 +1217,7 @@ starting_tip_col,2
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,25
+starting_vol,26
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1305,7 +1306,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,40
+tip_track,41
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
@@ -1467,8 +1468,8 @@ volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,6
-wash1_vol,23
-wash2_vol,22
+wash1_vol,24
+wash2_vol,23
 wash3_vol,11
 wash_buf_vol,1
 wash_scheme,1
