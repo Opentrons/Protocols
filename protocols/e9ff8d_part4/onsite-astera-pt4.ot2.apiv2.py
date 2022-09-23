@@ -44,7 +44,13 @@ def run(ctx):
 
     tipracks = [ctx.load_labware(tip_rack, slot)
                 for slot in [7]]
-
+    # Hardcoded Offsets
+    tipracks[0].set_offsets(x=0.4, y=0.1, z=-0.6)
+    mag_mod.set_offsets(x=2.00, y=-1.40, z=-3.70)
+    reservoir.set_offsets(x=0, y=0, z=-0.5)
+    reagent_plate.set_offsets(x=-0.5, y=0.6, z=0)
+    temp_mod_reag.set_offsets(x=0, y=0, z=0)
+    temp_mod.set_offsets(x=0, y=0, z=0)
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2',
                                m300_mount,
