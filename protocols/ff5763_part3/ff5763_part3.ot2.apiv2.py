@@ -102,6 +102,7 @@ def run(ctx):
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
         m300.flow_rate.dispense /= 5
+        m300.mix(5, 30, pcr_mix[i_x])
         m300.aspirate(40, pcr_mix[i_x])
         m300.move_to(pcr_mix[i_x].top())
         m300.aspirate(airgap_mastermix, pcr_mix[i_x].top())
@@ -185,6 +186,5 @@ def run(ctx):
     ctx.home()
     ctx.pause('Run complete, please move sample plate to off-deck thermocycler'
               )
-    for c in ctx.commands():
-        print(c)
-    # print(pcr_mix)
+    # for c in ctx.commands():
+    #     print(c)

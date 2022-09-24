@@ -62,7 +62,7 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. Supernatant is removed from samples on magnetic module and disposed off in liquid trash in slot 6
-2. 40 uL PCR Master Mix from slot 1 columns 1 and 3 (as needed) is added to samples on magnetic module
+2. 40 uL PCR Master Mix from slot 1 columns 1 and 3 (as needed) is added to samples on magnetic module. The master mix is gently mixed via the pipette every time it is accessed.
 3. Samples are moved to thermocycler compatible plate in slot 2
 4. Samples are centrifuged for 3 seconds at 280 x g
 5. 10 uL index adapters from either slot 5 well 3 or the barcoding plate in slot 3 are added to sample plate in slot 2 and mixed (10x with 40 uL)

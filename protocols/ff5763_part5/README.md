@@ -54,7 +54,7 @@ Explanation of complex parameters below:
 ---
 ### Protocol Steps
 1. Magnetic module is engaged for 5 minutes
-2. 15ul IPB is transferred to columns 7-12 on magnetic module
+2. 15ul IPB is transferred to columns 7-12 on magnetic module. The IPB tubes are mixed every other time the IPB is aspirated via a bead mixing function where the solution is aspirated from the bottom, dispensed 3 mm higher, aspirated at the same higher location, then dispensed from the bottom. This is repeated 10 times total.
 3. 125ul supernatant is transferred from columns 1-6 to columns 7-12 on the magnetic module with a 10x mix at 120ul
 4. Magnetic module is disengaged
 5. 5 minute incubation period

@@ -60,7 +60,7 @@ Explanation of complex parameters below:
 3. The magnetic module is engaged at 10mm for 5 minutes
 4. The resulting supernatant in columns 7-12 (if 48 samples) has 45ul moved to columns 1-6 in slot 3's deep well plate.
 5. 40ul of NFW is added to columns 1-6 in slot 3
-6. 45ul of IPB is added to columns 1-6 in slot 3 then mixed 10x at 100ul each time.
+6. 45ul of IPB is added to columns 1-6 in slot 3 then mixed 10x at 100ul each time. The IPB tubes are mixed every other time the IPB is aspirated via a bead mixing function where the solution is aspirated from the bottom, dispensed 3 mm higher, aspirated at the same higher location, then dispensed from the bottom. This is repeated 10 times total.
 7. The samples are left to incubate for 5 minutes
 8. Slot 2's plate can be disposed of
 9. Slot 4's plate (magnetic module plate) can be disposed of

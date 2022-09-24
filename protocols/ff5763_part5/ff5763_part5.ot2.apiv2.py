@@ -21,6 +21,7 @@ def run(ctx):
 
     # number of samples
     num_cols = math.ceil(num_samples/8)
+    vol_beads = num_cols*15
 
     # "True" for park tips, "False" for discard tips
 
@@ -60,6 +61,22 @@ def run(ctx):
     z_mod_value = 5
     a_mod_value = 5
     # MIDI_plate_mag_height = 9
+
+    def bead_mixing(well, pip, mvol, top=5, bottom=1,
+                    asp_speed_mod=5, disp_speed_mod=5, reps=10):
+        vol = mvol * .9
+
+        pip.move_to(well.center())
+        pip.flow_rate.aspirate *= asp_speed_mod
+        pip.flow_rate.dispense *= disp_speed_mod
+        for _ in range(reps):
+            pip.aspirate(vol, well.bottom(bottom))
+            pip.dispense(vol, well.bottom(top))
+            pip.aspirate(vol, well.bottom(top))
+            pip.dispense(vol, well.bottom(bottom))
+            pip.flow_rate.aspirate /= asp_speed_mod
+            pip.flow_rate.dispense /= disp_speed_mod
+        ctx.comment('\n\n')
     # protocol
 
     mag_module.engage()
@@ -67,7 +84,11 @@ def run(ctx):
 # transfer 15ul IPB to each empty well in mag module plate
     ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING IPB~~~~~~~~~~~~~~~~\n')
     m20.pick_up_tip()
-    for dest in final_plate_dest:
+    vol_mix_beads = vol_beads if vol_beads < 20 else 22
+    for i, dest in enumerate(final_plate_dest):
+        if i % 2 == 0:
+            bead_mixing(ipb, m20, vol_mix_beads, top=3, asp_speed_mod=1,
+                        disp_speed_mod=1)
         m20.flow_rate.aspirate /= 4
         m20.flow_rate.dispense /= 4
         m20.flow_rate.blow_out /= 4
