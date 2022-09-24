@@ -61,6 +61,38 @@ def run(ctx):
     vol_supernatant = 50
     supernatant_headspeed_modulator = 5
     airgap_nfwater = 10
+
+    def bead_mixing(well, pip, mvol, top=5, bottom=1,
+                    asp_speed_mod=5, disp_speed_mod=5, reps=10):
+        """bead_mixing."""
+        """
+        'bead_mixing ' will mix liquid that contains beads. This is done by
+        aspirating from the middle of the well & dispensing from the bottom to
+        mix the beads with the other liquids as much as possible. Aspiration &
+        dispensing will also be reversed to ensure proper mixing.
+        param well: The current well that the mixing will occur in.
+        param pip: The pipet that is currently attached/ being used.
+        param mvol: The volume that is transferred before the mixing steps.
+        param asp/disp_speed_mod: The speed modulation for aspirations and
+        dispenses. 0.5 will divide default volume in half, 2 will double it.
+        param reps: The number of mix repetitions that should occur. Note~
+        During each mix rep, there are 2 cycles of aspirating from bottom,
+        dispensing at the top and 2 cycles of aspirating from middle,
+        dispensing at the bottom
+        """
+        vol = mvol * .9
+
+        pip.move_to(well.center())
+        pip.flow_rate.aspirate *= asp_speed_mod
+        pip.flow_rate.dispense *= disp_speed_mod
+        for _ in range(reps):
+            pip.aspirate(vol, well.bottom(bottom))
+            pip.dispense(vol, well.bottom(top))
+            pip.aspirate(vol, well.bottom(top))
+            pip.dispense(vol, well.bottom(bottom))
+        pip.flow_rate.aspirate /= asp_speed_mod
+        pip.flow_rate.dispense /= disp_speed_mod
+        ctx.comment('\n\n')
     # protocol
 
     # move samples to Deep Well Plate on Mag Module
@@ -113,10 +145,13 @@ def run(ctx):
         m300.drop_tip()
     # add 45ul IPB to MIDI plate 2 and mix 10x
     ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING IPB~~~~~~~~~~~~~~~~\n')
-    for dest in sample_dest_MIDI_2:
+    for i, dest in enumerate(sample_dest_MIDI_2):
+        m300.pick_up_tip()
+        if i % 2 == 0:
+            bead_mixing(dest, m300, 45, asp_speed_mod=1,
+                        disp_speed_mod=1)
         m300.flow_rate.aspirate /= 4
         m300.flow_rate.dispense /= 4
-        m300.pick_up_tip()
         m300.aspirate(45, ipb)
         m300.dispense(45, dest)
         m300.flow_rate.aspirate *= 2
