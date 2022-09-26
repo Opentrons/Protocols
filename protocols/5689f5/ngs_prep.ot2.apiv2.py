@@ -161,8 +161,9 @@ for {time_incubation_minutes} minutes.')
         bead_ind = 11-i
         height = height_set[bead_ind//3]
         m20.pick_up_tip(p)
-        m20.transfer(vol_ampure_beads, ampure_beads.bottom(height), m.bottom(1),
-                     mix_before=(2, vol_ampure_beads), new_tip='never')
+        m20.transfer(vol_ampure_beads, ampure_beads.bottom(height),
+                     m.bottom(1), mix_before=(2, vol_ampure_beads),
+                     new_tip='never')
         for _ in range(8):
             m20.aspirate(vol_ampure_beads, m.bottom(1))
             m20.dispense(vol_ampure_beads, m.bottom(3))
@@ -218,7 +219,8 @@ resuming.')
     # elute
     parking_set = parking_sets20.pop()
     parking_set2 = parking_sets20.pop()
-    for i, (m, p, p2) in enumerate(zip(mag_samples, parking_set, parking_set2)):
+    for i, (m, p, p2) in enumerate(
+            zip(mag_samples, parking_set, parking_set2)):
         side_beads = 1 if magplate.rows()[0].index(m) % 2 == 0 else -1
         side_elution = -1 if magplate.rows()[0].index(m) % 2 == 0 else 1
 
