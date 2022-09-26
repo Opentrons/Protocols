@@ -167,6 +167,6 @@ def run(ctx):
     pick_up()
     m300.aspirate(40, aspirate_loc, rate=0.5)
     m300.dispense(40, strip_tube_plate.columns()[1][0])
-    blowout(strip_tube_plate.columns()[1][0].top())
+    blowout(strip_tube_plate.columns()[1][0])
     m300.touch_tip()
     m300.drop_tip()
