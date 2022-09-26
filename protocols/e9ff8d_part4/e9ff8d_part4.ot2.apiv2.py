@@ -1,3 +1,4 @@
+# flake8: noqa
 from opentrons.types import Point
 
 metadata = {
@@ -7,10 +8,6 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-
-
-
-# ADD ALL 12 WELL RESERVOIRS TO SLOT 11
 def run(ctx):
 
     engage_height = 23

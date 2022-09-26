@@ -8,6 +8,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Tip Rack",
+    "name": "tip_rack",
+    "options": [
+      {"label": "GEB 300ul Tips", "value": "opentrons_96_tiprack_300ul"},
+      {"label": "Opentrons 200ul Filter tips", "value": "opentrons_96_filtertiprack_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "m300_mount",
     "options": [

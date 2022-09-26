@@ -1,5 +1,6 @@
+# flake8: noqa
+
 from opentrons.types import Point
-from opentrons import protocol_api
 
 metadata = {
     'protocolName': '3.3 DNA Cleanup – SPRIselect',
@@ -92,7 +93,7 @@ def run(ctx):
     pick_up()
     aspirate_loc = samples.bottom(z=1).move(
             Point(x=(samples.diameter/2-length_from_side)*side))
-    m300.aspirate(200, aspirate_loc, rate=0.5)  # DO WE REMOVE 200UL OF SUPERNAT???
+    m300.aspirate(200, aspirate_loc, rate=0.5)
     m300.dispense(200, trash)
     m300.blow_out()
     m300.air_gap(20)
