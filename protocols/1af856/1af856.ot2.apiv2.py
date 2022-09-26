@@ -197,7 +197,8 @@ Return plate to slot 8. Resume\n\n
 
     for purification in purifications:
         p300s.transfer(
-         24, pb, purification, mix_before=(5, 0.8*24*num_purifications),
+         24, pb, purification, air_gap=15, touch_tip=True,
+         mix_before=(5, 0.8*24*num_purifications),
          new_tip='always')
 
     ctx.comment("\nSTEP - add PS for final vol 22.5 uL per sample and mix\n")
@@ -444,7 +445,8 @@ Unseal and return plate to slot 5. Resume\n\n
 
     ctx.comment("\nSTEP - add 7 uL beads, wait, engage magnets, wait\n")
 
-    p20s.transfer(7, pb, mag_plate.wells_by_name()['A3'], mix_before=(5, 7))
+    p20s.transfer(
+     7, pb, mag_plate.wells_by_name()['A3'], touch_tip=True, mix_before=(5, 7))
 
     ctx.delay(minutes=5)
 
@@ -604,7 +606,7 @@ Resume\n\n
 
     p300s.transfer(
      31.5, pb, mag_plate.wells_by_name()['A4'],
-     mix_before=(10, 24), mix_after=(5, 50))
+     mix_before=(10, 24), mix_after=(5, 50), air_gap=15, touch_tip=True)
 
     ctx.delay(minutes=5)
 
