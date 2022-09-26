@@ -6,21 +6,21 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "This is the third of four parts for a custom PCR prep followed by two stage cleanup. This",
     "internal": "e9ff8d_part3",
-    "labware": "\nFoil-Covered Index 96 Well Plate 200 \u00b5L\nEppendorf 96 Well Plate 200 \u00b5L on Opentrons Semi-Skirted Adapter\nEppendorf 96 Well Plate 200 \u00b5L on Aluminum Block 200 \u00b5L\nOpentrons 24 Well Aluminum Block with NEST 2 mL Snapcap\nOpentrons 96 Tip Rack 300 \u00b5L or Opentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "labware": "\nFoil-Covered Index Adapter 96 Well Plate, 200 \u00b5L\nEppendorf 96 Well Plate 200 \u00b5L on Opentrons Semi-Skirted Adapter\nEppendorf 96 Well Plate 200 \u00b5L on Aluminum Block 200 \u00b5L\nOpentrons 24 Well Aluminum Block with NEST 2 mL Snapcap\nOpentrons 96 Tip Rack 300 \u00b5L or Opentrons 96 Filter Tip Rack 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Broad Category\n\t* Specific Category\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e9ff8d_part3/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "description": "This is the third of four parts for a custom PCR prep followed by two stage cleanup. This\n\n\n",
         "internal": "e9ff8d_part3\n",
-        "labware": "* Foil-Covered Index 96 Well Plate 200 \u00b5L\n* [Eppendorf 96 Well Plate 200 \u00b5L on Opentrons Semi-Skirted Adapter](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)\n* [Eppendorf 96 Well Plate 200 \u00b5L on Aluminum Block 200 \u00b5L](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)\n* [Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) or [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n\n\n",
+        "labware": "* Foil-Covered Index Adapter 96 Well Plate, 200 \u00b5L\n* [Eppendorf 96 Well Plate 200 \u00b5L on Opentrons Semi-Skirted Adapter](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)\n* [Eppendorf 96 Well Plate 200 \u00b5L on Aluminum Block 200 \u00b5L](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)\n* [Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) or [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n\n\n",
         "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
+        "protocol-steps": "1. 60 uL of index mix is added to the samples\n2. The index adapter foil is pierced by multi-channel pipette\n3. 20 uL index adapter is added to the samples\n4. Sample plate is removed to an off-deck thermocycler\n\n\n",
         "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e9ff8d_part3/reagents.png)\n\n\n",
         "title": "4.1 Sample Index PCR"
     },
@@ -31,7 +31,7 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
+    "protocol-steps": "\n60 uL of index mix is added to the samples\nThe index adapter foil is pierced by multi-channel pipette\n20 uL index adapter is added to the samples\nSample plate is removed to an off-deck thermocycler\n",
     "reagent-setup": "",
     "title": "4.1 Sample Index PCR"
 }

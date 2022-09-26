@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* PCR
+	* Pre-Amplification
 
 
 ## Description
-This protocol does stuff!
+This is the first of four parts for a custom PCR prep followed by two stage cleanup.
 
 
 ### Modules
@@ -40,7 +40,12 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. 125 uL of recovery agent is added to samples
+2. 2 minute delay until a biphasic mixture is attained
+3. Visual inspection should occur of the biphasic mixture then resume is selected in the app.
+4. Recovery agent is removed from the samples, leaving only a clear liquid in the wells
+5. 35 uL of pre-amplification mix is added to the samples
+6. Samples are moved to a PCR strip tube prior to thermocycler step as outlined in procedure documentation
 
 
 ### Process

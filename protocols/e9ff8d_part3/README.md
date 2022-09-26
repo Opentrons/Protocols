@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol does stuff!
+This is the third of four parts for a custom PCR prep followed by two stage cleanup. This
 
 
 ### Modules
@@ -20,7 +20,7 @@ This protocol does stuff!
 
 
 ### Labware
-* Foil-Covered Index 96 Well Plate 200 µL
+* Foil-Covered Index Adapter 96 Well Plate, 200 µL
 * [Eppendorf 96 Well Plate 200 µL on Opentrons Semi-Skirted Adapter](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)
 * [Eppendorf 96 Well Plate 200 µL on Aluminum Block 200 µL](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-LoBind-PF-58208.html)
 * [Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
@@ -41,7 +41,10 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. 60 uL of index mix is added to the samples
+2. The index adapter foil is pierced by multi-channel pipette
+3. 20 uL index adapter is added to the samples
+4. Sample plate is removed to an off-deck thermocycler
 
 
 ### Process

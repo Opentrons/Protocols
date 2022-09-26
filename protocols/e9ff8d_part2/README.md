@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Purification
+	* DNA Cleanup
 
 
 ## Description
-This protocol does stuff!
+This is the second of four parts for a custom PCR prep followed by two stage cleanup. This is the first of two cleanups.
 
 
 ### Modules
@@ -41,7 +41,17 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. SPRI beads are mixed prior to 126 uL being added to samples
+2. SPRI and samples are mixed
+3. Beads are left to incubate for 5 minutes
+4. Magnetic module is engaged for 5 minutes to separate beads
+5. Supernatant is removed and disposed of
+6. Beads are washed twice with 200 uL of ethanol, disposing of ethanol each time
+7. Magnetic module is disengaged
+8. 101 uL of elution solution is added to the samples and mixed
+9. Samples are left to elute for 2 minutes
+10. Magnetic module is engaged for 5 minutes to separate beads
+11. 100 uL of now eluted sample is transferred to column 2 on the 96 well plate
 
 
 ### Process
