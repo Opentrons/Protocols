@@ -19,7 +19,7 @@ Links:
 **Note about tips**
 The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks.
 
-**Update**: This protocol was updated August 12th, 2022
+**Update**: This protocol was updated September 27th, 2022
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
