@@ -5,7 +5,7 @@ metadata = {
     'protocolName': 'MP Biomedicals magGENic Plant DNA Kit: Nucleic Acid \
 Purification',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.11'
+    'apiLevel': '2.12'
 }
 
 TEST_MODE_BEADS = False
@@ -15,13 +15,13 @@ TEST_MODE_AIRDRY = False
 
 def run(ctx):
 
-    [num_samples, lw_deepwell_plate, mixreps,
-     time_airdry_minutes, vol_final_elution] = get_values(  # noqa: F821
-        'num_samples', 'lw_deepwell_plate', 'mixreps',
-        'time_airdry_minutes', 'vol_final_elution')
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
 
     if TEST_MODE_BEADS:
         mixreps = 1
+    else:
+        mixreps = 15
     vol_mix = 180.0
     z_offset = 3.0
     radial_offset_fraction = 0.4  # fraction of radius
@@ -29,15 +29,18 @@ def run(ctx):
     vol_dmbb = 500.0
     vol_wash = 1000.0
     vol_elution = 50.0
+    vol_final_elution = 50.0
     engage_height = 7.6
     time_settling_minutes = 5.0
+    time_airdry_minutes = 4.0
 
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
     magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magplate = magdeck.load_labware(lw_deepwell_plate, 'deepwell plate')
+    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
+                                    'NEST deepwell plate')
     elution_rack = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '1',
                 'elution 1.5ml tuberack')
@@ -154,61 +157,6 @@ def run(ctx):
                 m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
             m300.flow_rate.aspirate /= 4
             m300.flow_rate.dispense /= 4
-
-    def bind(vol, parking_spots):
-        """
-        `bind` will perform magnetic bead binding on each sample in the
-        deepwell plate. Each channel of binding beads will be mixed before
-        transfer, and the samples will be mixed with the binding beads after
-        the transfer. The magnetic deck activates after the addition to all
-        samples, and the supernatant is removed after bead bining.
-        :param vol (float): The amount of volume to aspirate from the elution
-                            buffer source and dispense to each well containing
-                            beads.
-        :param park (boolean): Whether to save sample-corresponding tips
-                               between adding elution buffer and transferring
-                               supernatant to the final clean elutions PCR
-                               plate.
-        """
-
-        check_set(parking_spots)
-
-        latest_chan = -1
-        chan_ind = 0
-        vol_track = 0
-        max_vol_per_chan = 0.95*res1.wells()[0].max_volume
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            m300.pick_up_tip(spot)
-            if vol_track + 8*vol > max_vol_per_chan:
-                chan_ind += 1
-                vol_track = 0
-            vol_track += 8*vol
-            source = dmbb[chan_ind]
-            if chan_ind != latest_chan:  # mix if accessing new channel
-                m300.flow_rate.aspirate *= 4
-                m300.flow_rate.dispense *= 4
-                for _ in range(3):
-                    m300.aspirate(200, source.bottom(0.5))
-                    m300.dispense(200, source.bottom(5))
-                latest_chan = chan_ind
-                m300.flow_rate.aspirate /= 4
-                m300.flow_rate.dispense /= 4
-            m300.transfer(vol, source, well.top(), new_tip='never')
-            m300.flow_rate.aspirate *= 4
-            m300.flow_rate.dispense *= 4
-            m300.mix(mixreps, vol_mix, well.bottom(2))
-            m300.flow_rate.aspirate /= 4
-            m300.flow_rate.dispense /= 4
-            m300.air_gap(20)
-            m300.drop_tip(spot)
-
-        magdeck.engage(engage_height)
-        if not TEST_MODE_BEADS:
-            ctx.delay(minutes=time_settling_minutes, msg=f'Incubating on \
-MagDeck for {time_settling_minutes} minutes.')
-
-        # remove initial supernatant
-        remove_supernatant(vol+vol_starting, parking_spots)
 
     def wash(vol, source, parking_spots, remove=True,
              resuspend_method='mix', supernatant_volume=None,
