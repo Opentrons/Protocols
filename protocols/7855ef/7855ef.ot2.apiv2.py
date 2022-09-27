@@ -11,12 +11,9 @@ metadata = {
 
 def run(protocol):
 
-    # [num_samp, m20_mount, overage_percent] = get_values(  # noqa: F821
-    #     "num_samp", "m20_mount", "overage_percent")
+    [num_samp, m20_mount, overage_percent] = get_values(  # noqa: F821
+        "num_samp", "m20_mount", "overage_percent")
 
-    num_samp = 384
-    m20_mount = 'left'
-    overage_percent = 15
     if not 1 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
 

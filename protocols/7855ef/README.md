@@ -11,10 +11,10 @@
 This protocol is the first of a 4 part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). The OT-2 will distribute 7ul of Amplification Mix to each well of a 384 well plate up to the number of samples specified by the user. 3ul of DNA is then added to each well containing Ampflication Mix.
 
 Links:
-* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
-* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-part2)
-* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-part3)
-* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-part4)
+* [Part 1: DNA Transfer](../7855ef)
+* [Part 2: Pre-Ligation](../7855ef-part2)
+* [Part 3: Barcoding](../7855ef-part3)
+* [Part 4: Pooling](../7855ef-part4)
 
 **Note about tips**
 The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks.
@@ -27,7 +27,7 @@ The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves 
 To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
-* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
+* [Opentrons OT-2 Run App (Version 4.7.0 or later)](https://opentrons.com/ot-app/)
 * [P20 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
 * [Opentrons 96 Filter Tip Rack 20 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul?category=tipRack)
 * [ThermoFisher Scientific 96 Well Plate 200ul (AB-0800)](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fmanuals%2FMAN0014518_96well_pcr_plate_skirted_low_profile_qr.pdf&title=VGVjaG5pY2FsIERyYXdpbmcgLSBQQ1IgUGxhdGUsIDk2LXdlbGwsIExvdyBQcm9maWxlLCBTa2lydGVk)
