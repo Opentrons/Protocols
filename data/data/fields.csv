@@ -629,7 +629,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,68
-m300_mount,74
+m300_mount,77
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -723,8 +723,8 @@ mntmulti,2
 mntsingle,2
 mother_plate_type,1
 mount,2
-mount_m20,2
-mount_m300,3
+mount_m20,1
+mount_m300,2
 mount_p20,6
 mount_p300,5
 mount_side,1
@@ -797,14 +797,14 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,52
+num_samp,56
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,127
+num_samples,126
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -880,7 +880,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,122
+p300_mount,124
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1209,6 +1209,7 @@ start,1
 start_buff_vol,1
 start_col,1
 start_column,1
+start_index_tip,1
 start_tip,1
 start_urea_vol,1
 starting_conc,2
@@ -1294,7 +1295,7 @@ tip_immersion,1
 tip_max,1
 tip_no,1
 tip_park_start_col,2
-tip_rack,1
+tip_rack,5
 tip_rack_10,1
 tip_rack_300,1
 tip_reusage_strategy,1
