@@ -125,7 +125,6 @@ def run(protocol):
             amplify_mix_well) - 3 if liq_height(
                 amplify_mix_well) > 3.4 else 0.5
         m20.aspirate(7, amplify_mix_well.bottom(ht))
-        protocol.comment(f'Well ht: {ht}')  # remove
         m20.move_to(amplify_mix_well.top(-2))
         protocol.delay(seconds=2)
         touchtip(m20, amplify_mix_well)
