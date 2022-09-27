@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol performs nucleic acid purification on up to 24 samples according to the [MP Biomedicals magGenic](https://www.mpbio.com/us/maggenic-plant-dna-kit)
+This protocol performs nucleic acid purification on up to 24 samples according to the [MP Biomedicals magGenic Plant DNA Kit](https://www.mpbio.com/us/maggenic-plant-dna-kit).
 
 
 ### Modules
@@ -20,7 +20,7 @@ This protocol performs nucleic acid purification on up to 24 samples according t
 
 ### Labware
 * [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-
+* [NEST 2 mL 96-Well Deep Well Plate, V Bottom #999-00103](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
 * Opentrons 96 Filter Tip Rack 200 µL
 * [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)
