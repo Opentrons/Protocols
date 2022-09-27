@@ -15,10 +15,10 @@
 This protocol performs [Next Advance Checkit Go](https://www.nextadvance.com/checkit-go/) volume accuracy testing for Opentrons electronic pipettes on the OT-2. The user can select which model Checkit Go cartridge with which to test their pipette accuracy (2, 5, 10, 20, or 50ul).
 
 This protocol is meant to be used with the following Opentrons pipettes:  
-* P20 Single Channel
-* P20 MultiChannel
-* P300 Single Channel
-* P300 MultiChannel
+* P20 Single-Channel
+* P20 8-Channel
+* P300 Single-Channel
+* P300 8-Channel
 
 Checkit Go devices are shipped with a red dye to use for testing, but you may also want to use their [red dye pellets](https://www.nextadvance.com/product/checkit-go-dye-pellet-6-pack/). Keep in mind, the protocol you find here is only tested with the Next Advance dye that is provided with the plates. If you plan to use the device with any other liquids, optimizations to the protocol will need to be made. Please contact Next advance support for questions about which liquids can be used on their devices. Contact Opentrons support with questions about the protocol.
 
