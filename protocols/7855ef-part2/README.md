@@ -10,7 +10,7 @@
 ## Description
 This protocol is the second of a four part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). 2ul of Pre-ligation mix is distributed to each column of sample that was processed in Part 1 of the protocol.
 
-**Note**: This protocol was updated August 12th, 2022
+**Note**: This protocol was updated September 28th, 2022
 
 Links:
 * [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
@@ -50,13 +50,12 @@ When prompted to replace the 20ul tip racks, be sure to re-load all 4 tip racks 
 
 **Labware Setup**
 
-Slots 1, 2, 3: ThermoFisher Scientific (model AB0800) 96 well plate loaded with DNA sample.  
 
 Slot 5: 384 well plate
 
-Slot 7: MMX Plate with Pre-ligation Mix in Column 3
+Slot 6: MMX Plate with Pre-ligation Mix in Column 3
 
-Slot 8, 9, 10, 11: Opentrons 20ul Tip Rack
+Slots 7, 8, 9, 10: Opentrons 20ul Tip Rack
 
 
 
