@@ -18,21 +18,27 @@ def run(protocol):
         raise Exception("Enter a sample number between 1-384")
 
     num_col = math.ceil(num_samp/8)
+    num_plate = math.ceil(num_col/12)
+    num_tip = math.ceil((num_col+1)/12)
 
     tip_counter = 0
+    dropped_tip = 0
 
     # load labware
-    sample_plates = [protocol.load_labware(
-                    'fisherscientific_96_wellplate_200ul',
-                     str(slot), label='Sample Plate') for slot in [1, 2, 3, 4]]
+    sample_plates = [
+        protocol.load_labware(
+            'fisherscientific_96_wellplate_200ul',
+            str(slot),
+            label=f'Sample Plate {slot}') for slot in [1, 2, 3, 4][:num_plate]]
     reaction_plate = protocol.load_labware(
                     'microamp_384_wellplate_100ul', '5',
                     label='Reaction Plate')
     mmx_plate = protocol.load_labware('customendura_96_wellplate_200ul', '6',
                                       label='MMX Plate')
-    tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
-                                       str(slot))
-                 for slot in [7, 8, 9, 10, 11]]
+    tiprack20 = [
+        protocol.load_labware(
+            'opentrons_96_filtertiprack_20ul',
+            str(slot)) for slot in [7, 8, 9, 10, 11][:num_tip]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -40,23 +46,25 @@ def run(protocol):
 
     tips = [col for tipbox in tiprack20 for col in tipbox.rows()[0]]
 
-    overage_coef = (overage_percent/100)+1
-    v_naught = 7*num_col*overage_coef
-    # starting height minus 2.5mm, using % isn't enough
-    h_naught = (1.92*(v_naught)**(1/3))-2.5
-    h = h_naught
+    # return liquid height in a well
+    def liq_height(well):
+        r1 = well.diameter / 2
+        r2 = 0.6  # calculated manually
+        h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
+        return h
 
-    def adjust_height(vol):
-        nonlocal v_naught
-        nonlocal h
-        # below if/else needed to avoid complex number error
-        if v_naught - vol > 0:
-            v_naught = v_naught - vol
-        else:
-            v_naught = 0
-        h = (1.92*(v_naught)**(1/3))-2.5
-        if h < 3:
-            h = 1
+    # load reagents
+    overage_coef = (overage_percent/100)+1
+
+    n1 = num_col if num_samp <= 192 else 24
+    v1 = 7*n1*overage_coef
+    amplify_mix_1 = mmx_plate['A1']
+    amplify_mix_1.liq_vol = v1
+
+    n2 = num_col - 24 if num_samp > 192 else 0
+    v2 = 7*n2*overage_coef
+    amplify_mix_2 = mmx_plate['A2']
+    amplify_mix_2.liq_vol = v2
 
     def touchtip(pip, well):
         knock_loc = well.top(z=-2).move(
@@ -78,13 +86,19 @@ def run(protocol):
             m20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
 
+    def trash_tip():
+        nonlocal tip_counter
+        nonlocal dropped_tip
+        if tip_counter < 13:
+            m20.drop_tip()
+        else:
+            m20.drop_tip(tips[dropped_tip])
+            dropped_tip += 1
+
     sample_plate_cols = [col for plate in sample_plates
                          for col in plate.rows()[0]][:num_col]
     reaction_plate_cols = [col for j in range(2) for i in range(2)
                            for col in reaction_plate.rows()[i][j::2]][:num_col]
-
-    # load reagents
-    amplify_mix = mmx_plate.rows()[0][:2]
 
     # add amplification mix
     airgap = 2
@@ -94,25 +108,28 @@ def run(protocol):
     m20.flow_rate.blow_out = 1.5
     pick_up()
     for col in reaction_plate_cols:
-        if num > 192:
-            amplify_mix_well = amplify_mix[1]
+        if num >= 192:
+            amplify_mix_well = amplify_mix_2
         else:
-            amplify_mix_well = amplify_mix[0]
-        m20.aspirate(7, amplify_mix_well.bottom(h))
+            amplify_mix_well = amplify_mix_1
+        amplify_mix_well.liq_vol -= 7
+        ht = liq_height(
+            amplify_mix_well) - 2.5 if liq_height(
+                amplify_mix_well) > 3 else 0.5
+        m20.aspirate(7, amplify_mix_well.bottom(ht))
         m20.move_to(amplify_mix_well.top(-2))
         protocol.delay(seconds=2)
-        m20.touch_tip(v_offset=-2)
+        touchtip(m20, amplify_mix_well)
         m20.move_to(amplify_mix_well.top(-2))
         m20.aspirate(airgap, amplify_mix_well.top())
         m20.dispense(airgap, col.top())
         protocol.delay(seconds=2)
         m20.dispense(7, col)
         m20.blow_out(col.top(z=-2))
-        m20.touch_tip(v_offset=-2)
+        touchtip(m20, col)
         m20.move_to(col.top(-2))
-        adjust_height(7)
         num += 8
-    m20.return_tip()
+    trash_tip()
     protocol.comment('\n\n\n\n')
 
     # add DNA
@@ -129,10 +146,10 @@ def run(protocol):
         m20.mix(2, 5, d)
         m20.blow_out()
         touchtip(m20, d)
-        m20.return_tip()
+        trash_tip()
 
     protocol.home()
-    protocol.pause('''Protocol method complete. Please remove reaction plates
+    protocol.comment('''Protocol method complete. Please remove reaction plates
                    from deck and proceed with PCR and centrifuge steps.
                    Return reaction plates back to deck and continue to
                    Part 2 - Pre-ligation.''')
