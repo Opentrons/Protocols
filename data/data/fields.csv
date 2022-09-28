@@ -1291,7 +1291,7 @@ time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
-tip_disp,1
+tip_disp,2
 tip_immersion,1
 tip_max,1
 tip_no,1
