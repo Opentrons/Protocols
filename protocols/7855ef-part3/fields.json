@@ -19,5 +19,14 @@
     "label": "Overage Percent",
     "name": "overage_percent",
     "default": 15
+  },
+  {
+    "type": "dropDown",
+    "label": "Tip Disposal",
+    "name": "tip_disp",
+    "options": [
+      { "label": "Return All Tips", "value": 1 },
+       { "label": "Trash Tips", "value": 0 }
+     ]
   }
 ]
