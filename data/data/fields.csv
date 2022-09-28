@@ -880,7 +880,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,124
+p300_mount,123
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1058,7 +1058,7 @@ reservoir_loc,1
 reservoir_slot,1
 reservoir_type,5
 reset_counter,1
-reset_tipracks,7
+reset_tipracks,6
 resettips,1
 resv_well_edge_offset,1
 return_tips,1
@@ -1162,6 +1162,7 @@ single_channel_type,1
 single_pip_info,1
 size,1
 size_select,1
+skip_code,1
 skip_mix_step,1
 slide_dwell_time,1
 slot_2_height,1
@@ -1291,7 +1292,7 @@ time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
-tip_disp,2
+tip_disp,3
 tip_immersion,1
 tip_max,1
 tip_no,1

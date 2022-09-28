@@ -28,5 +28,14 @@
       { "label": "Return All Tips", "value": 1 },
        { "label": "Trash Tips", "value": 0 }
      ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Skip Barcode Addition",
+    "name": "skip_code",
+    "options": [
+      { "label": "No - Will Add Barcodes", "value": 0 },
+       { "label": "Yes - Only Reaction Mix", "value": 1 }
+     ]
   }
 ]
