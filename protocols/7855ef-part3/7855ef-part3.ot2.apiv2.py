@@ -11,10 +11,9 @@ metadata = {
 
 
 def run(protocol):
-
     [num_samp, m20_mount,
-     overage_percent, tip_disp] = get_values(  # noqa: F821
-        "num_samp", "m20_mount", "overage_percent", "tip_disp")
+     overage_percent, tip_disp, skip_code] = get_values(  # noqa: F821
+        "num_samp", "m20_mount", "overage_percent", "tip_disp", "skip_code")
 
     if not 1 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
@@ -81,25 +80,18 @@ def run(protocol):
     # Height Tracking
 
     overage_coef = (overage_percent/100)+1
-    v_naught = 3*num_col*overage_coef
-    # starting height minus 2.5mm, using % isn't enough
-    h_naught = (1.92*(v_naught)**(1/3))-2.5
-    h = h_naught
 
-    def adjust_height(vol):
-        nonlocal v_naught
-        nonlocal h
-        # below if/else needed to avoid complex number error
-        if v_naught - vol > 0:
-            v_naught = v_naught - vol
-        else:
-            v_naught = 0
-        h = (1.92*(v_naught)**(1/3))-2.5
-        if h < 3:
-            h = 1
+    # return liquid height in a well
+    def liq_height(well):
+        r1 = well.diameter / 2
+        r2 = 0.6  # calculated manually
+        h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
+        return h
 
     # load reagents
-    barcode_rxn_mix = mmx_plate.rows()[0][3]
+    barcode_rxn_mix = mmx_plate['A4']
+    barcode_rxn_mix.liq_vol = 3 * num_col * overage_coef
+
     reaction_plate_cols = [col for j in range(2) for i in range(2)
                            for col in reaction_plate.rows()[i][j::2]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
@@ -107,17 +99,18 @@ def run(protocol):
 
     # add barcode adapter
     airgap = 3
-    for s, d in zip(barcode_plate_cols, reaction_plate_cols):
-        pick_up()
-        m20.aspirate(1, s)
-        touchtip(m20, s)
-        m20.air_gap(airgap)
-        m20.dispense(airgap, d.top())
-        m20.dispense(1, d)
-        m20.mix(2, 8, d)
-        m20.blow_out()
-        touchtip(m20, d)
-        m20.return_tip() if tip_disp else trash_tip()
+    if not skip_code:
+        for s, d in zip(barcode_plate_cols, reaction_plate_cols):
+            pick_up()
+            m20.aspirate(1, s)
+            touchtip(m20, s)
+            m20.air_gap(airgap)
+            m20.dispense(airgap, d.top())
+            m20.dispense(1, d)
+            m20.mix(2, 8, d)
+            m20.blow_out()
+            touchtip(m20, d)
+            m20.return_tip() if tip_disp else trash_tip()
 
     # add barcode reaction mix
     for col in reaction_plate_cols:
@@ -125,7 +118,11 @@ def run(protocol):
         m20.flow_rate.dispense = 1.5
         m20.flow_rate.blow_out = 1.5
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix.bottom(h))
+        barcode_rxn_mix.liq_vol -= 3
+        ht = liq_height(
+            barcode_rxn_mix) - 2.5 if liq_height(
+                barcode_rxn_mix) > 3 else 0.5
+        m20.aspirate(3, barcode_rxn_mix.bottom(ht))
         m20.move_to(barcode_rxn_mix.top(-2))
         protocol.delay(seconds=2)
         touchtip(m20, barcode_rxn_mix)
@@ -141,7 +138,6 @@ def run(protocol):
         touchtip(m20, col)
         m20.move_to(col.top(-2))
         m20.return_tip() if tip_disp else trash_tip()
-        adjust_height(3)
 
     protocol.comment('''Barcoding sample libraries complete. Store at -20C after
                    centrifuge and PCR steps if needed as a break point''')
