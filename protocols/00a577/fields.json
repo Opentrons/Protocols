@@ -3,6 +3,6 @@
     "type": "int",
     "label": "number of samples (1-24)",
     "name": "num_samples",
-    "default": 24
+    "default": 96
   }
 ]

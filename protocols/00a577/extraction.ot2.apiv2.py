@@ -87,6 +87,14 @@ def run(ctx):
 
     magdeck.disengage()  # just in case
 
+    single_tip_list = tips300[-1].wells()[::-1]
+
+    def pick_up_single():
+        for tip in single_tip_list:
+            if tip.has_tip:
+                m300.pick_up_tip(tip)
+                return
+
     last_index = 0
 
     def check_set(set):
@@ -293,6 +301,17 @@ MagDeck for {time_settling_minutes} minutes.')
             p300.air_gap(5)
             p300.drop_tip(spot)
         p300.flow_rate.aspirate *= 5
+
+    # initial plating if < 24 samples
+    if num_samples <= 24:
+        source_rack = ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '7',
+            'source tuberack')
+        source_tubes = source_rack.wells()[:num_samples]
+        for source, dest in zip(source_tubes, mag_samples_s):
+            pick_up_single()
+            m300.transfer(500, source.bottom(2), dest, new_tip='never')
+            m300.drop_tip()
 
     wash(500, dmbb, parking_spots=parking_sets_m300[0],
          mix_before=True, supernatant_volume=vol_starting+vol_dmbb,
