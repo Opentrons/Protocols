@@ -4,9 +4,9 @@
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-<img src="https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/LOGO1.jpg" alt="drawing" width="200"/>
-<br></br>
-<img src="https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/Checkit_rgb.png" alt="drawing" width="200"/>
+![nextadvance](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/LOGO1_resized.jpg)  
+
+![checkit](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/Checkit_rgb_resized.png)
 
 ## Categories
 * Featured
