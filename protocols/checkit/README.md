@@ -4,7 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[Next Advance](https://www.nextadvance.com/)
+![Next Advance](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/LOGO1.jpg)  
+![Checkit](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/Checkit_rgb.png)
 
 ## Categories
 * Featured
