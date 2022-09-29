@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-![logos](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/logo_sidebyside.png)
+![logos](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/checkit/logo_sidebyside_v2.png)
 
 ## Categories
 * Featured
