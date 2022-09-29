@@ -148,7 +148,7 @@ complete, replace plate on magnetic module, and replace source sample plate \
         vol_counter_etoh = 0
         waste_ind = 0
         vol_counter_waste = 0
-        vol_max = 14500
+        vol_max = 13000
         for _ in range(3):
             m300.pick_up_tip()
             for dest in pcr_samples:
@@ -158,6 +158,9 @@ complete, replace plate on magnetic module, and replace source sample plate \
                 vol_counter_etoh += vol_wash*8
                 etoh_source = etoh[etoh_ind]
                 m300.dispense(m300.current_volume, etoh_source.top())
+                m300.move_to(etoh_source.top().move(
+                    Point(x=etoh_source.length/2, z=-1)))
+                m300.move_to(etoh_source.top())
                 m300.aspirate(vol_wash, etoh_source)
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
