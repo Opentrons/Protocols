@@ -82,7 +82,6 @@ def create_protocol():
                 file.seek(0)
                 f.write(file.read())
 
-            print(id, labware_file_ids)
             if len(labware_file_ids) > 0:
                 lw_folder_path = f"{protocol_folder_path}/labware"
                 Path.mkdir(Path(lw_folder_path))
