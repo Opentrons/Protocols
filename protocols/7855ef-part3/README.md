@@ -10,13 +10,13 @@
 ## Description
 This protocol is the third of a four part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). 1ul of IonCode Barcode Adapter is 1-1 transferred by well between the sample plate from Parts 1 & 2 and the Ion Code 96 well plate.
 
-**Note**: This protocol was updated August 12th, 2022
+**Note**: This protocol was updated September 28th, 2022
 
 Links:
-* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
-* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-part2)
-* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-part3)
-* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-part4)
+* [Part 1: DNA Transfer](./7855ef)
+* [Part 2: Pre-Ligation](./7855ef-part2)
+* [Part 3: Barcoding](./7855ef-part3)
+* [Part 4: Pooling](./7855ef-part4)
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)

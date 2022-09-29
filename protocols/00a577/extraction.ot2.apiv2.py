@@ -15,8 +15,8 @@ TEST_MODE_AIRDRY = False
 
 def run(ctx):
 
-    [num_samples] = get_values(  # noqa: F821
-        'num_samples')
+    [num_samples, mount_m300] = get_values(  # noqa: F821
+        'num_samples', 'mount_m300')
 
     if TEST_MODE_BEADS:
         mixreps = 1
@@ -41,9 +41,8 @@ def run(ctx):
     magdeck.disengage()
     magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
                                     'NEST deepwell plate')
-    elution_rack = ctx.load_labware(
-                'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '1',
-                'elution 1.5ml tuberack')
+    elution_plate = ctx.load_labware(
+                'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'elution plate')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '5',
                              'Liquid Waste').wells()[0].top()
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '2',
@@ -56,8 +55,7 @@ def run(ctx):
 
     # load P300M pipette
     m300 = ctx.load_instrument(
-        'p300_multi_gen2', 'left', tip_racks=tips300)
-    p300 = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)
+        'p300_multi_gen2', mount_m300, tip_racks=tips300)
 
     """
     Here is where you can define the locations of your reagents.
@@ -69,10 +67,10 @@ def run(ctx):
     num_cols = math.ceil(num_samples/8)
     mag_samples_m = magplate.rows()[0][:num_cols]
     mag_samples_s = magplate.wells()[:num_samples]
-    elution_samples_s = elution_rack.wells()[:num_samples]
+    elution_samples_m = elution_plate.wells()[:num_cols]
     all_tips_m300 = [well for rack in tips300 for well in rack.rows()[0]]
     parking_sets_m300 = []
-    for i in range(4):
+    for i in range(5):
         if (i+1)*num_cols <= len(all_tips_m300):
             set = all_tips_m300[i*num_cols:(i+1)*num_cols]
         else:
@@ -86,6 +84,14 @@ def run(ctx):
         radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
+
+    single_tip_list = tips300[-1].wells()[::-1]
+
+    def pick_up_single():
+        for tip in single_tip_list:
+            if tip.has_tip:
+                m300.pick_up_tip(tip)
+                return
 
     last_index = 0
 
@@ -258,11 +264,11 @@ MagDeck for {time_settling_minutes} minutes.')
                                plate.
         """
 
-        check_set(parking_spots)
+        check_set(parking_spots[0])
 
         # resuspend beads in elution
         magdeck.disengage()
-        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots[0])):
             m300.pick_up_tip(spot)
             m300.aspirate(vol, elution_buffer)
             m300.dispense(vol, m.bottom(1))
@@ -281,18 +287,31 @@ MagDeck for {time_settling_minutes} minutes.')
             ctx.delay(minutes=time_settling_minutes, msg=f'Incubating on \
 MagDeck for {time_settling_minutes} minutes.')
 
-        p300.flow_rate.aspirate /= 5
-        for i, (m, e) in enumerate(
-                zip(mag_samples_s, elution_samples_s)):
+        check_set(parking_spots[1])
+
+        m300.flow_rate.aspirate /= 5
+        for i, (m, e, spot) in enumerate(
+                zip(mag_samples_m, elution_samples_m, parking_spots[1])):
             # side = -1 if (magplate.wells().index(m) % 8) % 2 == 0 else 1
-            p300.pick_up_tip(spot)
-            p300.aspirate(vol_final_elution, m.bottom(0.8))
-            p300.dispense(vol_final_elution, e.bottom(5))
-            p300.move_to(e.bottom().move(Point(x=e.diameter/2*0.8, z=7)))
-            p300.blow_out(e.top(-2))
-            p300.air_gap(5)
-            p300.drop_tip(spot)
-        p300.flow_rate.aspirate *= 5
+            m300.pick_up_tip(spot)
+            m300.aspirate(vol_final_elution, m.bottom(0.8))
+            m300.dispense(vol_final_elution, e.bottom(5))
+            m300.move_to(e.bottom().move(Point(x=e.diameter/2*0.8, z=7)))
+            m300.blow_out(e.top(-2))
+            m300.air_gap(5)
+            m300.drop_tip(spot)
+        m300.flow_rate.aspirate *= 5
+
+    # initial plating if < 24 samples
+    if num_samples <= 24:
+        source_rack = ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '7',
+            'source tuberack')
+        source_tubes = source_rack.wells()[:num_samples]
+        for source, dest in zip(source_tubes, mag_samples_s):
+            pick_up_single()
+            m300.transfer(500, source.bottom(2), dest, new_tip='never')
+            m300.drop_tip()
 
     wash(500, dmbb, parking_spots=parking_sets_m300[0],
          mix_before=True, supernatant_volume=vol_starting+vol_dmbb,
@@ -302,7 +321,7 @@ MagDeck for {time_settling_minutes} minutes.')
     if not TEST_MODE_AIRDRY:
         ctx.delay(minutes=time_airdry_minutes, msg=f'Air drying for \
 {time_airdry_minutes} minutes before final elution.')
-    elute(vol_elution, parking_spots=parking_sets_m300[3])
+    elute(vol_elution, parking_spots=parking_sets_m300[3:5])
 
     magdeck.disengage()
     ctx.comment('Protocol complete.')
