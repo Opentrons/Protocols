@@ -189,6 +189,8 @@ complete, replace plate on magnetic module, and replace source sample plate \
                     m300.aspirate(50,
                                   source.bottom().move(
                                     Point(x=3*side, z=asp_height)))
+                m300.aspirate(20, source.bottom().move(
+                    Point(x=1.5*side, z=0.2)))
                 m300.move_to(source.top())
                 m300.flow_rate.aspirate *= 15
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
