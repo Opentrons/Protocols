@@ -21,7 +21,7 @@
     "type": "float",
     "label": "EtOH wash volume (in ul)",
     "name": "vol_wash",
-    "default": 200.0
+    "default": 150.0
   },
   {
     "type": "float",
