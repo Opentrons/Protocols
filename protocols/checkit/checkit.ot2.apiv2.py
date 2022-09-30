@@ -67,7 +67,7 @@ def run(ctx):
         }
     }
 
-    # load tipracks in remaining slots
+    # load tipracks
     tiprack_type = tiprack_map[pipette_type]
     tiprack = [ctx.load_labware(tiprack_type, '5')]
 
