@@ -1,13 +1,13 @@
-name: Create Develop to Master PR
+name: create-user-submissions-pr
 on:
   schedule:
     - cron: '45 20 * * 0-6'
 
 jobs:
-  create-pull-request:
+  mine-new-submissions:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out repository code
+    - name: checkout user-submissions branch
       uses: actions/checkout@v2
       ref: 'user-submissions'
 
