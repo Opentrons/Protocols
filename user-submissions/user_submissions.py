@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import io
 import os
+import random
 
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -26,6 +27,11 @@ PROTOCOLS_PATH = 'protocols'
 TODAY = date.today().strftime("%d/%m/%Y")
 
 all_protocol_ids = os.listdir(PROTOCOLS_PATH)
+chars = '0123456789abcdef'
+
+
+def generate_id():
+    return ''.join(random.sample(chars, 6))
 
 
 def create_protocol():
@@ -60,6 +66,7 @@ def create_protocol():
     for i, row in df.iterrows():
         # create protocol file
         id = str(row['id'])
+
         if id not in all_protocol_ids:
             protocol_folder_path = f"{PROTOCOLS_PATH}/{id}"
             if not Path(protocol_folder_path).exists():
