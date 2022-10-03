@@ -12,7 +12,7 @@
 
 ## Description
 
-This protocol performs [Next Advance Checkit Go](https://www.nextadvance.com/checkit-go/) volume accuracy testing for Opentrons electronic pipettes on the OT-2. The user can select which model Checkit Go cartridge with which to test their pipette accuracy (2, 5, 10, 20, or 50ul).
+This protocol performs [Next Advance Checkit Go](https://www.nextadvance.com/checkit-go/) volume accuracy testing for Opentrons electronic pipettes on the OT-2. The user can select which model Checkit Go cartridge with which to test their pipette accuracy (5, 10, 20, or 50ul).
 
 This protocol is meant to be used with the following Opentrons pipettes:  
 * P20 Single-Channel
