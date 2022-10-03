@@ -4,7 +4,6 @@
     "label": "CheckIt cartridge type",
     "name": "lw_checkit",
     "options": [
-      {"label": "2ul", "value": "checkit_8_wellplate_2ul"},
       {"label": "5ul", "value": "checkit_8_wellplate_5ul"},
       {"label": "10ul", "value": "checkit_8_wellplate_10ul"},
       {"label": "20ul", "value": "checkit_8_wellplate_20ul"},
