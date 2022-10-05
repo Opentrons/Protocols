@@ -521,6 +521,9 @@ def run(ctx):
     else:
         ctx.delay(minutes=bead_mag_time_elute)
 
+    ctx.pause('\n~~~~~~PLEASE VISUALLY INSPECT THE MAGNETIC'
+              ' MODULE PLATE SEPARATION~~~~~~~~~~~~\n')
+
     ctx.comment('\n\n~~~~~~~~~~~~~~REMOVING ELUTE~~~~~~~~~~~~~~~\n')
     for i, (s, d) in enumerate(zip(working_cols, elution_plate.rows()[0])):
         side = -x_abs_move_super if i % 2 == 0 else x_abs_move_super
