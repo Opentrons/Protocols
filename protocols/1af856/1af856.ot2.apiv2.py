@@ -23,7 +23,7 @@ def run(ctx):
 
     # helper functions
 
-    # return liquid height in a well
+    # return the liquid height in a well
     def liq_height(well, effective_diameter=None):
         if well.diameter:
             if effective_diameter:
