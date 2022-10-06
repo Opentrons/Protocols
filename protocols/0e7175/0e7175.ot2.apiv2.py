@@ -18,8 +18,8 @@ def get_values(*names):
 def run(ctx):
 
     [num_samp, sample_volume,
-        p300_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "sample_volume", "p300_mount", "p1000_mount")
+        p300_mount] = get_values(  # noqa: F821
+        "num_samp", "sample_volume", "p300_mount")
 
     num_samp == int(num_samp)
 

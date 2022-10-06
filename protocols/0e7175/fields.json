@@ -10,7 +10,7 @@
   },
   {
     "type": "int",
-    "label": "Sample Volume",
+    "label": "Sample Volume (ul)",
     "name": "sample_volume",
     "default": 75
   },
