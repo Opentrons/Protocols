@@ -1,0 +1,186 @@
+import math
+from opentrons.types import Point
+
+metadata = {
+    'protocolName': 'Embgenix™ PGT-A Kit: Preparation of Whole Genome \
+Amplification',
+    'author': 'Nick <ndiehl@opentrons.com',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.12'
+}
+
+
+def run(ctx):
+
+    [num_samples, vol_sample, m20_mount,
+     m300_mount] = get_values(  # noqa: F821
+        'num_samples', 'vol_sample', 'm20_mount', 'm300_mount')
+
+    # labware
+    tempdeck = ctx.load_module('temperature module gen2', '7')
+    tempdeck.set_temperature(4)
+    sample_plate = tempdeck.load_labware(
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'sample plate')
+    tipracks20 = [
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', '8')]
+    tipracks200 = [
+        ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
+    tuberack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4',
+        '1.5ml Eppendorf tuberack')
+    distribution_plate = ctx.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', '5',
+        'plate for mix distribution')
+
+    # pipettes
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
+                              tip_racks=tipracks20)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tipracks200)
+
+    # reagents
+    num_cols = math.ceil(num_samples/8)
+
+    samples_s = sample_plate.wells()[:num_samples]
+    samples_m = sample_plate.rows()[0][:num_cols]
+    dilution1_samples_s = sample_plate.wells()[num_samples:num_samples*2]
+    dilution1_samples_m = sample_plate.rows()[0][num_cols:num_cols*2]
+    dilution2_samples_s = sample_plate.wells()[num_samples*2:num_samples*3]
+    dilution2_samples_m = sample_plate.rows()[0][num_cols*3:num_cols*3]
+
+    ce_mm = tuberack.wells_by_name()['A1']
+    wga_mm = tuberack.wells_by_name()['B1']
+    wd1 = tuberack.wells_by_name()['C1']
+    wd2 = tuberack.wells_by_name()['D1']
+
+    def pick_up(pip, num_tips):
+        tip_cols = [col for rack in pip.tip_racks for col in rack.columns()]
+        for col in tip_cols:
+            count = 0
+            for tip in col[::-1]:
+                if tip.has_tip:
+                    count += 1
+                if count == num_tips:
+                    pip.pick_up_tip(tip)
+                    return
+        ctx.pause(f'Refill {pip.tip_racks[0].wells()[0].max_volume}uL tiprack \
+ before resuming.')
+        pip.reset_tipracks()
+        pick_up(pip, num_tips)
+
+    def wick(pip, well, side=1):
+        pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
+
+    def column_distribute(volume, source, distribution_column,
+                          final_destinations_s=samples_s,
+                          final_destinations_m=samples_m, mix_reps=10,
+                          new_tip=True):
+        if num_cols > 1:
+            vol_per_row = volume*num_cols*1.1  # overage
+            pip = m300 if vol_per_row > 20 else m20
+            pick_up(pip, 1)
+            num_aspirations = math.ceil(
+                vol_per_row*8/pip.tip_racks[0].wells()[0].max_volume)
+            wells_per_asp = pip.tip_racks[0].wells()[0].max_volume//vol_per_row
+            distribution_chunks = [
+                distribution_column[i*wells_per_asp:(i+1)*wells_per_asp]
+                if i < num_aspirations - 1
+                else distribution_column[i*wells_per_asp:]
+                for i in range(num_aspirations)
+            ]
+            for chunk in distribution_chunks:
+                pip.aspirate(vol_per_row*len(chunk))
+                for well in chunk:
+                    pip.dispense(vol_per_row, well.bottom(1))
+                    wick(pip, well)
+            pip.drop_tip()
+
+            # reassign pipette based on transfer volume per sample
+            pip = m300 if volume > 20 else m20
+            if not new_tip:
+                pick_up(pip, 8)
+            for i, s in enumerate(final_destinations_m):
+                if not pip.has_tip:
+                    pick_up(pip, 8)
+                pip.transfer(volume, distribution_column,
+                             s.bottom(1), new_tip='never')
+                pip.mix(mix_reps, volume*0.8, s.bottom(1))
+                wick(pip, s)
+                if new_tip:
+                    pip.drop_tip()
+            if pip.has_tip:
+                pip.drop_tip()
+        else:
+            pip = m300 if volume > 20 else m20
+            if not new_tip:
+                pick_up(pip, 1)
+            for s in final_destinations_s:
+                if not pip.has_tip:
+                    pick_up(pip, 1)
+                pip.transfer(volume, source, s.bottom(1), new_tip='never')
+                pip.mix(mix_reps, volume*0.8, s.bottom(1))
+                wick(pip, s)
+                if new_tip:
+                    pip.drop_tip()
+            if pip.has_tip:
+                pip.drop_tip()
+
+    """
+    V. Preparation of Whole Genome Amplification
+    """
+
+    """ V:A — Cell Lysis/gDNA Extraction"""
+
+    vol_total_reaction = 30.0
+    vol_ce_mm = vol_total_reaction - vol_sample
+    column_distribute(vol_ce_mm, ce_mm, distribution_plate.columns()[0])
+
+    ctx.pause('Proceed with steps V:A:4-7 and replace sample plate on \
+temperature module before resuming.')
+
+    """ V:B — Whole Genome Amplification"""
+    vol_wga_mm = 45.0
+    column_distribute(vol_wga_mm, wga_mm, distribution_plate.columns()[1])
+
+    ctx.pause('Proceed with steps V:B:4-5 and replace sample plate on \
+temperature module before resuming.')
+
+    """ V:C — Dilution of Whole Genome Amplified Products"""
+    vol_wd1 = 76.0
+    vol_wga_product = 4.0
+    # pre-transfer dilution buffer
+    column_distribute(vol_wd1, wd1, distribution_plate.columns()[2],
+                      final_destinations_m=dilution1_samples_m,
+                      final_destinations_s=dilution1_samples_s, mix_reps=0,
+                      new_tip=False)
+
+    # transfer sample to dilution and mix
+    for s, d in zip(samples_m, dilution1_samples_m):
+        pick_up(m20, 8)
+        m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+                     new_tip='never')
+        wick(m20, d)
+        m20.drop_tip()
+
+    vol_wd2 = 55.0
+    vol_wga_product = 5.0
+    # pre-transfer dilution buffer
+    column_distribute(vol_wd2, wd2, distribution_plate.columns()[3],
+                      final_destinations_m=dilution2_samples_m,
+                      final_destinations_s=dilution2_samples_s, mix_reps=0,
+                      new_tip=False)
+
+    # transfer sample to dilution and mix
+    for s, d in zip(dilution1_samples_m, dilution2_samples_m):
+        pick_up(m20, 8)
+        m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+                     new_tip='never')
+        wick(m20, d)
+        m20.drop_tip()
+
+    """
+    VI. Library Preparation
+    """
+
+    """ V:A — Fragmentation and Adapter Ligation"""
+    
