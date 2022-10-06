@@ -15,7 +15,7 @@ This protocol performs custom emulsions via two uploaded csv files - one for the
 
 ![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/03f9cd/Screen+Shot+2022-10-06+at+11.01.24+AM.png)
 
-* The csv should be formatted like so below. Note that it should include the header, as well as a second row describing the initial volume in each tube in milliliters to ensure liquid height tracking, and avoid submerging the pipette plunger in solution. The aqueous and oil csv files do not necessarily need to have the same number of columns (liquid number), but they should have the same number of rows (up to 144 rows).
+* The csv should be formatted like so. Note that it should include the header, as well as a second row describing the initial volume in each tube in milliliters to ensure liquid height tracking, and avoid submerging the pipette plunger in solution. The aqueous and oil csv files do not necessarily need to have the same number of columns (liquid number), but they should have the same number of rows (up to 144 rows).
 
 ### Labware
 * V&P Scientific 48 Well Plate 2000 µL #VP 416-ALB-48
