@@ -1,4 +1,4 @@
-"""OPEN TRONS."""
+"""OPENTRONS."""
 import math
 from opentrons import protocol_api
 import threading
@@ -188,7 +188,7 @@ def run(ctx):
             pip.dispense(vol, well.bottom(bottom))
         pip.flow_rate.aspirate /= asp_speed_mod
         pip.flow_rate.dispense /= disp_speed_mod
-        ctx.comment('\n\n\n')
+        ctx.comment('\n\n')
 
     def bead_spray_down(pipette, vol, src, well, reps, pip_rate=2):
         """Bead spray down."""
@@ -308,7 +308,7 @@ def run(ctx):
             for well in mag_plate.columns()[num_full_col][:left_over_in_unfilled_col]:  # noqa: E501
                 pick_up(p300)
                 if i % 3 == 0:
-                    bead_mixing(bead_tube, p300, 200, mix_rate, mix_rate, 5)
+                    bead_mixing(beads, p300, 200, mix_rate, mix_rate, 5)
                 # p300.mix(5, 200, bead_tube, rate=mix_rate)
                 p300.aspirate(bead_vol, beads, rate=bead_rate)
                 ctx.delay(3)
@@ -326,7 +326,7 @@ def run(ctx):
                 p300.blow_out()
                 drop_tip(p300)
 
-        ctx.comment('\n\n\n\n\n\n')
+        ctx.comment('\n\n')
 
     # ~~~~~~~~~~~~~~~~~~~ ENGAGE MAGNETS REMOVE WASTE ~~~~~~~~~~~~~~~~~~~
     ctx.comment('\n\n~~~~~~~~~~~~~~~REMOVING WASTE~~~~~~~~~~~~~~~~\n')
@@ -359,7 +359,7 @@ def run(ctx):
     if leftover:
         ctx.comment('USING SINGLE CHANNEL FOR UNFILLED COLUMN\n')
         for i, (well, park_loc_s) in enumerate(zip(mag_plate.columns()[num_full_col][:left_over_in_unfilled_col], park_spots_s)):  # noqa: E501
-            side = -x_abs_move_super if i % 2 == 0 else x_abs_move_super
+            side = -x_abs_move_super if num_full_col % 2 == 0 else x_abs_move_super  # noqa: E501
             pick_up(p300)
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
@@ -373,7 +373,7 @@ def run(ctx):
             p300.drop_tip(park_loc_s)
             ctx.comment('\n')
 
-    ctx.comment('\n\n\n\n\n\n')
+    ctx.comment('\n')
 
     # ~~~~~~~~~~~~~~~~~~~~~ WASH STEPS ~~~~~~~~~~~~~~~~~~~~~
     m300.flow_rate.dispense = 200
@@ -400,7 +400,7 @@ def run(ctx):
                     if i == 0:
                         p300.aspirate(20, ethanol[i].top())
                     p300.aspirate(etoh_wash_vol, ethanol[i+1])
-                    p300.move_to(ethanol[i])
+                    p300.move_to(ethanol[i].top())
                     p300.aspirate(20, ethanol[i].top())
                     p300.dispense(p300.current_volume, well.top())
                     p300.aspirate(20, well.top(3))
@@ -439,13 +439,12 @@ def run(ctx):
                 m300.drop_tip(park_loc_m)
             else:
                 drop_tip(m300)
-            ctx.comment('\n')
 
         if leftover:
             ctx.comment('USING SINGLE CHANNEL FOR UNFILLED COLUMN\n')
 
             for i, (well, park_loc_s) in enumerate(zip(mag_plate.columns()[num_full_col][:left_over_in_unfilled_col], park_spots_s)):  # noqa: E501
-                side = -x_abs_move_super if i % 2 == 0 else x_abs_move_super
+                side = -x_abs_move_super if num_full_col % 2 == 0 else x_abs_move_super  # noqa: E501
                 p300.pick_up_tip(park_loc_s)
                 p300.move_to(well.top(3))
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
@@ -522,6 +521,9 @@ def run(ctx):
     else:
         ctx.delay(minutes=bead_mag_time_elute)
 
+    ctx.pause('\n~~~~~~PLEASE VISUALLY INSPECT THE MAGNETIC'
+              ' MODULE PLATE SEPARATION~~~~~~~~~~~~\n')
+
     ctx.comment('\n\n~~~~~~~~~~~~~~REMOVING ELUTE~~~~~~~~~~~~~~~\n')
     for i, (s, d) in enumerate(zip(working_cols, elution_plate.rows()[0])):
         side = -x_abs_move_super if i % 2 == 0 else x_abs_move_super
@@ -543,11 +545,12 @@ def run(ctx):
 
         for i, (s, d) in enumerate(zip(mag_plate.columns()[num_full_col][:left_over_in_unfilled_col],  # noqa: E501
                                    elution_plate.columns()[num_full_col][:left_over_in_unfilled_col])):  # noqa: E501
+            side = -x_abs_move_super if num_full_col % 2 == 0 else x_abs_move_super  # noqa:E501
             pick_up(p300)
             p300.move_to(s.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            p300.aspirate(elute_vol, s, rate=magnet_rate)
+            p300.aspirate(elute_vol, s.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa:E501
             p300.move_to(s.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
