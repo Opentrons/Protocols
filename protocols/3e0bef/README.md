@@ -23,7 +23,7 @@ Explanation of complex parameters below:
 * **[QIAGEN ONLY] Aspiration Height**: Specify the height (in mm) from the bead to aspirate from (3mm is the default)
 * **Final Wash Removal (in µL)**: Specify the volume for the supernatant removal step during the final wash.
 * **Elution Volume (in µL)**: The volume of Elution Buffer added to each well. Please note ~ [the written protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-12-14/kf03tt7/Omega%20BioTek%20Mag-Bind%20Plant%20DNA%20extraction%20automation%20protocol.pdf) states 100-200µL and this protocol has been designed accordingly.
-* **Perform Resuspension Off-Deck**: Specify whether to perform resuspension with manual intervention (Yes) or with the OT-2 Pipette (No)
+* **Perform Resuspension Off-Deck**: Specify whether to perform resuspension with manual intervention (Yes) or with the OT-2 Pipette (No). This will apply to the initial 10 minute incubation and the 4 wash steps.
 * **Play Custom Music at Pause**: Specify whether or not to play custom music during pause steps. Please note, selecting **'No'** will result in the pre-installed music playing. Please only select **'Yes'** if you've worked with the Opentrons team on this protocol prior to download
 </br>
 

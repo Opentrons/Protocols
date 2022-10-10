@@ -54,7 +54,7 @@ def run(ctx: protocol_api.ProtocolContext):
          '_asp_ht',
          '_fin_wash',
          '_elution_vol',
-         '_off_deck'
+         '_off_deck',
          '_music')
 
     if not 1 <= _num_samps <= 96:
@@ -424,33 +424,37 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.drop_tip()
     flow_rate()
 
-    incubate_msg = f'\nIncubating at room temperature for {inc_time} minutes\
-     plus mixing\n'
-    ctx.comment(incubate_msg)
-
-    if num_cols > 1:
-        num_mixes = math.ceil(2*inc_time/num_cols)
+    if off_deck:
+        flash_lights()
+        ctx.pause('Please incubate samples for 10 minutes post resuspension.')
     else:
-        num_mixes = 10
-    for _ in range(num_mixes):
-        for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
-            if _ == 0:
-                m300.custom_pick_up()
-            if not m300.has_tip:
-                m300.custom_pick_up(t_d)
-            m300.mix(8, 150, col)
-            ctx.delay(seconds=1)
-            m300.blow_out(col.top(-2))
-            m300.touch_tip()
-            if len(mag_samps) > 1:
-                m300.drop_tip(t_d)
-            else:
-                ctx.delay(seconds=30)
-    if m300.has_tip:
-        m300.drop_tip(t_d)
+        incubate_msg = f'\nIncubating at room temperature for {inc_time} \
+        minutes plus mixing\n'
+        ctx.comment(incubate_msg)
 
-    t_start += num_cols
-    t_end += num_cols
+        if num_cols > 1:
+            num_mixes = math.ceil(2*inc_time/num_cols)
+        else:
+            num_mixes = 10
+        for _ in range(num_mixes):
+            for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
+                if _ == 0:
+                    m300.custom_pick_up()
+                if not m300.has_tip:
+                    m300.custom_pick_up(t_d)
+                m300.mix(8, 150, col)
+                ctx.delay(seconds=1)
+                m300.blow_out(col.top(-2))
+                m300.touch_tip()
+                if len(mag_samps) > 1:
+                    m300.drop_tip(t_d)
+                else:
+                    ctx.delay(seconds=30)
+        if m300.has_tip:
+            m300.drop_tip(t_d)
+
+        t_start += num_cols
+        t_end += num_cols
     mag_deck.engage()
     mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
     ctx.delay(minutes=mag_time, msg=mag_msg)
