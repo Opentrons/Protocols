@@ -41,6 +41,7 @@ def run(ctx: protocol_api.ProtocolContext):
      _asp_ht,
      _fin_wash,
      _elution_vol,
+     _off_deck,
      _music
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
          '_m300_mount',
@@ -53,6 +54,7 @@ def run(ctx: protocol_api.ProtocolContext):
          '_asp_ht',
          '_fin_wash',
          '_elution_vol',
+         '_off_deck'
          '_music')
 
     if not 1 <= _num_samps <= 96:
@@ -70,6 +72,7 @@ def run(ctx: protocol_api.ProtocolContext):
     fin_wash = _fin_wash  # volume for final wash removal
     asp_ht = _asp_ht  # height from the top of the labware to aspirate from
     add_water = _add_water  # True/False for adding water prior to air dry
+    off_deck = _off_deck  # True/False perform resuspension off-deck
     music = _music  # play custom music (only in Oregon)
 
     mag_deck = ctx.load_module('magnetic module gen2', 7)
@@ -288,7 +291,11 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(140, col)
-            m300.mix(10, 100, col)
+            if off_deck:
+                flash_lights()
+                ctx.pause("Please remove plate for manual resuspension")
+            else:
+                m300.mix(10, 100, col)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.blow_out()
