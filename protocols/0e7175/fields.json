@@ -9,6 +9,15 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "Use middle two columns?",
+    "name": "use_middle_2",
+    "options": [
+      {"label": "Yes, use middle 2", "value": true},
+      {"label": "No, ignore middle 2", "value": false}
+    ]
+  },
+  {
     "type": "int",
     "label": "Sample Volume (ul)",
     "name": "sample_volume",

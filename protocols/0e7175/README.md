@@ -13,6 +13,7 @@ This protocol replicates 6 or 7 isopaks from 1 or 2 source isopaks depending on 
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify whether running 24 or 48 samples. If running 24 samples, one isopak will be replicated into 7 isopaks. If running 48 samples, isopak 1 on slot 10 will supply empty isopaks in slots 1, 2, and 3, and isopak 2 on slot 11 will supply empty isopaks in slot 4, 5, and 6. See below for diagrams.
+* `Use middle two columns?`: Specify whether using the middle two columns in source isopak(s). If this option is selected, the middle two columns of the source isopaks will be ignored, and the middle two tubes in the destination isopaks will also be ignored for dispensing.
 * `Sample Volume`: Specify the sample volume to be replicated in microliters.
 * `P300 Mount`: Specify which mount (left or right) to host the P300 Multi-Channel Pipette.
 
