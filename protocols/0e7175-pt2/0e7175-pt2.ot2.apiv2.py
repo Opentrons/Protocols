@@ -134,10 +134,10 @@ def run(ctx):
                 pick_up_alternate()
                 p300.aspirate(200, source_col_set[i])
                 p300.dispense(100, dest_col_set[duplicate].top(z=-3))
-                # p300.touch_tip()
+                p300.touch_tip()
                 p300.dispense(100, dest_col_set[duplicate+1].top(z=-3))
-                # p300.blow_out()
-                # p300.touch_tip()
+                p300.blow_out()
+                p300.touch_tip()
                 p300.drop_tip()
             ctx.comment('\n')
             if iteration == 0:

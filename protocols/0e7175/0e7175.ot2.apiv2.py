@@ -6,25 +6,11 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "num_samp":24,
-    "sample_volume": 20,
-                                  "p300_mount":"left",
-                                  "p1000_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
-    # [num_samp, sample_volume,
-    #     p300_mount] = get_values(  # noqa: F821
-    #     "num_samp", "sample_volume", "p300_mount")
-
-    num_samp = 48
-    use_middle_2 = False
-    sample_volume = 75
-    p300_mount = "left"
+    [num_samp, use_middle_2, sample_volume,
+        p300_mount] = get_values(  # noqa: F821
+        "num_samp", "use_middle_2", "sample_volume", "p300_mount")
 
     num_samp == int(num_samp)
 
