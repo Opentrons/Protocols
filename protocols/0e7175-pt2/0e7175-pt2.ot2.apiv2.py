@@ -18,10 +18,10 @@ def run(ctx):
     plates = [ctx.load_labware('greiner_96_wellplate_200ul', slot)
               for slot in [1, 2]]
     if use_middle_2:
-        source_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)
+        source_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)
                           for slot in [4, 5, 7, 8]]
     else:
-        source_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)
+        source_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)
                           for slot in [4, 5, 6, 7, 8, 9]]
     if use_middle_2:
         tips = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)

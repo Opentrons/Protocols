@@ -36,9 +36,9 @@ def run(ctx):
         num_isopaks_dest = 6
 
     # labware
-    source_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)
+    source_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)
                       for slot in [10, 11]][:num_isopaks_source]
-    dest_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)
+    dest_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)
                     for slot in [1, 2, 3, 4, 5, 6, 7]][:num_isopaks_dest]
     tips = [ctx.load_labware('opentrons_96_tiprack_300ul', 9)]
 
