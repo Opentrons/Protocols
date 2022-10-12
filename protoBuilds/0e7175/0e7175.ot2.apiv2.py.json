@@ -1,6 +1,329 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Luminex Assay Creating Replicates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef get_values(*names):\n    import json\n    _all_values = json.loads(\"\"\"{ \"num_samp\":24,\n    \"sample_volume\": 20,\n                                  \"p300_mount\":\"left\",\n                                  \"p1000_mount\":\"right\"}\"\"\")\n    return [_all_values[n] for n in names]\n\n\ndef run(ctx):\n\n    # [num_samp, sample_volume,\n    #     p300_mount] = get_values(  # noqa: F821\n    #     \"num_samp\", \"sample_volume\", \"p300_mount\")\n\n    num_samp = 48\n    use_middle_2 = False\n    sample_volume = 75\n    p300_mount = \"left\"\n\n    num_samp == int(num_samp)\n\n    if num_samp == 24:\n        num_isopaks_source = 1\n        num_isopaks_dest = 7\n    else:\n        num_isopaks_source = 2\n        num_isopaks_dest = 6\n\n    # labware\n    source_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)\n                      for slot in [10, 11]][:num_isopaks_source]\n    dest_isopaks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot)\n                    for slot in [1, 2, 3, 4, 5, 6, 7]][:num_isopaks_dest]\n    tips = [ctx.load_labware('opentrons_96_tiprack_300ul', 9)]\n\n    # pipettes\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount, tip_racks=tips)\n\n    # protocol\n    ctx.comment('\\n-----------REPLICATING SAMPLES IN PLATE-----------\\n\\n')\n    source_isopak_cols_24 = source_isopaks[0].columns()\n    if num_samp > 24:\n        source_isopak_cols_48 = source_isopaks[1].columns()\n    dest_cols = [pak for pak in dest_isopaks]\n\n    if not use_middle_2:\n\n        del source_isopak_cols_24[2]\n        del source_isopak_cols_24[2]\n        if num_samp > 24:\n            del source_isopak_cols_48[2]\n            del source_isopak_cols_48[2]\n        dest_cols = [[] for i in range(len(dest_isopaks))]\n\n        for i, pak in enumerate(dest_isopaks):\n            for col in pak.rows()[0][:2]:\n                dest_cols[i].append(col)\n            for col in pak.rows()[0][4:]:\n                dest_cols[i].append(col)\n\n    if num_samp == 24:\n        for i, s_col in enumerate(source_isopak_cols_24):\n            num_paks = num_isopaks_dest\n            pickup_vol = sample_volume*1.2\n            num_transfers_per_asp = int(p300.max_volume // pickup_vol)\n            aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= p300.max_volume else num_paks*pickup_vol  # noqa: E501\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n\n            if use_middle_2:\n                for pak in dest_isopaks:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = sample_volume*1.2\n                        num_transfers_per_asp = int(300 // pickup_vol)\n                        aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= 300 else num_paks*pickup_vol  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n            else:\n                for pak in dest_cols:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = sample_volume*1.2\n                        num_transfers_per_asp = int(300 // pickup_vol)\n                        aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= 300 else num_paks*pickup_vol  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n    else:\n        for i, s_col in enumerate(source_isopak_cols_24):\n            num_paks = 3\n            pickup_vol = num_paks*sample_volume*1.2\n            aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n            if use_middle_2:\n                for pak in dest_isopaks[:3]:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n\n            else:\n                for pak in dest_cols[:3]:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n        ctx.comment('\\n\\n\\n\\n')\n\n        for i, s_col in enumerate(source_isopak_cols_48):\n            num_paks = 3\n            pickup_vol = num_paks*sample_volume*1.2\n            aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n\n            if use_middle_2:\n                for pak in dest_isopaks[3:]:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n\n            else:\n                for pak in dest_cols[3:]:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Luminex Assay Creating Replicates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef get_values(*names):\n    import json\n    _all_values = json.loads(\"\"\"{ \"num_samp\":24,\n    \"sample_volume\": 20,\n                                  \"p300_mount\":\"left\",\n                                  \"p1000_mount\":\"right\"}\"\"\")\n    return [_all_values[n] for n in names]\n\n\ndef run(ctx):\n\n    # [num_samp, sample_volume,\n    #     p300_mount] = get_values(  # noqa: F821\n    #     \"num_samp\", \"sample_volume\", \"p300_mount\")\n\n    num_samp = 48\n    use_middle_2 = False\n    sample_volume = 75\n    p300_mount = \"left\"\n\n    num_samp == int(num_samp)\n\n    if num_samp == 24:\n        num_isopaks_source = 1\n        num_isopaks_dest = 7\n    else:\n        num_isopaks_source = 2\n        num_isopaks_dest = 6\n\n    # labware\n    source_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)\n                      for slot in [10, 11]][:num_isopaks_source]\n    dest_isopaks = [ctx.load_labware('custom_24_wellplate_2000ul', slot)\n                    for slot in [1, 2, 3, 4, 5, 6, 7]][:num_isopaks_dest]\n    tips = [ctx.load_labware('opentrons_96_tiprack_300ul', 9)]\n\n    # pipettes\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount, tip_racks=tips)\n\n    # protocol\n    ctx.comment('\\n-----------REPLICATING SAMPLES IN PLATE-----------\\n\\n')\n    source_isopak_cols_24 = source_isopaks[0].columns()\n    if num_samp > 24:\n        source_isopak_cols_48 = source_isopaks[1].columns()\n    dest_cols = [pak for pak in dest_isopaks]\n\n    if not use_middle_2:\n\n        del source_isopak_cols_24[2]\n        del source_isopak_cols_24[2]\n        if num_samp > 24:\n            del source_isopak_cols_48[2]\n            del source_isopak_cols_48[2]\n        dest_cols = [[] for i in range(len(dest_isopaks))]\n\n        for i, pak in enumerate(dest_isopaks):\n            for col in pak.rows()[0][:2]:\n                dest_cols[i].append(col)\n            for col in pak.rows()[0][4:]:\n                dest_cols[i].append(col)\n\n    if num_samp == 24:\n        for i, s_col in enumerate(source_isopak_cols_24):\n            num_paks = num_isopaks_dest\n            pickup_vol = sample_volume*1.2\n            num_transfers_per_asp = int(p300.max_volume // pickup_vol)\n            aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= p300.max_volume else num_paks*pickup_vol  # noqa: E501\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n\n            if use_middle_2:\n                for pak in dest_isopaks:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = sample_volume*1.2\n                        num_transfers_per_asp = int(300 // pickup_vol)\n                        aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= 300 else num_paks*pickup_vol  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n            else:\n                for pak in dest_cols:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = sample_volume*1.2\n                        num_transfers_per_asp = int(300 // pickup_vol)\n                        aspirate_vol = sample_volume*num_transfers_per_asp*1.2 if num_paks*pickup_vol >= 300 else num_paks*pickup_vol  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n    else:\n        for i, s_col in enumerate(source_isopak_cols_24):\n            num_paks = 3\n            pickup_vol = num_paks*sample_volume*1.2\n            aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n            if use_middle_2:\n                for pak in dest_isopaks[:3]:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n\n            else:\n                for pak in dest_cols[:3]:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n                ctx.comment('\\n')\n\n        ctx.comment('\\n\\n\\n\\n')\n\n        for i, s_col in enumerate(source_isopak_cols_48):\n            num_paks = 3\n            pickup_vol = num_paks*sample_volume*1.2\n            aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume\n\n            p300.pick_up_tip()\n            p300.aspirate(aspirate_vol, s_col[0])\n            vol_ctr = aspirate_vol\n\n            if use_middle_2:\n                for pak in dest_isopaks[3:]:\n                    p300.dispense(sample_volume, pak.rows()[0][i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n\n            else:\n                for pak in dest_cols[3:]:\n                    p300.dispense(sample_volume, pak[i])\n                    vol_ctr -= sample_volume\n                    num_paks -= 1\n                    if vol_ctr < sample_volume + sample_volume*0.1 and num_paks > 0:  # noqa: E501\n                        pickup_vol = num_paks*sample_volume*1.2\n                        aspirate_vol = pickup_vol if pickup_vol < 300 else p300.max_volume  # noqa: E501\n                        p300.dispense(p300.current_volume, s_col[0])\n                        p300.aspirate(aspirate_vol, s_col[0])\n                        vol_ctr = aspirate_vol\n                if p300.current_volume > 0:\n                    p300.dispense(p300.current_volume, s_col[0])\n                p300.drop_tip()\n",
     "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "custom",
+                "brandId": [
+                    "1234"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 64.5
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Custom 24 Well Plate 2000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "custom_24_wellplate_2000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "A2": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 36,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "A3": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "A4": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 72,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "A5": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 90,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "A6": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 108,
+                    "y": 69.98,
+                    "z": 26.7
+                },
+                "B1": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "B2": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 36,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "B3": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "B4": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 72,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "B5": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 90,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "B6": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 108,
+                    "y": 51.98,
+                    "z": 26.7
+                },
+                "C1": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "C2": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 36,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "C3": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "C4": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 72,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "C5": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 90,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "C6": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 108,
+                    "y": 33.98,
+                    "z": 26.7
+                },
+                "D1": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18,
+                    "y": 15.98,
+                    "z": 26.7
+                },
+                "D2": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 36,
+                    "y": 15.98,
+                    "z": 26.7
+                },
+                "D3": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54,
+                    "y": 15.98,
+                    "z": 26.7
+                },
+                "D4": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 72,
+                    "y": 15.98,
+                    "z": 26.7
+                },
+                "D5": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 90,
+                    "y": 15.98,
+                    "z": 26.7
+                },
+                "D6": {
+                    "depth": 37.8,
+                    "diameter": 9.85,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 108,
+                    "y": 15.98,
+                    "z": 26.7
+                }
+            }
+        },
         {
             "brand": {
                 "brand": "greiner",
@@ -1190,46 +1513,46 @@
     ],
     "labware": [
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 1",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 2",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 3",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 4",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 5",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 6",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 7",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
@@ -1238,16 +1561,16 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 10",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 11",
+            "name": "Custom 24 Well Plate 2000 \u00b5L on 11",
             "share": false,
             "slot": "11",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_wellplate_2000ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
