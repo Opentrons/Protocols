@@ -70,6 +70,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Perform Resuspension Off-Deck",
+    "name": "_off_deck",
+    "options": [
+      { "label": "Yes", "value": 1 },
+      { "label": "No", "value": 0 }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Play Custom Music at Pause",
     "name": "_music",
     "options": [
