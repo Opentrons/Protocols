@@ -1,0 +1,32 @@
+[
+  {
+    "type": "int",
+    "label": "number of samples",
+    "name": "num_samples",
+    "default": 16
+  },
+  {
+    "type": "float",
+    "label": "sample volume (in ul)",
+    "name": "vol_sample",
+    "default": 5.0
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 8-channel pipette mount",
+    "name": "m20_mount",
+    "options": [
+      {"label": "right", "value": "right"},
+      {"label": "left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 8-channel pipette mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "left", "value": "left"},
+      {"label": "right", "value": "right"}
+    ]
+  }
+]
