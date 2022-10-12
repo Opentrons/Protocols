@@ -17,20 +17,22 @@ def run(ctx):
         'num_samples', 'vol_sample', 'm20_mount', 'm300_mount')
 
     # labware
-    tempdeck = ctx.load_module('temperature module gen2', '7')
-    tempdeck.set_temperature(4)
-    sample_plate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'sample plate')
-    tipracks20 = [
-        ctx.load_labware('opentrons_96_filtertiprack_20ul', '8')]
-    tipracks200 = [
-        ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
     tuberack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4',
         '1.5ml Eppendorf tuberack')
     distribution_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '5',
+        'biorad_96_wellplate_200ul_pcr', '5',
         'plate for mix distribution')
+    udi_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '6',
+                                 'UDI plate')
+    tempdeck = ctx.load_module('temperature module gen2', '7')
+    tempdeck.set_temperature(4)
+    sample_plate = tempdeck.load_labware(
+        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'sample plate')
+    tipracks20 = [
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', '8')]
+    tipracks200 = [
+        ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
 
     # pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
@@ -46,12 +48,16 @@ def run(ctx):
     dilution1_samples_s = sample_plate.wells()[num_samples:num_samples*2]
     dilution1_samples_m = sample_plate.rows()[0][num_cols:num_cols*2]
     dilution2_samples_s = sample_plate.wells()[num_samples*2:num_samples*3]
-    dilution2_samples_m = sample_plate.rows()[0][num_cols*3:num_cols*3]
+    dilution2_samples_m = sample_plate.rows()[0][num_cols*3:num_cols*4]
+    ligation_samples_m = sample_plate.rows()[0][num_cols*4:num_cols*5]
+    udi_m = udi_plate.rows()[0][:num_cols]
 
-    ce_mm = tuberack.wells_by_name()['A1']
-    wga_mm = tuberack.wells_by_name()['B1']
+    mm_ce = tuberack.wells_by_name()['A1']
+    mm_wga = tuberack.wells_by_name()['B1']
     wd1 = tuberack.wells_by_name()['C1']
     wd2 = tuberack.wells_by_name()['D1']
+    mm_library_prep = tuberack.wells_by_name()['A2']
+    mm_library_amp = tuberack.wells_by_name()['B2']
 
     def pick_up(pip, num_tips):
         tip_cols = [col for rack in pip.tip_racks for col in rack.columns()]
@@ -79,9 +85,9 @@ def run(ctx):
             vol_per_row = volume*num_cols*1.1  # overage
             pip = m300 if vol_per_row > 20 else m20
             pick_up(pip, 1)
-            num_aspirations = math.ceil(
-                vol_per_row*8/pip.tip_racks[0].wells()[0].max_volume)
-            wells_per_asp = pip.tip_racks[0].wells()[0].max_volume//vol_per_row
+            wells_per_asp = math.floor(
+                pip.tip_racks[0].wells()[0].max_volume//vol_per_row)
+            num_aspirations = math.ceil(8/wells_per_asp)
             distribution_chunks = [
                 distribution_column[i*wells_per_asp:(i+1)*wells_per_asp]
                 if i < num_aspirations - 1
@@ -132,15 +138,15 @@ def run(ctx):
     """ V:A — Cell Lysis/gDNA Extraction"""
 
     vol_total_reaction = 30.0
-    vol_ce_mm = vol_total_reaction - vol_sample
-    column_distribute(vol_ce_mm, ce_mm, distribution_plate.columns()[0])
+    vol_mm_ce = vol_total_reaction - vol_sample
+    column_distribute(vol_mm_ce, mm_ce, distribution_plate.columns()[0])
 
     ctx.pause('Proceed with steps V:A:4-7 and replace sample plate on \
 temperature module before resuming.')
 
     """ V:B — Whole Genome Amplification"""
-    vol_wga_mm = 45.0
-    column_distribute(vol_wga_mm, wga_mm, distribution_plate.columns()[1])
+    vol_mm_wga = 45.0
+    column_distribute(vol_mm_wga, mm_wga, distribution_plate.columns()[1])
 
     ctx.pause('Proceed with steps V:B:4-5 and replace sample plate on \
 temperature module before resuming.')
@@ -182,5 +188,47 @@ temperature module before resuming.')
     VI. Library Preparation
     """
 
-    """ V:A — Fragmentation and Adapter Ligation"""
-    
+    """ VI:A — Fragmentation and Adapter Ligation"""
+    vol_stem_loop_adapters = 4.0
+    vol_wd2_product = 8.0
+    stem_loop_adapters = distribution_plate.rows()[0][4:4+num_cols]
+    for a, s, d in zip(
+            stem_loop_adapters, dilution2_samples_m, ligation_samples_m):
+        pick_up(m20, 8)
+        m20.transfer(vol_stem_loop_adapters, a, d,
+                     new_tip='never')
+        wick(m20, d)
+
+        m20.transfer(vol_wd2_product, s, d, mix_after=(10, 10),
+                     new_tip='never')
+        wick(m20, d)
+        m20.drop_tip()
+
+    # library prep mm
+    vol_mm_library_prep = 10.5
+    column_distribute(vol_mm_library_prep, mm_library_prep,
+                      distribution_plate.columns()[4],
+                      final_destinations_m=ligation_samples_m, mix_reps=10,
+                      new_tip=False)
+
+    ctx.pause('Proceed with steps VI:A:7-8 and replace sample plate on \
+temperature module before resuming.')
+
+    """ VIB — Library Amplification and Indexing with UDI """
+
+    # library prep mm
+    vol_mm_library_amp = 25.5
+    column_distribute(vol_mm_library_amp, mm_library_amp,
+                      distribution_plate.columns()[5],
+                      final_destinations_m=ligation_samples_m, mix_reps=1,
+                      new_tip=False)
+
+    # transfer UDI primers
+    vol_udi = 2.0
+    for s, d in zip(udi_m, ligation_samples_m):
+        pick_up(m20, 8)
+        m20.transfer(vol_udi, s, d, mix_after=(10, 10), new_tip='never')
+        wick(m20, d)
+        m20.drop_tip()
+
+    ctx.comment('Proceed with steps VI:B:5-7. Protocol complete.')

@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS Library Prep
+	* Embgenix™ PGT-A
 
 
 ## Description
-This protocol does stuff!
+This protocol performs the [Embgenix™ PGT-A Kit: Preparation of Whole Genome Amplification](https://www.takarabio.com/documents/User%20Manual/Embgenix%20PGT/Embgenix%20PGT-A%20Kit%20%28RUO%29%20User%20Manual%20for%20Illumina%20MiSeq%20System.pdf), parts V-VI:B.
 
 
 ### Modules
@@ -28,11 +28,14 @@ This protocol does stuff!
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/05c733/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
+* Columns 1-2 on Temperature Module Plate (slot 7): Starting sample
+* A1 on Tuberack (slot 4): Cell Extraction Master Mix
+* B1 on Tuberack (slot 4): Whole Genome Amplification Master Mix
+* C1 on Tuberack (slot 4): WD2
+* D1 on Tuberack (slot 4): WD2
+* A2 on Tuberack (slot 4): Library Prep Master Mix
+* B2 on Tuberack (slot 4): Library Amplification Master Mix
+* Columns 1-2 on UDI Plate (slot 6): UDI
 
 
 ### Process
