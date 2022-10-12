@@ -12,7 +12,7 @@ def run(ctx):
         p300_mount] = get_values(  # noqa: F821
         "num_samp", "use_middle_2", "sample_volume", "p300_mount")
 
-    num_samp == int(num_samp)
+    num_samp = int(num_samp)
 
     if num_samp == 24:
         num_isopaks_source = 1
