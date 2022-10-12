@@ -62,6 +62,7 @@ air_gap_volume,1
 airgap,1
 am_bic_volume,1
 antibody_csv,1
+antibody_vol,1
 arrange_tips,1
 array_pattern,1
 asp_bottom_clearance,1
@@ -880,7 +881,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,124
+p300_mount,125
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1129,7 +1130,7 @@ sample_slots,1
 sample_trans_vol,1
 sample_type,1
 sample_vol,23
-sample_volume,4
+sample_volume,5
 samples,42
 samples_csv,1
 samples_labware,2
@@ -1402,7 +1403,7 @@ use_384,1
 use_csv,1
 use_filter_tips_left,2
 use_filter_tips_right,2
-use_middle_2,1
+use_middle_2,2
 use_nacl,1
 use_temp,1
 use_tuberack_a,1
