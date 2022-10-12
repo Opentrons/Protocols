@@ -35,6 +35,19 @@ def run(ctx):
             csa = well.length*well.width
         return well.liq_vol / csa
 
+    # apply speed limit to departing tip
+    def slow_tip_withdrawal(pipette, well_location, to_center=False):
+        if pipette.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        ctx.max_speeds[axis] = 10
+        if to_center is False:
+            pipette.move_to(well_location.top())
+        else:
+            pipette.move_to(well_location.center())
+        ctx.max_speeds[axis] = None
+
     # 20 and 200 uL filter tips, p20 single, p300 single
 
     tips20 = [ctx.load_labware(
@@ -195,11 +208,36 @@ Return plate to slot 8. Resume\n\n
 
     ctx.comment("\nSTEP - add 24 uL beads to each purification\n")
 
-    for purification in purifications:
-        p300s.transfer(
-         24, pb, purification, air_gap=15, touch_tip=True,
-         mix_before=(5, 0.8*24*num_purifications),
-         new_tip='always')
+    for index, purification in enumerate(purifications):
+
+        p300s.pick_up_tip()
+
+        # bead source premix
+        ht_premixdispense = liq_height(pb) + 3
+        vol_premix = 0.8*pb.liq_vol if 0.8*pb.liq_vol < 200 else 200
+        reps = 3 if index else 10
+
+        pb.liq_vol -= 24
+
+        ht = liq_height(
+         pb, effective_diameter=0.8*pb.diameter) - 3 if liq_height(
+         pb, effective_diameter=0.8*pb.diameter) - 3 > 1 else 1
+
+        for rep in range(reps):
+            p300s.aspirate(vol_premix, pb.bottom(1), rate=0.5)
+            p300s.dispense(vol_premix, pb.bottom(ht_premixdispense), rate=0.5)
+
+        p300s.aspirate(24, pb.bottom(ht), rate=0.5)
+        ctx.delay(seconds=1)
+        slow_tip_withdrawal(p300s, pb)
+        p300s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+        p300s.air_gap(15)
+
+        p300s.dispense(24, purification.bottom(1))
+        p300s.blow_out(purification.top())
+        p300s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
+        p300s.drop_tip()
 
     ctx.comment("\nSTEP - add PS for final vol 22.5 uL per sample and mix\n")
 
@@ -445,8 +483,27 @@ Unseal and return plate to slot 5. Resume\n\n
 
     ctx.comment("\nSTEP - add 7 uL beads, wait, engage magnets, wait\n")
 
+    # bead source premix
+    p300s.pick_up_tip()
+
+    ht_premixdispense = liq_height(pb) + 3
+    vol_premix = 0.8*pb.liq_vol if 0.8*pb.liq_vol < 200 else 200
+    reps = 10
+
+    pb.liq_vol -= 7
+
+    ht = liq_height(
+     pb, effective_diameter=0.8*pb.diameter) - 3 if liq_height(
+     pb, effective_diameter=0.8*pb.diameter) - 3 > 1 else 1
+
+    for rep in range(reps):
+        p300s.aspirate(vol_premix, pb.bottom(1), rate=0.5)
+        p300s.dispense(vol_premix, pb.bottom(ht_premixdispense), rate=0.5)
+
+    p300s.drop_tip()
+
     p20s.transfer(
-     7, pb, mag_plate.wells_by_name()['A3'], touch_tip=True, mix_before=(5, 7))
+     7, pb.bottom(ht), mag_plate.wells_by_name()['A3'], touch_tip=True)
 
     ctx.delay(minutes=5)
 
@@ -604,14 +661,40 @@ Resume\n\n
 
     ctx.comment("\nSTEP - add beads\n")
 
-    p300s.transfer(
-     31.5, pb, mag_plate.wells_by_name()['A4'],
-     mix_before=(10, 24), mix_after=(5, 50), air_gap=15, touch_tip=True)
+    # bead source premix
+    p300s.pick_up_tip()
+
+    ht_premixdispense = liq_height(pb) + 3
+    vol_premix = 0.8*pb.liq_vol if 0.8*pb.liq_vol < 200 else 200
+    reps = 10
+
+    pb.liq_vol -= 31.5
+
+    ht = liq_height(
+     pb, effective_diameter=0.8*pb.diameter) - 3 if liq_height(
+     pb, effective_diameter=0.8*pb.diameter) - 3 > 1 else 1
+
+    for rep in range(reps):
+        p300s.aspirate(vol_premix, pb.bottom(1), rate=0.5)
+        p300s.dispense(vol_premix, pb.bottom(ht_premixdispense), rate=0.5)
+
+    p300s.aspirate(31.5, pb.bottom(ht), rate=0.5)
+    ctx.delay(seconds=1)
+    slow_tip_withdrawal(p300s, pb)
+    p300s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+    p300s.air_gap(15)
+
+    p300s.dispense(31.5, mag_plate.wells_by_name()['A4'].bottom(1))
+    p300s.mix(5, 50, mag_plate.wells_by_name()['A4'].bottom(2))
+    p300s.blow_out(mag_plate.wells_by_name()['A4'].top())
+    p300s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
+    p300s.drop_tip()
 
     ctx.delay(minutes=5)
 
     mag.engage()
-    ctx.delay(time_engage)
+    ctx.delay(minutes=time_engage)
 
     ctx.comment("\nSTEP - remove sup\n")
 
