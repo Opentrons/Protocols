@@ -2,7 +2,7 @@
   {
     "type": "dropDown",
     "label": "Number of Samples",
-    "name": "pre_mix",
+    "name": "num_samp",
     "options": [
       {"label": "24 (1 isopak)", "value": 24},
       {"label": "48 (2 isopaks)", "value": 48}
