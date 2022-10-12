@@ -638,8 +638,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,68
-m300_mount,77
+m20_mount,69
+m300_mount,78
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1459,7 +1459,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,3
+vol_sample,4
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
