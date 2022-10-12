@@ -114,7 +114,7 @@ bead_ratio_1,1
 bead_ratio_2,1
 bead_separation_time_in_minutes,2
 bead_settling_time_on_magnet_in_minutes,1
-bead_vol,4
+bead_vol,9
 bead_vol1,1
 bead_vol2,1
 bead_volume,1
@@ -123,7 +123,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 bindbuf_source_well_indices,1
-binding_buffer_vol,20
+binding_buffer_vol,25
 blank_on,2
 blot_dwell_time,1
 blow_out,1
@@ -356,7 +356,7 @@ dp_type,2
 dplate,1
 drop_threshold,1
 dry_on_temperature_module,1
-dry_time,18
+dry_time,23
 drying_time,2
 drying_time_in_minutes,2
 dryrun,6
@@ -387,7 +387,7 @@ elution_slot_scan,2
 elution_time,1
 elution_transfer_vol,2
 elution_type,1
-elution_vol,35
+elution_vol,40
 em,1
 empty_vial_well,3
 end_col,1
@@ -688,11 +688,11 @@ mix_repetitions,2
 mix_reps,26
 mix_reps1,1
 mix_reps2,1
-mix_reps_bind,3
-mix_reps_elu,3
+mix_reps_bind,8
+mix_reps_elu,8
 mix_reps_elution1,1
 mix_reps_elution2,1
-mix_reps_wash,3
+mix_reps_wash,8
 mix_reps_wash1,1
 mix_reps_wash2,1
 mix_sources,1
@@ -812,7 +812,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,127
+num_samples,132
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1150,9 +1150,9 @@ sec_ex,1
 sec_plate,1
 second_media_y,1
 sep_time,2
-sep_time_bind,1
-sep_time_elu,1
-sep_time_wash,1
+sep_time_bind,6
+sep_time_elu,6
+sep_time_wash,6
 serial_csv,1
 set_tip_max,2
 settling_1,1
@@ -1227,7 +1227,7 @@ starting_tip_col,2
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,26
+starting_vol,31
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1317,7 +1317,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,41
+tip_track,46
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
@@ -1479,9 +1479,10 @@ volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,6
-wash1_vol,24
-wash2_vol,23
-wash3_vol,11
+wash1_vol,29
+wash2_vol,28
+wash3_vol,16
+wash4_vol,2
 wash_buf_vol,1
 wash_scheme,1
 waste,2
