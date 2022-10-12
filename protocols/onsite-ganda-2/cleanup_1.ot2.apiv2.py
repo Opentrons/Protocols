@@ -181,7 +181,7 @@ def run(ctx):
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
         m300.aspirate(
-            65, source.bottom().move(types.Point(x=side,
+            65, source.bottom().move(types.Point(x=side*2,
                                                  y=0, z=0.2)))
         m300.move_to(source.top())
         m300.air_gap(20)
