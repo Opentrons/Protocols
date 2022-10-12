@@ -180,16 +180,16 @@ def run(ctx):
     for i, source in enumerate(sample_plate_dest):
         side = -1 if i % 2 == 0 else 1
         m300.pick_up_tip()
-        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.aspirate /= 10
         m300.move_to(source.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
         m300.aspirate(
-            45, source.bottom().move(types.Point(x=side,
+            40, source.bottom().move(types.Point(x=side*2,
                                                  y=0, z=0.2)))
         m300.move_to(source.top())
         m300.air_gap(20)
-        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.aspirate *= 10
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.dispense(m300.current_volume, trash_total[0])
