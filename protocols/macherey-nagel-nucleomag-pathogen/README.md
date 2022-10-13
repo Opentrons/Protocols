@@ -53,7 +53,7 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagal-nucleomag-pathogen/line26reag.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagal-nucleomag-pathogen/reag_pathogen.png)
 
 
 ### Protocol Steps
@@ -61,9 +61,8 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 2. Wash 1
 3. Wash 2
 4. Wash 3
-5. Wash 4
-6. Delay for drying
-7. Elution
+5. Delay for drying
+6. Elution
 </br>
 </br>
 * Note
