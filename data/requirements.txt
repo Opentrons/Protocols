@@ -9,3 +9,4 @@ plotly==5.5.0
 PyGithub==1.55
 dash-bootstrap-components==1.0.2
 Werkzeug==2.0.0
+datadog_api_client==2.4.0

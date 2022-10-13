@@ -114,3 +114,6 @@ protocols/**/supplements
 
 # credentials for Salesforce hook on data analytics
 data/salesforce/credentials.json
+
+# credentials for Datadog hook on data analytics
+data/datadog/keys.json
