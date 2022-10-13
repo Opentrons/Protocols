@@ -19,7 +19,7 @@
 This protocol automates the NucleoMag® Tissue kit for flexible magnetic bead based isolation.
 
 Before beginning the protocol on the OT-2, the following preparation steps are needed.
-1. Perform the lysis according to the NucleoMag® Pathogen user manual.
+1. Perform the lysis according to the NucleoMag® Tissue user manual.
 2. Fill the 12-Well Buffer Reservoir according to the table below.
 3. Resuspend the NucleoMag® B-Beads by vortexing and place them in Position A1 of the 2mL Tube Rack.
 4. Load the instrument deck according to the displayed positions.
@@ -53,7 +53,7 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-tissue/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-tissue/reag_tissue.png)
 
 
 ### Protocol Steps

@@ -39,7 +39,7 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_plate = mag_mod.load_labware('96_squarewell_block_macherey_nagel')
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '3')
     res2 = ctx.load_labware('nest_12_reservoir_15ml', '6')
-    waste_res = res2 = ctx.load_labware('nest_12_reservoir_15ml', '9')
+    waste_res = ctx.load_labware('nest_12_reservoir_15ml', '9')
     elute_plate = ctx.load_labware('abgene_96_wellplate_700ul', '2')
 
     # load tip_racks
@@ -76,7 +76,7 @@ def run(ctx: protocol_api.ProtocolContext):
             pick_up()
             for _ in range(2):
                 m300.aspirate(200 if filter_tips else 300, aspirate_loc, rate=0.6)  # noqa E501
-                m300.dispense(200 if filter_tips else 300, waste_res.wells()[waste_well_ctr])    # noqa E501
+                m300.dispense(200 if filter_tips else 300, waste_res.wells()[waste_well_ctr].top())    # noqa E501
                 m300.blow_out(waste_res.wells()[waste_well_ctr].top())
                 waste_vol_ctr += 200
                 if waste_vol_ctr >= 12000:
@@ -102,7 +102,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up()
         m300.aspirate(50, prok)
         m300.dispense(50, col)
-        m300.mix(5, 90, col)
+        m300.mix(10, 90, col, rate=1.5)
         m300.drop_tip()
 
     ctx.comment('\n\n\nDISPENSING BEAD BUFFER\n')
@@ -113,12 +113,12 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.aspirate(162.5, reagent_col)
         m300.air_gap(airgap)
         m300.dispense(162.5+airgap, col)
-        m300.mix(5, 150, col)
+        m300.mix(10, 150, col, rate=1.5)
         m300.air_gap(airgap)
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=mag_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=6)
     remove_supernatant()
     mag_mod.disengage()
 
@@ -129,11 +129,11 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.dispense(200, col.top())
         m300.aspirate(200, reagent_col)
         m300.dispense(200, col)
-        m300.mix(5, 200 if filter_tips else 300, col)
+        m300.mix(10, 200 if filter_tips else 300, col, rate=1.5)
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=mag_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=6)
     remove_supernatant()
     mag_mod.disengage()
 
@@ -144,11 +144,11 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.dispense(200, col.top())
         m300.aspirate(200, reagent_col)
         m300.dispense(200, col)
-        m300.mix(5, 200 if filter_tips else 300, col)
+        m300.mix(10, 200 if filter_tips else 300, col, rate=1.5)
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=mag_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=6)
     remove_supernatant()
     ctx.delay(minutes=20)
     mag_mod.disengage()
@@ -162,6 +162,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=mag_height)
+    ctx.delay(minutes=6)
 
     for i, (sample_col, elute_col) in enumerate(
                                     zip(sample_cols, elute_plate.rows()[0])):
