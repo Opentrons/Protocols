@@ -21,7 +21,7 @@ This protocol automates the NucleoMag® Virus kit for flexible magnetic bead bas
 Before beginning the protocol on the OT-2, the following preparation steps are needed.
 1. Perform the lysis according to the NucleoMag® Virus user manual.
 2. Fill the 12-Well Buffer Reservoir according to the table below.
-3. Resuspend the NucleoMag® B-Beads by vortexing and place them in Position A1 of the 2mL Tube Rack.
+3. Resuspend the NucleoMag® V-Beads by vortexing and place them in Position A1 of the 2mL Tube Rack.
 4. Load the instrument deck according to the displayed positions.
 5. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.
 
@@ -53,7 +53,7 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-virus/reag.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-virus/reag_virus.png)
 
 
 ### Protocol Steps

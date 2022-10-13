@@ -53,7 +53,7 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-dna-microbiome/line56reag.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-dna-microbiome/reag_microbiome.png)
 
 
 ### Protocol Steps
