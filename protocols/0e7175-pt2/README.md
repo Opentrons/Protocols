@@ -13,8 +13,9 @@ This protocol provides sample and reagents to 2 96 well plates according to the 
 
 Explanation of complex parameters below:
 * `Sample Volume`: Specify the sample volume to be replicated in microliters.
-* `Use middle two columns?`: Specify whether using the middle two columns in source isopaks. See below for deck map if selected. If selected, the protocol will pause after the first 96 plate is filled to prompt the user to replace the alternate tip rack on slot 11. 
+* `Use middle two columns?`: Specify whether using the middle two columns in source isopaks. See below for deck map if selected. If selected, the protocol will pause after the first 96 plate is filled to prompt the user to replace the alternate tip rack on slot 11.
 * `Antibody Volume`: Specify the sample volume to be replicated in microliters.
+* `SA-PE Volume`: Specify the SA-PE volume to be replicated in microliters.
 * `P300 Mount`: Specify which mount (left or right) to host the P300 Multi-Channel Pipette.
 
 ---
