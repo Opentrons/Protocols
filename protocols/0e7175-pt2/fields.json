@@ -21,6 +21,12 @@
     "default": 60
   },
   {
+    "type": "int",
+    "label": "SA-PE Volume (ul)",
+    "name": "sape_vol",
+    "default": 75
+  },
+  {
     "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "p300_mount",

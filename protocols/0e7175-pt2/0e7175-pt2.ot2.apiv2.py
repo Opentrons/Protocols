@@ -8,9 +8,9 @@ metadata = {
 
 def run(ctx):
 
-    [sample_volume, use_middle_2, antibody_vol,
+    [sample_volume, use_middle_2, antibody_vol, sape_vol,
         p300_mount] = get_values(  # noqa: F821
-         "sample_volume", "use_middle_2", "antibody_vol",
+         "sample_volume", "use_middle_2", "antibody_vol", "sape_vol",
          "p300_mount")
 
     # labware
@@ -156,12 +156,13 @@ def run(ctx):
         p300.blow_out()
     p300.drop_tip()
     ctx.comment('\n')
+    ctx.pause('Incubate sample then select "Resume" on the Opentrons App.')
 
     ctx.comment('\n---------------Transferring SA-PE----------------\n\n')
     pick_up_full()
     for col in plate_wells:
-        p300.aspirate(75, sape)
-        p300.dispense(75, col.top())
+        p300.aspirate(sape_vol, sape)
+        p300.dispense(sape_vol, col.top())
         p300.blow_out()
     p300.drop_tip()
     ctx.comment('\n')
