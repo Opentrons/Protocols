@@ -1,11 +1,11 @@
+"""OPENTRONS."""
 from opentrons import protocol_api
 import math
 import threading
 from time import sleep
-from opentrons import types
 
 metadata = {
-    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 1: Bead Prep',
+    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 4: Second cDNA Strand Synthesis',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -58,6 +58,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     TEST_MODE = True
     bead_delay_time = 2
+    wash_delay_time = 2
     supernatant_headspeed_modulator = 10
     mag_height = 3.5
     ctx.max_speeds['Z'] = 400
@@ -67,25 +68,34 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # define all custom variables above here with descriptions:
     num_columns = math.ceil(num_samples/8)
-
+    if m300_mount == 'right':
+        m20_mount = 'left'
+    else:
+        m20_mount = 'right'
     # load modules
     mag_deck = ctx.load_module('magnetic module gen2', '1')
     temp_deck = ctx.load_module('temperature module gen2', '3')
-    print(temp_deck)
     print(num_columns)
-    trash = ctx.load_labware('nest_1_reservoir_195ml', '10').wells()[0].top()
-    # load labware
-    mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')
 
+    # load labware
+    mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')
+    temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
+                                        'pcr_strip_200ul')
+    # dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
+    # final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
+    trash = ctx.load_labware('nest_1_reservoir_195ml', '8').wells()[0].top()
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7']]
-
+               for slot in ['7', '10']]
+    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+              for slot in ['11']]
     # load instrument
 
     m300 = ctx.load_instrument(
         'p300_multi_gen2', m300_mount, tip_racks=tips300)
+
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
@@ -155,57 +165,45 @@ def run(ctx: protocol_api.ProtocolContext):
             pip.dispense(vol, well.bottom(1), rate=2)
     # reagents
 
-    beads = mag_plate.rows()[0][0]
-    wash = mag_plate.rows()[0][-1]
+    samples = mag_plate.rows()[0][:num_columns]
+    rxn_buffer = temp_plate.rows()[0][0]
+    enzyme_mix = temp_plate.rows()[0][2]
+    nfw = temp_plate.rows()[0][4]
 
     # protocol
+    ctx.comment('\n~~~~~~~~~~~ADDING REACTION BUFFER~~~~~~~~~~~\n')
+    for dest in samples:
+        pick_up(m20)
+        m20.aspirate(8, rxn_buffer)
+        m20.dispense(8, dest)
+        drop_tip(m20)
 
-    ctx.comment('\n~~~~~~~~~~~~~~ADDING WASH BUFFER TO BEADS~~~~~~~~~~~~~~\n')
-    pick_up(m300)
-    for _ in range(num_samples):
-        m300.aspirate(20, wash.top())
-        m300.aspirate(100, wash)
-        m300.dispense(120, beads.top(), rate=2)
-    bead_mixing(beads, m300, 200, reps=6)
-    m300.aspirate(10, beads.top())
-    m300.drop_tip()
+    ctx.comment('\n~~~~~~~~~~~ADDING ENZYME MIX~~~~~~~~~~~\n')
+    for dest in samples:
+        pick_up(m20)
+        m20.aspirate(4, enzyme_mix)
+        m20.dispense(4, dest)
+        drop_tip(m20)
 
-    mag_deck.engage(height_from_base=mag_height)
-    if TEST_MODE:
-        ctx.delay(seconds=bead_delay_time)
-    else:
-        ctx.delay(minutes=bead_delay_time)
-
-    ctx.comment('\n~~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~~~\n')
-    pick_up(m300)
-    for _ in range(num_samples+1):
-        ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
-        ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m300.aspirate(100, beads.bottom().move(types.Point(x=-1, y=0, z=0)))
-        m300.move_to(beads.top())
-        ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
-        ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        m300.dispense(100, trash)
-    drop_tip(m300)
-
-    ctx.comment('\n~~~~~~~~~~~~~~ADDING WASH BUFFER TO BEADS~~~~~~~~~~~~~~\n')
-    pick_up(m300)
-    for _ in range(num_samples):
-        m300.aspirate(20, wash.top())
-        m300.aspirate(50, wash)
-        m300.dispense(70, beads.top(), rate=2)
-    bead_mixing(beads, m300, 50, reps=6)
-    m300.aspirate(10, beads.top())
-    m300.drop_tip()
+    ctx.comment('\n~~~~~~~~~~~ADDING NUCLEASE FREE WATER~~~~~~~~~~~\n')
+    for dest in samples:
+        pick_up(m300)
+        m300.aspirate(48, nfw)
+        m300.dispense(48, dest)
+        m300.mix(6, 70, dest)
+        drop_tip(m300)
 
     if flash:
         if not ctx._hw_manager.hardware.is_simulator:
             cancellationToken.set_true()
         thread = create_thread(ctx, cancellationToken)
     m300.home()
-    ctx.pause('\n\n~~~~~~~~~~~~~~BEADS WASHED AND PREPPED~~~~~~~~~~~~~~~\n')
+    ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL  COMPLETE~~~~~~~~~~~~~~~\n')
     ctx.home()  # home before continuing with protocol
     if flash:
         cancellationToken.set_false()  # stop light flashing after home
         thread.join()
     ctx.set_rail_lights(True)
+
+    for c in ctx.commands():
+        print(c)
