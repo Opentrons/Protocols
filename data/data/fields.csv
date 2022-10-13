@@ -479,10 +479,16 @@ i7_well,1
 i7row,1
 inc_time,1
 include_bind,1
+include_buffer_a1,1
+include_buffer_a2,1
+include_buffer_n3,1
 include_dnase,1
 include_dry,1
 include_elute,1
+include_elution,1
+include_isoprop,1
 include_mastermix_step,1
+include_moving_fresh_plate,1
 include_multi,1
 include_ntc,2
 include_pause,1
@@ -494,6 +500,7 @@ include_wash3,1
 include_wash4,1
 include_wash5,1
 include_wash6,1
+include_wash_buffer,1
 incubate_bind_time,1
 incubate_samples_with_beads,3
 incubation_delay_time,1
@@ -814,7 +821,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,132
+num_samples,133
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
