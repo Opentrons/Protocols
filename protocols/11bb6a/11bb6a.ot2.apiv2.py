@@ -70,8 +70,10 @@ def run(ctx):
     p300m.pick_up_tip(tips300[0]['H12'])
     p300m.transfer(
      1.05*(14*num_cols), rxn_bf.bottom(0.5), mx_tube, new_tip='never')
+    p300m.drop_tip()
 
     # same tip enzyme mix to mix tube with 5 percent overage and mix
+    p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(
      1.05*(4*num_cols), enz_mx.bottom(0.5), mx_tube, mix_after=(
       10, 14*num_cols), new_tip='never')
@@ -87,6 +89,6 @@ def run(ctx):
     p20m.transfer(
      2.25, reagent_plate.columns()[0][0].bottom(0.5),
      [column[0] for column in libraryprep_plate.columns()[:num_cols]],
-     mix_after=(5, 10))
+     mix_after=(5, 10), new_tip='always')
 
     ctx.comment("Vortex, spin and incubate on PCR machine")
