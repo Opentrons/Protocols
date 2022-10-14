@@ -13,8 +13,8 @@ from datadog_api_client.v2.model.logs_query_filter import LogsQueryFilter
 from datadog_api_client.v2.model.logs_sort import LogsSort
 
 """ pre-chunk data due to 1000-log response limit """
-start = datetime(2022, 10, 12)
-end = datetime(2022, 10, 13)
+start = datetime(2022, 10, 13)
+end = datetime(2022, 10, 14)
 num_days = (end - start).days
 periods_per_day = 12  # rough calculation to accommodate all logs
 num_periods = num_days*periods_per_day
@@ -48,7 +48,7 @@ with ApiClient(configuration) as api_client:
             ),
             sort=LogsSort.TIMESTAMP_ASCENDING,
             page=LogsListRequestPage(
-                limit=1000  # maximum
+                limit=1000  # 1000 maximum
             ),
         )
 
