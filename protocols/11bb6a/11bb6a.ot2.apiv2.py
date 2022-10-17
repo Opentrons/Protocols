@@ -57,21 +57,25 @@ def run(ctx):
     enz_mx.liq_vol = 4*num_cols + deadvol_tube
 
     # alert user to reagent volumes needed
-    ctx.comment("Ensure reagents in sufficient volume are present on deck.")
+    ctx.comment(
+     "\nEnsure reagents in sufficient volume are present on deck.\n")
     for volume, reagent, location in zip(
                                     [math.ceil(rxn_bf.liq_vol),
                                      math.ceil(enz_mx.liq_vol)],
                                     ['reaction buffer', 'enzyme mix'],
                                     [rxn_bf, enz_mx]):
         ctx.comment(
-         "{0} uL {1} in {2}".format(str(volume), reagent.upper(), location))
+         "\n{0} uL {1} in {2}\n".format(
+          str(volume), reagent.upper(), location))
 
     # p300m "single channel" reaction buffer to mix tube with 5 percent overage
     p300m.pick_up_tip(tips300[0]['H12'])
     p300m.transfer(
      1.05*(14*num_cols), rxn_bf.bottom(0.5), mx_tube, new_tip='never')
+    p300m.drop_tip()
 
     # same tip enzyme mix to mix tube with 5 percent overage and mix
+    p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(
      1.05*(4*num_cols), enz_mx.bottom(0.5), mx_tube, mix_after=(
       10, 14*num_cols), new_tip='never')
@@ -87,6 +91,6 @@ def run(ctx):
     p20m.transfer(
      2.25, reagent_plate.columns()[0][0].bottom(0.5),
      [column[0] for column in libraryprep_plate.columns()[:num_cols]],
-     mix_after=(5, 10))
+     mix_after=(5, 10), new_tip='always')
 
-    ctx.comment("Vortex, spin and incubate on PCR machine")
+    ctx.comment("\nVortex, spin and incubate on PCR machine\n")
