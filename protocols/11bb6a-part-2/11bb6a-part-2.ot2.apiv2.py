@@ -203,9 +203,10 @@ def run(ctx):
             # height of top of etoh
             ht = liq_height(etoh) - 3 if liq_height(etoh) - 3 > 1 else 1
 
-            # etoh aspiration at ht mm to avoid overimmersion, post air gap
-            p300m.aspirate(120, etoh.bottom(ht))
-            p300m.air_gap(20)
+            # at ht mm - avoid overimmersion, avoid ridge in reservoir bottom
+            p300m.aspirate(
+             120, etoh.bottom(ht).move(types.Point(x=4.5, y=0, z=0)))
+            p300m.air_gap(20)  # post air gap
 
             # etoh top dispense with delayed blow out
             p300m.dispense(140, column[0].top())
@@ -259,6 +260,8 @@ def run(ctx):
     ctx.delay(minutes=dry_time)
 
     ctx.comment("Step - resuspend beads in 1x TE")
+
+    mag.disengage()
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         p20m.pick_up_tip()
