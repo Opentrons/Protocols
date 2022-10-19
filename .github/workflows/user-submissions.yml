@@ -1,7 +1,7 @@
 name: create-user-submissions-pr
 on:
   schedule:
-    - cron: '45 20 * * 0-6'
+    - cron: '00 20 * * 0-6'
 
 jobs:
   mine-new-submissions:
@@ -11,6 +11,12 @@ jobs:
       uses: actions/checkout@v2
       ref: 'user-submissions'
 
+    - name: pull new user submissions
+      run: make parse-user-submissions
+
+    - name: create all necessary files
+      run: make all
+
     - name: Get current date
       id: date
       run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
@@ -18,14 +24,14 @@ jobs:
     - name: pull-request
       uses: repo-sync/pull-request@v2
       with:
-        source_branch: "develop"
-        destination_branch: "master"
+        source_branch: "user-submissions"
+        destination_branch: "develop"
         github_token: ${{ secrets.GITHUB_TOKEN }}
         pr_label: "chore,automated-pr"
-        pr_title: "chore(Release): ${{ steps.date.outputs.today }}"
+        pr_title: "chore(Submissions): ${{ steps.date.outputs.today }}"
         pr_body: |
           ### Overview
 
-          This PR adds all changes made to **develop**, making the changes live on the [Protocol Library](https://protocols.opentrons.com)
-        pr_reviewer: chazmanc
-        pr_assignee: chazmanc
+          This PR adds all user submitted protocols to **develop**
+        pr_reviewer: ncdiehl11
+        pr_assignee: ncdiehl11
