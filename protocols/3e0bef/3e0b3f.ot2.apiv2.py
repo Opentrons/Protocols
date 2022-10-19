@@ -291,10 +291,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(140, col)
-            if off_deck:
-                flash_lights()
-                ctx.pause("Please remove plate for manual resuspension")
-            else:
+            if not off_deck:
                 m300.mix(10, 100, col)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
@@ -302,6 +299,10 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.touch_tip(speed=40)
             m300.aspirate(10, col.top())
             m300.drop_tip()
+
+        if off_deck:
+            flash_lights()
+            ctx.pause("Please remove plate for manual resuspension")
 
         mag_deck.engage()
         mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
@@ -371,6 +372,19 @@ def run(ctx: protocol_api.ProtocolContext):
             spm1_wells.append(spm[idx//3])
         else:
             spm2_wells.append(spm[idx//3])
+
+    reagent_keys = {
+        'RBB + RNase + Mag-Bind Beads': rbb,
+        'CSPW 1 Buffer': cspw1,
+        'CSPW 2 Buffer': cspw2,
+        'Elution Buffer': elution_buffer,
+        'SPM': spm,
+    }
+    for key in reagent_keys:
+        for x in reagent_keys[key]:
+            ctx.comment(f'load {x.current_volume} of {key} in {x}')
+    # for x in rbb:
+    #     ctx.comment(f'load {x.current_volume} in {x}')
 
     if samp_labware == 'qiagen_96_tuberack_1200ul':
         ctx.comment('\nTransferring 500uL of sample to plate on MagDeck\n')
@@ -520,7 +534,8 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.aspirate(elution_vol, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
         m300.dispense_h(elution_vol, col)
-        m300.mix(10, 50, col)
+        if not off_deck:
+            m300.mix(10, 50, col)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
         m300.blow_out(col.bottom(6))
         for _ in range(2):
