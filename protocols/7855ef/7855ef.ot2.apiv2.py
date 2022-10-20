@@ -16,10 +16,7 @@ def run(protocol):
     if not 1 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
 
-    metadata = {
-        'protocolName': f'[{num_samp}/384] Agriseq Library Prep (1/4)\
-         DNA transfer'
-    }
+    metadata = {'protocolName': f'[{num_samp}/384] Agriseq Library Prep (1/4) DNA transfer'}  # flake8: noqa
 
     num_col = math.ceil(num_samp/8)
     num_plate = math.ceil(num_col/12)
