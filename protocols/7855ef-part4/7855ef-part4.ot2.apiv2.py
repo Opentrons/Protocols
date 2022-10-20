@@ -66,6 +66,11 @@ def run(protocol):
         pip.move_to(knock_loc)
         pip.move_to(knock_loc2)
 
+    protocol.comment(
+        f'This protocol is for {num_samp} samples. \
+        Please prepare reagents accordingly'
+    )
+
     # pool each row of plates
     airgap = 2
     reaction_plate_cols = [col for j in range(2) for i in range(2)

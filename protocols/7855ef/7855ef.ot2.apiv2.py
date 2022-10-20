@@ -1,8 +1,9 @@
-# flake8: noqa
 import math
 from opentrons.types import Point
 
+
 metadata = {
+    'protocolName': 'Agriseq Library Prep Part 1 - DNA transfer',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -16,8 +17,6 @@ def run(protocol):
 
     if not 1 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
-
-    metadata = {'protocolName': f'[{num_samp}/384] Agriseq Library Prep (1/4) DNA transfer'}
 
     num_col = math.ceil(num_samp/8)
     num_plate = math.ceil(num_col/12)
@@ -101,7 +100,10 @@ def run(protocol):
                          for col in plate.rows()[0]][:num_col]
     reaction_plate_cols = [col for j in range(2) for i in range(2)
                            for col in reaction_plate.rows()[i][j::2]][:num_col]
-
+    protocol.comment(
+        f'This protocol is for {num_samp} samples. \
+        Please prepare reagents accordingly'
+    )
     # add amplification mix
     airgap = 2
     num = 0

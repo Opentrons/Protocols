@@ -68,6 +68,10 @@ def run(protocol):
         pip.move_to(knock_loc)
         pip.move_to(knock_loc2)
 
+    protocol.comment(
+        f'This protocol is for {num_samp} samples. \
+        Please prepare reagents accordingly'
+    )
     # Height Tracking
 
     overage_coef = (overage_percent/100)+1
