@@ -16,6 +16,12 @@
   },
   {
     "type": "float",
+    "label": "sample aspiration height (mm above bottom)",
+    "name": "height_asp_sample",
+    "default": 1.0
+  },
+  {
+    "type": "float",
     "label": "mastermix volume (ul)",
     "name": "mm_vol",
     "default": 9.0

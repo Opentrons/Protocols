@@ -95,7 +95,7 @@ def run(ctx):
                 for i in range(num_aspirations)
             ]
             for chunk in distribution_chunks:
-                pip.aspirate(vol_per_row*len(chunk))
+                pip.aspirate(vol_per_row*len(chunk), source)
                 for well in chunk:
                     pip.dispense(vol_per_row, well.bottom(1))
                     wick(pip, well)
