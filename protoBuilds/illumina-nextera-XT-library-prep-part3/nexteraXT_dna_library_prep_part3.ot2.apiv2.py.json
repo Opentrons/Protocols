@@ -86,7 +86,7 @@
             "type": "usascientific_12_reservoir_22ml"
         },
         {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN1 on 4",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 4",
             "share": false,
             "slot": "4",
             "type": "biorad_96_wellplate_200ul_pcr"
@@ -128,5 +128,12 @@
         "protocolName": "Illumina Nextera XT NGS Prep 3: Normalize Libraries",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module on 4 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

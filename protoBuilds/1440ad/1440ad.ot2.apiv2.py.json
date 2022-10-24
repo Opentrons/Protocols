@@ -225,5 +225,24 @@
         "protocolName": "Extraction with Mag-Bind TotalPure NGS kit",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw MAG PLATE on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw SAMPLES on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 6 lw COOL REAGENTS on Temperature Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "tempdeck"
+        }
+    ]
 }

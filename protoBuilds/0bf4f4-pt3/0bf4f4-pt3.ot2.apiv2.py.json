@@ -214,5 +214,12 @@
         "protocolName": "Ilumina DNA Prep Part 3 - Clean up Libraries",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

@@ -1189,7 +1189,7 @@
             "type": "opentrons_96_filtertiprack_10ul"
         },
         {
-            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module GEN1 on 4",
+            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module on 4",
             "share": false,
             "slot": "4",
             "type": "eppendorftwin.tec_96_wellplate_150ul"
@@ -1227,13 +1227,13 @@
     },
     "modules": [
         {
-            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw None",
+            "name": "MagneticModuleContext at Magnetic Module on 1 lw None",
             "share": false,
             "slot": "1",
             "type": "magdeck"
         },
         {
-            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module GEN1 on 4",
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module on 4",
             "share": false,
             "slot": "4",
             "type": "tempdeck"

@@ -66,13 +66,13 @@
     ],
     "labware": [
         {
-            "name": "1 on Magnetic Module GEN1 on 1",
+            "name": "1 on Magnetic Module on 1",
             "share": false,
             "slot": "1",
             "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "4 on Temperature Module GEN1 on 4",
+            "name": "4 on Temperature Module on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
@@ -120,5 +120,18 @@
         "protocolName": "Nextera DNA Flex NGS Library Prep: Amplify Tagmented DNA",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module on 1 lw 1 on Magnetic Module on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw 4 on Temperature Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

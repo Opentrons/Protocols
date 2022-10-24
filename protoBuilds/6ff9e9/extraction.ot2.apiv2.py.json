@@ -1393,5 +1393,12 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "COVID-19 Station B RNA Extraction"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw deepwell plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }
