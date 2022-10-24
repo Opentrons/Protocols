@@ -463,6 +463,7 @@ heat_shock,1
 heating_module_temp,1
 height_above_cartridge,1
 height_after_disp,1
+height_asp_sample,1
 height_dispense,2
 height_engage,17
 height_final,1
