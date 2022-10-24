@@ -113,7 +113,7 @@ def parse(protocol_path):
     # Use a simulating protocol context
     sh_arg = ThreadManager(HardwareAPI.build_hardware_simulator).sync
     
-    context_impl = ProtocolContextSimulation(sync_hardware=sh_arg, api_version='2.13')
+    context_impl = ProtocolContextSimulation(sync_hardware=sh_arg, api_version=protocol.api_level)
 
     context = opentrons.protocol_api.contexts.ProtocolContext(
         implementation=context_impl)
