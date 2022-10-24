@@ -213,24 +213,24 @@ def write_readme_text(readme_data):
     return readme_lines
 
 
-if __name__ == '__main__':
-    protocol_path = sys.argv[1]
-    protobuildPath = sys.argv[2]
-    folder_id = str(Path(protocol_path).parent).split('/')[-1]
-
-    with open(protobuildPath) as protobuild_file:
-        protobuilds_data = json.load(protobuild_file)
-
-    mapPath = 'protolib/parse/readme_map.json'
-    with open(mapPath) as map_file:
-        readme_map = json.load(map_file)
-    # print('OT2 APIv2: parsing {} to {}'.format(sourceFilePath, destFilePath))
-
-    readme_path = f'{Path(protocol_path).parent}/README.md'
-    readme_content = parse(protobuilds_data, readme_map, folder_id)
-    readme_text = write_readme_text(readme_content)
-
-    if not Path(readme_path).exists():  # do not overwrite README
-        with open(readme_path, 'w') as f:
-            for line in readme_text:
-                f.writelines(f'{line}\n')
+##if __name__ == '__main__':
+##    protocol_path = sys.argv[1]
+##    protobuildPath = sys.argv[2]
+##    folder_id = str(Path(protocol_path).parent).split('/')[-1]
+##
+##    with open(protobuildPath) as protobuild_file:
+##        protobuilds_data = json.load(protobuild_file)
+##
+##    mapPath = 'protolib/parse/readme_map.json'
+##    with open(mapPath) as map_file:
+##        readme_map = json.load(map_file)
+##    # print('OT2 APIv2: parsing {} to {}'.format(sourceFilePath, destFilePath))
+##
+##    readme_path = f'{Path(protocol_path).parent}/README.md'
+##    readme_content = parse(protobuilds_data, readme_map, folder_id)
+##    readme_text = write_readme_text(readme_content)
+##
+##    if not Path(readme_path).exists():  # do not overwrite README
+##        with open(readme_path, 'w') as f:
+##            for line in readme_text:
+##                f.writelines(f'{line}\n')
