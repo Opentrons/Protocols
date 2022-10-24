@@ -28,7 +28,7 @@
     "label": "Labware on the Heater Shaker",
     "name": "labware_hs",
     "options": [
-      { "label": "opentrons_96_deepwell_adapter_nest_wellplate_2ml_deep", "value": "opentrons_96_deepwell_adapter_nest_wellplate_2ml_deep" },
+      { "label": "opentrons_96_deep_well_adapter_nest_wellplate_2ml_deep", "value": "opentrons_96_deep_well_adapter_nest_wellplate_2ml_deep" },
       { "label": "opentrons_flat_plate_adapter_corning_384_wellplate_112ul_flat", "value": "opentrons_flat_plate_adapter_corning_384_wellplate_112ul_flat" },
       { "label": "opentrons_96_flat_bottom_adapter_nest_wellplate_200ul_flat", "value": "opentrons_96_flat_bottom_adapter_nest_wellplate_200ul_flat" },
       { "label": "opentrons_96_pcr_plate_adapter_nest_wellplate_100ul_pcr_full_skirt", "value": "opentrons_96_pcr_plate_adapter_nest_wellplate_100ul_pcr_full_skirt" },
