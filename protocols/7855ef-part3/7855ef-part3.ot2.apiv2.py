@@ -77,6 +77,11 @@ def run(protocol):
             m20.drop_tip(tips[dropped_tip])
             dropped_tip += 1
 
+    protocol.comment(
+        f'This protocol is for {num_samp} samples. \
+        Please prepare reagents accordingly'
+    )
+
     # Height Tracking
 
     overage_coef = (overage_percent/100)+1

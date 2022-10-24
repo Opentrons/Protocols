@@ -1,6 +1,7 @@
 import math
 from opentrons.types import Point
 
+
 metadata = {
     'protocolName': 'Agriseq Library Prep Part 1 - DNA transfer',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -99,7 +100,10 @@ def run(protocol):
                          for col in plate.rows()[0]][:num_col]
     reaction_plate_cols = [col for j in range(2) for i in range(2)
                            for col in reaction_plate.rows()[i][j::2]][:num_col]
-
+    protocol.comment(
+        f'This protocol is for {num_samp} samples. \
+        Please prepare reagents accordingly'
+    )
     # add amplification mix
     airgap = 2
     num = 0
