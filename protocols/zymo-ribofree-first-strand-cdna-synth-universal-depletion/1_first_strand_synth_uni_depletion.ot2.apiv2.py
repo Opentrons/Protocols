@@ -6,7 +6,7 @@ metadata = {
 cDNA Synthesis and RiboFreeTM Universal Depletion (robot 1)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.3'
 }
 
 
