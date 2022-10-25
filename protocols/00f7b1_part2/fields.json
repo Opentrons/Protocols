@@ -31,7 +31,7 @@
   {
     "type": "dropDown",
     "label": "Flash?",
-    "name": "m300_mount",
+    "name": "flash",
     "options": [
       {"label": "Yes, flash", "value": true},
       {"label": "No, do not flash", "value": false}
