@@ -60,7 +60,7 @@ def run(ctx: protocol_api.ProtocolContext):
         "num_samples", "m300_mount", "flash")
 
     'Global variables'
-    TEST_MODE = True
+    TEST_MODE = False
     bead_delay_time = 7
     wash_delay_time = 7
     supernatant_headspeed_modulator = 10
