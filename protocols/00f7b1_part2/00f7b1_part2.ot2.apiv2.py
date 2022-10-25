@@ -83,11 +83,11 @@ def run(ctx: protocol_api.ProtocolContext):
     print(num_columns)
 
     # load labware
-    mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')  # changed from thermofisher_96_wellplate_200ul
+    mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')  # changed from thermofisher_96_wellplate_200ul
     temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
                                         'pcr_strip_200ul')
     dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
-    final_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2')  # changed from thermofisher_96_wellplate_200ul
+    final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')  # changed from thermofisher_96_wellplate_200ul
     trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
     # load tipracks
 
@@ -344,7 +344,7 @@ def run(ctx: protocol_api.ProtocolContext):
     else:
         ctx.delay(minutes=5)
 
-    ctx.comment('\n~~~~~~~~~~~~~ENGAGING MAGNENTIC MODULE~~~~~~~~~~~~\n')
+    ctx.comment('\n~~~~~~~~~~~~~ENGAGING MAGNETIC MODULE~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(minutes=bead_delay_time)

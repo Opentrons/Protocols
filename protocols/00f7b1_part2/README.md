@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS LIBRARY PREP
+	* NEBNext® Ultra™ II Directional RNA Library Prep
 
 
 ## Description
-This protocol does stuff!
+This protocol is part 2 of a 10 part series. Please look at deck map and liquid legend below. Note: bead strip tubes can accommodate 2 columns of sample by volume (i.e. 6 columns of beads for a full plate of samples). The RNA wash can accommodate 3 columns of sample per column of wash. There only needs to be one column of strand primer mix per run for all sample numbers. An overage of at least 10% should be used each run.
 
 
 ### Modules
@@ -34,15 +34,32 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-10-25+at+10.39.41+AM.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part2/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-10-25+at+10.36.13+AM.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Beads added to sample and mixed
+2. Protocol pause
+3. Samples mixed
+4. Magnet engaged, supernatant removed
+5. Beads washed twice with buffer
+6. Supernatant removed
+7. Tris added to sample
+8. Protocol pause
+9. Binding buffer added to sample
+10. Incubate 5 minutes
+11. Magnet module engaged
+12. Supernatant removed
+13. Final wash
+14. Remove supernatant
+15. Master mix elution added to sample
+16. Protocol pause
+17. Incubation
+18. Moving RNA to new plate
 
 
 ### Process
