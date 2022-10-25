@@ -145,7 +145,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return (self.well.bottom(self.height))
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -161,9 +161,9 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return (self.well.bottom(self.height))
             else:
-                return(self.well.top())
+                return (self.well.top())
 
     # to track liquid height
     water = WellH(w, min_height=1, current_volume=water_volume)
@@ -194,14 +194,14 @@ def run(ctx):
     p20m.flow_rate.dispense = 3.8
 
     # capture and report original value for p20m pick_up_current
-    default_current = ctx._implementation._hw_manager.hardware.\
+    default_current = ctx._hw_manager.hardware.\
         _attached_instruments[p20m._implementation.get_mount()].\
         config.pick_up_current
     ctx.comment("""Tip pick-up current for the p20 multi-channel pipette
     initially configured to {} mAmp.""".format(str(default_current)))
 
     # temporarily reduce p20m pick_up_current for one-channel tip pickup
-    ctx._implementation._hw_manager.hardware._attached_instruments[
+    ctx._hw_manager.hardware._attached_instruments[
      p20m._implementation.get_mount()].update_config_item(
      'pick_up_current', reduced_pick_up_current)
     ctx.comment("""Tip pick-up current configuration for the p20 multi-channel
@@ -212,12 +212,12 @@ def run(ctx):
     pick_up(p20m)
 
     # reset p20m pick_up_current to original value
-    ctx._implementation._hw_manager.hardware._attached_instruments[
+    ctx._hw_manager.hardware._attached_instruments[
      p20m._implementation.get_mount()].update_config_item(
      'pick_up_current', default_current)
     ctx.comment("""Tip pick-up current for the p20 multi-channel pipette
     restored to initial value of {} mAmp for standard 8-tip pickup.""".format(
-     str(ctx._implementation._hw_manager.hardware._attached_instruments[
+     str(ctx._hw_manager.hardware._attached_instruments[
       p20m._implementation.get_mount()].config.pick_up_current)))
 
     # water then fluomix to last well of 1st col each tray

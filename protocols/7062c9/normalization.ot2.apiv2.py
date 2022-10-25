@@ -28,7 +28,7 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tipracks20)
 
-    ctx._implementation._hw_manager.hardware._attached_instruments[
+    ctx._hw_manager.hardware._attached_instruments[
         p300._implementation.get_mount()].update_config_item(
             'pick_up_current', 0.1)
 
