@@ -88,12 +88,5 @@
         "protocolName": "MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw deepwell plate on Magnetic Module GEN2 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

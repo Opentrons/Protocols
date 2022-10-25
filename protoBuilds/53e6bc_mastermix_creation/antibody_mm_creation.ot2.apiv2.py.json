@@ -1415,7 +1415,7 @@
     ],
     "labware": [
         {
-            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module on 1",
+            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "eppendorftwin.tec_96_wellplate_150ul"
@@ -1457,12 +1457,5 @@
         "protocolName": "Mastermix Creation",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module on 1 lw Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

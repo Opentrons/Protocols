@@ -51,7 +51,7 @@
     ],
     "labware": [
         {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module on 4",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "biorad_96_wellplate_200ul_pcr"
@@ -99,12 +99,5 @@
         "protocolName": "Transfer with Temperature Module",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module on 4 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module on 4",
-            "share": false,
-            "slot": "4",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

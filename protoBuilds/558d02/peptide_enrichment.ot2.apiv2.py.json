@@ -1187,7 +1187,7 @@
     ],
     "labware": [
         {
-            "name": "USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module on 1",
+            "name": "USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "usascientific_96_wellplate_2.4ml_deep"
@@ -1265,12 +1265,5 @@
         "protocolName": "Magbead-Based Peptide Enrichment",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 1 lw USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

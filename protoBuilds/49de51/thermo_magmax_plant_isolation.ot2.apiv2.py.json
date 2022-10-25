@@ -95,18 +95,5 @@
         "protocolName": "ThermoFisher MagMAX Plant DNA Isolation",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw deepwell plate on Magnetic Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw NEST 96 Deepwell Plate 2mL on Temperature Module GEN2 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

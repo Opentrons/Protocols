@@ -117,24 +117,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "GeneRead QIAact Lung DNA UMI Panel Kit:Cleanup of Adapter-ligated DNA with\n                    QIAact Beads"
     },
-    "modules": [
-        {
-            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
-            "share": false,
-            "slot": "7",
-            "type": "thermocycler"
-        },
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

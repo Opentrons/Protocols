@@ -2452,18 +2452,5 @@
         "protocolName": "FA Workflow",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw None",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 10 lw None",
-            "share": false,
-            "slot": "10",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

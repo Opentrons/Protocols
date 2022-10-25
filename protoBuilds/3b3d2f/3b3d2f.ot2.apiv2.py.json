@@ -106,12 +106,5 @@
         "protocolName": "Plate Loading for ddPCR",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw 4 Degree Tube Block on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

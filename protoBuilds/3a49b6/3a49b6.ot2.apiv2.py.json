@@ -105,12 +105,5 @@
         "protocolName": "Normalization",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

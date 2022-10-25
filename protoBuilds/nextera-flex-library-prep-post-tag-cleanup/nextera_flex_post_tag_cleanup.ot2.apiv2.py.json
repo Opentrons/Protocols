@@ -47,7 +47,7 @@
     ],
     "labware": [
         {
-            "name": "1 on Magnetic Module on 1",
+            "name": "1 on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "biorad_96_wellplate_200ul_pcr"
@@ -107,12 +107,5 @@
         "protocolName": "Nextera DNA Flex NGS Library Prep: Post Tagmentation Cleanup",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 1 lw 1 on Magnetic Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

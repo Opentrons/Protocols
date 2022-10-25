@@ -1268,12 +1268,5 @@
         "protocolName": "Zymo Quick-DNA/RNA Viral Kit [Custom]",
         "source": "Protocol Library"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw VWR 96 Well Plate 1000 \u00b5L on Magnetic Module GEN2 on 7",
-            "share": false,
-            "slot": "7",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

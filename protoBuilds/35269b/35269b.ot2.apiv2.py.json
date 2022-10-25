@@ -1328,12 +1328,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "MAI VIRAL ISOLATION"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Extraction Plate on Magnetic Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

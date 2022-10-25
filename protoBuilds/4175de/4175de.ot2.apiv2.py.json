@@ -1233,12 +1233,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "Cherrypicking PCR/qPCR prep"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Applied Biosystems 96 Well Plate 100 \u00b5L on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

@@ -1146,7 +1146,7 @@
     ],
     "labware": [
         {
-            "name": "96-well BRANDplate with V-bottom on Temperature Module on 1",
+            "name": "96-well BRANDplate with V-bottom on Temperature Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "brandplates_96_wellplate_360ul"
@@ -1206,12 +1206,5 @@
         "protocolName": "Non-Sterile Cell Analysis",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module on 1 lw 96-well BRANDplate with V-bottom on Temperature Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

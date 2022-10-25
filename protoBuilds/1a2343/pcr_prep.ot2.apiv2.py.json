@@ -63,7 +63,7 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "reagent plate on Temperature Module on 4",
+            "name": "reagent plate on Temperature Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "usascientific_96_wellplate_2.4ml_deep"
@@ -113,7 +113,7 @@
             "type": "thermocycler"
         },
         {
-            "name": "TemperatureModuleContext at Temperature Module on 4 lw reagent plate on Temperature Module on 4",
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw reagent plate on Temperature Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "tempdeck"

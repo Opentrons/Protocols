@@ -2726,7 +2726,7 @@
     ],
     "labware": [
         {
-            "name": "Greiner Bio-One 96-Deepwell Plate 2ml on Magnetic Module on 1",
+            "name": "Greiner Bio-One 96-Deepwell Plate 2ml on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "greinerbioone_96_wellplate_2ml_deep"
@@ -2804,12 +2804,5 @@
         "protocolName": "Promega MagneHis\u2122 Protein Purification System",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 1 lw Greiner Bio-One 96-Deepwell Plate 2ml on Magnetic Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

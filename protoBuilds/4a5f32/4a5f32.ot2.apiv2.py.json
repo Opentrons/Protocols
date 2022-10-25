@@ -1785,12 +1785,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "Nucleic Acid Purification with Magnetic Beads"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw 4ti-0960/C 96 Well Full Skirted Plate on Magnetic Module GEN2 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

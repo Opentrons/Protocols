@@ -197,12 +197,5 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Swift NormalaseTM Amplicon Panels (SNAP): Size Selection and Cleanup Part 1/2"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw PCR plate on Magnetic Module GEN2 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

@@ -209,12 +209,5 @@
         "protocolName": "NGS Library Cleanup with Ampure XP Beads",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw magnetic plate on Magnetic Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

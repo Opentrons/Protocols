@@ -117,24 +117,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "Custom NGS Library Prep"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        },
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

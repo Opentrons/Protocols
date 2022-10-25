@@ -123,7 +123,7 @@
     ],
     "labware": [
         {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 1",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "biorad_96_wellplate_200ul_pcr"
@@ -165,12 +165,5 @@
         "protocolName": "Omega Bio-tek Mag-Bind TotalPure NGS",
         "source": "Protocol Library"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 1 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

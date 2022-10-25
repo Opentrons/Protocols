@@ -81,12 +81,5 @@
         "protocolName": "Ethanol Transfer with User",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN1 on 4 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN1 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

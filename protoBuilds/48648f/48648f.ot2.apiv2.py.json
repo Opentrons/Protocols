@@ -1554,12 +1554,5 @@
         "subcategory": "None",
         "tags": "None"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Extraction Plate on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

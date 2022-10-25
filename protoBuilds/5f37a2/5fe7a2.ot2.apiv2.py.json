@@ -2423,7 +2423,7 @@
             "type": "eppendorf_96_deepwellplate_500ul"
         },
         {
-            "name": "Eppendorf DWP 2000ul on Magnetic Module on 10",
+            "name": "Eppendorf DWP 2000ul on Magnetic Module GEN1 on 10",
             "share": false,
             "slot": "10",
             "type": "eppendorf_96_deepwellplate_2000ul"
@@ -2447,12 +2447,5 @@
         "protocolName": "Nucleic Acid Purification",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 10 lw Eppendorf DWP 2000ul on Magnetic Module on 10",
-            "share": false,
-            "slot": "10",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

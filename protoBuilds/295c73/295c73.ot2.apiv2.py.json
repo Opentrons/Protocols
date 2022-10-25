@@ -86,24 +86,5 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "swiftbiosci.com accel-amplicon-plus-egfr-pathway-panel"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN1 on 6 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN1 on 6",
-            "share": false,
-            "slot": "6",
-            "type": "tempdeck"
-        },
-        {
-            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
-            "share": false,
-            "slot": "7",
-            "type": "thermocycler"
-        },
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 9 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 9",
-            "share": false,
-            "slot": "9",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

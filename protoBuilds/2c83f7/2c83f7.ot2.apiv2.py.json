@@ -128,12 +128,5 @@
         "protocolName": "Zymo Research Direct-zol-96 RNA MagPrep",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN1 on 4 lw deepwell block on Magnetic Module GEN1 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

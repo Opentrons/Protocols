@@ -1328,18 +1328,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "LGC Sbeadex Plant Maxi Kit Nucleic Acid Extraction"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "magdeck"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

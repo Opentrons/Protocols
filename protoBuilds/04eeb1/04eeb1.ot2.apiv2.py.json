@@ -99,12 +99,5 @@
         "description": "Custom Protocol Request",
         "protocolName": "Illumina COVIDSeq Test: Anneal RNA"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Master Mix Reservoir on Temperature Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

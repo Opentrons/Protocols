@@ -1285,12 +1285,5 @@
         "protocolName": "MagMAX Plant DNA Isolation Kit [2/2]",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 7",
-            "share": false,
-            "slot": "7",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

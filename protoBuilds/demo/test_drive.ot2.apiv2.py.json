@@ -144,12 +144,5 @@
         "protocolName": "OT-2 Demo",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw None",
-            "share": false,
-            "slot": "7",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

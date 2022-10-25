@@ -162,12 +162,5 @@
         "protocolName": "Protein Labeling with Incubation",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN1 on 4",
-            "share": false,
-            "slot": "4",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

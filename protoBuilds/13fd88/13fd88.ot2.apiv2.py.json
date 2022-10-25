@@ -2341,12 +2341,5 @@
         "protocolName": "Protein Purification with Magnetic NI Resin",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw Greiner BioOne 96 Well Microplate on Magnetic Module GEN2 on 7",
-            "share": false,
-            "slot": "7",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }
