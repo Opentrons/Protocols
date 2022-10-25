@@ -93,7 +93,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                         'pcr_strip_200ul')
     dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
     final_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2')  # changed from thermofisher_96_wellplate_200ul
-    trash = ctx.load_labware('nest_1_reservoir_195ml', '8').wells()[0].top()
+    trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
