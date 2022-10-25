@@ -30,7 +30,7 @@ setup:
 
 venvs/ot2:
 	mkdir -p venvs
-	virtualenv venvs/ot2
+	virtualenv -p=3.8 venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
