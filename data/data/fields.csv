@@ -434,7 +434,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,23
+flash,24
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -646,7 +646,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,69
+m20_mount,68
 m300_mount,79
 m300_type,2
 m_mount,1
@@ -1468,7 +1468,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,4
+vol_sample,3
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
