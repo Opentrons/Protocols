@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "Embgenix.ot2.apiv2.py"
+            "00f7b1_part2.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/05c733",
-    "slug": "05c733",
+    "path": "protocols/00f7b1_part2",
+    "slug": "00f7b1_part2",
     "status": "ok"
 }

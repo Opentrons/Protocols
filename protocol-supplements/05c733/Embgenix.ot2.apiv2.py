@@ -12,9 +12,10 @@ Amplification',
 
 def run(ctx):
 
-    [num_samples, vol_sample, m20_mount,
-     m300_mount] = get_values(  # noqa: F821
-        'num_samples', 'vol_sample', 'm20_mount', 'm300_mount')
+    num_samples = 16
+    vol_sample = 5.0
+    m20_mount = 'right'
+    m300_mount = 'left'
 
     # labware
     tuberack = ctx.load_labware(
@@ -95,7 +96,7 @@ def run(ctx):
                 for i in range(num_aspirations)
             ]
             for chunk in distribution_chunks:
-                pip.aspirate(vol_per_row*len(chunk))
+                pip.aspirate(vol_per_row*len(chunk), source)
                 for well in chunk:
                     pip.dispense(vol_per_row, well.bottom(1))
                     wick(pip, well)
