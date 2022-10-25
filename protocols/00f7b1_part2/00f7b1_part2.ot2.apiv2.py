@@ -11,7 +11,7 @@ metadata = {
     'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 2: RNA Isolation',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
+    'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
@@ -58,11 +58,6 @@ def run(ctx: protocol_api.ProtocolContext):
      m300_mount, flash
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "m300_mount", "flash")
-
-    "GET VALUES"
-    num_samples = 16
-    m300_mount = 'right'
-    flash = True
 
     'Global variables'
     TEST_MODE = True
@@ -226,10 +221,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     samples = mag_plate.rows()[0][:num_columns]
     beads = temp_plate.rows()[0][:math.ceil(num_columns/2)]*12
-    wash_1 = dwp.rows()[0][2]
-    wash_2 = dwp.rows()[0][4]
+    wash_1 = dwp.rows()[0][0]
+    wash_2 = dwp.rows()[0][2]
     tris = dwp.rows()[0][6]
-    wash_3 = dwp.rows()[0][8]
+    wash_3 = dwp.rows()[0][4]
     strand_primer_mix = temp_plate.rows()[0][-1]
     rna_wash = temp_plate.rows()[0][6:6+math.ceil(num_columns/3)]*12
     final_dest = final_plate.rows()[0][:num_columns]
