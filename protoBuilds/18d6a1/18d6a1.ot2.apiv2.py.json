@@ -1315,5 +1315,12 @@
         "protocolName": "MGI Easy Nucleic Acid Extraction Kit",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 10 lw Extraction Plate on Magnetic Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

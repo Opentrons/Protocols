@@ -150,5 +150,18 @@
         "protocolName": "Zymobiomics Magbead Nucleic Acid Purification",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw deepwell plate (on magdeck) on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 7 lw spot for drying mid-protocol on Temperature Module GEN1 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "tempdeck"
+        }
+    ]
 }

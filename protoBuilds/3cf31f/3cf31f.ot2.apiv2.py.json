@@ -2295,5 +2295,12 @@
         "description": "Custom Protocol Request",
         "protocolName": "BioFluid Mix and Transfer - Part 1/2 - APIv2"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 10 lw Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module GEN1 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "tempdeck"
+        }
+    ]
 }

@@ -69,7 +69,7 @@
             "type": "opentrons_96_filtertiprack_200ul"
         },
         {
-            "name": "Deep Well Plate on Magnetic Module GEN1 on 4",
+            "name": "Deep Well Plate on Magnetic Module on 4",
             "share": false,
             "slot": "4",
             "type": "usascientific_96_wellplate_2.4ml_deep"
@@ -129,5 +129,12 @@
         "protocolName": "Purification of Genomic DNA",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module on 4 lw Deep Well Plate on Magnetic Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }
