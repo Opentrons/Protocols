@@ -193,5 +193,12 @@
         "protocolName": "nCoV-2019 Lo Cost protocol",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 10 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "tempdeck"
+        }
+    ]
 }

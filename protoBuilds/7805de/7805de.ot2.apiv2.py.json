@@ -161,5 +161,18 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "NEBNext Ultra II Directional RNA Library Prep Kit\n    for Illumina with poly(A) selection: part 1 -\n    RNA Isolation, Fragmentation and Priming"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw Mag Plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw 4 Degree Block on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }

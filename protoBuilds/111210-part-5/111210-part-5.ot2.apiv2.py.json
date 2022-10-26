@@ -93,5 +93,18 @@
         "description": "Custom Protocol Request",
         "protocolName": "GeneRead QIAact Lung RNA Fusion UMI Panel Kit:\n                    Adaptor ligation"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw None",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }

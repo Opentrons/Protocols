@@ -5513,7 +5513,7 @@
             "type": "genmate_96_aluminumblock_20ul"
         },
         {
-            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module GEN1 on 4",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
@@ -5543,5 +5543,12 @@
         "protocolName": "PCR Prep",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

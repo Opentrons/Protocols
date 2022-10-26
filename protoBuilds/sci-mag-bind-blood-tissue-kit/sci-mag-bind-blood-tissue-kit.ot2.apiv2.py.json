@@ -232,5 +232,12 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Mag-Bind\u00ae Blood & Tissue DNA HDQ 96 Kit"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 6 lw deepwell plate on Magnetic Module GEN1 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "magdeck"
+        }
+    ]
 }

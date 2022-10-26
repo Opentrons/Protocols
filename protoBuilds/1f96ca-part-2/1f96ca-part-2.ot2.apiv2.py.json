@@ -149,5 +149,12 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "NGS Library Prep: KAPA Hyper Plus 96rx, cat#07962428001,\n    ROCHE - part 2 of 2: post-PCR clean up and pooling"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 9 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "magdeck"
+        }
+    ]
 }

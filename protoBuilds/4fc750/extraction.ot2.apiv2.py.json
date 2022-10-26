@@ -302,5 +302,12 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Omega Mag-Bind\u00ae Blood & Tissue DNA 96 Kit - 250\u03bcL Blood Protocol"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw deepwell plate on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }
