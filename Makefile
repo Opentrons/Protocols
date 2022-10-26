@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
-OT2_VERSION_TAG := v4.3.0
+OT2_VERSION_TAG := v6.1.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 # Parsers output to here
@@ -30,7 +30,7 @@ setup:
 
 venvs/ot2:
 	mkdir -p venvs
-	virtualenv venvs/ot2
+	virtualenv -p=3.8 venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \

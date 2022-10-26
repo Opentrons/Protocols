@@ -11,12 +11,10 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [rna_plate_type, sample_vol, height_asp_sample, mm_vol, num_samples_1,
-     num_samples_2, num_samples_3, num_samples_4,
-     m20_mount] = get_values(  # noqa: F821
-        'rna_plate_type', 'sample_vol', 'height_asp_sample', 'mm_vol',
-        'num_samples_1', 'num_samples_2', 'num_samples_3', 'num_samples_4',
-        'm20_mount')
+    [rna_plate_type, sample_vol, mm_vol, num_samples_1, num_samples_2,
+     num_samples_3, num_samples_4, m20_mount] = get_values(  # noqa: F821
+        'rna_plate_type', 'sample_vol', 'mm_vol', 'num_samples_1',
+        'num_samples_2', 'num_samples_3', 'num_samples_4', 'm20_mount')
 
     # load labware
     rna_source_plates = [
@@ -67,7 +65,7 @@ def run(ctx):
         ctx.pause(f'Ensure plate {i+1} is on deck before resuming.')
         for s, d in zip(s_set, d_set):
             m20.pick_up_tip()
-            m20.aspirate(sample_vol, s.bottom(height_asp_sample))
+            m20.aspirate(sample_vol, s.bottom(1))
             m20.aspirate(2, d.bottom(2))
             m20.dispense(m20.current_volume, d.bottom(2))
             m20.drop_tip()
