@@ -94,6 +94,7 @@ def run(ctx):
 
     p300m.aspirate(vol, enz_mx.bottom(0.5))
     p300m.dispense(vol, mm)
+    p300m.drop_tip()
 
     # increment volume of mastermix
     mm.liq_vol += vol
@@ -102,6 +103,7 @@ def run(ctx):
 
     vol = 1.05*(14*num_cols)    # 5 percent overage
 
+    p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(
      vol, ep_buffer_and_mx.bottom(0.5), mm, mix_after=(10, 16*num_cols),
      new_tip='never')
