@@ -11,8 +11,7 @@ metadata = {
     'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 10: Purification of PCR Product',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
-                         # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
+    'apiLevel': '2.13'  
 }
 
 # Definitions for deck light flashing
