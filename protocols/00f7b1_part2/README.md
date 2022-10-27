@@ -6,7 +6,7 @@
 
 
 ## Categories
-* NGS LIBRARY PREP
+* NGS Library Prep
 	* NEBNext® Ultra™ II Directional RNA Library Prep
 
 
@@ -34,7 +34,7 @@ This protocol is part 2 of a 10 part series. Please look at deck map and liquid 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-10-25+at+10.39.41+AM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/new+deck.png)
 
 
 ### Reagent Setup

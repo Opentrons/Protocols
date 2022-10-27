@@ -16,8 +16,6 @@ metadata = {
 }
 
 # Definitions for deck light flashing
-
-
 class CancellationToken:
     """FLASH SETUP."""
 
@@ -80,7 +78,6 @@ def run(ctx: protocol_api.ProtocolContext):
     # load modules
     mag_deck = ctx.load_module('magnetic module gen2', '1')
     temp_deck = ctx.load_module('temperature module gen2', '3')
-    print(num_columns)
 
     # load labware
     mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')
@@ -90,12 +87,12 @@ def run(ctx: protocol_api.ProtocolContext):
     sample_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '5')
     final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
     trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
-    # load tipracks
 
+    # load tipracks
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7', '10']]
+               for slot in ['10', '7', '6']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-              for slot in ['11']]
+              for slot in ['11', '8']]
     # load instrument
 
     m300 = ctx.load_instrument(
@@ -103,7 +100,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
 
-    # pipette functions   # INCLUDE ANY BINDING TO CLASS
     # reagents
     samples_start = sample_plate.rows()[0][:num_columns]
     samples_mag = mag_plate.rows()[0][:num_columns]

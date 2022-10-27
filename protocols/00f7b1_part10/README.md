@@ -6,7 +6,7 @@
 
 
 ## Categories
-* NGS LIBRARY PREP
+* NGS Library Prep
 	* NEBNext® Ultra™ II Directional RNA Library Prep
 
 
