@@ -80,7 +80,6 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_deck = ctx.load_module('magnetic module gen2', '1')
     mag_deck.disengage()
     temp_deck = ctx.load_module('temperature module gen2', '3')
-    print(num_columns)
 
     # load labware
     mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')  # changed from thermofisher_96_wellplate_200ul
@@ -92,9 +91,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7', '10']]
+               for slot in ['10', '7', '6']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-              for slot in ['11']]
+              for slot in ['11', '8']]
     # load instrument
 
     m300 = ctx.load_instrument(
@@ -190,6 +189,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.air_gap(50)
             drop_tip(m300)
 
+        for i, dest in enumerate(samples):
             pick_up(m20)
             m20.move_to(dest.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
@@ -209,9 +209,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def wash_beads(vol, source, dest, side_disp, mix_reps=15):
         pick_up(m300)
-        m300.aspirate(vol, source)
-        m300.dispense(vol, dest.bottom().move(types.Point(x=-side_disp, y=0, z=5)), rate=2)
-        # bead_mixing(dest, m300, vol, reps=6)
         for _ in range(mix_reps):
             m300.aspirate(vol, dest.bottom().move(types.Point(x=-side_disp, y=0, z=3)), rate=2)
             m300.dispense(vol, dest.bottom().move(types.Point(x=-side_disp, y=0, z=5)), rate=2)
@@ -291,7 +288,14 @@ def run(ctx: protocol_api.ProtocolContext):
     for wash in [wash_1, wash_2]:
         for i, dest in enumerate(samples):
             side = -1 if i % 2 == 0 else 1
-            wash_beads(180, wash, dest, side)
+            pick_up(m300)
+            m300.aspirate(180, wash)
+            m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+            drop_tip(m300)
+
+        for i, dest in enumerate(samples):
+            side = -1 if i % 2 == 0 else 1
+            wash_beads(150, wash, dest, side)
 
         mag_deck.engage(height_from_base=mag_height)
         if TEST_MODE:
@@ -357,7 +361,17 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~~~WASHING BEADS WITH BUFFER~~~~~~~~~~~~\n')
     for i, dest in enumerate(samples):
         side = -1 if i % 2 == 0 else 1
-        wash_beads(180, wash_3, dest, side)
+        pick_up(m300)
+        m300.aspirate(180, wash_3)
+        m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+        drop_tip(m300)
+
+    for i, dest in enumerate(samples):
+        side = -1 if i % 2 == 0 else 1
+        wash_beads(150, wash_3, dest, side)
+
+
+
 
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
@@ -375,7 +389,12 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m20)
         m20.aspirate(11.5, strand_primer_mix)
         m20.dispense(11.5, dest.bottom().move(types.Point(x=-side, y=0, z=3)))
-        bead_mixing(dest, m20, 11, side)
+
+        for _ in range(10):
+            m20.aspirate(11*0.8, dest.bottom().move(types.Point(x=-side,
+                                                  y=0, z=1)), rate=2)
+            m20.dispense(11*0.8, dest.bottom().move(types.Point(x=-side,
+                                                  y=0, z=5)), rate=2)
         drop_tip(m20)
 
     if flash:

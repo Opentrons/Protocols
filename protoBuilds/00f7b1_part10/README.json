@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "NGS LIBRARY PREP": [
+        "NGS Library Prep": [
             "NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep"
         ]
     },
@@ -11,7 +11,7 @@
     "labware": "\nArmadillo 96 Well Plate 200 \u00b5L PCR Full Skirt\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nNEST 1 Well Reservoir 195 mL #360103\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* NGS LIBRARY PREP\n\t* NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep\n\n\n",
+        "categories": "* NGS Library Prep\n\t* NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+10/deck.png)\n\n\n",
         "description": "This protocol is part 10 of a 10 part series. Please look at deck map and liquid legend below. Note: the TE buffer can accommodate 3 columns of sample per column of wash. Each ethanol column can accommodate 4 columns of sample. If running more than one column of reagent, the volumes should be split equally among all columns.\n\n\n",
         "internal": "00f7b1_part10\n",

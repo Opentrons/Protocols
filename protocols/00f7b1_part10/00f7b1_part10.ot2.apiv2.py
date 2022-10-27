@@ -92,9 +92,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7', '10']]
+               for slot in ['10', '7', '6']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-              for slot in ['11']]
+              for slot in ['11', '8']]
     # load instrument
 
     m300 = ctx.load_instrument(
