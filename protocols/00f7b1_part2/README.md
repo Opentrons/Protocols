@@ -20,7 +20,7 @@ This protocol is part 2 of a 10 part series. Please look at deck map and liquid 
 
 
 ### Labware
-* [Armadillo 96 Well Plate 200 µL PCR Full Skirt](https://labware.opentrons.com/armadillo_96_wellplate_200ul_pcr_full_skirt?category=wellPlate)
+* [Armadillo 96 Well Plate 200 µL PCR](https://labware.opentrons.com/armadillo_96_wellplate_200ul_pcr_full_skirt?category=wellPlate)
 * [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
 * [Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
 * Opentrons 96 Filter Tip Rack 200 µL
