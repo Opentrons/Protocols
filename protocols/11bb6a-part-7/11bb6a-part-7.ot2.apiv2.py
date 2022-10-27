@@ -53,7 +53,7 @@ def run(ctx):
      block.wells_by_name()[name] for name in ['A1']]
     deadvol_tube = 10
     temp.set_temperature(4)
-    q5.liq_vol = 12*num_cols*8 + deadvol_tube
+    q5.liq_vol = 12*num_cols*8 + deadvol_tube + 20
 
     # magnetic module with library prep plate or size plate
     mag = ctx.load_module('magnetic module gen2', '9')
@@ -149,9 +149,13 @@ def run(ctx):
 
     disposal_vol = 2
 
+    tip_list = [*reversed(sorted(
+     [tip for column in tips20[0].columns()[:2] for tip in column],
+     key=lambda x: x.well_name[0]))][:num_cols]
+
     for column, tip, i7well in zip(
      pcr_plate.columns()[:num_cols],
-     tips20[0].rows()[-1][:num_cols],
+     tip_list,
      i7_row[:num_cols]):
 
         p20m.pick_up_tip(tip)  # picking up tip from row H
@@ -164,9 +168,7 @@ def run(ctx):
 
         p20m.dispense(disposal_vol, i7well.bottom(1))
 
-        p20m.return_tip()      # tip will be reused with same i7 column
-
-        p20m.reset_tipracks()
+        p20m.drop_tip()
 
     # ********************************************************************
 
@@ -228,7 +230,7 @@ def run(ctx):
 
     for column in pcr_plate.columns()[:num_cols]:
 
-        p20m.pick_up_tip()
+        pick_up_or_refill(p20m)
 
         p20m.aspirate(1, i5_col[0].bottom(1), rate=0.5)
 
@@ -243,7 +245,7 @@ def run(ctx):
     p20m.flow_rate.aspirate = 3.5
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
-        p20m.pick_up_tip()
+        pick_up_or_refill(p20m)
 
         loc_asp = column[0].bottom(1).move(types.Point(
           x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
