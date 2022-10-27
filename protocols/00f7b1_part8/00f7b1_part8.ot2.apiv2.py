@@ -230,22 +230,6 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.dispense(50, trash)
         drop_tip(m300)
 
-        # pick_up(m20)
-        # m20.move_to(dest.top())
-        # ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
-        # ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        # m20.aspirate(10, dest.bottom().move(types.Point(x=0, y=0, z=1)),
-        #              rate=0.1)
-        # ctx.delay(seconds=1)
-        # m20.move_to(dest.top())
-        # m20.aspirate(1, dest.top())
-        # ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
-        # ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        # m20.dispense(m20.current_volume, trash)
-        # m20.blow_out()
-        # m20.aspirate(10, trash)
-        # drop_tip(m20)
-
     ctx.comment('\n~~~~~~~~~~~~~~WASHING TWICE WITH ETHANOL~~~~~~~~~~~~~\n')
     for _ in range(2):
         pick_up(m300)

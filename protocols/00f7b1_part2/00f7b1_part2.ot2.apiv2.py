@@ -82,11 +82,11 @@ def run(ctx: protocol_api.ProtocolContext):
     temp_deck = ctx.load_module('temperature module gen2', '3')
 
     # load labware
-    mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')  # changed from thermofisher_96_wellplate_200ul
+    mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')
     temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
                                         'pcr_strip_200ul')
     dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
-    final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')  # changed from thermofisher_96_wellplate_200ul
+    final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
     trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
     # load tipracks
 

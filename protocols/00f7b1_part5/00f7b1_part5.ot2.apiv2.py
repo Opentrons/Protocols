@@ -360,7 +360,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL  COMPLETE~~~~~~~~~~~~~~~\n')
     ctx.home()  # home before continuing with protocol
     if flash:
-        cancellationToken.set_false()  # stop light flashing after home
+        cancellationToken.set_false()
         thread.join()
     ctx.set_rail_lights(True)
 
