@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "NGS LIBRARY PREP": [
+        "NGS Library Prep": [
             "NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep"
         ]
     },
@@ -11,8 +11,8 @@
     "labware": "\nArmadillo 96 Well Plate 200 \u00b5L PCR Full Skirt\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nNEST 1 Well Reservoir 195 mL #360103\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* NGS LIBRARY PREP\n\t* NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-10-25+at+10.39.41+AM.png)\n\n\n",
+        "categories": "* NGS Library Prep\n\t* NEBNext\u00ae Ultra\u2122 II Directional RNA Library Prep\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/new+deck.png)\n\n\n",
         "description": "This protocol is part 2 of a 10 part series. Please look at deck map and liquid legend below. Note: bead strip tubes can accommodate 2 columns of sample by volume (i.e. 6 columns of beads for a full plate of samples). The RNA wash can accommodate 3 columns of sample per column of wash. There only needs to be one column of strand primer mix per run for all sample numbers. An overage of at least 10% should be used each run.\n\n\n",
         "internal": "00f7b1_part2\n",
         "labware": "* [Armadillo 96 Well Plate 200 \u00b5L PCR Full Skirt](https://labware.opentrons.com/armadillo_96_wellplate_200ul_pcr_full_skirt?category=wellPlate)\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
