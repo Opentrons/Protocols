@@ -555,15 +555,18 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.set_rail_lights(True)
 
     # Transfer elution to PCR plate
-    for col in mag_samps_h:
-        m300.custom_pick_up()
-        m300.mix(10, 50, col)
-        m300.slow_tip_withdrawal(10, col, to_surface=True)
-        m300.blow_out(col.bottom(6))
-        for _ in range(2):
-            m300.move_to(col.bottom(5))
-            m300.move_to(col.bottom(6))
-        m300.drop_tip(home_after=False)
+    if not off_deck:
+        for col in mag_samps_h:
+            m300.custom_pick_up()
+            m300.mix(10, 50, col)
+            m300.slow_tip_withdrawal(10, col, to_surface=True)
+            m300.blow_out(col.bottom(6))
+            for _ in range(2):
+                m300.move_to(col.bottom(5))
+                m300.move_to(col.bottom(6))
+            m300.drop_tip(home_after=False)
+    else:
+        ctx.comment('Please perform manual resupsension off deck.')
 
     mag_deck.engage()
     mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
