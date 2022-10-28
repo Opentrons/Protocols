@@ -1,0 +1,565 @@
+{
+    "content": "metadata = {\n    'protocolName': 'CGE Buffer Load',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, num_source_racks,\n        num_dest_racks, p1000_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"num_source_racks\",\n            \"num_dest_racks\", \"p1000_mount\")\n\n    # labware\n    dest_racks = [ctx.load_labware('cgev2_36_tuberack_2000ul', slot)\n                  for slot in [4, 5, 6][:num_dest_racks]]\n    source_racks = [\n                    ctx.load_labware(\n                                    'opentrons_6_tuberack_falcon_50ml_conical',\n                                    slot)\n                    for slot in [1, 2, 3][:num_source_racks]]\n\n    print(dest_racks, source_racks)\n    tips = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)\n            for slot in [10]]\n\n    # pipettes\n    p1000 = ctx.load_instrument(\n                    'p1000_single_gen2', p1000_mount, tip_racks=tips)\n\n    # mapping\n    csv_rows = [[val.strip() for val in line.split(',')]\n                for line in csv_samp.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    # protocol\n    ctx.pause('''Make sure there is not more than a 35mL in the reagent tubes.\n    Select resume in the app to continue.''')\n\n    for i, row in enumerate(csv_rows):\n        # ctx.comment(f'Row {i+2} in csv')\n        change_tip_TF = True if row[1].lower() == 'y' else False\n        transfer_vol = int(row[2])\n        source_slot = ctx.loaded_labwares[int(row[4])]\n        source_well = source_slot.wells_by_name()[row[5]]\n        dest_slot = ctx.loaded_labwares[int(row[7])]\n        dest_well = dest_slot.wells_by_name()[row[8]]\n\n        # aspirate handling\n        asp_flow_rate = int(row[9])\n        asp_height = int(row[10])\n        asp_delay_TF = True if row[11].lower() == 'y' else False\n        asp_delay_time = int(row[12]) if asp_delay_TF else 0\n        tip_pos_after_asp_delay_TF = True if len(row[13]) > 0 else False\n        asp_touch_tip_TF = True if row[14].lower() == 'y' else False\n        asp_airgap_TF = True if row[16].lower() == 'y' else False\n\n        # dispense handling\n        disp_flow_rate = int(row[17])\n        disp_height = int(row[18])\n        disp_delay_TF = True if row[19].lower() == 'y' else False\n        disp_delay_time = int(row[20]) if disp_delay_TF else 0\n        tip_pos_after_disp_delay_TF = True if len(row[21]) > 0 else False\n        disp_touch_tip_TF = True if row[22].lower() == 'y' else False\n        disp_blow_out_TF = True if row[24].lower() == 'y' else False\n        # disp_airgap_TF = True if row[25].lower() == 'y' else False\n\n        # ------------------------ LIQUID COMMANDS -------------------------\n\n        # set flow rate\n        p1000.flow_rate.aspirate = asp_flow_rate\n        p1000.flow_rate.dispense = disp_flow_rate\n\n        if transfer_vol <= 900:\n\n            # pick up tip\n            if change_tip_TF and p1000.has_tip:\n                p1000.drop_tip()\n            if change_tip_TF:\n                p1000.pick_up_tip()\n\n            # Aspirate\n            p1000.aspirate(transfer_vol, source_well.bottom(asp_height))\n            if asp_delay_TF:\n                ctx.delay(seconds=asp_delay_time)\n            if tip_pos_after_asp_delay_TF:\n                tip_pos_after_asp_delay = int(row[13])\n                p1000.move_to(source_well.bottom(tip_pos_after_asp_delay))\n            if asp_touch_tip_TF:\n                asp_touch_tip_height = int(row[15])\n                p1000.touch_tip(v_offset=-source_well.depth-asp_touch_tip_height)  # noqa: E501\n            if asp_airgap_TF:\n                p1000.air_gap(100)\n\n            # Dispense\n            if asp_airgap_TF:\n                p1000.dispense(transfer_vol+100, dest_well.bottom(disp_height))\n            else:\n                p1000.dispense(transfer_vol, dest_well.bottom(disp_height))\n            if disp_delay_TF:\n                ctx.delay(seconds=disp_delay_time)\n            if tip_pos_after_disp_delay_TF:\n                tip_pos_after_disp_delay = int(row[21])\n                p1000.move_to(dest_well.bottom(tip_pos_after_disp_delay))\n            if disp_touch_tip_TF:\n                disp_touch_tip_height = int(row[23])\n                p1000.touch_tip(v_offset=-dest_well.depth-disp_touch_tip_height)  # noqa: E501\n            if disp_blow_out_TF:\n                p1000.blow_out()\n            # if disp_airgap_TF:\n            #     p1000.air_gap(99)\n            ctx.comment('\\n\\n')\n\n        else:\n\n            transfer_vol_ctr = transfer_vol\n            max_aspirate_vol = 900\n\n            # pick up tip\n            if change_tip_TF and p1000.has_tip:\n                p1000.drop_tip()\n            if change_tip_TF:\n                p1000.pick_up_tip()\n\n            while transfer_vol_ctr > 0:\n                # Aspirate\n                pickup_vol = max_aspirate_vol if transfer_vol_ctr > max_aspirate_vol else transfer_vol_ctr  # noqa: E501\n                p1000.aspirate(pickup_vol, source_well.bottom(asp_height))\n                transfer_vol_ctr -= pickup_vol\n                if asp_delay_TF:\n                    ctx.delay(seconds=asp_delay_time)\n                if tip_pos_after_asp_delay_TF:\n                    tip_pos_after_asp_delay = int(row[13])\n                    p1000.move_to(source_well.bottom(tip_pos_after_asp_delay))\n                if asp_touch_tip_TF:\n                    asp_touch_tip_height = int(row[15])\n                    p1000.touch_tip(v_offset=-(source_well.depth-asp_touch_tip_height))  # noqa: E501\n                if asp_airgap_TF:\n                    p1000.air_gap(100)\n\n                # Dispense\n                if asp_airgap_TF:\n                    p1000.dispense(pickup_vol+100, dest_well.bottom(disp_height))  # noqa: E501\n                else:\n                    p1000.dispense(pickup_vol, dest_well.bottom(disp_height))\n                if disp_delay_TF:\n                    ctx.delay(seconds=disp_delay_time)\n                if tip_pos_after_disp_delay_TF:\n                    tip_pos_after_disp_delay = int(row[21])\n                    p1000.move_to(dest_well.bottom(tip_pos_after_disp_delay))\n                if disp_touch_tip_TF:\n                    disp_touch_tip_height = int(row[23])\n                    p1000.touch_tip(v_offset=-(dest_well.depth-disp_touch_tip_height))  # noqa: E501\n                if disp_blow_out_TF:\n                    p1000.blow_out()\n                # if disp_airgap_TF:\n                #     p1000.air_gap(99)\n            ctx.comment('\\n\\n')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "CGE v2",
+                "brandId": [
+                    "na"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 38.2
+            },
+            "groups": [
+                {
+                    "brand": {
+                        "brand": "clear",
+                        "brandId": [
+                            "na"
+                        ]
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "E3",
+                        "F3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "E4",
+                        "F4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "E5",
+                        "F5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6",
+                        "E6",
+                        "F6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "CGE v2 36 Tube Rack with clear 2 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2",
+                    "F2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3",
+                    "E3",
+                    "F3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4",
+                    "E4",
+                    "F4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "E6",
+                    "F6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "cgev2_36_tuberack_2000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "A2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "A3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "A4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "A5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "A6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 77.17,
+                    "z": 4.2
+                },
+                "B1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "B2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "B3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "B4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "B5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "B6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 63.57,
+                    "z": 4.2
+                },
+                "C1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "C2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "C3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "C4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "C5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "C6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 49.97,
+                    "z": 4.2
+                },
+                "D1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "D2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "D3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "D4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "D5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "D6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 36.37,
+                    "z": 4.2
+                },
+                "E1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "E2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "E3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "E4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "E5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "E6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 22.77,
+                    "z": 4.2
+                },
+                "F1": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.3,
+                    "y": 9.17,
+                    "z": 4.2
+                },
+                "F2": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 26.9,
+                    "y": 9.17,
+                    "z": 4.2
+                },
+                "F3": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 40.5,
+                    "y": 9.17,
+                    "z": 4.2
+                },
+                "F4": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 54.1,
+                    "y": 9.17,
+                    "z": 4.2
+                },
+                "F5": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 67.7,
+                    "y": 9.17,
+                    "z": 4.2
+                },
+                "F6": {
+                    "depth": 34,
+                    "diameter": 6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 81.3,
+                    "y": 9.17,
+                    "z": 4.2
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": "water,Y,1500,OPENTRONS 6 TUBE RACK WITH FALCON 50 ML CONICAL,1,A1,CGE V2 36 TUBE RACK WITH CLEAR 2,4,F1,500,3,N,,,N,,Y,1000,10,N,,,N,,Y,Y,,,,,,\nwater,Y,1500,OPENTRONS 6 TUBE RACK WITH FALCON 50 ML CONICAL,1,A1,CGE V2 36 TUBE RACK WITH CLEAR 2,4,A2,500,3,N,,,N,,Y,1000,10,N,,,N,,Y,Y,,,,,,",
+            "label": ".CSV File",
+            "name": "csv_samp",
+            "type": "textFile"
+        },
+        {
+            "default": 3,
+            "label": "Number of Source Racks (1-3)",
+            "name": "num_source_racks",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Number of Destination Racks (1-3)",
+            "name": "num_dest_racks",
+            "type": "int"
+        },
+        {
+            "label": "P1000 Single-Channel Mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "CGE v2 36 Tube Rack with clear 2 mL on 4",
+            "share": false,
+            "slot": "4",
+            "type": "cgev2_36_tuberack_2000ul"
+        },
+        {
+            "name": "CGE v2 36 Tube Rack with clear 2 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "cgev2_36_tuberack_2000ul"
+        },
+        {
+            "name": "CGE v2 36 Tube Rack with clear 2 mL on 6",
+            "share": false,
+            "slot": "6",
+            "type": "cgev2_36_tuberack_2000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "CGE Buffer Load",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

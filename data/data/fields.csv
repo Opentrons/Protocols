@@ -249,7 +249,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,8
+csv_samp,9
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
@@ -805,6 +805,7 @@ num_col,8
 num_cols,3
 num_columns,1
 num_daughter_plates,1
+num_dest_racks,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
@@ -835,6 +836,7 @@ num_samples_4,1
 num_samples_per_plate,1
 num_samps,6
 num_slides,2
+num_source_racks,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -867,7 +869,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,32
+p1000_mount,33
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1

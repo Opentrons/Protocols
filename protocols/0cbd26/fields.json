@@ -1,0 +1,29 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv_samp",
+    "default": "water,Y,1500,OPENTRONS 6 TUBE RACK WITH FALCON 50 ML CONICAL,1,A1,CGE V2 36 TUBE RACK WITH CLEAR 2,4,F1,500,3,N,,,N,,Y,1000,10,N,,,N,,Y,Y,,,,,,\nwater,Y,1500,OPENTRONS 6 TUBE RACK WITH FALCON 50 ML CONICAL,1,A1,CGE V2 36 TUBE RACK WITH CLEAR 2,4,A2,500,3,N,,,N,,Y,1000,10,N,,,N,,Y,Y,,,,,,"
+  },
+  {
+    "type": "int",
+    "label": "Number of Source Racks (1-3)",
+    "name": "num_source_racks",
+    "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Number of Destination Racks (1-3)",
+    "name": "num_dest_racks",
+    "default": 3
+  },
+  {
+    "type": "dropDown",
+    "label": "P1000 Single-Channel Mount",
+    "name": "p1000_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
