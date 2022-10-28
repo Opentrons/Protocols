@@ -38,7 +38,7 @@ def run(ctx):
     temp = ctx.load_module('Temperature Module', '1')
     block = temp.load_labware(
      labware_tempmod)
-    [lig_mx, mix_tube, enhancer] = [
+    [lig_mx, enhancer, mix_tube] = [
      block.wells_by_name()[name] for name in ['A1', 'A2', 'A3']]
     deadvol_tube = 10
     temp.set_temperature(4)
@@ -53,7 +53,7 @@ def run(ctx):
      labware_plates, '3', 'Library Prep Plate')
 
     # ligation mix volume 60 uL per column of samples
-    lig_mx.liq_vol = 60*num_cols + deadvol_tube + 5
+    lig_mx.liq_vol = 60*num_cols + deadvol_tube + 20
 
     # enhancer volume 2 uL per column of samples
     enhancer.liq_vol = 2*num_cols + deadvol_tube + 5
@@ -151,12 +151,15 @@ def run(ctx):
         ctx.delay(seconds=3)
         slow_tip_withdrawal(p300m, mix_tube)
 
+    p300m.drop_tip()
+
     ctx.comment("STEP - transferring enhancer to mix tube")
 
     # total volume enhancer to be transferred
     vol = 1.05*(2*num_cols)    # 5 percent overage
 
-    # transfer
+    # pick up one tip on the rear-most channel and transfer
+    p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(vol, enhancer, mix_tube.bottom(ht_dest), new_tip='never')
 
     ctx.comment("STEP - transfer mixture to 2nd column reagent plate")
@@ -170,7 +173,7 @@ def run(ctx):
 
     ctx.comment(" reagent plate liq vol {}".format(mixture.liq_vol))
 
-    for index, well in enumerate(reagent_plate.columns()[0]):
+    for index, well in enumerate(reagent_plate.columns()[1]):
 
         if not index:
 

@@ -43,11 +43,12 @@ def run(ctx):
 
     mag = ctx.load_module('magnetic module gen2', '9')
     mag_plate = mag.load_labware(labware_plates, 'Library Prep Plate (96xA)')
+    mag.disengage()
 
     reservoir = ctx.load_labware(
      'nest_12_reservoir_15ml', '5', '12-well Reservoir')
     [beads, elutionbf] = [
-     reservoir.wells_by_name()[name] for name in ['A1', 'A12']]
+     reservoir.wells_by_name()[name] for name in ['A1', 'A10']]
     deadvol_reservoir_1 = 1800
 
     etoh = ctx.load_labware(
@@ -202,9 +203,10 @@ def run(ctx):
             # height of top of etoh
             ht = liq_height(etoh) - 3 if liq_height(etoh) - 3 > 1 else 1
 
-            # etoh aspiration at ht mm to avoid overimmersion, post air gap
-            p300m.aspirate(100, etoh.bottom(ht))
-            p300m.air_gap(20)
+            # at ht mm - avoid overimmersion, avoid ridge in reservoir bottom
+            p300m.aspirate(
+             100, etoh.bottom(ht).move(types.Point(x=4.5, y=0, z=0)))
+            p300m.air_gap(20)  # post air gap
 
             # etoh top dispense with delayed blow out
             p300m.dispense(120, column[0].top())

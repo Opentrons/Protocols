@@ -39,12 +39,13 @@ def run(ctx):
     ctx.load_module('Temperature Module', '1')
 
     # magnetic module empty
-    ctx.load_module('magnetic module gen2', '9')
+    mag = ctx.load_module('magnetic module gen2', '9')
+    mag.disengage()
 
     reservoir = ctx.load_labware(
      'nest_12_reservoir_15ml', '5', '12-well Reservoir')
     [diluentbf] = [
-     reservoir.wells_by_name()[name] for name in ['A12']]
+     reservoir.wells_by_name()[name] for name in ['A9']]
     deadvol_reservoir_1 = 1800
     diluentbf.liq_vol = num_cols*8*22 + deadvol_reservoir_1
 

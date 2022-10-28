@@ -1,4 +1,4 @@
-# NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 5: DNA Purification
+# NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 8: Purification of Ligation
 
 
 ### Author
@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol is part 5 of a 10 part series. Please look at deck map and liquid legend below. Note: the TE buffer can accommodate 3 columns of sample per column of wash. Each ethanol column can accommodate 4 columns of sample. If running more than one column of reagent, the volumes should be split equally among all columns.
+This protocol is part 8 of a 10 part series. Please look at deck map and liquid legend below. Note: the TE buffer can accommodate 3 columns of sample per column of wash. Each ethanol column can accommodate 4 columns of sample. If running more than one column of reagent, the volumes should be split equally among all columns.
 
 
 ### Modules
@@ -34,23 +34,22 @@ This protocol is part 5 of a 10 part series. Please look at deck map and liquid 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+5/Screen+Shot+2022-10-27+at+10.48.22+AM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+10/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+5/Screen+Shot+2022-10-25+at+3.47.25+PM.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+10/reag.png)
 
 
 ### Protocol Steps
-1. Samples added to mag plate
-2. Beads added to samples
-3. Incubate
-4. Remove supernatant
-5. Two ethanol washes
-6. Air dry beads
-7. Elute with TE
-8. Incubate
-9. Move cDNA to final plate
+1. Beads added to samples
+2. Incubate
+3. Remove supernatant
+4. Two ethanol washes
+5. Air dry beads
+6. Elute with TE
+7. Incubate
+8. Move product to final plate
 
 
 ### Process
@@ -68,4 +67,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-00f7b1_part5
+00f7b1_part10
