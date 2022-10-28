@@ -70,8 +70,9 @@ resuming.')
     _pick_up(m300)
     for plate in plates:
         for d in plate.rows()[0]:
-            m300.distribute(100, sivi_1.bottom(1), d.bottom(6.5),
-                            disposal_vol=0, new_tip='never')
+            m300.aspirate(20, sivi_1.top())
+            m300.aspirate(100, sivi_1.bottom(1))
+            m300.dispense(m300.current_volume, d.bottom(6.5))
     m300.drop_tip()
 
     # track final used tip
