@@ -190,6 +190,7 @@ def run(ctx: protocol_api.ProtocolContext):
             drop_tip(m300)
 
         for i, dest in enumerate(samples):
+            side = -1 if i % 2 == 0 else 1
             pick_up(m20)
             m20.move_to(dest.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
@@ -291,6 +292,7 @@ def run(ctx: protocol_api.ProtocolContext):
             pick_up(m300)
             m300.aspirate(180, wash)
             m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+            m300.air_gap(100)
             drop_tip(m300)
 
         for i, dest in enumerate(samples):
@@ -356,7 +358,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.delay(minutes=bead_delay_time)
 
     ctx.comment('\n~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~\n')
-    remove_supernatant(150)
+    remove_supernatant(100)
     mag_deck.disengage()
     ctx.comment('\n~~~~~~~~~~~~~WASHING BEADS WITH BUFFER~~~~~~~~~~~~\n')
     for i, dest in enumerate(samples):
@@ -364,6 +366,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         m300.aspirate(180, wash_3)
         m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+        m300.air_gap(100)
         drop_tip(m300)
 
     for i, dest in enumerate(samples):
@@ -421,9 +424,11 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.delay(minutes=bead_delay_time)
 
     ctx.comment('\n~~~~~~~~~~~~~MOVING RNA TO NEW PLATE~~~~~~~~~~~~\n')
-    for s, d in zip(samples, final_dest):
+    for i, (s, d) in enumerate(zip(samples, final_dest)):
+        side = -1 if i % 2 == 0 else 1
         pick_up(m20)
-        m20.aspirate(10, s)
+        m20.aspirate(10, s.bottom().move(types.Point(x=side,
+                                              y=0, z=3)), rate=2)
         m20.dispense(10, d)
         drop_tip(m20)
 
