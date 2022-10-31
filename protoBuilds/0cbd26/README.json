@@ -1,0 +1,28 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol preps tubes from a custom csv with liquid handling parameters also present in the csv. The csv header has the following parameters in the first row: Liquid Name, Change Tip, Transfer Volume, Source Container Type, SourceSlot, SourceWell, Destination Container Type, DestinationSlot,DestinationWell, Aspirate Flow Rate, Aspirate Position From Bottom, Aspirate Delay (Y/N), Aspirate Delay (s), Aspirate Delay (mm), Aspirate Touchtip (Y/N), Aspirate Touchtip (mm), Aspirate Airgap, Dispense Flow Rate, Dispense Position From Bottom, Dispense Delay (Y/N), Dispense Delay (s), Dispense Delay (mm), Dispense Touchtip (Y/N), Dispense Touchtip (mm),Dispense Blowout, Dispense Airgap, Volume in A1, Volume in B1, Volume in B2, Volume in A2, Volume in A3, Vome MAX. It is crucial that the header of the csv is exactly in that order. The user can specify up to 3 slots for the for the source racks (Falcon racks, slots 1, 2, and 3), and up to 3 slots for the destination racks (CGE racks, slots 4, 5, 6). The user must specify how many racks of each are on the deck at the start of the run, and put the racks in order of numerical lowest to highest (i.e. slots 4, and 5 for only two destination racks on the deck).",
+    "internal": "0cbd26",
+    "labware": "\nCGE v2 36 Tube Rack with clear 2 mL\nOpentrons 6 Tube Rack with Falcon 50 mL Conical\nOpentrons 96 Tip Rack 1000 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cbd26/Screen+Shot+2022-10-28+at+3.31.57+PM.png)\n\n\n\n",
+        "description": "This protocol preps tubes from a custom csv with liquid handling parameters also present in the csv. The csv header has the following parameters in the first row: Liquid Name, Change Tip, Transfer Volume, Source Container Type, SourceSlot, SourceWell, Destination Container Type, DestinationSlot,DestinationWell, Aspirate Flow Rate, Aspirate Position From Bottom, Aspirate Delay (Y/N), Aspirate Delay (s), Aspirate Delay (mm), Aspirate Touchtip (Y/N), Aspirate Touchtip (mm), Aspirate Airgap, Dispense Flow Rate, Dispense Position From Bottom, Dispense Delay (Y/N), Dispense Delay (s), Dispense Delay (mm), Dispense Touchtip (Y/N), Dispense Touchtip (mm),Dispense Blowout, Dispense Airgap, Volume in A1, Volume in B1, Volume in B2, Volume in A2, Volume in A3, Vome MAX. It is crucial that the header of the csv is exactly in that order. The user can specify up to 3 slots for the for the source racks (Falcon racks, slots 1, 2, and 3), and up to 3 slots for the destination racks (CGE racks, slots 4, 5, 6). The user must specify how many racks of each are on the deck at the start of the run, and put the racks in order of numerical lowest to highest (i.e. slots 4, and 5 for only two destination racks on the deck).\n\n\n",
+        "internal": "0cbd26\n",
+        "labware": "* CGE v2 36 Tube Rack with clear 2 mL\n* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 1000 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "title": "CGE Buffer Load"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P1000 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "CGE Buffer Load"
+}
