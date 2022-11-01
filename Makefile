@@ -25,7 +25,7 @@ ot2monorepoClone:
 .PHONY: setup
 setup:
 	$(MAKE) ot2monorepoClone
-	python -m pip install virtualenv
+	python3 -m pip install virtualenv
 	$(MAKE) venvs/ot2
 
 venvs/ot2:
