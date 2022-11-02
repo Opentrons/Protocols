@@ -1,5 +1,5 @@
 {
-    "content": "import subprocess\nfrom opentrons import protocol_api, types\nmetadata = {\n    'protocolName': 'Speaker Test',\n    'author': 'Parrish Payne <protocols@opentrons.com>',\n    'description': 'Tests out the speaker system on the OT-2',\n    'apiLevel': '2.11'\n}\n\nAUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3'\ndef run_quiet_process(command):\n    subprocess.check_output('{} &> /dev/null'.format(command), shell=True)\ndef test_speaker(protocol):\n    print('Speaker')\n    print('Next\\t--> CTRL-C')\n    try:\n        if not protocol.is_simulating():\n            run_quiet_process('mpg123 {}'.format(AUDIO_FILE_PATH))\n        else:\n            print('Not playing mp3, simulating')\n    except KeyboardInterrupt:\n        pass\n        print()\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n    [pip, mnt, tips] = get_values(  # noqa: F821\n      'pip', 'mnt', 'tips')\n    \n    tr2 = protocol.load_labware(tips, '1')\n    pipette = protocol.load_instrument(pip, mnt, tip_racks=[tr2])\n    pipette.pick_up_tip()\n    pipette.drop_tip()\n    test_speaker(protocol)\n",
+    "content": "import subprocess\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'OT-2 Speaker Test',\n    'author': 'Parrish Payne <protocols@opentrons.com>',\n    'description': 'Tests out the speaker system on the OT-2',\n    'apiLevel': '2.11'\n}\n\nAUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3'\n\ndef run_quiet_process(command):\n    subprocess.check_output('{} &> /dev/null'.format(command), shell=True)\n\ndef test_speaker(protocol):\n    print('Speaker')\n    print('Next\\t--> CTRL-C')\n    try:\n        if not protocol.is_simulating():\n            run_quiet_process('mpg123 {}'.format(AUDIO_FILE_PATH))\n        else:\n            print('Not playing mp3, simulating')\n    except KeyboardInterrupt:\n        pass\n        print()\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n    [pip, mnt, tips] = get_values(  # noqa: F821\n      'pip', 'mnt', 'tips')\n\n    tr2 = protocol.load_labware(tips, '1')\n    pipette = protocol.load_instrument(pip, mnt, tip_racks=[tr2])\n    pipette.pick_up_tip()\n    pipette.drop_tip()\n    test_speaker(protocol)\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -100,7 +100,7 @@
         "apiLevel": "2.11",
         "author": "Parrish Payne <protocols@opentrons.com>",
         "description": "Tests out the speaker system on the OT-2",
-        "protocolName": "Speaker Test"
+        "protocolName": "OT-2 Speaker Test"
     },
     "modules": []
 }
