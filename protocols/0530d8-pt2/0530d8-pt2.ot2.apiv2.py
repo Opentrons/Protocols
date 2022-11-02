@@ -28,7 +28,7 @@ def run(ctx):
     heater_shaker.close_labware_latch()
 
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-            for slot in [2, 3, 5, 6, 7, 9, 11]]
+            for slot in [2, 3, 5, 6, 7, 9]]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
