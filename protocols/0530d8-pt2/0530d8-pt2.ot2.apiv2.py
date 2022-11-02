@@ -25,6 +25,7 @@ def run(ctx):
     mag_plate = mag_mod.load_labware('abgene_96_wellplate_2000ul')
     heater_shaker = ctx.load_module('heaterShakerModuleV1', 10)
     hs_plate = heater_shaker.load_labware('abgene_96_wellplate_2000ul')
+    heater_shaker.close_labware_latch()
 
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
             for slot in [2, 3, 5, 6, 7, 9, 11]]
