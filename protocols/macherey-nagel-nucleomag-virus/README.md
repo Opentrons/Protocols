@@ -53,7 +53,7 @@ You can access the full description of this workflow on the OT-2 by visiting thi
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-virus/reag_virus.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel-nucleomag-virus/Screen+Shot+2022-11-02+at+11.27.24+AM.png)
 
 
 ### Protocol Steps
