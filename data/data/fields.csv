@@ -516,7 +516,7 @@ index_vol,2
 indexing_plate_loadname,1
 init_temp,2
 init_time,2
-init_vol,2
+init_vol,3
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
@@ -805,7 +805,6 @@ num_col,8
 num_cols,3
 num_columns,1
 num_daughter_plates,1
-num_dest_racks,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
@@ -813,7 +812,7 @@ num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,26
+num_plates,27
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -836,7 +835,6 @@ num_samples_4,1
 num_samples_per_plate,1
 num_samps,6
 num_slides,2
-num_source_racks,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -905,7 +903,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,126
+p300_mount,127
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
