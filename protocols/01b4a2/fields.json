@@ -14,7 +14,7 @@
   {
     "type": "int",
     "label": "Initial volume in 50mL tube on slot 8",
-    "name": "vol_effector_cell",
+    "name": "init_vol",
     "default": 40
   },
   {

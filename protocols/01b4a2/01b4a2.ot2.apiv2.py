@@ -15,10 +15,11 @@ def run(ctx):
             "p300_mount", "p1000_mount")
 
     # labware
-    final_plates = [ctx.load_labware('corning_96_wellplate_360ul_flat', slot)
+    final_plates = [ctx.load_labware('micronicm9641', slot)
                     for slot in [6, 3]][:num_plates]
-    reag_rack = ctx.load_labware('opentrons_6_tuberack_nest_50ml_conical', 8)
-    middle_rack = ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 9)
+    reag_rack = ctx.load_labware('opentrons_6_tuberack_50000ul', 8)
+    middle_rack = ctx.load_labware(
+                    'bricklabwaretype2rackshort_24_wellplate_2000ul', 9)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in [5]]
     tips1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)
@@ -57,7 +58,7 @@ def run(ctx):
         p1000.pick_up_tip()
         p1000.transfer(transfer_vol, buff.bottom(h),
                        dest_well, new_tip='never', touch_tip=True)
-        p1000.mix(10, transfer_vol/2, dest_well)
+        p1000.mix(15, transfer_vol/2, dest_well)
         p1000.touch_tip()
         p1000.drop_tip()
         adjust_height(transfer_vol)
