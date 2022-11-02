@@ -15,7 +15,8 @@ def run(ctx):
             "p300_mount", "p1000_mount")
 
     # labware
-    final_plates = [ctx.load_labware('micronicm9641', slot)
+    final_plates = [ctx.load_labware('micronicm9641.4_96_wellplate_1400ul',
+                    slot)
                     for slot in [6, 3]][:num_plates]
     reag_rack = ctx.load_labware('opentrons_6_tuberack_50000ul', 8)
     middle_rack = ctx.load_labware(
