@@ -242,29 +242,29 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.dispense(30, eth.top())
 
         ctx.delay(seconds=30)
-        ctx.comment('\n~~~~~~~~~~~~~~REMOVING ETHANOL~~~~~~~~~~~~~\n')
-        for i, dest in enumerate(samples_mag):
-            side = -1 if i % 2 == 0 else 1
-            if i > 0:
-                pick_up(m300)
-            m300.move_to(dest.top(2))
-            ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
-            ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(200, dest.bottom().move(types.Point(x=side, y=0, z=1)),
-                          rate=0.1)
-            m300.move_to(dest.top(2))
-            ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
-            ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-            m300.dispense(200, trash)
-            drop_tip(m300)
+            ctx.comment('\n~~~~~~~~~~~~~~REMOVING ETHANOL~~~~~~~~~~~~~\n')
+            for i, dest in enumerate(samples_mag):
+                side = -1 if i % 2 == 0 else 1
+                if i > 0:
+                    pick_up(m300)
+                m300.move_to(dest.top(2))
+                ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
+                ctx.max_speeds['A'] /= supernatant_headspeed_modulator
+                m300.aspirate(200, dest.bottom().move(types.Point(x=side, y=0, z=1)),
+                              rate=0.1)
+                m300.move_to(dest.top(2))
+                ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
+                ctx.max_speeds['A'] *= supernatant_headspeed_modulator
+                m300.dispense(200, trash)
+                drop_tip(m300)
             if _ == 1:
-                ctx.delay(minutes=1)
-                pick_up(m20)
-                m20.aspirate(10, dest.bottom(0.25), rate=.1)
-                m20.aspirate(2, dest.top())
-                m20.dispense(m20.current_volume, trash)
-                m20.aspirate(10, trash)
-                m20.drop_tip()
+                for i, dest in enumerate(samples_mag):
+                    pick_up(m20)
+                    m20.aspirate(10, dest.bottom(0.25), rate=.1)
+                    m20.aspirate(2, dest.top())
+                    m20.dispense(m20.current_volume, trash)
+                    m20.aspirate(10, trash)
+                    m20.drop_tip()
 
     ctx.comment('\n~~~~~~~~~~~~~~AIR DRY BEADS FOR 5 MINUTES~~~~~~~~~~~~~\n')
     if TEST_MODE:
@@ -305,9 +305,11 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.delay(minutes=bead_delay_time)
 
     ctx.comment('\n~~~~~~~~~~~~~~MOVING PRODUCT TO FINAL PLATE~~~~~~~~~~~~~\n')
-    for s, d in zip(samples_mag, final_dest):
+    for i, (s, d) in enumerate(zip(samples_mag, final_dest)):
+        side = -1 if i % 2 == 0 else 1
         pick_up(m20)
-        m20.aspirate(15, s)
+        m20.aspirate(15, s.bottom().move(types.Point(x=side, y=0, z=1)),
+                      rate=0.1)
         m20.dispense(15, d)
         drop_tip(m20)
 
