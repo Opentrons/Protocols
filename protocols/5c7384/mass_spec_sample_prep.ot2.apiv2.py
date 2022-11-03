@@ -8,8 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, p20_mount, p300_mount, plate_def = get_values(  # noqa: F821
-        'num_samples', 'p20_mount', 'p300_mount', 'plate_def')
+    [num_samples, p20_mount, p300_mount, plate_def,
+     module_type] = get_values(  # noqa: F821
+        'num_samples', 'p20_mount', 'p300_mount', 'plate_def',
+        'module_type')
 
     waste = ctx.load_labware('nest_1_reservoir_195ml', '1',
                              'waste container (load empty)').wells()[0].top()
@@ -27,8 +29,14 @@ def run(ctx):
         plate_def, '2', 'ethanol plate').wells()[:num_samples]
     acetonitrile = ctx.load_labware(
         plate_def, '3', 'acetonitrile plate').wells()[:num_samples]
-    tc = ctx.load_module('thermocycler')
-    sample_plate = tc.load_labware(plate_def, 'sample plate')
+    if module_type == 'thermocycler':
+        temp_module = ctx.load_module('thermocycler')
+        heat_func = temp_module.set_block_temperature
+    else:
+        temp_module = ctx.load_module('temperature module gen2', '7')
+        heat_func = temp_module.set_temperature
+
+    sample_plate = temp_module.load_labware(plate_def, 'sample plate')
     samples = sample_plate.wells()[:num_samples]
 
     dtt = reagent_plate.columns()[0]
@@ -37,7 +45,7 @@ def run(ctx):
     abc = reagent_plate.columns()[3:5]
     trypsin = reagent_plate.columns()[5]
 
-    tc.set_block_temperature(60)
+    heat_func(60)
 
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=[])
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=[])
@@ -76,7 +84,7 @@ resuming.')
         p20.transfer(5, caa[i % 8], s, mix_after=(2, 5), new_tip='never')
         p20.drop_tip()
 
-    tc.set_block_temperature(25)
+    heat_func(25)
     ctx.delay(minutes=30, msg='Incubating 30 minutes at RT (25C) for \
 alkylation.')
 
@@ -155,7 +163,7 @@ plate of ethanol before resuming.')
         p20.transfer(5, trypsin[i % 8], s, mix_after=(2, 5), new_tip='never')
         p20.drop_tip()
 
-    tc.set_block_temperature(37)
+    heat_func(37)
     ctx.comment('Protocol complete. Please shake the plate from the magnetic \
 module to resuspend the beads, and replace on the thermocycler now set at \
 37C.')
