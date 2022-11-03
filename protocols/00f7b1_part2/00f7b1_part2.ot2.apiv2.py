@@ -428,7 +428,7 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         pick_up(m20)
         m20.aspirate(10, s.bottom().move(types.Point(x=side,
-                                              y=0, z=3)), rate=2)
+                                              y=0, z=1)), rate=0.1)
         m20.dispense(10, d)
         drop_tip(m20)
 
@@ -437,7 +437,7 @@ def run(ctx: protocol_api.ProtocolContext):
             cancellationToken.set_true()
         thread = create_thread(ctx, cancellationToken)
     m300.home()
-    ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL COMPLETE~~~~~~~~~~~~~~~\n')
+    ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL  COMPLETE~~~~~~~~~~~~~~~\n')
     ctx.home()  # home before continuing with protocol
     if flash:
         cancellationToken.set_false()  # stop light flashing after home
