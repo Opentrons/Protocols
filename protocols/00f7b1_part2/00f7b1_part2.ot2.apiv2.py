@@ -437,7 +437,7 @@ def run(ctx: protocol_api.ProtocolContext):
             cancellationToken.set_true()
         thread = create_thread(ctx, cancellationToken)
     m300.home()
-    ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL COMPLETE~~~~~~~~~~~~~~~\n')
+    ctx.pause('\n\n~~~~~~~~~~~~~~PROTOCOL  COMPLETE~~~~~~~~~~~~~~~\n')
     ctx.home()  # home before continuing with protocol
     if flash:
         cancellationToken.set_false()  # stop light flashing after home
