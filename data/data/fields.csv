@@ -73,7 +73,7 @@ asp_delay_time,1
 asp_flow_rate,2
 asp_flowrate_p10,1
 asp_flowrate_p50,1
-asp_height,24
+asp_height,25
 asp_height_1,1
 asp_height_m20,1
 asp_height_recipient,1
@@ -250,6 +250,9 @@ csv_file_2,1
 csv_input,3
 csv_oil,1
 csv_samp,9
+csv_samp1,1
+csv_samp2,1
+csv_samp3,1
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
@@ -652,7 +655,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,68
-m300_mount,81
+m300_mount,83
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -736,7 +739,7 @@ mm_transfer_vol,1
 mm_vol,8
 mm_volume,1
 mmx_vol,2
-mnt,3
+mnt,4
 mnt10,2
 mnt1000,2
 mnt20,7
@@ -812,7 +815,7 @@ num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,27
+num_plates,28
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -820,7 +823,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,57
+num_samp,58
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -903,7 +906,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,127
+p300_mount,129
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -957,7 +960,7 @@ peptide_supernat_vol,1
 perform_barcode,1
 perform_normalization,1
 perform_steps,1
-pip,2
+pip,3
 pip_l,2
 pip_mnt,5
 pip_model,5
@@ -1344,7 +1347,7 @@ tiprack_lname_20_ul,1
 tiprack_lname_300ul,1
 tiprack_slot,1
 tipreuse,5
-tips,1
+tips,2
 tipstrategy_dilution,1
 tiptrash,2
 tiptype,3
