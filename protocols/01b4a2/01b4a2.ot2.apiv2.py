@@ -54,7 +54,7 @@ def run(ctx):
 
     # protocol
     for row in csv_rows:
-        transfer_vol = int(row[2])
+        transfer_vol = float(row[2])
         dest_well = middle_rack.wells_by_name()[row[1]]
         p1000.pick_up_tip()
         p1000.transfer(transfer_vol, buff.bottom(h),
