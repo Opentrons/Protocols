@@ -68,8 +68,12 @@ def run(protocol):
                 'WARNING: volume {} is below pipette\'s minimum volume.'
                 .format(vol))
 
-    pipette.transfer(
-        volumes,
-        source,
-        plate.wells()[:len(volumes)],  # added for simulation purposes
-        new_tip=tip_reuse)
+    if tip_reuse == 'never':
+        pipette.pick_up_tip()
+
+    for vol, dest in zip(volumes, plate.wells()):
+        if vol > 0:
+            pipette.transfer(vol, source, dest, new_tip=tip_reuse)
+
+    if pipette.has_tip:
+        pipette.drop_tip()
