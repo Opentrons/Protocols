@@ -10,8 +10,10 @@ metadata = {
 
 AUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3'
 
+
 def run_quiet_process(command):
     subprocess.check_output('{} &> /dev/null'.format(command), shell=True)
+
 
 def test_speaker(protocol):
     print('Speaker')
