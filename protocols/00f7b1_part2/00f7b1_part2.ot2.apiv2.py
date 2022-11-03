@@ -428,7 +428,7 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         pick_up(m20)
         m20.aspirate(10, s.bottom().move(types.Point(x=side,
-                                              y=0, z=1)), rate=2, rate=0.1)
+                                              y=0, z=1)), rate=0.1)
         m20.dispense(10, d)
         drop_tip(m20)
 
