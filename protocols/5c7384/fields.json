@@ -28,5 +28,14 @@
     "label": "plate defintion",
     "name": "plate_def",
     "default": "nest_96_wellplate_100ul_pcr_full_skirt"
+  },
+  {
+    "type": "dropDown",
+    "label": "heating moudle type",
+    "name": "module_type",
+    "options": [
+      {"label": "thermocycler", "value": "thermocycler"},
+      {"label": "temperature module (GEN2)", "value": "temperature module gen2"}
+    ]
   }
 ]
