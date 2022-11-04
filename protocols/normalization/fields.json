@@ -68,7 +68,7 @@
     "name": "tip_reuse",
     "options": [
       {"label": "Use a new tip for each transfer", "value": "always"},
-      {"label": "Reuse tip for each transfer", "value": "once"}
+      {"label": "Reuse tip for each transfer", "value": "never"}
     ]
   }
 ]
