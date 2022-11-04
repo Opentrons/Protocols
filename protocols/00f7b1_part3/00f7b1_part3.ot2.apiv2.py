@@ -61,6 +61,8 @@ def run(ctx: protocol_api.ProtocolContext):
     wash_delay_time = 2
     supernatant_headspeed_modulator = 10
     mag_height = 3.5
+    print(TEST_MODE, bead_delay_time, wash_delay_time,
+          supernatant_headspeed_modulator, mag_height)
     ctx.max_speeds['Z'] = 400
     ctx.max_speeds['A'] = 400
     # Setup for flashing lights notification to empty trash
@@ -85,6 +87,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
     # final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
     trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
+    print(trash)
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
