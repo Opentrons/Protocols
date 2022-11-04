@@ -5,7 +5,7 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 4: Second cDNA Strand Synthesis',
+    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 4: Second cDNA Strand Synthesis',  # noqa
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -61,6 +61,8 @@ def run(ctx: protocol_api.ProtocolContext):
     wash_delay_time = 2
     supernatant_headspeed_modulator = 10
     mag_height = 3.5
+    print(TEST_MODE, bead_delay_time, wash_delay_time,
+          supernatant_headspeed_modulator, mag_height)
     ctx.max_speeds['Z'] = 400
     ctx.max_speeds['A'] = 400
     # Setup for flashing lights notification to empty trash
