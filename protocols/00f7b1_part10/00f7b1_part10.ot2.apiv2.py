@@ -11,7 +11,7 @@ metadata = {
     'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 10: Purification of PCR Product',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'  
+    'apiLevel': '2.13'
 }
 
 # Definitions for deck light flashing
@@ -321,8 +321,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         m300.aspirate(24, s.bottom().move(types.Point(x=side, y=0, z=1)),
                       rate=0.1)
-        m300.dispense(24, d.bottom().move(types.Point(x=side, y=0, z=1)),
-                      rate=0.1)
+        m300.dispense(24, d)
         m300.blow_out(d.bottom(5))
         drop_tip(m300)
 
