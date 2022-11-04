@@ -1,0 +1,23 @@
+[
+  {
+    "type": "int",
+    "label": "Number of Samples (1-24)",
+    "name": "num_samples",
+    "default": 12
+  },
+  {
+    "type": "int",
+    "label": "Sample Transfer Volume",
+    "name": "vol_trans",
+    "default": 10
+  },
+   {
+      "type": "dropDown",
+      "label": "P300 Mount",
+      "name": "p300_mount",
+      "options": [
+        { "label": "right", "value": "right" },
+        { "label": "left", "value": "left" }
+      ]
+    }
+]
