@@ -33,18 +33,19 @@ This protocol is part 4 of a 10 part series. Please look at deck map and liquid 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+3/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+4/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+3/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+4/reagents.png)
 
 
 ### Protocol Steps
 0. Temperature module cools down to 4 C (this can be done manually prior to protocol start)
-1. 8 uL of strand specificity reagent is added from the temperature module in slot 3, column 1 to all samples
-2. 2 uL of enzyme mix is added from the temperature module in slot 3, column 3 to all samples then mixed to combine
-3. Protocol is complete, OT-2 will flash to alert user
+1. 8 uL of reaction buffer is added from the temperature module in slot 3, column 1 to all samples
+2. 4 uL of enzyme mix is added from the temperature module in slot 3, column 3 to all samples then mixed to combine
+3. 48 ul of nuclease free water is added to each sample from slot 4, column 12 then mixed
+4. Protocol is complete, OT-2 will flash to alert user
 
 
 ### Process
