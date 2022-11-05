@@ -184,8 +184,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~ADDING ENZYME MIX~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m20)
-        m20.aspirate(2, enzyme_mix)
-        m20.dispense(2, dest)
+        m20.aspirate(2, enzyme_mix, rate=0.25)
+        m20.dispense(2, dest, rate=0.25)
         m20.mix(6, 10, dest)
         drop_tip(m20)
 

@@ -84,7 +84,7 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')
     temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
                                         'pcr_strip_200ul')
-    # dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
+    dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
     # final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
     trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
     print(trash)
@@ -172,7 +172,7 @@ def run(ctx: protocol_api.ProtocolContext):
     samples = mag_plate.rows()[0][:num_columns]
     rxn_buffer = temp_plate.rows()[0][0]
     enzyme_mix = temp_plate.rows()[0][2]
-    nfw = temp_plate.rows()[0][-1]
+    nfw = dwp.rows()[0][-1]
 
     # protocol
     ctx.comment('\n~~~~~~~~~~~ADDING REACTION BUFFER~~~~~~~~~~~\n')
@@ -185,8 +185,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~ADDING ENZYME MIX~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m20)
-        m20.aspirate(4, enzyme_mix)
-        m20.dispense(4, dest)
+        m20.aspirate(4, enzyme_mix, rate=0.25)
+        m20.dispense(4, dest, rate=0.25)
         drop_tip(m20)
 
     ctx.comment('\n~~~~~~~~~~~ADDING NUCLEASE FREE WATER~~~~~~~~~~~\n')
