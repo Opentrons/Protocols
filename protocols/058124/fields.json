@@ -17,6 +17,6 @@
     "type": "textFile",
     "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "uploaded_csv",
-    "default": "sample number,dilution scheme\n1,1\n2,1\n3,3\n4,4\n5,5\n6,6\n7,6\\n8,6\n9,3\\n10,4\n11,5\n12,6\n"
+    "default": "sample number,dilution scheme\n1,1\n2,1\n3,3\n4,4\n5,5\n6,6\n7,6\n8,6\n9,3\n10,4\n11,5\n12,6\n"
   }
 ]
