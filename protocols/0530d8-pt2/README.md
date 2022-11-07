@@ -8,7 +8,7 @@
 	* DNA Extraction
 
 ## Description
-This protocol performs a DNA extraction with the samples gathered from part 1 of the protocol. For specific protocol steps, please see below. A field for aspiration height when transferring the samples from the heater shaker to the magnetic module allows the user to ensure beads are not picked up, and and aspiration rate of 10% of the default is instilled to ensure so.
+This protocol performs a DNA extraction with the samples gathered from part 1 of the protocol. For specific protocol steps, please see below. A field for aspiration height when transferring the samples from the heater shaker to the magnetic module allows the user to ensure beads are not picked up, and and aspiration rate of 10% of the default is instilled to ensure so. Note: for reagent 4 in columns 4 & 5, reagent 5 in columns 6 & 7, and reagent 6 in columns 8 & 9, split the total calculated reagent volume EQUALLY between the pair of columns, as the protocol will circle between the pair of columns as the source.
 
 
 
@@ -23,13 +23,13 @@ This protocol performs a DNA extraction with the samples gathered from part 1 of
 * [Opentrons 200ul Filter Tips](https://shop.opentrons.com/universal-filter-tips/)
 
 ### Pipettes
-* [P300 Single Channel Pipette](link to pipette on shop.opentrons.com)
-* [P300 Multi Channel Pipette](link to pipette on shop.opentrons.com)
+* [P300 Single Channel Pipette](https://opentrons.com/pipettes/)
+* [P300 Multi Channel Pipette](https://opentrons.com/pipettes/)
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/pt2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-07+at+11.05.05+AM.png)
 
 ### Reagent Setup
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-01+at+11.46.43+AM.png)
