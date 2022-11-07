@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-PROTOCOLS_PYTHON ?= python3
+PROTOCOLS_PYTHON ?= python
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT2_VERSION_TAG := v6.1.0
