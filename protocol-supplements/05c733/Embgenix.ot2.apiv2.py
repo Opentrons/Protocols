@@ -19,8 +19,8 @@ def run(ctx):
 
     # labware
     tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4',
-        '1.5ml Eppendorf tuberack')
+        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4',
+        '1.5ml Eppendorf tube aluminum block')
     distribution_plate = ctx.load_labware(
         'biorad_96_wellplate_200ul_pcr', '5',
         'plate for mix distribution')
