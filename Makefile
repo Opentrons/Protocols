@@ -1,5 +1,7 @@
 SHELL := /bin/bash
 
+PROTOCOLS_PYTHON ?= python3
+
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT2_VERSION_TAG := v6.1.0
 OT2_MONOREPO_DIR := ot2monorepoClone
@@ -15,17 +17,20 @@ OT2_INPUT_FILES_UNFILTERED := $(shell find protocols -type f -name '*.ot2.apiv2.
 OT2_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT2_INPUT_FILES_UNFILTERED))
 OT2_OUTPUT_FILES := $(patsubst protocols/%.ot2.apiv2.py, $(BUILD_DIR)/%.ot2.apiv2.py.json, $(OT2_INPUT_FILES))
 
+pip_install := ${PROTOCOLS_PYTHON} -m pip install
+
+
 .PHONY: all
 all: parse-ot2 parse-errors parse-README
 	$(MAKE) build
 
-ot2monorepoClone:
+.PHONY: clone-repo
+clone-repo:
 	git clone --depth=1 --branch=$(OT2_VERSION_TAG) $(MONOREPO_URI) $(OT2_MONOREPO_DIR)
 
 .PHONY: setup
-setup:
-	$(MAKE) ot2monorepoClone
-	python3 -m pip install virtualenv
+setup: clone-repo
+	${pip_install} pipenv==2021.5.29 virtualenv flake8==3.8.4 pytest
 	$(MAKE) venvs/ot2
 
 venvs/ot2:
@@ -34,7 +39,6 @@ venvs/ot2:
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
-	pip install pipenv==2021.5.29 && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) setup && \
 	python setup.py install && \
