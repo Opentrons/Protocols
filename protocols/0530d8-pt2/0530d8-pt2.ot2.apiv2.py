@@ -51,6 +51,11 @@ def run(ctx):
                       rate=0.1, new_tip='never')
         ctx.delay(seconds=1)
 
+    reagent4 = reag_plate.rows()[0][3:5]*12
+    reagent5 = reag_plate.rows()[0][5:7]*12
+    reagent6 = reag_plate.rows()[0][7:9]*12
+    reagent7 = reag_plate.rows()[0][9]
+
     # mapping
     ctx.comment('\n---------TRANSFERRING SAMPLE TO MAG PLATE-----------\n\n')
     for source, dest in zip(hs_plate.wells(), mag_plate.wells()[:num_samp]):
@@ -68,10 +73,10 @@ def run(ctx):
         p300.drop_tip()
 
     ctx.comment('\n---------------ADDING 240 REAGENT----------------\n\n')
-    for col in hs_plate.rows()[0][:num_col]:
+    for col, reag_col in zip(hs_plate.rows()[0][:num_col], reagent4):
         pick_up(m300)
         for _ in range(2):
-            m300.aspirate(120, reag_plate.rows()[0][3])
+            m300.aspirate(120, reag_col)
             m300.dispense(120, col)
             m300.blow_out(col.top(z=-2))
         m300.mix(15, 200, col)
@@ -81,7 +86,7 @@ def run(ctx):
     if num_samp <= 88:
         pick_up(m300)
         for _ in range(2):
-            m300.aspirate(120, reag_plate.rows()[0][3])
+            m300.aspirate(120, reagent4)
             m300.dispense(120, hs_plate.rows()[0][11])
             m300.blow_out(col.top(z=-2))
         m300.mix(15, 200, hs_plate.rows()[0][11])
@@ -103,11 +108,11 @@ def run(ctx):
         m300.drop_tip()
 
     ctx.comment('\n---------------TWO WASHES----------------\n\n')
-    for reag_col in [4, 5]:
+    for reag_set in [reagent5, reagent6]:
         ctx.comment('\n---------------ADDING 200 REAGENT----------------\n\n')
-        for col in hs_plate.rows()[0][:num_col]:
+        for col, reag_col in zip(hs_plate.rows()[0][:num_col], reag_set):
             pick_up(m300)
-            m300.aspirate(200, reag_plate.rows()[0][reag_col])
+            m300.aspirate(200, reag_col)
             m300.dispense(200, col)
             m300.blow_out(col.top(z=-2))
             m300.mix(5, 200, col)
@@ -116,7 +121,7 @@ def run(ctx):
 
         if num_samp <= 88:
             pick_up(m300)
-            m300.aspirate(200, reag_plate.rows()[0][reag_col])
+            m300.aspirate(200, reag_col)
             m300.dispense(200, hs_plate.rows()[0][11])
             m300.blow_out(col.top(z=-2))
             m300.mix(5, 200, hs_plate.rows()[0][11])
@@ -140,7 +145,7 @@ def run(ctx):
     ctx.comment('\n---------------ADDING 30ul REAGENT----------------\n\n')
     for col in hs_plate.rows()[0][:num_col]:
         pick_up(m300)
-        m300.aspirate(30, reag_plate.rows()[0][6])
+        m300.aspirate(30, reagent7)
         m300.dispense(30, col)
         m300.blow_out(col.top(z=-2))
         m300.mix(10, 20, col)
@@ -149,7 +154,7 @@ def run(ctx):
 
     if num_samp <= 88:
         pick_up(m300)
-        m300.aspirate(30, reag_plate.rows()[0][6])
+        m300.aspirate(30, reagent7)
         m300.dispense(30, hs_plate.rows()[0][11])
         m300.blow_out(col.top(z=-2))
         m300.mix(10, 20, hs_plate.rows()[0][11])
