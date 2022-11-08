@@ -363,16 +363,15 @@ def run(ctx):
             # post-dispense air gap to avoid drips
             p300m.air_gap(20)
 
-            p300m.drop_tip()
+            # to improve completeness of removal
+            if repeat:
+                p300m.move_to(column[0].top())
+                for clearance in [0.7, 0.4, 0.2, 0]:
+                    loc = column[0].bottom(clearance).move(types.Point(
+                       x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+                    p300m.aspirate(25, loc)
 
-        # to improve completeness of removal
-        #      for index, column in enumerate(mag_plate.columns()[:num_cols]):
-        #          p300m.pick_up_tip()
-        #          for clearance in [0.7, 0.4, 0.2, 0]:
-        #              loc = column[0].bottom(clearance).move(types.Point(
-        #               x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
-        #              p300m.aspirate(25, loc)
-        #          p300m.drop_tip()
+            p300m.drop_tip()
 
     ctx.comment("\n***\nStep - wait for beads to dry\n***\n")
 
