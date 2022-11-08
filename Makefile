@@ -30,7 +30,7 @@ clone-repo:
 
 .PHONY: setup
 setup: clone-repo
-	${pip_install} pipenv==2021.5.29 virtualenv flake8==3.8.4 pytest
+	${pip_install} virtualenv flake8==3.8.4 pytest
 	$(MAKE) venvs/ot2
 
 venvs/ot2:
@@ -40,6 +40,7 @@ venvs/ot2:
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
+	${pip_install} pipenv==2021.5.29 && \
 	$(MAKE) setup && \
 	python setup.py install && \
 	popd && \
