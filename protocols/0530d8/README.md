@@ -8,7 +8,7 @@
 	* DNA Extraction
 
 ## Description
-This protocol takes up to 3 csv files per source plate to dispense into a 96 well plate on the heater shaker module. Samples can be in any order in the source plate as long as they are specified in the csv, but will always be loaded into the final plate by column. A maximum number of 90 samples can be loaded into the 96 well plate on the heater shaker, leaving room for the 6 controls (and subsequently 90 samples between all 3 csv files).
+This protocol takes up to 3 csv files per source plate to dispense into a 96 well plate on the heater shaker module. Samples can be in any order in the source plate as long as they are specified in the csv, but will always be loaded into the final plate by column. A maximum number of 90 samples can be loaded into the 96 well plate on the heater shaker, leaving room for the 6 controls (and subsequently 90 samples between all 3 csv files). Note: for reagent 4 in columns 4 & 5, reagent 5 in columns 6 & 7, and reagent 6 in columns 8 & 9, split the total calculated reagent volume EQUALLY between the pair of columns, as the protocol will circle between the pair of columns as the source.
 
 * The first row of all 3 csv files should be populated with the header, with the relevant parsing information to start in row 2 of each csv file. The header should consist of the following in the following order: ```barcode, rack_num, sample_rack_row, sample_rack_col,plate_row, plate_col, dna_extract_row, dna_extract_col```. All relevant information for the protocol is just taken from the ```dna_extract_row, dna_extract_col``` columns. The number of csv files must equal the number of source plates selected below.
 
@@ -30,7 +30,7 @@ This protocol takes up to 3 csv files per source plate to dispense into a 96 wel
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/pt1.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-07+at+11.04.58+AM.png)
 
 ### Reagent Setup
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-01+at+11.46.43+AM.png)
