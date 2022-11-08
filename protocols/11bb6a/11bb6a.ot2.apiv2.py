@@ -51,37 +51,39 @@ def run(ctx):
      labware_plates, '3', 'Library Prep Plate')
 
     # reaction buffer volume 14 uL per column of samples
-    rxn_bf.liq_vol = 14*num_cols + deadvol_tube + 5
+    rxn_bf.liq_vol = 1.1*14*num_cols + 2*deadvol_tube
 
     # enzyme mix volume 4 uL per column of samples
-    enz_mx.liq_vol = 4*num_cols + deadvol_tube
+    enz_mx.liq_vol = 1.1*4*num_cols + deadvol_tube
 
     # alert user to reagent volumes needed
     ctx.comment(
-     "\nEnsure reagents in sufficient volume are present on deck.\n")
+     "\n***\nEnsure reagents in sufficient volume are present on deck\n***\n")
     for volume, reagent, location in zip(
                                     [math.ceil(rxn_bf.liq_vol),
                                      math.ceil(enz_mx.liq_vol)],
                                     ['reaction buffer', 'enzyme mix'],
                                     [rxn_bf, enz_mx]):
         ctx.comment(
-         "\n{0} uL {1} in {2}\n".format(
+         "\n***\n{0} uL {1} in {2}\n***\n".format(
           str(volume), reagent.upper(), location))
 
-    # p300m "single channel" reaction buffer to mix tube with 5 percent overage
+    # p300m "single channel" reaction buffer to mix tube with 10 pct overage
     p300m.pick_up_tip(tips300[0]['H12'])
     p300m.transfer(
-     1.05*(14*num_cols), rxn_bf.bottom(0.5), mx_tube, new_tip='never')
+     1.1*(14*num_cols)+(14/18)*deadvol_tube,
+     rxn_bf.bottom(0.5), mx_tube, new_tip='never')
     p300m.drop_tip()
 
-    # same tip enzyme mix to mix tube with 5 percent overage and mix
+    # enzyme mix to mix tube with 10 percent overage and mix
     p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(
-     1.05*(4*num_cols), enz_mx.bottom(0.5), mx_tube, mix_after=(
+     1.1*(4*num_cols)+(4/18)*deadvol_tube,
+     enz_mx.bottom(0.5), mx_tube, mix_after=(
       10, 14*num_cols), new_tip='never')
 
-    # same tip fragmentation mix to Reagent Plate 1st column with extra 1 uL
-    vol = 2.25*num_cols+1
+    # same tip fragmentation mix to Reagent Plate 1st column with extra 2 uL
+    vol = 2.25*num_cols+2
     for well in reagent_plate.columns()[0]:
         p300m.aspirate(vol, mx_tube.bottom(0.5))
         p300m.dispense(vol, well)
@@ -93,4 +95,4 @@ def run(ctx):
      [column[0] for column in libraryprep_plate.columns()[:num_cols]],
      mix_after=(5, 10), new_tip='always')
 
-    ctx.comment("\nVortex, spin and incubate on PCR machine\n")
+    ctx.comment("\n***\nVortex, spin and incubate on PCR machine\n***\n")
