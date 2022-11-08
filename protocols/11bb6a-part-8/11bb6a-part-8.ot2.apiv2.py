@@ -65,7 +65,8 @@ def run(ctx):
     etoh.liq_vol = num_cols*8*200 + deadvol_reservoir_2
 
     # alert user to reagent volumes needed
-    ctx.comment("Ensure reagents in sufficient volume are present on deck.")
+    ctx.comment(
+     "\n***\nEnsure reagents in sufficient volume are present on deck\n***\n")
     for volume, units, reagent, location in zip([round(
      beads.liq_vol / 1000, 1),
      math.ceil(elutionbf.liq_vol / 1000),
@@ -74,7 +75,7 @@ def run(ctx):
      ['beads', 'elution buffer', 'etoh'],
      [beads, elutionbf, etoh]):
         ctx.comment(
-         "{0} {1} {2} in {3}".format(
+         "\n***\n{0} {1} {2} in {3}\n***\n".format(
           str(volume), units, reagent.upper(), location))
 
     # notify user to replenish tips
@@ -83,8 +84,8 @@ def run(ctx):
             pip.pick_up_tip()
         except OutOfTipsError:
             ctx.pause(
-             """Please Refill the {} Tip Boxes
-             and Empty the Tip Waste""".format(pip))
+             """\n***\nPlease Refill the {} Tip Boxes
+             and Empty the Tip Waste\n***\n""".format(pip))
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -113,7 +114,7 @@ def run(ctx):
             pipette.move_to(well_location.center())
         ctx.max_speeds[axis] = None
 
-    ctx.comment("Step - add beads to sample and mix")
+    ctx.comment("\n***\nStep - add beads to sample and mix\n***\n")
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
 
@@ -123,7 +124,7 @@ def run(ctx):
 
         # bead premix - aspirate 2 mm, dispense at top of liquid
         if not index % 2:    # sets frequency of premixing
-            ctx.comment("Step - pre-mixing beads")
+            ctx.comment("\n***\nStep - pre-mixing beads\n***\n")
             for rep in range(5):
                 p300m.aspirate(
                  200, beads.bottom(2), rate=0.5)
@@ -155,16 +156,16 @@ def run(ctx):
 
         p300m.drop_tip()
 
-    ctx.comment("Step - incubate 5 minutes")
+    ctx.comment("\n***\nStep - incubate 5 minutes\n***\n")
 
     ctx.delay(minutes=5)
 
-    ctx.comment("Step - engage magnets and wait")
+    ctx.comment("\n***\nStep - engage magnets and wait\n***\n")
 
     mag.engage(height_from_base=engage_height)
     ctx.delay(minutes=engage_time)
 
-    ctx.comment("Step - discard supernatant")
+    ctx.comment("\n***\nStep - discard supernatant\n***\n")
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p300m)
@@ -190,7 +191,7 @@ def run(ctx):
 
         p300m.drop_tip()
 
-    ctx.comment("Step - wash twice with 80 percent ethanol")
+    ctx.comment("\n***\nStep - wash twice with 80 percent ethanol\n***\n")
 
     for repeat in range(2):
 
@@ -244,22 +245,21 @@ def run(ctx):
             # post-dispense air gap to avoid drips
             p300m.air_gap(20)
 
+            # to improve completeness of removal
+            if repeat:
+                p300m.move_to(column[0].top())
+                for clearance in [0.7, 0.4, 0.2, 0]:
+                    loc = column[0].bottom(clearance).move(types.Point(
+                       x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+                    p300m.aspirate(25, loc)
+
             p300m.drop_tip()
 
-        # to improve completeness of removal
-        #      for index, column in enumerate(mag_plate.columns()[:num_cols]):
-        #          p300m.pick_up_tip()
-        #          for clearance in [0.7, 0.4, 0.2, 0]:
-        #              loc = column[0].bottom(clearance).move(types.Point(
-        #               x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
-        #              p300m.aspirate(25, loc)
-        #          p300m.drop_tip()
-
-    ctx.comment("Step - wait for beads to dry")
+    ctx.comment("\n***\nStep - wait for beads to dry\n***\n")
 
     ctx.delay(minutes=dry_time)
 
-    ctx.comment("Step - resuspend beads in elution buffer")
+    ctx.comment("\n***\nStep - resuspend beads in elution buffer\n***\n")
 
     mag.disengage()
 
@@ -291,16 +291,16 @@ def run(ctx):
 
         p20m.drop_tip()
 
-    ctx.comment("Step - incubate 2 minutes")
+    ctx.comment("\n***\nStep - incubate 2 minutes\n***\n")
 
     ctx.delay(minutes=2)
 
-    ctx.comment("Step - engage magnets and wait")
+    ctx.comment("\n***\nStep - engage magnets and wait\n***\n")
 
     mag.engage(height_from_base=engage_height)
     ctx.delay(minutes=engage_time)
 
-    ctx.comment("Step - transfer eluate to output plate")
+    ctx.comment("\n***\nStep - transfer eluate to output plate\n***\n")
 
     p20m.flow_rate.aspirate = 3.5
 
@@ -324,4 +324,4 @@ def run(ctx):
 
     mag.disengage()
 
-    ctx.comment("Finished")
+    ctx.comment("\n***\nFinished\n***\n")
