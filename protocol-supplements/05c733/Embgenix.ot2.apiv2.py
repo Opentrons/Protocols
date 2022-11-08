@@ -24,7 +24,7 @@ def run(ctx):
     distribution_plate = ctx.load_labware(
         'biorad_96_wellplate_200ul_pcr', '5',
         'plate for mix distribution')
-    udi_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '6',
+    udi_plate = ctx.load_labware('axygen_96well_pcr_microplate_200ul', '6',
                                  'UDI plate')
     tempdeck = ctx.load_module('temperature module gen2', '7')
     tempdeck.set_temperature(4)
