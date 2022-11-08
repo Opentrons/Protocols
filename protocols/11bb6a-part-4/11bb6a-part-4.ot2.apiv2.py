@@ -53,10 +53,10 @@ def run(ctx):
      labware_plates, '3', 'Library Prep Plate')
 
     # ligation mix volume 60 uL per column of samples
-    lig_mx.liq_vol = 60*num_cols + deadvol_tube + 20
+    lig_mx.liq_vol = 1.1*60*num_cols + deadvol_tube
 
     # enhancer volume 2 uL per column of samples
-    enhancer.liq_vol = 2*num_cols + deadvol_tube + 5
+    enhancer.liq_vol = 1.1*2*num_cols + deadvol_tube
 
     # user volume
     user[0].liq_vol = num_cols + 1
@@ -68,14 +68,16 @@ def run(ctx):
     mix_tube.liq_vol = 0
 
     # alert user to reagent volumes needed
-    ctx.comment("Ensure reagents in sufficient volume are present on deck.")
+    ctx.comment(
+     "\n***\nEnsure reagents in sufficient volume are present on deck\n***\n")
     for volume, reagent, location in zip(
      [math.ceil(lig_mx.liq_vol), mix_tube.liq_vol, math.ceil(enhancer.liq_vol),
       user[0].liq_vol, adapter[0].liq_vol],
      ['ligation mix', 'master mix', 'enhancer', 'user dilution', 'adapter'],
      [lig_mx, mix_tube, enhancer, user, adapter]):
         ctx.comment(
-         "{0} uL {1} in {2}".format(str(volume), reagent.upper(), location))
+         "\n***\n{0} uL {1} in {2}\n***\n".format(
+          str(volume), reagent.upper(), location))
 
     # return liquid height in a well
     def liq_height(well, correcteddiameter=None):
@@ -99,10 +101,10 @@ def run(ctx):
         current_pipette.move_to(well_location.top())
         ctx.max_speeds[axis] = None
 
-    ctx.comment("STEP - transferring ligation mix to mix tube")
+    ctx.comment("\n***\nSTEP - transferring ligation mix to mix tube\n***\n")
 
     # total volume to be transferred
-    vol = 1.05*(60*num_cols)    # 5 percent overage
+    vol = 1.1*(60*num_cols)    # 10 percent overage
 
     # number of transfers needed
     reps = math.ceil(vol / 200)
@@ -117,11 +119,9 @@ def run(ctx):
 
         if not rep:
 
-            ctx.comment("STEP - pre-mixing ligation mix")
+            ctx.comment("\n***\nSTEP - pre-mixing ligation mix\n***\n")
 
             ht_mx = liq_height(lig_mx) if liq_height(lig_mx) > 1 else 1
-
-            ctx.comment(" ht_mx {}".format(ht_mx))
 
             for rpt in range(10):
                 p300m.aspirate(200, lig_mx.bottom(3), rate=0.2)
@@ -133,7 +133,7 @@ def run(ctx):
         lig_mx.liq_vol -= v
 
         # tip height just below top of source liquid, avoiding over-immersion
-        ht_source = liq_height(lig_mx) if liq_height(lig_mx) > 1 else 0.5
+        ht_source = liq_height(lig_mx) if liq_height(lig_mx) > 0.5 else 0.5
 
         # aspirate
         p300m.aspirate(v, lig_mx.bottom(ht_source), rate=0.2)
@@ -153,16 +153,17 @@ def run(ctx):
 
     p300m.drop_tip()
 
-    ctx.comment("STEP - transferring enhancer to mix tube")
+    ctx.comment("\n***\nSTEP - transferring enhancer to mix tube\n***\n")
 
     # total volume enhancer to be transferred
-    vol = 1.05*(2*num_cols)    # 5 percent overage
+    vol = 1.1*(2*num_cols)    # 10 percent overage
 
     # pick up one tip on the rear-most channel and transfer
     p300m.pick_up_tip(tips300[0]['H11'])
     p300m.transfer(vol, enhancer, mix_tube.bottom(ht_dest), new_tip='never')
 
-    ctx.comment("STEP - transfer mixture to 2nd column reagent plate")
+    ctx.comment(
+     "\n***\nSTEP - transfer mixture to 2nd column reagent plate\n***\n")
 
     # volume to be transferred to each well
     vol = 7.75*num_cols + 2    # 2 uL overage
@@ -171,13 +172,12 @@ def run(ctx):
 
     mixture.liq_vol = vol
 
-    ctx.comment(" reagent plate liq vol {}".format(mixture.liq_vol))
-
     for index, well in enumerate(reagent_plate.columns()[1]):
 
         if not index:
 
-            ctx.comment("STEP - pre-mixing the contents of the mix tube")
+            ctx.comment(
+             "\n***\nSTEP - pre-mixing the contents of the mix tube\n***\n")
             for rep in range(10):
                 p300m.aspirate(200, mix_tube.bottom(3), rate=0.3)
                 ctx.delay(seconds=2)
@@ -188,7 +188,7 @@ def run(ctx):
         mix_tube.liq_vol -= vol
 
         # tip height just below top of source liquid, avoiding over-immersion
-        ht = liq_height(mix_tube) if liq_height(mix_tube) > 1 else 0.5
+        ht = liq_height(mix_tube) if liq_height(mix_tube) > 0.5 else 0.5
 
         p300m.aspirate(vol, mix_tube.bottom(ht), rate=0.2)
         ctx.delay(seconds=2)
@@ -200,19 +200,21 @@ def run(ctx):
 
     p300m.drop_tip()
 
-    ctx.comment("STEP - transfer 1 uL adapter to wells of Library Prep Plate")
+    ctx.comment(
+     "\n***\nSTEP - transfer 1 uL adapter to Library Prep Plate wells\n***\n")
 
     p20m.transfer(
      1, adapter[0].bottom(0.5),
      [column[0] for column in libraryprep_plate.columns()[:num_cols]],
      new_tip='always')
 
-    ctx.comment("STEP - transfer 7.75 uL mixture to Library Prep Plate")
+    ctx.comment(
+     "\n***\nSTEP - transfer 7.75 uL mixture to Library Prep Plate\n***\n")
 
     for column in libraryprep_plate.columns()[:num_cols]:
         p20m.pick_up_tip()
 
-        ht = liq_height(mixture) if liq_height(mixture) > 1 else 0.5
+        ht = liq_height(mixture) if liq_height(mixture) > 0.5 else 0.5
 
         mixture.liq_vol -= 7.75
 
@@ -233,9 +235,10 @@ def run(ctx):
 
         p20m.drop_tip()
 
-    ctx.pause("Pausing for incubation on off-deck PCR machine")
+    ctx.pause("\n***\nPausing for incubation on off-deck PCR machine\n***\n")
 
-    ctx.comment("STEP - transfer 1 uL User to Library Prep Plate")
+    ctx.comment(
+     "\n***\nSTEP - transfer 1 uL User to Library Prep Plate\n***\n")
 
     for column in libraryprep_plate.columns()[:num_cols]:
         p20m.pick_up_tip()
@@ -253,5 +256,5 @@ def run(ctx):
 
         p20m.drop_tip()
 
-    ctx.comment("""Proceed to incubation on off-deck PCR machine.
-                   Then to either part-5 or part-6""")
+    ctx.comment("""\n***\nProceed to incubation on off-deck PCR machine.
+                   Then to either part-5 or part-6\n***\n""")
