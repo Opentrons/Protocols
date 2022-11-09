@@ -37,7 +37,7 @@ venvs/ot2:
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
-	${pip_install} pipenv== 2020.5.28 && \
+	${pip_install} pipenv==2020.5.28 && \
 	$(MAKE) setup && \
 	python setup.py install && \
 	popd && \
