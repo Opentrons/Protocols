@@ -16,9 +16,9 @@ Links:
 
 
 Explanation of parameters below:
-* `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
-* `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
-* `Number of samples in tuberack 3 (7-8)`: 0 to 32
+* `Number of samples in tuberack 1 slot 10-11`: How many samples to transfer from rack 1: 1 to 32
+* `Number of samples in tuberack 2 slot 7-8`: 0 to 32
+* `Number of samples in tuberack 3 slot 4-5`: 0 to 32
 * `Master mix wells location`: Informs the protocol which wells of the reservoir contain mastermix, starting from A1 on the very left. For example 1-4 to specify wells A1 to A4. This parameter may also be a single number instead of a range
 * `Mastermix max volume per well (mL)`: Informs the protocol what the maximal volume of mastermix is in each reservoir well, default is 9.54 mL
 * `Mastermix mixing rate multiplier`: Controls the flow rate of mixing, 1.0 means standard flow rate, less is slower and more is faster.

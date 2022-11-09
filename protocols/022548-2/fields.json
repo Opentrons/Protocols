@@ -1,19 +1,19 @@
 [
   {
     "type": "int",
-    "label": "Number of samples in tuberack 1 slot(2-3)",
+    "label": "Number of samples in tuberack 1 slot 10-11",
     "name": "n_samples_rack_1",
     "default": 32
   },
   {
     "type": "int",
-    "label": "Number of samples in tuberack 2 (slot 4-5)",
+    "label": "Number of samples in tuberack 2 slot 7-8",
     "name": "n_samples_rack_2",
     "default": 32
   },
   {
     "type": "int",
-    "label": "Number of samples in tuberack 3 (7-8)",
+    "label": "Number of samples in tuberack 3 slot 4-5",
     "name": "n_samples_rack_3",
     "default": 32
   },
