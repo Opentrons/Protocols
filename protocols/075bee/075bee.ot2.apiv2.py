@@ -1,9 +1,9 @@
 import math
 metadata = {
-    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',
+    'protocolName': 'Material Synthesis Prep with CSV Input',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.13'
 }
 
 

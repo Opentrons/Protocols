@@ -524,6 +524,7 @@ init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,1
+init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
 input_csv,16
@@ -907,7 +908,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,129
+p300_mount,130
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1210,6 +1211,10 @@ source_asp_flow_rate_mmx,1
 source_asp_flow_rate_plate,1
 source_asp_height_plate,1
 source_asp_height_plate_mmx,1
+source_csv_slot3,1
+source_csv_slot7,1
+source_csv_slot8,1
+source_csv_slot9,1
 source_lw,1
 source_plate,2
 source_plate_type,1
