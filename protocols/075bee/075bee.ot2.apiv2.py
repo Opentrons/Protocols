@@ -18,31 +18,37 @@ def run(ctx):
     # labware
     source_rack_50 = ctx.load_labware(
                     'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 5)
-    source_rack_50 = source_rack_50
+
     source_rack_15 = ctx.load_labware(
                     'opentrons_15_tuberack_falcon_15ml_conical', 2)
-    source_rack_15 = source_rack_15
     dest_racks = [ctx.load_labware('twdtradewinds_24_tuberack_4000ul', slot)
                   for slot in [3, 7, 8, 9]]
     tips = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-            for slot in [1, 4]]
+                  for slot in [1, 4]]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
 
     # protocol
 
+    radius_15_tubes = source_rack_15.wells()[0].diameter/2
+    radius_50_tubes = source_rack_50.rows()[0][3].diameter/2
+
     ctx.max_speeds['Z'] = 125
     ctx.max_speeds['A'] = 125
 
     csv_rows_init_vols = [[val.strip() for val in line.split(',')]
                           for line in init_vols_csv.splitlines()
-                          if line.split(',')[0].strip()][1:]
+                          if line.split(',')[0].strip()]
 
     init_vols_all_tubes = [int(row[2]) for row in csv_rows_init_vols]
+    init_height_all_tubes = []
+    for i, vol in enumerate(init_vols_all_tubes):
+        radius = radius_15_tubes if i < 15 else radius_50_tubes
+        init_height_all_tubes.append(1000*vol*0.6/(math.pi*radius**2))
 
     all_csvs = [source_csv_slot3, source_csv_slot7,
-                source_csv_slot8, source_csv_slot9]
+                source_csv_slot8, source_csv_slot9][:1]
 
     for csv, dest_rack in zip(all_csvs, dest_racks):
         dest_rack_wells = [well for row in dest_rack.rows() for well in row]
@@ -55,8 +61,6 @@ def run(ctx):
             radius = source_tube.diameter/2
 
             # liquid height tracking
-            source_tube_vol = init_vols_all_tubes[col_num]
-            h_source_tube = 0.6*source_tube_vol/(math.pi*radius**2)
             if not p300.has_tip:
                 p300.pick_up_tip()
             pick_up_tip_ctr = 0
@@ -66,8 +70,9 @@ def run(ctx):
 
                 if vol > 0:
                     if vol <= 300:
+                        h = init_height_all_tubes[col_num]
                         dh = vol/(math.pi*radius**2)
-                        p300.aspirate(vol, source_tube.bottom(h_source_tube if h_source_tube > 15 else 1))  # noqa: E501
+                        p300.aspirate(vol, source_tube.bottom(h if h > 15 else 1))  # noqa: E501
                         ctx.delay(seconds=1)
                         ctx.max_speeds['Z'] /= 10
                         ctx.max_speeds['A'] /= 10
@@ -77,14 +82,14 @@ def run(ctx):
                         ctx.delay(seconds=5)
                         p300.touch_tip(v_offset=-1)
                         p300.dispense(vol, dest_well.top(z=-3))
-                        init_vols_all_tubes[col_num] -= dh
-                        pick_up_tip_ctr += 1
+                        init_height_all_tubes[col_num] -= dh
                     else:
                         num_divisions = math.ceil(vol/300)
                         vol_divided = vol / num_divisions
                         for _ in range(num_divisions):
-                            dh = vol_divided/(math.pi*radius**2)
-                            p300.aspirate(vol_divided, source_tube.bottom(h_source_tube if h_source_tube > 15 else 1))  # noqa: E501
+                            h = init_height_all_tubes[col_num]
+                            dh = vol/(math.pi*radius**2)
+                            p300.aspirate(vol_divided, source_tube.bottom(h if h > 15 else 1))  # noqa: E501
                             ctx.delay(seconds=1)
                             ctx.max_speeds['Z'] /= 10
                             ctx.max_speeds['A'] /= 10
@@ -94,7 +99,7 @@ def run(ctx):
                             ctx.delay(seconds=5)
                             p300.touch_tip(v_offset=-1)
                             p300.dispense(vol_divided, dest_well)
-                            init_vols_all_tubes[col_num] -= dh
+                            init_height_all_tubes[col_num] -= dh
                             pick_up_tip_ctr += 1
 
             if pick_up_tip_ctr > 0:
