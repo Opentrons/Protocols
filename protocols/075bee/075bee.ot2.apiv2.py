@@ -82,7 +82,9 @@ def run(ctx):
                         ctx.delay(seconds=5)
                         p300.touch_tip(v_offset=-1)
                         p300.dispense(vol, dest_well.top(z=-3))
+
                         init_height_all_tubes[col_num] -= dh
+                        pick_up_tip_ctr += 1
                     else:
                         num_divisions = math.ceil(vol/300)
                         vol_divided = vol / num_divisions
