@@ -54,20 +54,27 @@ def run(ctx):
                                     for tip in rack.wells()]
         tip_log[pip]['max'] = len(tip_log[pip]['tips'])
 
-    def _pick_up(pip, loc=None):
+    def find_tip(pip, loc=None):
         if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:
-            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+            ctx.pause(f'Replace {str(pip.max_volume)}µl tipracks before \
 resuming.')
             pip.reset_tipracks()
             tip_log[pip]['count'] = 0
         if loc:
-            pip.pick_up_tip(loc)
+            tip = loc
         else:
-            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
+            tip = tip_log[pip]['tips'][tip_log[pip]['count']]
             tip_log[pip]['count'] += 1
+        return tip
 
     # liquid transfers
-    _pick_up(m300)
+    tip = find_tip(m300)
+    column_ind = tiprack[0].rows()[0].index(tip)
+
+    ctx.home()
+    ctx.pause(f'Ensure tips are placed in column {column_ind+1} of tiprack on \
+slot 11 before resuming.')
+    m300.pick_up_tip(tip)
     for plate in plates:
         for d in plate.rows()[0]:
             m300.aspirate(20, sivi_1.top())
