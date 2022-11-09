@@ -24,7 +24,7 @@ def run(ctx):
     dest_racks = [ctx.load_labware('twdtradewinds_24_tuberack_4000ul', slot)
                   for slot in [3, 7, 8, 9]]
     tips = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                  for slot in [1, 4]]
+            for slot in [1, 4]]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
