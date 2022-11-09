@@ -11,7 +11,7 @@ def run(ctx):
 
     [init_vols_csv, source_csv_slot3,
      source_csv_slot7, source_csv_slot8,
-     source_csv_slot9, p300_mount, p1000_mount] = get_values(  # noqa: F821
+     source_csv_slot9, p300_mount] = get_values(  # noqa: F821
         "init_vols_csv", "source_csv_slot3", "source_csv_slot7",
          "source_csv_slot8", "source_csv_slot9", "p300_mount")
 
