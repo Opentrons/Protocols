@@ -1,32 +1,30 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "Sample Prep": [
+            "Plate Filling"
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "This protocol preps up to (4) 24 tube custom tube racks with unique volumes of reagents 1-18 coming from a 15mL tube rack, as well as a 50mL tube rack. CSV's for destination custom racks should all include the following header Rack, Well, Label, DEAEMA (mL), AEMAm (mL), DIPAEMA (mL), DMAEMA (mL), MPC (mL), PEGMA500 (mL), HEMA (mL), PEGMA300 (mL), PEGMA950 (mL), GlyMA (mL), PHPMA (mL), Initiator (mL), CTA (mL), Initiator 2 (mL), CTA 2 (mL), Solv (mL), Solv2, Solv3. Headers may include whatever nomenclature is desired, but must have the same number of columns. The initial volumes CSV informs the initial volume of all 15 tubes in slots 2 and 5, and includes the following as the header Slot (2 or 5), Tube Position (A1, A2, etc.), Initial Volume (mL). Note: the initial volume CSV should include 18 rows not including the header - 15 for the 15 tube rack, and 3 for the 50mL rack. ",
     "internal": "075bee",
     "labware": "\nTWD_Tradewinds 24 Tube Rack with 4mL_Scintillation_Vials 4 mL\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 15 Tube Rack with Falcon 15 mL Conical\nOpentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/075bee/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/075bee/Screen+Shot+2022-11-09+at+1.54.16+PM.png)\n\n\n",
+        "description": "This protocol preps up to (4) 24 tube custom tube racks with unique volumes of reagents 1-18 coming from a 15mL tube rack, as well as a 50mL tube rack. CSV's for destination custom racks should all include the following header `Rack, Well, Label, DEAEMA (mL), AEMAm (mL), DIPAEMA (mL), DMAEMA (mL), MPC (mL), PEGMA500 (mL), HEMA (mL), PEGMA300 (mL), PEGMA950 (mL), GlyMA (mL), PHPMA (mL), Initiator (mL), CTA (mL), Initiator 2 (mL), CTA 2 (mL), Solv (mL), Solv2, Solv3`. Headers may include whatever nomenclature is desired, but must have the same number of columns. The initial volumes CSV informs the initial volume of all 15 tubes in slots 2 and 5, and includes the following as the header `Slot (2 or 5), Tube Position (A1, A2, etc.), Initial Volume (mL)`. Note: the initial volume CSV should include 18 rows not including the header - 15 for the 15 tube rack, and 3 for the 50mL rack. \n\n\n",
         "internal": "075bee\n",
         "labware": "* TWD_Tradewinds 24 Tube Rack with 4mL_Scintillation_Vials 4 mL\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 15 Tube Rack with Falcon 15 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
-        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/075bee/reagents.png)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app. by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions. if needed.\n4. Upload your protocol file (.py extension. to the [OT App](https://opentrons.com/ot-app. in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Pick up tip\n2. Aspirate from A1 of tube rack at deck slot 2 at a height that doesnt penetrate the liquid past 75% of the tip length\n3. Raise pipette to the top of the source tube at a rate of 10mm/s and delay 5s\n4. Touch tip at a vertical offset of -1mm from the top of the tube\n5. Move to A1 at deck slot 3 (custom tube rack)\n6. Dispense at top of tube\n7. Delay 5s and Blowout at a rate of 5uL/s\n8. Repeat Steps 2-7 over destination A2-D6 using an array of volumes and flow rates, all using liquid from source location A1\n9. Drop tip\n10. Repeat steps 1-9 for each of the source tubes in the Falcon tube racks at deck slot 2 and deck slot 5\n11. Mix each destination vial 200uL, 3 times\n12. Repeat steps 1-11 for all destination vial racks at deck slots 7, 8, & 9\n\n\n",
         "title": "Material Synthesis Prep with CSV Input"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
-    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
-    "reagent-setup": "",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the [OT App](https://opentrons.com/ot-app. by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions. if needed.\nUpload your protocol file (.py extension. to the [OT App](https://opentrons.com/ot-app. in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nPick up tip\nAspirate from A1 of tube rack at deck slot 2 at a height that doesnt penetrate the liquid past 75% of the tip length\nRaise pipette to the top of the source tube at a rate of 10mm/s and delay 5s\nTouch tip at a vertical offset of -1mm from the top of the tube\nMove to A1 at deck slot 3 (custom tube rack)\nDispense at top of tube\nDelay 5s and Blowout at a rate of 5uL/s\nRepeat Steps 2-7 over destination A2-D6 using an array of volumes and flow rates, all using liquid from source location A1\nDrop tip\nRepeat steps 1-9 for each of the source tubes in the Falcon tube racks at deck slot 2 and deck slot 5\nMix each destination vial 200uL, 3 times\nRepeat steps 1-11 for all destination vial racks at deck slots 7, 8, & 9\n",
     "title": "Material Synthesis Prep with CSV Input"
 }
