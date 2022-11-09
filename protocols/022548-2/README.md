@@ -45,7 +45,9 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-Load 300 ul tip racks in order 6-3. Load tube racks in order from top down. Load samples in order down the column in each tube rack. Tube racks should be filled fully before proceeding to next tube rack. For example, 33 samples total would mean 32 in the top most tube rack and 1 sample in the middle tube rack.
+* Load 300 ul tip racks in order 6-3. Load tube racks in order from top down. Load samples in order down the column in each tube rack. Tube racks should be filled fully before proceeding to next tube rack. For example, 33 samples total would mean 32 in the top most tube rack and 1 sample in the middle tube rack.
+
+
 ![Deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/Screen+Shot+2022-08-25+at+3.01.33+PM.png)
 
 ### Reagent Setup
