@@ -85,14 +85,14 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Define labware and slots
     sample_tuberack_loader = \
-        ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['4', '7', '10'])
+        ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['10', '7', '4'])
     target_plate_loader = \
         ("thermofisherkingfisherdeepwell_96_wellplate_2000ul", '2')
     mastermix_labware_loader = ('nest_12_reservoir_15ml', '1')
     sample_200ul_filtertiprack_loader = \
         ('opentrons_96_filtertiprack_200ul', '9')
 
-    mm_well_vol_ul = mastermix_max_vol * 1_000
+    mm_well_vol_ul = mastermix_max_vol * 1000
     # TODO: Remove dead volumes from the protocols - the dead-volume is
     # already defined by the 1.5 multiplier (1/3rd of the total vol)
     dead_vol = 1/3 * mm_well_vol_ul
@@ -666,7 +666,6 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.touch_tip()
         p300.dispense(200, d)
         p300.blow_out()
-        p300.touch_tip()
         p300.drop_tip()
 
     # Mastermix steps (5-11) are performed in protocol 1 - mastermix creation
@@ -694,7 +693,7 @@ def run(ctx: protocol_api.ProtocolContext):
     max_mix_vol = min(m300.max_volume*n_tips, mm_tracker.well_vol)
     per_tip_mix_vol = max_mix_vol/n_tips
     for i, well in enumerate(mm_wells):
-        m300.mix(7, per_tip_mix_vol, well,
+        m300.mix(3, per_tip_mix_vol, well,
                  mastermix_mix_rate_multiplier)
         m300.blow_out(well)
         m300.touch_tip()
@@ -733,7 +732,6 @@ def run(ctx: protocol_api.ProtocolContext):
             mm_vol_per_sample+air_gap_vol, well,
             mm_dispense_flowrate_multiplier)
         m300.blow_out()
-        m300.touch_tip()
         m300.drop_tip()
         tip_count += 1
         ctx.comment('\n')
@@ -759,7 +757,6 @@ def run(ctx: protocol_api.ProtocolContext):
             target_plate.rows()[0][num_full_columns],
             mm_dispense_flowrate_multiplier)
         m300.blow_out()
-        m300.touch_tip()
         m300.drop_tip()
         tip_count += 1
         ctx.comment('\n')

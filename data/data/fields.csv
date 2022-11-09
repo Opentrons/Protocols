@@ -264,7 +264,7 @@ d_time,2
 deactivate_mod,1
 dead_vol,3
 deadvol_plate,3
-deadvol_reservoir,3
+deadvol_reservoir,4
 debug,1
 debug_mode,1
 deep_name,1
@@ -412,6 +412,7 @@ ethanol_wash_vol,1
 etoh_inc,1
 etoh_volume,2
 etoh_well,2
+every_nth_col,1
 ex_opti,1
 example_dropdown,1
 example_file,1
@@ -437,7 +438,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,26
+flash,28
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -474,6 +475,8 @@ height_intermediate_high,1
 height_intermediate_low,1
 height_intermediate_middle,1
 height_source,1
+hs_rpm,1
+hs_temp,1
 htp_csv,1
 i5_volume,1
 i5_well,1
@@ -577,10 +580,11 @@ labware_clinical_samples_2,1
 labware_collect_plate,1
 labware_cultureplate,1
 labware_deep_well,1
-labware_dest,1
+labware_dest,2
 labware_dna_sample_plate,1
 labware_elisa_plate,3
 labware_firstrna,1
+labware_hs,1
 labware_magneticmodule,5
 labware_mm,1
 labware_mmplate,1
@@ -595,13 +599,14 @@ labware_pre_pcr_plate,2
 labware_processing_plate,1
 labware_rack,1
 labware_res,1
-labware_reservoir,14
+labware_reservoir,15
 labware_reservoir_12well,1
 labware_reservoir_1well,1
 labware_rna,1
 labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
+labware_source,1
 labware_tempmod,12
 labware_tempmod2,5
 labware_tips20,3
@@ -650,7 +655,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,68
-m300_mount,83
+m300_mount,85
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -826,7 +831,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,136
+num_samples,138
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -956,12 +961,13 @@ peptide_supernat_vol,1
 perform_barcode,1
 perform_normalization,1
 perform_steps,1
-pip,2
+pip,3
 pip_l,2
 pip_mnt,5
 pip_model,5
 pip_mount,9
 pip_r,2
+pip_side,1
 pip_tip,4
 pip_type,8
 pipette,1
@@ -1308,6 +1314,7 @@ tempgen,1
 template_vol,1
 test_method,1
 test_plates,1
+tfer_vol,1
 time_airdry_minutes,1
 time_dry,18
 time_engage,19
@@ -1315,6 +1322,7 @@ time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
+time_shake,1
 tip_disp,3
 tip_immersion,1
 tip_max,1
@@ -1418,7 +1426,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 udi_start_col,1
-uploaded_csv,16
+uploaded_csv,17
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
