@@ -39,7 +39,7 @@ def run(ctx):
 
     csv_rows_init_vols = [[val.strip() for val in line.split(',')]
                           for line in init_vols_csv.splitlines()
-                          if line.split(',')[0].strip()]
+                          if line.split(',')[0].strip()][1:]
 
     init_vols_all_tubes = [int(row[2]) for row in csv_rows_init_vols]
     init_height_all_tubes = []
@@ -48,7 +48,7 @@ def run(ctx):
         init_height_all_tubes.append(1000*vol*0.6/(math.pi*radius**2))
 
     all_csvs = [source_csv_slot3, source_csv_slot7,
-                source_csv_slot8, source_csv_slot9][:1]
+                source_csv_slot8, source_csv_slot9]
 
     for csv, dest_rack in zip(all_csvs, dest_racks):
         dest_rack_wells = [well for row in dest_rack.rows() for well in row]

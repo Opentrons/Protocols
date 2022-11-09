@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "CSV For Initial Volumes on Slots 2 & 5 ",
     "name": "init_vols_csv",
-    "default": "Slot,Tube Position,Initial Volume\n2,A1,30"
+    "default": "Slot,Tube Position,Initial Vol\n2,A1,30"
   },
   {
     "type": "textFile",
