@@ -10,9 +10,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, p20_type, p20_type, p20_mount, p300_mount, plate_def,
+    [num_samples, p20_type, p300_type, p20_mount, p300_mount, plate_def,
      module_type] = get_values(  # noqa: F821
-        'num_samples', 'p20_type', 'p20_type', 'p20_mount', 'p300_mount',
+        'num_samples', 'p20_type', 'p300_type', 'p20_mount', 'p300_mount',
         'plate_def', 'module_type')
 
     waste = ctx.load_labware('nest_1_reservoir_195ml', '1',
