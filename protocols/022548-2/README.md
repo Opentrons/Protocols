@@ -16,9 +16,9 @@ Links:
 
 
 Explanation of parameters below:
-* `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
-* `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
-* `Number of samples in tuberack 3 (7-8)`: 0 to 32
+* `Number of samples in tuberack 1 slot 10-11`: How many samples to transfer from rack 1: 1 to 32
+* `Number of samples in tuberack 2 slot 7-8`: 0 to 32
+* `Number of samples in tuberack 3 slot 4-5`: 0 to 32
 * `Master mix wells location`: Informs the protocol which wells of the reservoir contain mastermix, starting from A1 on the very left. For example 1-4 to specify wells A1 to A4. This parameter may also be a single number instead of a range
 * `Mastermix max volume per well (mL)`: Informs the protocol what the maximal volume of mastermix is in each reservoir well, default is 9.54 mL
 * `Mastermix mixing rate multiplier`: Controls the flow rate of mixing, 1.0 means standard flow rate, less is slower and more is faster.
@@ -45,7 +45,9 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-Load 300 ul tip racks in order 6-3. Load tube racks in order from top down. Load samples in order down the column in each tube rack. Tube racks should be filled fully before proceeding to next tube rack. For example, 33 samples total would mean 32 in the top most tube rack and 1 sample in the middle tube rack.
+* Load 300 ul tip racks in order 6-3. Load tube racks in order from top down. Load samples in order down the column in each tube rack. Tube racks should be filled fully before proceeding to next tube rack. For example, 33 samples total would mean 32 in the top most tube rack and 1 sample in the middle tube rack.
+
+
 ![Deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/Screen+Shot+2022-08-25+at+3.01.33+PM.png)
 
 ### Reagent Setup
