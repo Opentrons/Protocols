@@ -7,7 +7,25 @@
   },
   {
     "type": "dropDown",
-    "label": "P20-single channel pipette mount",
+    "label": "P20 pipette type",
+    "name": "p20_type",
+    "options": [
+      {"label": "multi", "value": "p20_multi_gen2"},
+      {"label": "single", "value": "p20_single_gen2"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 pipette type",
+    "name": "p300_type",
+    "options": [
+      {"label": "multi", "value": "p300_multi_gen2"},
+      {"label": "single", "value": "p300_single_gen2"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 channel pipette mount",
     "name": "p20_mount",
     "options": [
       {"label": "right", "value": "right"},
@@ -16,7 +34,7 @@
   },
   {
     "type": "dropDown",
-    "label": "P300-single channel pipette mount",
+    "label": "P300 channel pipette mount",
     "name": "p300_mount",
     "options": [
       {"label": "left", "value": "left"},
