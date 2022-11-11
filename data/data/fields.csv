@@ -73,7 +73,7 @@ asp_delay_time,1
 asp_flow_rate,2
 asp_flowrate_p10,1
 asp_flowrate_p50,1
-asp_height,24
+asp_height,25
 asp_height_1,1
 asp_height_m20,1
 asp_height_recipient,1
@@ -250,6 +250,9 @@ csv_file_2,1
 csv_input,3
 csv_oil,1
 csv_samp,9
+csv_samp1,1
+csv_samp2,1
+csv_samp3,1
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
@@ -409,6 +412,7 @@ ethanol_wash_vol,1
 etoh_inc,1
 etoh_volume,2
 etoh_well,2
+every_nth_col,1
 ex_opti,1
 example_dropdown,1
 example_file,1
@@ -471,6 +475,8 @@ height_intermediate_high,1
 height_intermediate_low,1
 height_intermediate_middle,1
 height_source,1
+hs_rpm,1
+hs_temp,1
 htp_csv,1
 i5_volume,1
 i5_well,1
@@ -575,10 +581,11 @@ labware_clinical_samples_2,1
 labware_collect_plate,1
 labware_cultureplate,1
 labware_deep_well,1
-labware_dest,1
+labware_dest,2
 labware_dna_sample_plate,1
 labware_elisa_plate,3
 labware_firstrna,1
+labware_hs,1
 labware_magneticmodule,5
 labware_mm,1
 labware_mmplate,1
@@ -600,6 +607,7 @@ labware_rna,1
 labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
+labware_source,1
 labware_tempmod,12
 labware_tempmod2,5
 labware_tips20,3
@@ -648,7 +656,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,68
-m300_mount,83
+m300_mount,85
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -809,7 +817,7 @@ num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,27
+num_plates,28
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -817,7 +825,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,57
+num_samp,58
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -900,7 +908,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,128
+p300_mount,130
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -954,12 +962,13 @@ peptide_supernat_vol,1
 perform_barcode,1
 perform_normalization,1
 perform_steps,1
-pip,2
+pip,3
 pip_l,2
 pip_mnt,5
 pip_model,5
 pip_mount,9
 pip_r,2
+pip_side,1
 pip_tip,4
 pip_type,8
 pipette,1
@@ -1310,6 +1319,7 @@ tempgen,1
 template_vol,1
 test_method,1
 test_plates,1
+tfer_vol,1
 time_airdry_minutes,1
 time_dry,18
 time_engage,19
@@ -1317,6 +1327,7 @@ time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
+time_shake,1
 tip_disp,3
 tip_immersion,1
 tip_max,1
