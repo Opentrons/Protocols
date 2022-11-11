@@ -10,6 +10,7 @@
     "label": "Labware for the Processing Plates",
     "name": "labware_processing_plate",
     "options": [
+      { "label": "thermofisher_95040450_96_deepwell_2ml", "value": "thermofisher_95040450_96_deepwell_2ml" },
       { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" },
       { "label": "usascientific_96_wellplate_2.4ml_deep", "value": "usascientific_96_wellplate_2.4ml_deep" }
     ]
