@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NUCLEIC ACID EXTRACTION & PURIFICATION": [
+            "Nucleic Acid Purification"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol performs the 96-well Plasmid ezFilter Miniprep Kit. For a detailed list of protocol steps, please see below.\nExplanation of complex parameters below:\n Number of plates: Specify whether using 1 (slot 2 alone) or two (slots 2 and 5) plates for this run.\n Number of Samples Plate 1 & 2: Select the number of samples per plate. If the number of plates variable = 1 above, then the number of samples for plate 2 will be ignored.\n* P300 Mount: Specify which mount (left or right) to host the P300 Multi-Channel Pipette\n",
+    "internal": "089108",
+    "labware": "\nNEST 1 Well Reservoir\nOpentrons 300ul Tips\nNEST 1 Well Reservoir\nUSA Scientific 96 Deepwell Plate 2.4mL\nCustom 96 plates\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NUCLEIC ACID EXTRACTION & PURIFICATION\n\t* Nucleic Acid Purification\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0a1784/Screen+Shot+2022-09-15+at+4.25.47+PM.png)\n\n---\n\n",
+        "description": "This protocol performs the [96-well Plasmid ezFilter Miniprep Kit](https://www.bioland-sci.com/index.php?main_page=product_info&products_id=137&zenid=6d2c9844db2a12e37e573e104fedbba5). For a detailed list of protocol steps, please see below.\n\nExplanation of complex parameters below:\n* `Number of plates`: Specify whether using 1 (slot 2 alone) or two (slots 2 and 5) plates for this run.\n* `Number of Samples Plate 1 & 2`: Select the number of samples per plate. If the number of plates variable = 1 above, then the number of samples for plate 2 will be ignored.\n* `P300 Mount`: Specify which mount (left or right) to host the P300 Multi-Channel Pipette\n\n---\n\n",
+        "internal": "089108\n",
+        "labware": "* [NEST 1 Well Reservoir](https://shop.opentrons.com/consumables/)\n* [Opentrons 300ul Tips](https://shop.opentrons.com/consumables/)\n* [NEST 1 Well Reservoir](https://shop.opentrons.com/consumables/)\n* USA Scientific 96 Deepwell Plate 2.4mL\n* Custom 96 plates\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons P300 Multi-Channel Pipette](https://opentrons.com/pipettes/)\n\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Buffer A1 added to samples\n2. Pause to swap plates and reagents (protocol pause specifies exact steps).\n3. Buffer A2 added to samples.\n4. Pause to swap plates and reagents (protocol pause specifies exact steps).\n5. Buffer N3 added to samples.\n6. Samples moved to plates 3 if one plate is selected, 3 and 6 if two plates are selected.\n7. Pause to swap plates and reagents (protocol pause specifies exact steps).\n8. Isopropanol added to samples and moved to new plate.\n9. Wash buffer added to samples.\n10. Elution buffer added to samples.\n\n",
+        "title": "96-well Plasmid ezFilter Miniprep Kit"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Multi-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nBuffer A1 added to samples\nPause to swap plates and reagents (protocol pause specifies exact steps).\nBuffer A2 added to samples.\nPause to swap plates and reagents (protocol pause specifies exact steps).\nBuffer N3 added to samples.\nSamples moved to plates 3 if one plate is selected, 3 and 6 if two plates are selected.\nPause to swap plates and reagents (protocol pause specifies exact steps).\nIsopropanol added to samples and moved to new plate.\nWash buffer added to samples.\nElution buffer added to samples.\n",
+    "title": "96-well Plasmid ezFilter Miniprep Kit"
+}

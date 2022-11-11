@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Featured": [
+            "Cherrypicking"
+        ]
+    },
+    "deck-setup": "Example Deck Setup - this is variable depending on the .csv uploaded.\n\n",
+    "description": "With this protocol, your robot can perform multiple well-to-well liquid transfers using a single-channel pipette by parsing through a user-defined .csv file. The protocol can use Opentrons GEN1 or GEN2 pipettes.\nThis particular cherrypicking protocol  allows you to specify the source plate labware and slot number, as well as the aspiration height above the bottom of the well (in mm). Appropriate tip racks will be placed in every slot that isn't already populated with a source or destination labware.\nExplanation of complex parameters below:\n Pipette Type: Specify which single channel pipette you will be using for this protocol.\n input .csv file: Here, you should upload a .csv file formatted in the following way being sure to include the header line. Refer to our Labware Library to copy API names for labware to include in the source_labware and destination_labware columns of the .csv.\n",
+    "internal": "3359a5",
+    "labware": "\nAny verified labware found in our Labware Library\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Featured\n\t* Cherrypicking\n\n",
+        "deck-setup": "Example Deck Setup - this is variable depending on the .csv uploaded.\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3359a5/Screen+Shot+2021-04-29+at+2.45.06+PM.png)\n\n\n---\n\n",
+        "description": "With this protocol, your robot can perform multiple well-to-well liquid transfers using a single-channel pipette by parsing through a user-defined .csv file. The protocol can use Opentrons GEN1 or GEN2 pipettes.\n\nThis particular cherrypicking protocol  allows you to specify the source plate labware and slot number, as well as the aspiration height above the bottom of the well (in mm). Appropriate tip racks will be placed in every slot that isn't already populated with a source or destination labware.\n\n\nExplanation of complex parameters below:\n* `Pipette Type`: Specify which single channel pipette you will be using for this protocol.\n* `input .csv file`: Here, you should upload a .csv file formatted in the [following way](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3359a5/template.csv) being sure to include the header line. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `source_labware` and `destination_labware` columns of the .csv.\n\n---\n\n",
+        "internal": "3359a5\n",
+        "labware": "* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Single GEN2 Pipette](https://opentrons.com/pipettes/)\n* [P300 Single GEN2 Pipette](https://opentrons.com/pipettes/)\n* [P1000 Single GEN2 Pipette](https://opentrons.com/pipettes/)\n* P10 Single GEN1 Pipette\n* P50 Single GEN1 Pipette\n* P300 Single GEN1 Pipette\n* P1000 Single GEN1 Pipette\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Pipette will aspirate a user-specified volume at the designated labware and well according to the imported csv file. Slot is also specified, as well as aspiration height from the bottom of the well.\n2. Pipette will dispense this volume into user-specified labware and well according to the imported csv file. Slot is also specified.\n3. Steps 1 and 2 repeated over the duration of the CSV.\n\n",
+        "title": "Cherrypicking with Defined Aspiration Heights"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Single GEN2 Pipette\nP300 Single GEN2 Pipette\nP1000 Single GEN2 Pipette\nP10 Single GEN1 Pipette\nP50 Single GEN1 Pipette\nP300 Single GEN1 Pipette\nP1000 Single GEN1 Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nPipette will aspirate a user-specified volume at the designated labware and well according to the imported csv file. Slot is also specified, as well as aspiration height from the bottom of the well.\nPipette will dispense this volume into user-specified labware and well according to the imported csv file. Slot is also specified.\nSteps 1 and 2 repeated over the duration of the CSV.\n",
+    "title": "Cherrypicking with Defined Aspiration Heights"
+}

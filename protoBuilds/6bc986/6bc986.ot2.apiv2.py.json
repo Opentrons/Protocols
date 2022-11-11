@@ -1,0 +1,125 @@
+{
+    "content": "import math\nfrom opentrons import types\n\nmetadata = {\n    'protocolName': 'Apostle Sample Lysis 4',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [clearance_aspirate, clearance_dispense, sample_count\n     ] = get_values(  # noqa: F821\n      'clearance_aspirate', 'clearance_dispense', 'sample_count')\n\n    num_cols = math.ceil(sample_count / 8)\n\n    # p50 multi and tips\n    tips300 = [ctx.load_labware(\"opentrons_96_tiprack_300ul\", '4')]\n    p50m = ctx.load_instrument(\n        \"p50_multi\", 'left', tip_racks=tips300)\n\n    # 96 deep well plate on slot 8\n    deep_well_plate = ctx.load_labware(\"nest_96_wellplate_2ml_deep\", '8')\n\n    # aspir8 reservoir in slot 2\n    reservoir = ctx.load_labware(\"aspir8_1_reservoir_taped\", '2')\n\n    # dispense and blow out 10 ul sample lysis buffer to v-bottom deep wells\n    for column in deep_well_plate.columns()[:num_cols]:\n        p50m.pick_up_tip()\n        p50m.aspirate(\n         10, reservoir.wells_by_name()['A1'].bottom(clearance_aspirate))\n        p50m.move_to(column[0].bottom(clearance_dispense))\n        p50m.move_to(column[0].bottom(\n         clearance_dispense).move(types.Point(x=-1, y=0, z=1)))\n        p50m.dispense(10)\n        p50m.blow_out()\n        p50m.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "aspir-8",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 24.8
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "reservoir",
+                "displayName": "Aspir-8 Reservoir",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "aspir8_1_reservoir_taped",
+                "quirks": [
+                    "centerMultichannelOnWells",
+                    "touchTipDisabled"
+                ]
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 24.5,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 200000,
+                    "x": 96.95,
+                    "xDimension": 26.9,
+                    "y": 42.76,
+                    "yDimension": 69.6,
+                    "z": 0.3
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 2,
+            "label": "Well Bottom Clearance for Aspiration (mm)",
+            "name": "clearance_aspirate",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Well Bottom Clearance for Dispense (mm)",
+            "name": "clearance_dispense",
+            "type": "float"
+        },
+        {
+            "default": 96,
+            "label": "Sample Count (1-96)",
+            "name": "sample_count",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Aspir-8 Reservoir on 2",
+            "share": false,
+            "slot": "2",
+            "type": "aspir8_1_reservoir_taped"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Apostle Sample Lysis 4"
+    },
+    "modules": []
+}

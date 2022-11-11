@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Oxford Nanopore Ligation Sequencing Kit"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol automates the Adapter Ligation and Clean-Up portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. There is a first part of this protocol for the DNA Repair and End-Prep.\nExplanation of parameters below:\n Number of Samples: Specify the number of samples in multiples of 8 (Max: 96).\n P300 Multichannel GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n P300 Single GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n Magnetic Module Engage Height from Well Bottom (mm): Specify the height of the magnets from the bottom of the well.\n",
+    "internal": "516336-part-2",
+    "labware": "\nThermoFisher 96 Well 0.8mL Polypropylene Deepwell Storage Plate\nBio-Rad 96 Well Plate 200 \u00b5L PCR\nNEST 12-Well Reservoirs, 15 mL\nOpentrons 300uL Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n\t* Oxford Nanopore Ligation Sequencing Kit\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/516336_deck_part2.png)\n\n",
+        "description": "This protocol automates the Adapter Ligation and Clean-Up portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. There is a first part of this protocol for the [DNA Repair and End-Prep](https://protocols.opentrons.com/protocol/516336).\n\nExplanation of parameters below:\n* `Number of Samples`: Specify the number of samples in multiples of 8 (Max: 96).\n* `P300 Multichannel GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.\n* `P300 Single GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.\n* `Magnetic Module Engage Height from Well Bottom (mm)`: Specify the height of the magnets from the bottom of the well.\n\n---\n\n",
+        "internal": "516336-part-2",
+        "labware": "* [ThermoFisher 96 Well 0.8mL Polypropylene Deepwell Storage Plate](https://www.thermofisher.com/order/catalog/product/AB0765#/AB0765)\n* [Bio-Rad 96 Well Plate 200 \u00b5L PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr/)\n* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)\n* [Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 GEN2 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n* [P300 GEN2 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "\n1. Transfer master mix and put into PCR plate, and mix each time.\n2. Transfer Samples from Sample PCR Plate to MIDI plate on Magnetic Module.\n3. Resuspend AMPure beads by pipette mixing and transfer to MIDI plate on magnetic module.\n4. Pause for Hula Mixer and Spin Down the plate.\n5. Engage Magnetic Module for 5 minutes and then remove supernatant.\n6. Wash the beads with fragment buffer (Long or Short). Mixing the buffer, engage magnetic module to allow beads to pellet and then remove supernantant.\n7. Repeat Step 6.\n8. Pause and Spin Down the samples.\n9. Place on magnetic module and engage magnet for 1 minute.\n10. Remove supernatant from samples.\n11. Disengage magnet and add 15 uL of elution buffer.\n12. Incubate for 10 minutes at room temperature.\n13. Engage magnet for 5 minutes to allow beads to pellet and the eluate is clear.\n14. Pause and remove old BioRad PCR plate on Slot 2 with a new Bio Rad PCR Plate.\n15. Transfer 15 uL of eluate containing the new NDA library into the new BioRad PCR plate.\n\n\n",
+        "reagent-setup": "\n![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/516336_reagents_part2.png)\n\n---\n\n",
+        "title": "Ligation Sequencing Kit: Adapter Ligation and Clean-Up"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)",
+        "Temperature Module (GEN2)",
+        "Thermocycler Module"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 GEN2 Multi-Channel Pipette\nP300 GEN2 Single-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nTransfer master mix and put into PCR plate, and mix each time.\nTransfer Samples from Sample PCR Plate to MIDI plate on Magnetic Module.\nResuspend AMPure beads by pipette mixing and transfer to MIDI plate on magnetic module.\nPause for Hula Mixer and Spin Down the plate.\nEngage Magnetic Module for 5 minutes and then remove supernatant.\nWash the beads with fragment buffer (Long or Short). Mixing the buffer, engage magnetic module to allow beads to pellet and then remove supernantant.\nRepeat Step 6.\nPause and Spin Down the samples.\nPlace on magnetic module and engage magnet for 1 minute.\nRemove supernatant from samples.\nDisengage magnet and add 15 uL of elution buffer.\nIncubate for 10 minutes at room temperature.\nEngage magnet for 5 minutes to allow beads to pellet and the eluate is clear.\nPause and remove old BioRad PCR plate on Slot 2 with a new Bio Rad PCR Plate.\nTransfer 15 uL of eluate containing the new NDA library into the new BioRad PCR plate.\n",
+    "reagent-setup": "\n",
+    "title": "Ligation Sequencing Kit: Adapter Ligation and Clean-Up"
+}

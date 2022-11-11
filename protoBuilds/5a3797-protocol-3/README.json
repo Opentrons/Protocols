@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\nOpentrons 200 uL Filter Tip Rack (Slot 1, Slot 2)\nSample Deep Well Plate (Slot 3)\n12-well reservoir (Slot 4)\nTube Racks 1-7 (Slots 5-11, sequentially)\n",
+    "description": "This protocol performs aliquoting from 7 different tube racks (first 96 tubes) into a 96 well plate. It then aliquots from a 12-well reservoir into the deep well plate.",
+    "internal": "5a3797-protocol-3",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "* Opentrons 200 uL Filter Tip Rack (Slot 1, Slot 2)\n* Sample Deep Well Plate (Slot 3)\n* 12-well reservoir (Slot 4)\n* Tube Racks 1-7 (Slots 5-11, sequentially)\n\n",
+        "description": "This protocol performs aliquoting from 7 different tube racks (first 96 tubes) into a 96 well plate. It then aliquots from a 12-well reservoir into the deep well plate.\n\n",
+        "internal": "5a3797-protocol-3",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Select the mount position for the P300-multichannel and P300-single channel pipette. Choose tube rack type for each of the tube racks.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "protocol-steps": "\n1. Aliquot 200uL from the approximately 7 tube racks into 96 well plate\n2. Aliquot 275uL from 15mL-12 section reservoir into the deep well plate change tips for each row.\n\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [KingFisher\u2122 Plastics for 96 deep-well format](https://www.thermofisher.com/order/catalog/product/95040450#/95040450)\n* Sorfa 10 mL Tubes\n* Copan 10 mL Tubes\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Protocol 3 for Sample plate set up"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nSelect the mount position for the P300-multichannel and P300-single channel pipette. Choose tube rack type for each of the tube racks.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nAliquot 200uL from the approximately 7 tube racks into 96 well plate\nAliquot 275uL from 15mL-12 section reservoir into the deep well plate change tips for each row.\n\n\n\n\nKingFisher\u2122 Plastics for 96 deep-well format\nSorfa 10 mL Tubes\nCopan 10 mL Tubes\n\n\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Protocol 3 for Sample plate set up"
+}

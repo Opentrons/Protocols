@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "description": "This protocol creates a custom plate-filling protocol from 1 source plate to up to 9 destination plate using a P300-multi channel pipette. The transfer scheme is shown here.\n\n\nTo purchase tips, reagents, or pipettes, please visit our online store or contact our sales team at info@opentrons.com\n\nOpentrons OT-2\nOpentrons OT-2 Run App (Version 3.15.0 or later)\nP300 Multi Channel Pipette\nNEST 96 Deepwell Plate 2mL\nGreiner Microlon 96 Well Plate 340 \u00b5L\n",
+    "internal": "4bdd14",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n",
+        "description": "This protocol creates a custom plate-filling protocol from 1 source plate to up to 9 destination plate using a P300-multi channel pipette. The transfer scheme is shown [here](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2020-11-24/ek13tro/image.png).\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\nTo purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)\n\n* [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)\n* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)\n* [P300 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n* [NEST 96 Deepwell Plate 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep)\n* Greiner Microlon 96 Well Plate 340 \u00b5L\n\n",
+        "internal": "4bdd14\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "\n1. Input your protocol parameters.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Simple Plate Transfer - 4 Sources"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput your protocol parameters.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Simple Plate Transfer - 4 Sources"
+}

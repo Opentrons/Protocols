@@ -1,0 +1,37 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification": [
+            "DNA Extraction"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol takes up to 3 csv files per source plate to dispense into a 96 well plate on the heater shaker module. Samples can be in any order in the source plate as long as they are specified in the csv, but will always be loaded into the final plate by column. A maximum number of 90 samples can be loaded into the 96 well plate on the heater shaker, leaving room for the 6 controls (and subsequently 90 samples between all 3 csv files). Note: for reagent 4 in columns 4 & 5, reagent 5 in columns 6 & 7, and reagent 6 in columns 8 & 9, split the total calculated reagent volume EQUALLY between the pair of columns, as the protocol will circle between the pair of columns as the source.\n\nThe first row of all 3 csv files should be populated with the header, with the relevant parsing information to start in row 2 of each csv file. The header should consist of the following in the following order: barcode, rack_num, sample_rack_row, sample_rack_col,plate_row, plate_col, dna_extract_row, dna_extract_col. All relevant information for the protocol is just taken from the dna_extract_row, dna_extract_col columns. The number of csv files must equal the number of source plates selected below.\n\n",
+    "internal": "0530d8",
+    "labware": "\nAbgene 96 deep well plate\nOpentrons 200ul Filter Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n\t* DNA Extraction\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-07+at+11.04.58+AM.png)\n\n",
+        "description": "This protocol takes up to 3 csv files per source plate to dispense into a 96 well plate on the heater shaker module. Samples can be in any order in the source plate as long as they are specified in the csv, but will always be loaded into the final plate by column. A maximum number of 90 samples can be loaded into the 96 well plate on the heater shaker, leaving room for the 6 controls (and subsequently 90 samples between all 3 csv files). Note: for reagent 4 in columns 4 & 5, reagent 5 in columns 6 & 7, and reagent 6 in columns 8 & 9, split the total calculated reagent volume EQUALLY between the pair of columns, as the protocol will circle between the pair of columns as the source.\n\n* The first row of all 3 csv files should be populated with the header, with the relevant parsing information to start in row 2 of each csv file. The header should consist of the following in the following order: ```barcode, rack_num, sample_rack_row, sample_rack_col,plate_row, plate_col, dna_extract_row, dna_extract_col```. All relevant information for the protocol is just taken from the ```dna_extract_row, dna_extract_col``` columns. The number of csv files must equal the number of source plates selected below.\n\n\n---\n\n",
+        "internal": "0530d8\n",
+        "labware": "* [Abgene 96 deep well plate](https://assets.fishersci.com/TFS-Assets/LCD/Datasheets/Abgene-96-Well-Plate-Datasheet.pdf)\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/universal-filter-tips/)\n\n",
+        "modules": "* [Heater-Shaker Module](https://shop.opentrons.com/heater-shaker-module/)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 Single Channel Pipette](link to pipette on shop.opentrons.com)\n* [P300 Multi Channel Pipette](link to pipette on shop.opentrons.com)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Sample added to heater shaker (HS) plate\n2. Controls added to HS plate.\n3. 50ul of reagent in column 1 of the reagent plate is loaded into samples and control on HS plate.\n4. Heater shaker set at 37C, 2000 RPM for 60 minutes\n5. 60ul of reagent in column 2 of the reagent plate is loaded into samples and control on HS plate.\n6. Heater shaker set at 55C for 30 minutes\n\n",
+        "reagent-setup": "![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0530d8/Screen+Shot+2022-11-01+at+11.46.43+AM.png)\n\n---\n\n",
+        "title": "DNA Extraction with Heater Shaker - Part 1"
+    },
+    "modules": [
+        "Heater-Shaker Module",
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 Single Channel Pipette\nP300 Multi Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nSample added to heater shaker (HS) plate\nControls added to HS plate.\n50ul of reagent in column 1 of the reagent plate is loaded into samples and control on HS plate.\nHeater shaker set at 37C, 2000 RPM for 60 minutes\n60ul of reagent in column 2 of the reagent plate is loaded into samples and control on HS plate.\nHeater shaker set at 55C for 30 minutes\n",
+    "reagent-setup": "\n",
+    "title": "DNA Extraction with Heater Shaker - Part 1"
+}

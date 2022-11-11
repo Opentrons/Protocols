@@ -1,0 +1,342 @@
+{
+    "content": "\"\"\"Protocol.\"\"\"\nimport math\n\nmetadata = {\n    'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, p1000_sample_height,\n        plate_height, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_sample_height\", \"plate_height\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 95:\n        raise Exception(\"Enter a sample number between 1-95\")\n\n    num_samp = num_samp+1\n\n    # load labware\n    samples = [ctx.load_labware('opentrons_15_tuberack_5000ul', slot)\n               for slot in ['1', '4', '7', '10', '2', '5', '8', '11']]\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '3',\n                                    label='Sample plate')\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '6')]\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n\n    # PROTOCOL\n\n    # reagents\n    sample_map_left = [tube for i, tuberack in enumerate(\n                        samples[:4]*len(samples[0].columns()))\n                       for col in\n                       tuberack.columns()[math.floor(i/4):math.floor(i/4)+1]\n                       for tube in col[::-1]]\n    sample_map_right = [tube for i, tuberack in enumerate(\n                        samples[4:]*len(samples[0].columns()))\n                        for col in\n                        tuberack.columns()[math.floor(i/4):math.floor(i/4)+1]\n                        for tube in col[::-1]]\n\n    plate_map = [well for row in sample_plate.rows()\n                 for well in row][:num_samp-1]\n\n    # add patient samples\n    samp_ctr = 0\n    for i, well in enumerate(plate_map):\n        sample_map = sample_map_left if i < 60 else sample_map_right\n        p1000.pick_up_tip()\n        p1000.aspirate(200, sample_map[samp_ctr].bottom(z=p1000_sample_height))\n        p1000.touch_tip()\n        p1000.dispense(200, well.bottom(z=plate_height))\n        p1000.blow_out()\n        p1000.drop_tip()\n        samp_ctr += 1\n        if samp_ctr == 60:\n            samp_ctr = 0\n            ctx.comment('\\n')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "custom",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 111.13
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "opentrons 15mL tube rack",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_15_tuberack_5000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 11.13
+                },
+                "A2": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 11.13
+                },
+                "A3": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 11.13
+                },
+                "A4": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 11.13
+                },
+                "A5": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 11.13
+                },
+                "B1": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 11.13
+                },
+                "B2": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 11.13
+                },
+                "B3": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 11.13
+                },
+                "B4": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 11.13
+                },
+                "B5": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 11.13
+                },
+                "C1": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 11.13
+                },
+                "C2": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 11.13
+                },
+                "C3": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 11.13
+                },
+                "C4": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 11.13
+                },
+                "C5": {
+                    "depth": 100,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 11.13
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 24,
+            "label": "Number of samples (1-95)",
+            "name": "num_samp",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "P1000 sample tube aspiration height",
+            "name": "p1000_sample_height",
+            "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "P1000 sample dispense height (in plate)",
+            "name": "plate_height",
+            "type": "int"
+        },
+        {
+            "label": "P1000 Single GEN2 Mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "opentrons 15mL tube rack on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "Sample plate on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Extraction Prep for TaqPath Covid-19 Combo Kit",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

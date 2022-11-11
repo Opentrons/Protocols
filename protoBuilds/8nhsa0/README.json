@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Cherrypicking"
+        ]
+    },
+    "description": "This protocol performs cherrypicking from x source plates to y destination plates, both Bio-Rad 96-well low profile PCR plates (200\u00b5l). The user can specify the sources and destinations in any slot, and the protocol will automatically load the plate in that slot. Tipracks will automatically be loaded in the remaining available slots. In the case that all tips are exhausted, the protocol pauses, and the user is prompted to refill the racks before resuming.\nThe CSV should be formatted like so:\nsource slot, source well, destination slot, destination well, volume\n1,A1,3,A1,5\n...\nThe header line should be included (the first line from the .csv file is ignored)\n\n\n\nBio-Rad 96-well low profile PCR plates (200\u00b5l)\nOpentrons P50-single electronic pipette\nOpentrons 300\u00b5l tipracks\n",
+    "internal": "8nhsa0",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Cherrypicking\n\n\n",
+        "description": "This protocol performs cherrypicking from x source plates to y destination plates, both Bio-Rad 96-well low profile PCR plates (200\u00b5l). The user can specify the sources and destinations in any slot, and the protocol will automatically load the plate in that slot. Tipracks will automatically be loaded in the remaining available slots. In the case that all tips are exhausted, the protocol pauses, and the user is prompted to refill the racks before resuming.\n\nThe CSV should be formatted like so:\n\n```\nsource slot, source well, destination slot, destination well, volume\n1,A1,3,A1,5\n...\n```\n\n**The header line should be included (the first line from the .csv file is ignored)**\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Bio-Rad 96-well low profile PCR plates (200\u00b5l)](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* [Opentrons P50-single electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n* [Opentrons 300\u00b5l tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n\n",
+        "internal": "8nhsa0\n",
+        "notes": "If you have any questions about this protocol, please contact the Applications Engineering Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "\n1. Upload CSV and input your protocol parameters.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Cherrypicking (Custom)"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Applications Engineering Team by filling out the Troubleshooting Survey.",
+    "process": "\nUpload CSV and input your protocol parameters.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Cherrypicking (Custom)"
+}

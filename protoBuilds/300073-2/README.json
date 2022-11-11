@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "PCR prep"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol transfers 5 \u00b5L of saliva samples from a source to a target 96 well plate using a 20 \u00b5L multi-channel pipette.\nThe protocol lets the user control the height of aspiration/dispension from the bottom of the samples and target wells, as well as the flow rate of aspiration and dispension.\nExplanation of parameters below:\n Number of samples to transfer: How many samples to transfer from the source to the target plate\n Aspiration flow rate (\u00b5L/s): rate of aspiration in microliters per second\n Dispension flow rate (\u00b5L/s): rate of dispension in microliters per second\n Aspiration height from the bottom of the tubes (mm): Height from the bottom of the tubes to aspirate from in mm\n Dispension height from the bottom of the tubes (mm): Height from the bottom of the plate wells to dispense from in mm\n (Optional) Temperature module with aluminum block: Parameter to indicate whether you are using a temperature module with an aluminum block to put your source plate on\n Set temperature of the temperature module: Temperature to set on the temperature module in degrees C\n Amount of time to keep the pipette in the tube after aspiration (s): How many seconds to wait before withdrawing the pipette from the tube after aspiration\n",
+    "internal": "300073-2",
+    "labware": "\nStellar Scientific 96 well plate\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* PCR prep\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/300073/deck2.jpg)\n\n---\n\n",
+        "description": "This protocol transfers 5 \u00b5L of saliva samples from a source to a target 96 well plate using a 20 \u00b5L multi-channel pipette.\nThe protocol lets the user control the height of aspiration/dispension from the bottom of the samples and target wells, as well as the flow rate of aspiration and dispension.\n\n\nExplanation of parameters below:\n* `Number of samples to transfer`: How many samples to transfer from the source to the target plate\n* `Aspiration flow rate (\u00b5L/s)`: rate of aspiration in microliters per second\n* `Dispension flow rate (\u00b5L/s)`: rate of dispension in microliters per second\n* `Aspiration height from the bottom of the tubes (mm)`: Height from the bottom of the tubes to aspirate from in mm\n* `Dispension height from the bottom of the tubes (mm)`: Height from the bottom of the plate wells to dispense from in mm\n* `(Optional) Temperature module with aluminum block`: Parameter to indicate whether you are using a temperature module with an aluminum block to put your source plate on\n* `Set temperature of the temperature module`: Temperature to set on the temperature module in degrees C\n* `Amount of time to keep the pipette in the tube after aspiration (s)`: How many seconds to wait before withdrawing the pipette from the tube after aspiration\n\n---\n\n",
+        "internal": "300073-2\n",
+        "labware": "* [Stellar Scientific 96 well plate](https://www.stellarscientific.com/96-well-low-profile-fast-type-pcr-plate-with-raised-rim-edge-0-1ml-rnase-and-dnase-free-clear-100-cs/)\n\n",
+        "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [20 \u00b5L multi-channel pipette gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [20 \u00b5L filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. If a temperature module is on the deck the first step is to set the temperature according to the parameter.\n2. Samples are transferred from the source plate to the target plate, in the manner specified by the parameter settings.\n\n",
+        "title": "Saliva sample transfer from source to target well plate"
+    },
+    "modules": [
+        "Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\n20 \u00b5L multi-channel pipette gen2\n20 \u00b5L filter tips\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nIf a temperature module is on the deck the first step is to set the temperature according to the parameter.\nSamples are transferred from the source plate to the target plate, in the manner specified by the parameter settings.\n",
+    "title": "Saliva sample transfer from source to target well plate"
+}

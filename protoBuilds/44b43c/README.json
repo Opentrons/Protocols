@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "description": "This protocol performs a PCR preparation by transferring mastermix and controls from custom deepwell plates and samples from PCR plates to corresponding deepwell plates. The user is prompted to\n\n\n\nThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate with Barcode, 0.1 mL Cat # 4366932\nThermoFisher KingFisher\u2122 Deepwell 96-Well Plate Cat # 95040450\nOpentrons P300 GEN2 multi-channel electronic pipette\nOpentrons P20 GEN2 multi-channel electronic pipette\nOpentrons 50/300\u00b5l tipracks\nOpentrons 20\u00b5l tipracks\n\n",
+    "internal": "44b43c",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "description": "This protocol performs a PCR preparation by transferring mastermix and controls from custom deepwell plates and samples from PCR plates to corresponding deepwell plates. The user is prompted to\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* ThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate with Barcode, 0.1 mL Cat # 4366932\n* ThermoFisher KingFisher\u2122 Deepwell 96-Well Plate Cat # 95040450\n* [Opentrons P300 GEN2 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)\n* [Opentrons P20 GEN2 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)\n* [Opentrons 50/300\u00b5l tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 20\u00b5l tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n---\n\n",
+        "internal": "44b43c\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input the number of plates to process (1-3), the number of sample columns (1-12), and the respective mount sides for your P300 GEN 2 multi-channel and P20 GEN2 multi-channel pipettes.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "COVID-19 PCR Preparation"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput the number of plates to process (1-3), the number of sample columns (1-12), and the respective mount sides for your P300 GEN 2 multi-channel and P20 GEN2 multi-channel pipettes.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "COVID-19 PCR Preparation"
+}

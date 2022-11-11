@@ -1,0 +1,32 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "Links:\n Random Aliquoting\n\n\n Plasmind Luciferase Assay\n\n\n QIAcuity Plate Transfer\n\n\n PCR Prep\n\n\nThis protocol performs a custom PCR prep from 4 source 96-well RNA plate to a single 384-well destination plate. The transfer scheme is shown below.\n",
+    "internal": "9250d7",
+    "labware": "\nOpentrons 20ul tips\nCorning 96 Well Plate 360 ul Flat\nCustom 384 Well Plate 100 ul\nGeneric PCR Strips in 96-well aluminum block\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.us-east-1.amazonaws.com/custom-README-images/925d07/deck.png?versionId=qLdqfwXnxAUL.Q0DsCMwQD4t37oqX96S&response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLWVhc3QtMiJIMEYCIQDh2SuhUJrAbGVRHxOnqIYvsuoX24YLUMskYfu4dDbVDQIhAN7JMJvSaDkV8ahLnkw1%2FxG2YmkjtwszFEmpJ7nm6M3QKogDCJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMNDgwMDM0NzU4NjkxIgwP%2F8LEp6TeMPVl7Pgq3ALlyIR0p8yxAJOfNvoGleOs1edmgGEByFqDf0VYNkqBGMarkQZNcYqipaQxF82afh5lA2ck4RXMPj9xRq%2FKTHAE0xigIYUkGOJgqjxkilNgCakvGI4ILdjzEjIKuuDYMwfHdR7VS%2BuADUjTY9ZvpeQkktrsMzwgD%2BLk9hcMbkRWNWPea3AlmgNAgoq%2BSLbIMFHtd99DTf8N1OKqum6omteVXWoTWH0hUXMeLZyQ9gQZZ0%2F22e8Mh3DRE3%2FdLjh92m%2Brm8o1TKBMB0hPDrCv1zKm2%2BCSAuHoxODgb4W0RyEBiJGwH%2Be%2F1ZLu%2FnYsrLC0UGXZsArBYSosyszPchnlnSrguA%2F5p%2FKW0yWb%2FL%2Bkqcg%2F%2F%2F4%2Bh5iZ1SycKFvgMC7Ma%2Bcp6IBOozTpLVBeU6jEP1VeIEAeBxNF0QmUeiUwDQ3OIH0bKBQlOdOdbc0qHgD9u9nEvTv877odHjbVhxowmuPXlQY6sgLOeJ6t17RfHSgszFXMyppkhwCibNOx3c26ou3XM%2Fretauca%2BKovLWZlRtPrggxliFJeVUlXqV7k3dpC4XhwJeuybmcA8FaPvz%2FsHKm0zmLRpqmpp438rs8AXDuJNbp%2BHoPhTcc4AjAfq0xyrhY07VU%2FAAn0B2%2FdwDB1cuRrf4rt4iQeeFhGuC8AuMVnOcVAW2ORvqll067lcYUyWLzt5Nit7ncgG1V9tgKA0bZ2ZEIxciJRbMhmYtj%2BqwgxVymSmeb11q6LJMH0acrJTnXJJYiWHZ%2BAFPXDHN%2FKhLimqc9OPDJs9n8BwXZsJ78K0Hwk6u1HBm1grrKHyrPT%2F4gNcCUG0%2Bpc6Eh6ZS9JrPvq3KAy8%2F1jKrHFhNnLoCsQAhnt8tvWtoQCFWC4jXDEMCDwf2ZtZM%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220624T172242Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAW7RCNEARRJXZPZ64%2F20220624%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=6b9bc0f27c223ed652b90a98e00fb9172f72b014445bdcdd94899779d50109d3)\n\n---\n\n",
+        "description": "\nLinks:\n* [Random Aliquoting](./925d07-cp)\n<br></br>\n<br></br>\n* [Plasmind Luciferase Assay](./925d07-pla)\n<br></br>\n<br></br>\n* [QIAcuity Plate Transfer](./925d07-q)\n<br></br>\n<br></br>\n* [PCR Prep](./925d07-v3)\n<br></br>\n<br></br>\n\nThis protocol performs a custom PCR prep from 4 source 96-well RNA plate to a single 384-well destination plate. The transfer scheme is shown below.\n\n---\n\n",
+        "internal": "9250d7\n",
+        "labware": "* [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips)\n* Corning 96 Well Plate 360 ul Flat\n* Custom 384 Well Plate 100 ul\n* Generic PCR Strips in [96-well aluminum block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n\n",
+        "modules": "* [Temperature Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n\n---\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "title": "PCR Prep"
+    },
+    "modules": [
+        "Temperature Module GEN2"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi Channel Pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "title": "PCR Prep"
+}

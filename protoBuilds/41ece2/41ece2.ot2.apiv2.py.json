@@ -1,0 +1,139 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Custom Drug Dilution Assay (version 2)',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt300, mnt10, cellsmedia, np] = get_values(  # noqa: F821\n     'mnt300', 'mnt10', 'cellsmedia', 'np')\n\n    # load labware\n    tips10 = [protocol.load_labware('opentrons_96_filtertiprack_10ul', '6')]\n    tips300 = [protocol.load_labware('opentrons_96_tiprack_300ul', '3')]\n\n    m10 = protocol.load_instrument('p10_multi', mnt10, tip_racks=tips10)\n    m300 = protocol.load_instrument('p300_multi', mnt300, tip_racks=tips300)\n    m10.flow_rate.aspirate = 10\n    m10.flow_rate.dispense = 10\n\n    ds200 = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '11', 'Drug Stock 200uM')\n    dplates = [\n        protocol.load_labware(\n            'corning_96_wellplate_360ul_flat',\n            s,\n            n) for s, n in zip([10, 7, 4, 1], [\n                'Drug Dilution 10uM',\n                'Drug Dilution 1uM',\n                'Drug Dilution 0.1uM',\n                'Drug Dilution 0.01uM'][:np])]\n    media = protocol.load_labware(\n        'axygen_1_reservoir_90ml', '2', 'Media+IL-2+OKT3+CD28')\n    if cellsmedia:\n        cells = protocol.load_labware(\n            'axygen_1_reservoir_90ml', '5', 'Cells')\n\n    # Transfer 100\u00b5L (or 90\u00b5L) Media to wells in plates\n    lastplate = dplates[-1].rows()[0][1:]\n    otherplates = [r for plate in dplates[:-1] for r in plate.rows()[0][1:]]\n    allPlateWells = [otherplates, lastplate]\n\n    protocol.comment('Transferring Media to columns 2-12 ...')\n    tipctr = 0\n\n    for idx, wells in enumerate(allPlateWells):\n        vol = 100 if idx == 0 else 90\n        for well in wells:\n            if tipctr == 0:\n                m300.pick_up_tip()\n            m300.aspirate(20, media['A1'].top())\n            m300.aspirate(60, media['A1'])\n            m300.dispense(60, media['A1'])\n            m300.aspirate(vol, media['A1'])\n            m300.air_gap(30)\n            m300.dispense(vol+50, well)\n            m300.blow_out()\n            tipctr += 1\n            if tipctr == 4:\n                m300.return_tip()\n                m300.reset_tipracks()\n                tipctr = 0\n    if m300.has_tip:\n        m300.return_tip()\n\n    # Perform dilutions\n    protocol.comment('Performing 10x dilutions...')\n    for i in range(1, 11):\n        m10.pick_up_tip()\n        for j in range(len(dplates)):\n            dest = dplates[j].rows()[0][i]\n            src = ds200.rows()[0][i] if j == 0 else dplates[j-1].rows()[0][i]\n            m10.transfer(\n                10, src, dest, new_tip='never',\n                mix_before=(4, 10), mix_after=(4, 10))\n            m10.blow_out()\n        m10.drop_tip()\n\n    # Transfer 100\u00b5L Cells to wells in plates\n    if cellsmedia:\n        protocol.comment('Transferring 100\u00b5L of cells to columns 2-12...')\n        tipctr = 0\n        m300.flow_rate.dispense = 200\n\n        for wells in allPlateWells:\n            for well in wells:\n                if tipctr == 0:\n                    m300.pick_up_tip(tips300[0]['A2'])\n                m300.mix(5, 300, cells['A1'])\n                m300.aspirate(20, cells['A1'].top())\n                m300.aspirate(60, cells['A1'])\n                m300.dispense(60, cells['A1'])\n                m300.aspirate(100, cells['A1'])\n                m300.air_gap(30)\n                m300.dispense(150, well.top())\n                m300.blow_out()\n                tipctr += 1\n                if tipctr == 4:\n                    m300.drop_tip(tips300[0]['A2'])\n                    tipctr = 0\n        if m300.has_tip:\n            m300.drop_tip(tips300[0]['A2'])\n\n    protocol.comment('Protocol complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300-Multi Mount",
+            "name": "mnt300",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P10-Multi Mount",
+            "name": "mnt10",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Add Cells + Media?",
+            "name": "cellsmedia",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Number of Dilution Plates",
+            "name": "np",
+            "options": [
+                {
+                    "label": "3",
+                    "value": 3
+                },
+                {
+                    "label": "4",
+                    "value": 4
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p10_multi"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Media+IL-2+OKT3+CD28 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "axygen_1_reservoir_90ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Drug Dilution 0.1uM on 4",
+            "share": false,
+            "slot": "4",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Cells on 5",
+            "share": false,
+            "slot": "5",
+            "type": "axygen_1_reservoir_90ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 10 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_10ul"
+        },
+        {
+            "name": "Drug Dilution 1uM on 7",
+            "share": false,
+            "slot": "7",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Drug Dilution 10uM on 10",
+            "share": false,
+            "slot": "10",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Drug Stock 200uM on 11",
+            "share": false,
+            "slot": "11",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Chaz <chaz@opentrons.com>",
+        "protocolName": "Custom Drug Dilution Assay (version 2)",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

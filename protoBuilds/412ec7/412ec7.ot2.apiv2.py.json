@@ -1,0 +1,144 @@
+{
+    "content": "\"\"\"ESKILS PROTOCOL.\"\"\"\nmetadata = {\n    'protocolName': 'Serial Dilution for Eskil',\n    'author': 'John C. Lynch',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n    }\n\n\ndef run(ctx):\n    \"\"\"LINTER.\"\"\"\n    [plate_type,\n     temp_mod_on,\n     dilution_factor,\n     num_of_dilutions,\n     total_mixing_volume,\n     blank_on,\n     tip_use_strategy\n     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        'plate_type',\n        'temp_mod_on',\n        'dilution_factor',\n        'num_of_dilutions',\n        'total_mixing_volume',\n        'blank_on',\n        'tip_use_strategy')\n\n    # Check for bad setup here\n    if not 1 <= num_of_dilutions <= 11:\n        raise Exception('Enter a number of dilutions between 1 and 11')\n    if temp_mod_on == 1 and 'aluminum' not in plate_type:\n        raise Exception('Please select compatible plate and\\\n    temperature module setting')\n    if temp_mod_on == 0 and 'aluminum' in plate_type:\n        raise Exception(\n                        'Please select compatible plate and\\\n    temperature module setting')\n    if num_of_dilutions == 11 and blank_on == 1:\n        raise Exception(\n                        'No room for blank with 11 dilutions'\n        )\n\n    # define all custom variables above here with descriptions:\n    transfer_volume = total_mixing_volume/dilution_factor\n    diluent_volume = total_mixing_volume - transfer_volume\n\n    # load modules\n    if temp_mod_on == 1:\n        temp_mod = ctx.load_module('tempdeck', '4')\n\n    # load labware\n    trough = ctx.load_labware('nest_12_reservoir_15ml', '1')\n    if temp_mod_on == 1:\n        dilute_plate = temp_mod.load_labware(plate_type)\n    elif temp_mod_on == 0:\n        dilute_plate = ctx.load_labware(plate_type, '4')\n\n    # load tipracks\n    tiprack = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['2', '3']\n        ]\n    # load instrument\n    pipette = ctx.load_instrument(\n        'p300_multi_gen2', mount='left', tip_racks=tiprack)\n    # pipette functions   # INCLUDE ANY BINDING TO CLASS\n\n    # helper functions\n\n    # reagents\n\n    # protocol\n    # step 2\n    # Distribute diluent across the plate to the the number of samples\n    pipette.transfer(\n        diluent_volume,\n        trough.wells()[0],\n        dilute_plate.rows()[0][1:num_of_dilutions],\n        air_gap=10,\n        new_tip=tip_use_strategy\n    )\n\n    # step 3, 4\n    # Dilution of samples across the 96-well flat bottom plate\n    if tip_use_strategy == 'never':\n        pipette.pick_up_tip()\n    for s, d in zip(\n            dilute_plate.rows()[0][:num_of_dilutions-1],\n            dilute_plate.rows()[0][1:num_of_dilutions]\n    ):\n        pipette.transfer(\n            transfer_volume,\n            s,\n            d,\n            air_gap=10,\n            mix_after=(5, total_mixing_volume-5),\n            new_tip=tip_use_strategy\n        )\n    if tip_use_strategy == 'never':\n        pipette.drop_tip()\n\n    if blank_on == 1:\n        pipette.transfer(\n            diluent_volume,\n            trough.wells()[0],\n            dilute_plate.rows()[0][-1],\n            air_gap=10,\n            new_tip=tip_use_strategy\n        )\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Plate Type",
+            "name": "plate_type",
+            "options": [
+                {
+                    "label": "NEST 96-Well, 100\u00b5L PCR w/aluminum block",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "NEST 96-Well, 100\u00b5L PCR",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "Bio-Rad 96-Well, 200\u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Bio-Rad 96-Well, 200\u00b5L PCR w/aluminum block",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Use Temperature Module",
+            "name": "temp_mod_on",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "NO",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1.5,
+            "label": "dilution factor",
+            "name": "dilution_factor",
+            "type": "float"
+        },
+        {
+            "default": 10,
+            "label": "number of dilutions",
+            "name": "num_of_dilutions",
+            "type": "int"
+        },
+        {
+            "default": 150,
+            "label": "total mixing volume (in uL)",
+            "name": "total_mixing_volume",
+            "type": "float"
+        },
+        {
+            "label": "Blank in Well Plate",
+            "name": "blank_on",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "tip use strategy",
+            "name": "tip_use_strategy",
+            "options": [
+                {
+                    "label": "change tips",
+                    "value": "always"
+                },
+                {
+                    "label": "use one tip",
+                    "value": "never"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "John C. Lynch",
+        "protocolName": "Serial Dilution for Eskil",
+        "source": "Custom Protocol Request"
+    },
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
+}

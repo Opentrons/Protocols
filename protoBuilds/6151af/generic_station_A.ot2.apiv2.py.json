@@ -1,0 +1,353 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Sample Plating Protocol',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samples, sample_vol, asp_height, p300_mount,\n     tip_type] = get_values(  # noqa: F821\n        'num_samples', 'sample_vol', 'asp_height', 'p300_mount', 'tip_type')\n\n    # define source/dest wells\n    if num_samples > 96:\n        raise Exception('The number of samples should be 1-96.')\n\n    # load labware\n    num_racks = math.ceil(num_samples/15)\n    source_tuberacks = [\n        ctx.load_labware('avantik_15_tuberack_3000ul', slot,\n                         'sample tuberack ' + str(i + 1))\n        for i, slot in enumerate(\n            ['1', '4', '5', '6', '7', '8', '9'][:num_racks])]\n    dest_plate = ctx.load_labware(\n        'nest_96_wellplate_2ml_deep', '2', 'deepwell plate')\n    tiprack300 = [ctx.load_labware(tip_type, '3')]\n\n    # load pipette\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # define source/dest wells\n    if num_samples > 96:\n        raise Exception('The number of samples should be 1-96.')\n\n    sources = [tube for rack in source_tuberacks\n               for tube in rack.wells()][:num_samples]\n    dests = dest_plate.wells()[:num_samples]\n\n    # calculate air gap allowable\n    tip_max_vol = tiprack300[0].wells()[0].max_volume\n    if tip_max_vol - sample_vol < 20:\n        if tip_max_vol - sample_vol > 0:\n            air_gap = tip_max_vol - sample_vol\n        else:\n            air_gap = 0  # no air gap if multiple transfers\n    else:\n        air_gap = 20\n    for source, dest in zip(sources, dests):\n        p300.pick_up_tip()\n        p300.transfer(sample_vol, source.bottom(asp_height),\n                      dest, air_gap=air_gap, new_tip='never')\n        p300.air_gap(20)  # ensure no dripping on way to trash\n        p300.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Avantik",
+                "brandId": [
+                    "GL4692"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 107.7
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Avantik 15 Tube Rack 3000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "avantik_15_tuberack_3000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 6.1
+                },
+                "A2": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 6.1
+                },
+                "A3": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 6.1
+                },
+                "A4": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 6.1
+                },
+                "A5": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 6.1
+                },
+                "B1": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 6.1
+                },
+                "B2": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 6.1
+                },
+                "B3": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 6.1
+                },
+                "B4": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 6.1
+                },
+                "B5": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 6.1
+                },
+                "C1": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 6.1
+                },
+                "C2": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 6.1
+                },
+                "C3": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 6.1
+                },
+                "C4": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 6.1
+                },
+                "C5": {
+                    "depth": 101.6,
+                    "diameter": 12.7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 3000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 6.1
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "default": 200,
+            "label": "sample volume (in \u00b5L)",
+            "name": "sample_vol",
+            "type": "int"
+        },
+        {
+            "default": 5.0,
+            "label": "aspiration height from bottom of source tube (in mm)",
+            "name": "asp_height",
+            "type": "float"
+        },
+        {
+            "label": "P300 single-channel GEN2 pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 tip type",
+            "name": "tip_type",
+            "options": [
+                {
+                    "label": "200\u00b5l filter",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "300\u00b5l standard",
+                    "value": "opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "sample tuberack 1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "deepwell plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "sample tuberack 2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "sample tuberack 3 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "sample tuberack 4 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "sample tuberack 5 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "sample tuberack 6 on 8",
+            "share": false,
+            "slot": "8",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "sample tuberack 7 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "avantik_15_tuberack_3000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Sample Plating Protocol",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}

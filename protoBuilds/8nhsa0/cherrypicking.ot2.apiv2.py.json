@@ -1,0 +1,120 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    p50_mount, input_csv, air_gap = get_values(  # noqa: F821\n        'p50_mount', 'input_csv', 'air_gap')\n\n    # parse csv\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in input_csv.splitlines()[1:]]\n    occupied_slots = [int(line[ind]) for line in data for ind in [0, 2]]\n    for slot in occupied_slots:\n        if slot not in ctx.loaded_labwares:\n            ctx.load_labware('biorad_96_wellplate_200ul_pcr', str(slot))\n\n    tipracks = []\n    for slot in range(1, 12):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(\n                ctx.load_labware('opentrons_96_tiprack_300ul', str(slot),\n                                 '300ul tiprack'))\n\n    p50 = ctx.load_instrument('p50_single', p50_mount, tip_racks=tipracks)\n\n    tip_max = len(tipracks)*96\n    tip_count = 0\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Refill tipracks before resuming.')\n            p50.reset_tipracks()\n            tip_count = 0\n        tip_count += 1\n        p50.pick_up_tip()\n\n    for line in data:\n        s_slot, s_well, d_slot, d_well, vol = line[:5]\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        pick_up()\n        p50.transfer(float(vol), source, dest, air_gap=air_gap,\n                     new_tip='never')\n        p50.air_gap(5)\n        p50.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P50-single GEN1 mount",
+            "name": "p50_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "source slot, source well, destination slot, destination well, volume\n1,A1,3,A1,5",
+            "label": "input .csv file",
+            "name": "input_csv",
+            "type": "textFile"
+        },
+        {
+            "default": 5,
+            "label": "air gap volume (in ul)",
+            "name": "air_gap",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "300ul tiprack on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "300ul tiprack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.3",
+        "author": "Nick <ndiehl@opentrons.com>",
+        "protocolName": "Cherrypicking",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

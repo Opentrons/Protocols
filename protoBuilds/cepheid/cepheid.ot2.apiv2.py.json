@@ -1,0 +1,619 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Pooling Samples and Distribution to Cepheid',\n    'author': 'Dipro <dipro@basisdx.org>; Chaz <chaz@opentrons.com>',\n    'source': 'Covid-19 Diagnostics',\n    'apiLevel': '2.6'\n}\n\n\ndef run(protocol):\n    [numSamps, mnt] = get_values(  # noqa: F821\n     'numSamps', 'mnt')\n\n    # load labware and pipettes\n    tips1000 = protocol.load_labware('opentrons_96_filtertiprack_1000ul', '8')\n\n    p1000 = protocol.load_instrument(\n        'p1000_single_gen2', mnt, tip_racks=[tips1000])\n\n    samp_tuberack_1 = protocol.load_labware('basisdx_15_tuberack_12000ul', '4')\n    samp_tuberack_2 = protocol.load_labware('basisdx_15_tuberack_12000ul', '6')\n\n    pool_rack = protocol.load_labware('basisdx_15_tuberack_12000ul', '5')\n\n    cepheid_1 = protocol.load_labware('cepheid', '1')\n    cepheid_2 = protocol.load_labware('cepheid', '2')\n    cepheid_3 = protocol.load_labware('cepheid', '3')\n\n    # load samples & visby dilution buffer\n\n    samp_1 = samp_tuberack_1['A1']\n    samp_2 = samp_tuberack_1['A2']\n    samp_3 = samp_tuberack_1['A3']\n    samp_4 = samp_tuberack_1['A4']\n    samp_5 = samp_tuberack_1['A5']\n    samp_6 = samp_tuberack_1['B1']\n    samp_7 = samp_tuberack_1['B2']\n    samp_8 = samp_tuberack_1['B3']\n    samp_9 = samp_tuberack_1['B4']\n    samp_10 = samp_tuberack_1['B5']\n\n    samp_11 = samp_tuberack_1['C1']\n    samp_12 = samp_tuberack_1['C2']\n    samp_13 = samp_tuberack_1['C3']\n    samp_14 = samp_tuberack_1['C4']\n    samp_15 = samp_tuberack_1['C5']\n\n    samp_16 = samp_tuberack_2['A1']\n    samp_17 = samp_tuberack_2['A2']\n    samp_18 = samp_tuberack_2['A3']\n    samp_19 = samp_tuberack_2['A4']\n    samp_20 = samp_tuberack_2['A5']\n    samp_21 = samp_tuberack_2['B1']\n    samp_22 = samp_tuberack_2['B2']\n    samp_23 = samp_tuberack_2['B3']\n    samp_24 = samp_tuberack_2['B4']\n    samp_25 = samp_tuberack_2['B5']\n    samp_26 = samp_tuberack_2['C1']\n    samp_27 = samp_tuberack_2['C2']\n    samp_28 = samp_tuberack_2['C3']\n    samp_29 = samp_tuberack_2['C4']\n    samp_30 = samp_tuberack_2['C5']\n\n    pool_1 = pool_rack['A1']\n    pool_2 = pool_rack['A5']\n    pool_3 = pool_rack['C1']\n\n    cepheid_well_1 = cepheid_1['A1']\n    cepheid_well_2 = cepheid_2['A1']\n    cepheid_well_3 = cepheid_3['A1']\n\n    # setting pipette speeds\n    p1000.flow_rate.aspirate = 300\n    p1000.flow_rate.dispense = 300\n\n    # Pool samples\n    protocol.comment('Pooling Samples Now')\n    pool_vol = 62\n    mygap = 50\n\n    # maybe define the number of samples here\n    my_list_of_samples_1 = [samp_1, samp_2, samp_3, samp_4, samp_5,\n                            samp_6, samp_7, samp_8, samp_9, samp_10]\n    my_list_of_samples_2 = [samp_11, samp_12, samp_13, samp_14, samp_15,\n                            samp_16, samp_17, samp_18, samp_19, samp_20]\n    my_list_of_samples_3 = [samp_21, samp_22, samp_23, samp_24, samp_25,\n                            samp_26, samp_27, samp_28, samp_29, samp_30]\n\n    def pool_party(my_list_of_samples, pool, cepheid_well):\n        for sample in my_list_of_samples:\n            p1000.pick_up_tip()\n            p1000.aspirate(pool_vol, sample.bottom(10))\n            p1000.air_gap(mygap)\n\n            # dispense into pool\n            p1000.dispense(pool_vol+5+mygap, pool.top(-30))\n            if sample != my_list_of_samples[-1]:\n                p1000.air_gap(mygap)\n                p1000.drop_tip(home_after=False)\n\n            else:\n                # Mix the Pool\n                protocol.comment('Mixing Pooled Samples')\n                p1000.mix(2, 500, pool.bottom(38))\n\n                # Dispensing to Cepheid\n                protocol.comment('Adding Pool to Cepheid')\n                ali_vol = 300\n                p1000.aspirate(ali_vol, pool.bottom(38))\n                p1000.aspirate(1, pool.top(-1))\n                p1000.air_gap(mygap)\n                p1000.dispense(ali_vol+20+mygap, cepheid_well.bottom(10))\n                p1000.air_gap(mygap)\n                p1000.drop_tip()\n\n    pool_party(my_list_of_samples_1, pool_1, cepheid_well_1)\n    if numSamps > 10:\n        pool_party(my_list_of_samples_2, pool_2, cepheid_well_2)\n    if numSamps > 20:\n        pool_party(my_list_of_samples_3, pool_3, cepheid_well_3)\n\n    # Finish\n    protocol.comment('Protocol complete!')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Basis DX",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 104.5
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Basis DX 15 Tube Rack 12000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "basisdx_15_tuberack_12000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "B1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "C1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 10.5
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Cepheid",
+                "brandId": [
+                    "Cepheid"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 60
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "A2"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Cepheid",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ],
+                [
+                    "A2"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "cepheid",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 20,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 45,
+                    "y": 30.5,
+                    "z": 40
+                },
+                "A2": {
+                    "depth": 20,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 100,
+                    "y": 30.5,
+                    "z": 40
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Basis DX",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 104.5
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Basis DX 15 Tube Rack pool",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "basisdx_15_tuberack_pool",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "A5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 10.5
+                },
+                "B1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "B5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 10.5
+                },
+                "C1": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C2": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C3": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C4": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 10.5
+                },
+                "C5": {
+                    "depth": 94,
+                    "diameter": 15.24,
+                    "shape": "circular",
+                    "totalLiquidVolume": 12000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 10.5
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "label": "Number of Samples",
+            "name": "numSamps",
+            "options": [
+                {
+                    "label": "10",
+                    "value": 10
+                },
+                {
+                    "label": "20",
+                    "value": 20
+                },
+                {
+                    "label": "30",
+                    "value": 30
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P1000 Mount",
+            "name": "mnt",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Cepheid on 1",
+            "share": false,
+            "slot": "1",
+            "type": "cepheid"
+        },
+        {
+            "name": "Cepheid on 2",
+            "share": false,
+            "slot": "2",
+            "type": "cepheid"
+        },
+        {
+            "name": "Cepheid on 3",
+            "share": false,
+            "slot": "3",
+            "type": "cepheid"
+        },
+        {
+            "name": "Basis DX 15 Tube Rack 12000 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "basisdx_15_tuberack_12000ul"
+        },
+        {
+            "name": "Basis DX 15 Tube Rack 12000 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "basisdx_15_tuberack_12000ul"
+        },
+        {
+            "name": "Basis DX 15 Tube Rack 12000 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "basisdx_15_tuberack_12000ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.6",
+        "author": "Dipro <dipro@basisdx.org>; Chaz <chaz@opentrons.com>",
+        "protocolName": "Pooling Samples and Distribution to Cepheid",
+        "source": "Covid-19 Diagnostics"
+    },
+    "modules": []
+}

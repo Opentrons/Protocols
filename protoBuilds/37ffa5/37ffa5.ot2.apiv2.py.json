@@ -1,0 +1,108 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': '''mRNA Encapsulation''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [count_samples_rowa, count_samples_rowb, count_samples_rowc,\n     count_samples_rowd] = get_values(  # noqa: F821\n      'count_samples_rowa', 'count_samples_rowb', 'count_samples_rowc',\n      'count_samples_rowd')\n\n    ctx.set_rail_lights(True)\n\n    num_samplerows = 0\n\n    tot_count = 0\n\n    for count in [count_samples_rowa, count_samples_rowb, count_samples_rowc,\n                  count_samples_rowd]:\n\n        if not 0 <= count <= 5:\n            raise Exception('Invalid sample count (must be 1-5).')\n\n        if count:\n            num_samplerows += 1\n\n        tot_count += count\n\n    # helper functions\n\n    # return liquid height in a well\n    def liq_height(well, effective_diameter=None):\n        if well.diameter:\n            if effective_diameter:\n                radius = effective_diameter / 2\n            else:\n                radius = well.diameter / 2\n            csa = math.pi*(radius**2)\n        else:\n            csa = well.length*well.width\n        return well.liq_vol / csa\n\n    # yield list chunks of size n\n    def create_chunks(list_name, n):\n        for i in range(0, len(list_name), n):\n            yield list_name[i:i+n]\n\n    # 300 and 1000 uL tips, p300 single, p1000 single\n\n    tips1000 = [ctx.load_labware(\n     \"opentrons_96_tiprack_1000ul\", str(slot)) for slot in [1]]\n\n    p1000s = ctx.load_instrument(\n        \"p1000_single_gen2\", 'left', tip_racks=tips1000)\n\n    tips300 = [\n     ctx.load_labware(\n      \"opentrons_96_tiprack_300ul\", str(slot)) for slot in [2]]\n\n    p300s = ctx.load_instrument(\n        \"p300_single_gen2\", 'right', tip_racks=tips300)\n\n    # tube rack for samples and mRNA stock\n    tuberack = ctx.load_labware(\n     'opentrons_24_tuberack_nest_1.5ml_snapcap', '7',\n     '25 ug/mL Sample Stock and mRNA Stock')\n\n    samps = [\n     row[:count] for row, count in zip(tuberack.rows(), [\n         count_samples_rowa, count_samples_rowb,\n         count_samples_rowc, count_samples_rowd])]\n\n    mrna = [row[-1] for row in tuberack.rows()]\n\n    sample_plate = ctx.load_labware(\n     'corning_96_wellplate_360ul_flat', '4', 'Sample Plate')\n\n    tworows = []\n    for index, row in enumerate(sample_plate.rows()):\n        if not index % 2:\n            new = row\n            new.extend(sample_plate.rows()[index+1])\n            tworows.append(new)\n\n    test_plates = [\n     ctx.load_labware('corning_96_wellplate_360ul_flat', str(slot),\n                      'Test Plate {}'.format(\n                      index+1)) for index, slot in enumerate([3, 6, 9, 5])]\n\n    buffer_reservoir = ctx.load_labware(\n     'nest_12_reservoir_15ml', '8', 'Buffer Reservoir')\n    te, te_triton, pbs = [\n     buffer_reservoir.wells_by_name()[name] for name in ['A1', 'A2', 'A3']]\n    # deadvol_res = 3000\n\n    # pbs.liq_vol = 13000*(tot_count / 20) + deadvol_res\n    # te.liq_vol = 10400 + 6000*(tot_count / 20) + deadvol_res\n    # te_triton.liq_vol = 4000 + 6000*(tot_count / 20) + deadvol_res\n\n    # alert user to reagent volumes needed\n    # ctx.comment(\"Ensure buffers in sufficient volume are present on deck.\")\n    # for volume, units, reagent, location in zip(\n    # [math.ceil(rgnt.liq_vol) if rgnt.liq_vol < 1500 else math.ceil(\n    # rgnt.liq_vol / 1000) for rgnt in [te, te_triton, pbs]],\n    # ['mL', 'mL', 'mL'],\n    # ['TE', 'TE Triton', 'PBS'],\n    # [te, te_triton, pbs]):\n    # ctx.comment(\n    # \"{0} {1} {2} in {3}\".format(\n    # str(volume), units, reagent.upper(), location))\n\n    for repeat in range(num_samplerows):\n\n        ctx.comment('\\nStarting {}\\n'.format(test_plates[repeat]))\n\n        num_samps = len(samps[repeat])\n\n        ctx.comment(\n         '\\nDistributing PBS to Sample Plate for {} samples\\n'.format(\n          num_samps))\n\n        dests = [\n         well.bottom(1) for chunk in [\n          *create_chunks(tworows[repeat], 3)][:num_samps] for well in chunk]\n\n        p1000s.distribute(\n         num_samps*[210, 220, 230], pbs.bottom(1),\n         dests, disposal_volume=100, blow_out=True,\n         blowout_location='trash', new_tip='once')\n\n        ctx.comment(\n         '\\nDistributing {} Samples to Sample Plate\\n'.format(num_samps))\n\n        for index, chunk in enumerate(\n         [*create_chunks(tworows[repeat], 3)][:num_samps]):\n\n            p300s.distribute(\n             [40, 30, 20], samps[repeat][index].bottom(1),\n             [well.top(2) for well in chunk],\n             disposal_volume=10, blow_out=True,\n             blowout_location='trash', touch_tip=True, new_tip='once')\n\n        ctx.comment('\\nDistributing TE to Test Plate\\n')\n\n        p1000s.pick_up_tip()\n\n        for5thsample = [\n         (well, well2) for well, well2 in zip(\n          test_plates[repeat].rows()[4][8:11],\n          test_plates[repeat].rows()[5][8:11])]\n\n        dests = [well.bottom(1) for pair in [pair for chunk in [*create_chunks(\n          [(well, well2) for well, well2 in zip(test_plates[repeat].rows()[0],\n           test_plates[repeat].rows()[1])] + for5thsample, 3)\n           ][:num_samps] for pair in chunk] for well in pair]\n\n        p1000s.distribute(\n         num_samps*3*[50, 50], te.bottom(1),\n         dests, disposal_volume=100, blow_out=True,\n         blowout_location='trash', new_tip='never')\n\n        dests = [well.bottom(1) for pair in [\n          pair for chunk in [*create_chunks(\n           [(well, well2) for i, well, well2 in zip([*range(12)],\n            test_plates[repeat].rows()[6],\n            test_plates[repeat].rows()[7]) if (i and (not 8 <= i <= 10))], 2)\n           ] for pair in chunk] for well in pair]\n\n        p1000s.distribute(\n         8*[50, 50], te.bottom(1), dests, disposal_volume=100,\n         blow_out=True, blowout_location='trash',\n         new_tip='never')\n\n        dests = [well.bottom(1) for pair in [pair for chunk in [\n          *create_chunks([(well, well2) for well, well2 in zip(\n           test_plates[repeat].rows()[4],\n           test_plates[repeat].rows()[5]) if (\n           well, well2) not in for5thsample], 6)\n          ] for pair in chunk] for well in pair]\n\n        p1000s.distribute(\n         9*[100, 100], te.bottom(1),\n         dests, disposal_volume=100,\n         blow_out=True, blowout_location='trash',\n         new_tip='never')\n\n        ctx.comment('\\nDistributing TE-Triton to Test Plate\\n')\n\n        dests = [\n         test_plates[repeat].rows()[rowindex][0].bottom(1) for rowindex in [\n          6, 7]] + [te_triton.bottom(1)]\n\n        p1000s.distribute(\n         [100, 100, 100], te_triton.bottom(1),\n         dests,\n         disposal_volume=0, blow_out=False, new_tip='never')\n\n        for5thsample = [(well, well2) for well, well2 in zip(\n         test_plates[repeat].rows()[6][8:11],\n         test_plates[repeat].rows()[7][8:11])]\n\n        dests = [well.bottom(1) for pair in [pair for chunk in [*create_chunks(\n          [(well, well2) for well, well2 in zip(test_plates[repeat].rows()[2],\n           test_plates[repeat].rows()[3])] + for5thsample, 3)\n           ][:num_samps] for pair in chunk] for well in pair\n           ] + [te_triton.bottom(1)]\n\n        vols = num_samps*3*[50, 50]\n\n        vols = vols + [100]\n\n        p1000s.distribute(\n         vols, te_triton.bottom(1),\n         dests, disposal_volume=0, blow_out=False,\n         new_tip='never')\n\n        dests = [\n         well.bottom(1) for row in test_plates[repeat].rows(\n         )[6:8] for i, well in zip([*range(12)], row) if (\n          i and (not 8 <= i <= 10))] + [te_triton.bottom(1)]\n\n        vols = 16*[50]\n\n        vols = vols + [100]\n\n        p1000s.distribute(\n         vols, te_triton.bottom(1),\n         dests, disposal_volume=0, blow_out=False, new_tip='never')\n\n        p1000s.drop_tip()\n\n        ctx.comment('\\nAdding Sample to Test Plate\\n')\n\n        source = [*create_chunks(tworows[repeat], 3)][:num_samps]\n\n        dest = [\n         *create_chunks(test_plates[repeat].columns() + test_plates[\n          repeat].columns()[8:11], 3)][:num_samps]\n\n        for i, chunk, chunk2 in zip([0, 0, 0, 0, 4][:num_samps], source, dest):\n\n            p300s.pick_up_tip()\n\n            for well, column in zip(reversed(chunk), reversed(chunk2)):\n\n                p300s.distribute(\n                 4*[50], well.bottom(0.5),\n                 [well.top(2) for well in column[i:i+4]],\n                 disposal_volume=10, blow_out=True,\n                 blowout_location='trash', touch_tip=True, new_tip='never')\n\n            p300s.drop_tip()\n\n        ctx.comment('\\nSerial Dilution of mRNA in Test Plate\\n')\n\n        p1000s.distribute(\n         4*[100], mrna[repeat].bottom(1),\n         [row[0].top(2) for row in test_plates[repeat].rows()[4:]],\n         disposal_volume=25, blow_out=True,\n         blowout_location='trash', touch_tip=True, new_tip='once')\n\n        # mix and transfer to next well\n        for row in test_plates[repeat].rows()[4:]:\n            p300s.pick_up_tip()\n            for index, well in enumerate(row[:8]):\n                dest = row[\n                 index+1] if index < 7 else ctx.fixed_trash.wells()[0].top(-5)\n                p300s.transfer(\n                 100, well, dest, mix_before=(3, 100), new_tip='never')\n            p300s.drop_tip()\n\n        ctx.comment(\n         '''\\nFinished {}. Pause the robot to remove it from the deck\\n\n        \\nResume to continue with remaining test plates.\\n'''.format(\n          test_plates[repeat]))\n\n    ctx.comment(\"\"\"\\nProcess complete for all test plates\\n\"\"\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 5,
+            "label": "Number of Samples in Row A of Tube Rack (1-5)",
+            "name": "count_samples_rowa",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of Samples in Row B of Tube Rack (0-5)",
+            "name": "count_samples_rowb",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of Samples in Row C of Tube Rack (0-5)",
+            "name": "count_samples_rowc",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of Samples in Row D of Tube Rack (0-5)",
+            "name": "count_samples_rowd",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Test Plate 1 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Sample Plate on 4",
+            "share": false,
+            "slot": "4",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Test Plate 4 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Test Plate 2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "25 ug/mL Sample Stock and mRNA Stock on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_24_tuberack_nest_1.5ml_snapcap"
+        },
+        {
+            "name": "Buffer Reservoir on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Test Plate 3 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "mRNA Encapsulation"
+    },
+    "modules": []
+}

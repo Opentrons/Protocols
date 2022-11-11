@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "assay1.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": true,
+        "skip-tests": false
+    },
+    "path": "protocols/747d99-assay-1",
+    "slug": "747d99-assay-1",
+    "status": "ok"
+}

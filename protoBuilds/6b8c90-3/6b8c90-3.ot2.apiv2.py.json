@@ -1,0 +1,720 @@
+{
+    "content": "metadata = {\n    'protocolName': 'EtOH 48 Sample to 1mL Vial',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt50, num_samps] = get_values(  # noqa: F821\n     'mnt50', 'num_samps')\n\n    # load labware\n    tips = protocol.load_labware('opentrons_96_tiprack_300ul', '7')\n    p50 = protocol.load_instrument('p50_single', mnt50, tip_racks=[tips])\n\n    v1ml = [\n        protocol.load_labware(\n            'custom1mltesttube_24_wellplate_5000ul',\n            s) for s in ['2', '5']\n            ]\n    v1mls = [well for plate in v1ml for well in plate.wells()][:num_samps]\n\n    v5ml = [\n        protocol.load_labware(\n            'custom5mltesttube_24_wellplate_5000ul',\n            s) for s in ['1', '4']\n            ]\n\n    v5mls = [well for plate in v5ml for well in plate.wells()][:num_samps]\n\n    for src, dest in zip(v5mls, v1mls):\n        p50.pick_up_tip()\n        p50.aspirate(50, src.bottom(40))\n        p50.dispense(50, dest.bottom(20))\n        p50.blow_out()\n        p50.touch_tip(dest, v_offset=-2)\n        p50.drop_tip()\n\n    protocol.comment('Protocol complete!')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Custom 5 mL Test Tube",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 70
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Custom 5 ML Test Tube 24 Well Plate 5000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "custom5mltesttube_24_wellplate_5000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A2": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A3": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A4": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A5": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A6": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "B1": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B2": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B3": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B4": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B5": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B6": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "C1": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C2": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C3": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C4": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C5": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C6": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "D1": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D2": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D3": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D4": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D5": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D6": {
+                    "depth": 70,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 16.97,
+                    "z": 0
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Custom 1 mL Test Tube",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 40
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Custom 1 ML Test Tube 24 Well Plate 5000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "custom1mltesttube_24_wellplate_5000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A2": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A3": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A4": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A5": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "A6": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 70.37,
+                    "z": 0
+                },
+                "B1": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B2": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B3": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B4": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B5": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "B6": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 52.57,
+                    "z": 0
+                },
+                "C1": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C2": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C3": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C4": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C5": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "C6": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 34.77,
+                    "z": 0
+                },
+                "D1": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 15.1,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D2": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 34.2,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D3": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 53.3,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D4": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 72.4,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D5": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 91.5,
+                    "y": 16.97,
+                    "z": 0
+                },
+                "D6": {
+                    "depth": 40,
+                    "diameter": 7,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 110.6,
+                    "y": 16.97,
+                    "z": 0
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "label": "P50-Single Mount",
+            "name": "mnt50",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 48,
+            "label": "Number of Samples (1-48)",
+            "name": "num_samps",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Custom 5 ML Test Tube 24 Well Plate 5000 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "custom5mltesttube_24_wellplate_5000ul"
+        },
+        {
+            "name": "Custom 1 ML Test Tube 24 Well Plate 5000 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "custom1mltesttube_24_wellplate_5000ul"
+        },
+        {
+            "name": "Custom 5 ML Test Tube 24 Well Plate 5000 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "custom5mltesttube_24_wellplate_5000ul"
+        },
+        {
+            "name": "Custom 1 ML Test Tube 24 Well Plate 5000 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "custom1mltesttube_24_wellplate_5000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Chaz <chaz@opentrons.com>",
+        "protocolName": "EtOH 48 Sample to 1mL Vial"
+    },
+    "modules": []
+}

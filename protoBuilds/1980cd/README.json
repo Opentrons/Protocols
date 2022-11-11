@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification": [
+            "Plant DNA"
+        ]
+    },
+    "description": "This protocol automates {mesoscale kit} in 4 steps over 2 days. Those steps are:\n\n(Day 1) Load blocking solution into test plates\n(Day 2) Load standards and up to 10 sample columns from sample plates into 2 test plates\n(Day 2) Load detection antibody into test plates\n(Day 2) Load read buffer into test plates\n\nThe initial Day 1 step can be done with up to 9 test plates. The subsequent steps are done with 1 sample plate and then 2 test plates. To increase throughput, run the step again with a separate plate. \nNote all volumes requested in process are the amount required + 10%. You may need more or less given your particular robot and calibrations.\n\n\n\nOpentrons P300-multi channel electronic pipettes (GEN2)\nOpentrons 200ul Filter Tips\nNEST 1 Well Reservoir 195 mL\nNEST 12-Well Reservoirs, 15 mL\n{mesoscale kit{\n",
+    "internal": "1980cd",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n\t* Plant DNA\n\n",
+        "description": "This protocol automates {mesoscale kit} in 4 steps over 2 days. Those steps are:\n\n1. (Day 1) Load blocking solution into test plates\n2. (Day 2) Load standards and up to 10 sample columns from sample plates into 2 test plates\n3. (Day 2) Load detection antibody into test plates\n4. (Day 2) Load read buffer into test plates\n\nThe initial Day 1 step can be done with up to 9 test plates. The subsequent steps are done with 1 sample plate and then 2 test plates. To increase throughput, run the step again with a separate plate. \n\nNote all volumes requested in process are the amount required + 10%. You may need more or less given your particular robot and calibrations.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons P300-multi channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [NEST 1 Well Reservoir 195 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)\n* [{mesoscale kit{](https://example.com)\n\n",
+        "internal": "1980cd\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Load necessary labware to positions.\n2. For the first step, add 15.84ml of blocking solution per plate that you wish to fill to the single well trough. The \"Test Plates\" value is only required for this step.  \n3. For the second step, add Xml of control 1 to well A1 and Xml of control 2 to well A2 of a 12 column trough. After this step, incubate and wash separately of Opentrons.\n4. For the third step, add 2.640ml of the detection antibody to well A3 of a 12 column trough. After this step, incubate and wash separately of Opentrons.\n5. For the fourth and final step, add 15.84ml of read buffer to a trough. This will be allocated to the test plates \n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Sarah Daley Protocol (check mesoscale.com link)"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nLoad necessary labware to positions.\nFor the first step, add 15.84ml of blocking solution per plate that you wish to fill to the single well trough. The \"Test Plates\" value is only required for this step.  \nFor the second step, add Xml of control 1 to well A1 and Xml of control 2 to well A2 of a 12 column trough. After this step, incubate and wash separately of Opentrons.\nFor the third step, add 2.640ml of the detection antibody to well A3 of a 12 column trough. After this step, incubate and wash separately of Opentrons.\nFor the fourth and final step, add 15.84ml of read buffer to a trough. This will be allocated to the test plates \n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Sarah Daley Protocol (check mesoscale.com link)"
+}
