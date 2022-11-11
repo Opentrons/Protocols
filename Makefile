@@ -34,7 +34,7 @@ venvs/ot2:
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
-	pip install pipenv==2021.5.28 && \
+	pip install pipenv==2022.11.5 && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) setup && \
 	python setup.py install && \
