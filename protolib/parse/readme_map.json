@@ -61,10 +61,6 @@
     "thermocycler": {
       "displayText": "Opentrons Thermocycler Module",
       "link": "https://shop.opentrons.com/thermocycler-module-1/"
-    },
-    "heatershaker": {
-      "displayText": "Opentrons Heater-Shaker Module",
-      "link": "https://shop.opentrons.com/heater-shaker-module/"
     }
   }
 }
