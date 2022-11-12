@@ -418,7 +418,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.custom_pick_up()
     flow_rate(blow=10)
     for idx, dest in enumerate(mag_samps):
-        src = rbb[idx//2]
+        src = rbb[idx//3]
         for _ in range(3):
             flow_rate(asp=20, disp=20)
             m300.mix(1, 100, src)

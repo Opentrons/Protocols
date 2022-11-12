@@ -20,7 +20,7 @@ def run(ctx):
     if not 1 <= num_cols <= 12:
         raise Exception('Invalid number of columns (must be 1-12).')
 
-    # filter tips, p300 and p20 multi
+    # tips, p300 and p20 multi
     tips300 = [ctx.load_labware(
      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [11]]
     p300m = ctx.load_instrument(
