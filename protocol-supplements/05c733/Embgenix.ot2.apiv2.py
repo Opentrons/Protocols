@@ -22,7 +22,7 @@ def run(ctx):
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4',
         '1.5ml Eppendorf tube aluminum block')
     distribution_plate = ctx.load_labware(
-        'biorad_96_wellplate_200ul_pcr', '5',
+        'eppendorftwin.tec96_96_aluminumblock_200ul', '5',
         'plate for mix distribution')
     udi_plate = ctx.load_labware('axygen_96well_pcr_microplate_200ul', '6',
                                  'UDI plate')
