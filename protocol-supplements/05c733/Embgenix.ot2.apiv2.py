@@ -14,8 +14,8 @@ def run(ctx):
 
     num_samples = 16
     vol_sample = 5.0
-    m20_mount = 'right'
-    m300_mount = 'left'
+    m20_mount = 'left'
+    m300_mount = 'right'
 
     # labware
     tuberack = ctx.load_labware(
