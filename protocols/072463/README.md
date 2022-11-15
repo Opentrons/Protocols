@@ -1,4 +1,4 @@
-# Day 2
+# Custom Acid Digestion Assay Day 2
 
 
 ### Author
@@ -6,18 +6,19 @@
 
 
 ## Categories
-* Broad Category
+* Sample Prep
 	* Specific Category
 
 
 ## Description
-This protocol does stuff!
+This protocol is day 2 of a specialized assay. Samples and standards are added in triplicate from a custom aluminum
+vial holder to a quartz reaction vessel. After a 1 hour wait, deionized water and three different reagents are added as needed to all samples and standards.
 
 
 ### Labware
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [Opentrons 24 Tube Rack with Generic 2 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
+* Custom Aluminum Vial Holder
+* [Zinsser Quartz 96 Well Plate](https://www.zinsserna.com/reactor_plates.htm)
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 
@@ -36,7 +37,18 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+0. If temperature module is being used, it pre-heats to 95 C
+1. Samples are added in triplicate to the 96 well quartz plate from vials held in the custom aluminum plate. Volume is
+determined by the volume variable below.
+2. 36 uL deionized water is added to wells that will hold the standards
+3. Standards are added in triplicate to the 96 well quartz plate from vials held in the custom aluminum plate. Volume is determined by the volume variable below.
+Note: Standards are added to the wells immediately after the sample wells. E.g. if 4 samples are selected, wells A1-A12
+will have samples in triplicate and wells B1-C9 will have 7 standards in triplicate
+4. A 60 minute delay occurs, if the temperature module is being used it will heat to 95
+5. 46 uL of deionized water is added to all wells in the quartz plate
+6. 30 uL of Reagent A is added to all wells in the quartz plate
+7. 49 uL of Reagent B is added to all wells in the quartz plate
+8. 75 uL of Reagent C is added to all wells in the quartz plate
 
 
 ### Process
