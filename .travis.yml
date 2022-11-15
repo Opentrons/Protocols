@@ -1,12 +1,12 @@
 language: python
 python:
-  - "3.7.10"
+  - "3.8.4"
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
-  - make teardown setup
+  - make setup
 
 addons:
   apt:
