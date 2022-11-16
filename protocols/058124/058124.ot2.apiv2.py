@@ -89,8 +89,8 @@ def run(ctx):
             pip.pick_up_tip()
         except OutOfTipsError:
             ctx.pause(
-             """Please Refill the {} Tip Boxes
-             and Empty the Tip Waste""".format(pip))
+             """\n***\nPlease Refill the {} Tip Boxes
+             and Empty the Tip Waste\n***\n""".format(pip))
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -114,7 +114,8 @@ def run(ctx):
 
     for scheme in range(6):
         ctx.comment(
-         "\nScheme {}, preparing dilutions for {} columns of samples\n".format(
+         """\n***\nScheme {}, preparing dilutions
+         for {} columns of samples\n***\n""".format(
           str(scheme+1), sample_cols_per_scheme[scheme]))
 
     diluent = ctx.load_labware(labware_reservoir, '8', 'diluent').wells()[0]
@@ -175,13 +176,21 @@ def run(ctx):
         diluent.liq_vol += numsamps*sum(params[key]['diluent vol'])
     diluent.liq_vol += deadvol_reservoir
     ctx.pause(
-     "\nEnsure reservoir is filled with {} mL diluent. Resume\n".format(
+     """\n***\nEnsure reservoir is filled with
+     {} mL diluent. Resume\n***\n""".format(
       diluent.liq_vol / 1000))
 
     output = []  # to collect destination location for each sample
 
+    # to yield next tip column
+    def tipcolumns():
+
+        yield from tips300[0].columns()
+
+    tipcol = tipcolumns()
+
     # for each dilution scheme and all of its assigned samples
-    for i, (key, value) in enumerate(dilutions.items()):
+    for key, value in dilutions.items():
 
         # for each column of 8 samples (last column may be < 8)
         for samplenums in value:
@@ -195,15 +204,19 @@ def run(ctx):
                 column[0].liq_vol = 0
 
             # notify user - current scheme, assigned samples, destination
-            ctx.comment("\nCurrent Dilution Scheme: {}\n".format(key))
-            ctx.comment("\nAssigned Samples: {}\n".format(value))
-            ctx.comment("\nCurrent Samples: {}\n".format(samplenums))
-            ctx.comment("\nCurrent Destination: {}\n".format(destination))
+            ctx.comment(
+             "\n***\nCurrent Dilution Scheme: {}\n***\n".format(key))
+            ctx.comment("\n***\nAssigned Samples: {}\n***\n".format(value))
+            ctx.comment("\n***\nCurrent Samples: {}\n***\n".format(samplenums))
+            ctx.comment(
+             "\n***\nCurrent Destination: {}\n***\n".format(destination))
 
             # to pick up one tip for each sample (last column may be < 8)
             tipcolindex = abs(len(samplenums)-8)
 
-            p300m.pick_up_tip(tips300[0].columns()[i][tipcolindex])
+            col = next(tipcol)
+
+            p300m.pick_up_tip(col[tipcolindex])
 
             # diluent transfer to destination columns
             for vol, column in zip(params[key]['diluent vol'], destination):
@@ -227,7 +240,7 @@ def run(ctx):
                     p300m.dispense(v, column[0].bottom(1))
                     ctx.delay(seconds=1)
                     slow_tip_withdrawal(p300m, column[0])
-                    p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
+                    p300m.touch_tip(radius=0.9, v_offset=-2, speed=10)
                     column[0].liq_vol += v  # increment current dest vol
 
             # sample to wells of 1st column of 4-column destination chunk
@@ -238,15 +251,22 @@ def run(ctx):
 
                 sampvol = params[key]['sample vol']
 
-                p20s.aspirate(sampvol, sample_positions[samplenum - 1])
+                source = sample_positions[samplenum - 1]
 
-                p20s.dispense(sampvol, d.bottom(1))
+                ht_disp = liq_height(destination[0][0])
+
+                p20s.mix(5, sampvol, source.bottom(1))
+                p20s.aspirate(sampvol, source.bottom(1))
+                p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
+                # dispense to top of liquid
+                p20s.dispense(sampvol, d.bottom(ht_disp))
                 p20s.mix(5, sampvol, d.bottom(1))
                 ctx.delay(seconds=1)
                 slow_tip_withdrawal(p20s, d)
-                p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+                p20s.touch_tip(radius=0.85, v_offset=-2, speed=10)
 
-                output.append(str(d))  # dest location - to write to output
+                output.append((samplenum, str(d)))  # dest location for output
 
                 p20s.drop_tip()
 
@@ -285,9 +305,9 @@ def run(ctx):
             p300m.drop_tip()
 
     # output file - original csv content plus destination for each sample
-    for row, dest in zip(csvrows, output):
+    for row, dest in zip(csvrows, sorted(output)):
 
-        row['destination'] = dest
+        row['destination'] = dest[1]
 
     """
     write output to jupyter notebook directory on OT-2 raspberry pi
@@ -306,5 +326,5 @@ def run(ctx):
             for row in csvrows:
                 writer.writerow(row)
 
-    ctx.comment("""\nfinished - use the Opentrons app (click jupyter link)
-    to locate and download the output csv file\n""")
+    ctx.comment("""\n***\nfinished - use the Opentrons app (click jupyter link)
+    to locate and download the output csv file\n***\n""")
