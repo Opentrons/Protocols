@@ -30,6 +30,10 @@ vial holder to a quartz reaction vessel. After a 1 hour wait, deionized water an
 
 ### Deck Setup
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/deck.png)
+NOTES ON SETUP:
+* Temperature module will only be loaded onto the deck if set below in the variables
+* Tiprack in slot 7 will change between 20 uL and 300 uL tips when transfer volume is set above or below 20 uL. Please double check in the Opentrons app when preparing the deck setup.
+* Standards are in the first seven wells of the listed plate, A1-B3. Only two are listed to show well order. This also applies to samples. They will populate top to bottom, left to right, from A1, A2, A3, A4, B1, B2, etc.
 
 
 ### Reagent Setup

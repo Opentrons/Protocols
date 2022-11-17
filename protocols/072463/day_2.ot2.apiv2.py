@@ -40,7 +40,7 @@ def run(ctx: protocol_api.ProtocolContext):
         temp_mod.set_temperature(95)
         final_plate = temp_mod.load_labware('zinsser_96_wellplate_1898ul')
     else:
-        final_plate = ctx.load_labware('zinsser_96_wellplate_1898ul')
+        final_plate = ctx.load_labware('zinsser_96_wellplate_1898ul', '3')
     sample_plate = ctx.load_labware('opentrons_24_tuberack_generic_'
                                     '2ml_screwcap', '6')
     if vol_trans < 20:
