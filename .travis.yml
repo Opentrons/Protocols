@@ -5,7 +5,7 @@ python:
 install:
   - pyenv install 3.7.12
   - deactivate
-  - pyenv global 3.7.12
+  - pyenv local 3.7.12
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
