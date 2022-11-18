@@ -1,8 +1,6 @@
 language: python
 python:
   - "3.8.4"
-virtualenv:
-  system_site_packages: true
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
