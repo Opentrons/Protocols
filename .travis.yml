@@ -1,7 +1,10 @@
-os: osx
-language: python
-python:
-  - "3.8.4"
+jobs:
+  include:
+    - os: osx
+      osx_image: xcode13.1
+      language: python
+      python:
+        - "3.8.4"
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
