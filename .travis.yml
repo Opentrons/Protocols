@@ -1,10 +1,8 @@
 language: python
-jobs:
-  include:
-    - name: "Python 3.7.4 on macOS"
-      os: osx
-      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
-      language: shell       # 'language: python' is an error on Travis CI macOS
+python:
+  - "3.8.4"
+virtualenv:
+  system_site_packages: true
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
