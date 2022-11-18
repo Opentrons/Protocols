@@ -3,6 +3,8 @@ python:
   - "3.8.4"
 
 install:
+  - deactivate
+  - pyenv global 3.8.4
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
