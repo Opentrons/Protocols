@@ -30,7 +30,7 @@ clone-repo:
 
 .PHONY: setup
 setup: clone-repo
-	${pip_install} virtualenv flake8==3.7.9 pytest
+	${pip_install} virtualenv flake8==3.8.4 pytest
 	$(MAKE) venvs/ot2
 
 venvs/ot2:

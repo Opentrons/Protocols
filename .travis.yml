@@ -1,12 +1,9 @@
+os: osx
 language: python
 python:
   - "3.8.4"
 
 install:
-  - pyenv install 3.7.12
-  - deactivate
-  - pyenv local 3.7.12
-  - python -m pip install pipenv
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
