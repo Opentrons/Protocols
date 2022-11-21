@@ -1,4 +1,4 @@
-from opentrons import protocol_api, types
+from opentrons import protocol_api
 
 metadata = {
     'apiLevel': '2.9',
@@ -9,10 +9,12 @@ metadata = {
     'source': 'Standard Biotools Inc',
 }
 
+
 def run(protocol: protocol_api.ProtocolContext):
     Rate_Normal = 1.0
     Rate_Slow = 0.66
     Rate_Slowest = 0.1
+
     def set_speed(rate):
         protocol.max_speeds['X'] = (600 * rate)
         protocol.max_speeds['Y'] = (400 * rate)
@@ -34,11 +36,11 @@ def run(protocol: protocol_api.ProtocolContext):
     # load instrument
     m20 = protocol.load_instrument('p20_multi_gen2', 'right', tip_racks=tips20)
 
-    #Set Assay Volumes
-    Vol_Asp     =   4.1 #aspriate 0.1ul more
+    # Set Assay Volumes
+    Vol_Asp     =   4.1  # aspriate 0.1ul more
     Vol_Disp    =   4
 
-    #Tip Pickup Handler
+    # Tip Pickup Handler
     tips20_count = 0
     tips20_max = len(tips20)*12
 
@@ -49,9 +51,9 @@ def run(protocol: protocol_api.ProtocolContext):
         tips20_count += 1
         m20.pick_up_tip()
 
-    #Set Flow Rates
-    #Default Aspirate Speed - 150 uL/s
-    #Default Dispense Speed - 300 uL/s
+    # Set Flow Rates
+    # Default Aspirate Speed - 150 uL/s
+    # Default Dispense Speed - 300 uL/s
     Delay_Asp       = 0.5
     Delay_Disp      = 1
 
@@ -62,6 +64,7 @@ def run(protocol: protocol_api.ProtocolContext):
     Chunks_48B = [
         SamplePlate.rows()[0][i:i+3] for i in range(
             0, len(SamplePlate.rows()), 3)]
+
     # the above chunks_48 variable makes a list of lists.
     # i.e. [[A1, A2, A3], [A4, A5, A6]]
     # the first [0] after .rows() attribute gives row A, the second index
@@ -127,7 +130,6 @@ def run(protocol: protocol_api.ProtocolContext):
                         if count == 6:
                             return
                     row_start += 1  # now change it to row B
-                    #col_start += 1
 
         row_start += 1  # now change it to row B
 
