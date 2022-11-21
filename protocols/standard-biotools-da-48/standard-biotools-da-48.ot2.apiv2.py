@@ -37,8 +37,8 @@ def run(protocol: protocol_api.ProtocolContext):
     m20 = protocol.load_instrument('p20_multi_gen2', 'right', tip_racks=tips20)
 
     # Set Assay Volumes
-    Vol_Asp     =   4.1  # aspriate 0.1ul more
-    Vol_Disp    =   4
+    Vol_Asp = 4.1  # aspriate 0.1ul more
+    Vol_Disp = 4
 
     # Tip Pickup Handler
     tips20_count = 0
@@ -54,8 +54,8 @@ def run(protocol: protocol_api.ProtocolContext):
     # Set Flow Rates
     # Default Aspirate Speed - 150 uL/s
     # Default Dispense Speed - 300 uL/s
-    Delay_Asp       = 0.5
-    Delay_Disp      = 1
+    Delay_Asp = 0.5
+    Delay_Disp = 1
 
     # protocol
     Chunks_48A = [
