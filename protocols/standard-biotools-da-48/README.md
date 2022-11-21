@@ -14,10 +14,10 @@
 
 
 ## Description
-![Standard Biotools Logo](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standardbio-color-logo-blue-outline-blue-TM.jpg)
+<img src="https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standardbio-color-logo-blue-outline-blue-TM.jpg" alt="Standard Biotools Logo" width="200"/>
 </br>
 This protocol transfers 4 µL of samples and assays from 96-well plates to the Standard Biotools 48.48 IFC (Integrated Fluidic Circuit)</br>
-![Standard Biotools 48.48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_48.48+IFC.jpg)
+<img src="https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_48.48+IFC.jpg" alt="Standard Biotools 48.48" width="200"/>
 </br>
 **Preparation**:</br>
 Before beginning the protocol on the OT-2, perform the following preparation steps:
