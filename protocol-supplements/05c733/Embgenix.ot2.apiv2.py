@@ -109,7 +109,7 @@ def run(ctx):
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
-                pip.transfer(volume, distribution_column,
+                pip.transfer(volume, distribution_column.bottom(),
                              s.bottom(1), new_tip='never')
                 pip.mix(mix_reps, volume*0.8, s.bottom(1))
                 wick(pip, s)
