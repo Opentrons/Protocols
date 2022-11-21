@@ -10,7 +10,7 @@
 
 ## Categories
 * Sample Prep
-	* Standard Biotools
+	* Standard BioTools
 
 
 ## Description
