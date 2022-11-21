@@ -109,9 +109,10 @@ def run(ctx):
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
-                pip.transfer(volume, distribution_column.bottom(),
+                pip.transfer(volume, distribution_column[0].bottom(),
                              s.bottom(1), new_tip='never')
-                pip.mix(mix_reps, volume*0.8, s.bottom(1))
+                if mix_reps > 0:
+                    pip.mix(mix_reps, volume*0.8, s.bottom(1))
                 wick(pip, s)
                 if new_tip:
                     pip.drop_tip()
@@ -140,7 +141,8 @@ def run(ctx):
 
     vol_total_reaction = 30.0
     vol_mm_ce = vol_total_reaction - vol_sample
-    column_distribute(vol_mm_ce, mm_ce, distribution_plate.columns()[0])
+    column_distribute(vol_mm_ce, mm_ce, distribution_plate.columns()[0],
+                      mix_reps=0)
 
     ctx.pause('Proceed with steps V:A:4-7 and replace sample plate on \
 temperature module before resuming.')
