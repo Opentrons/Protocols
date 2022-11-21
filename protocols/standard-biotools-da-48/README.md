@@ -2,6 +2,9 @@
 
 
 ### Author
+[Standard Biotools](https://www.standardbio.com/)
+
+### Partner
 [Opentrons](https://opentrons.com/)
 
 
@@ -11,6 +14,8 @@
 
 
 ## Description
+![Standard Biotools Logo](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standardbio-color-logo-blue-outline-blue-TM.jpg)
+</br>
 This protocol transfers 4 µL of samples and assays from 96-well plates to the Standard Biotools 48.48 IFC (Integrated Fluidic Circuit)</br>
 ![Standard Biotools 48.48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_48.48+IFC.jpg)
 </br>
