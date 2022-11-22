@@ -91,7 +91,12 @@ def run(protocol):
         r1 = well.diameter / 2
         r2 = 0.6  # calculated manually
         h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
-        return h
+        if h > 10:
+            return 10
+        elif h < 3:
+            return 0.5
+        else:
+            return h
 
     # load reagents
     barcode_rxn_mix = mmx_plate['A4']
@@ -124,9 +129,7 @@ def run(protocol):
         m20.flow_rate.blow_out = 1.5
         pick_up()
         barcode_rxn_mix.liq_vol -= 3
-        ht = liq_height(
-            barcode_rxn_mix) - 2.5 if liq_height(
-                barcode_rxn_mix) > 3 else 0.5
+        ht = liq_height(barcode_rxn_mix)
         m20.aspirate(3, barcode_rxn_mix.bottom(ht))
         m20.move_to(barcode_rxn_mix.top(-2))
         protocol.delay(seconds=2)
