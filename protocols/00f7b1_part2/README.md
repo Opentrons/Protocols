@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol is part 2 of a 10 part series. Please look at deck map and liquid legend below. Note: bead strip tubes can accommodate 2 columns of sample by volume (i.e. 6 columns of beads for a full plate of samples). The RNA wash can accommodate 3 columns of sample per column of wash. There only needs to be one column of strand primer mix per run for all sample numbers. An overage of at least 10% should be used each run.
+This protocol is part 2 of a 10 part series. Please look at deck map and liquid legend below. Note: bead strip tubes can accommodate 2 columns of sample by volume (i.e. 6 columns of beads for a full plate of samples). The RNA binding buffer can accommodate 3 columns of sample per column of wash. There only needs to be one column of strand primer mix per run for all sample numbers. An overage of at least 10% should be used each run.
 
 
 ### Modules
@@ -38,7 +38,7 @@ This protocol is part 2 of a 10 part series. Please look at deck map and liquid 
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-10-25+at+10.36.13+AM.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+2/Screen+Shot+2022-11-23+at+10.44.42+AM.png)
 
 
 ### Protocol Steps
