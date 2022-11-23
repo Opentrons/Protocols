@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":8,"m300_mount":"right","flash":true}""")
-    return [_all_values[n] for n in names]
-
-
 # flake8: noqa
 
 
