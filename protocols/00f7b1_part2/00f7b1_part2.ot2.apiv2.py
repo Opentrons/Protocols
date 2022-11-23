@@ -1,3 +1,9 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samples":16,"m300_mount":"right","flash":true}""")
+    return [_all_values[n] for n in names]
+
+
 # flake8: noqa
 
 """OPENTRONS."""
@@ -263,22 +269,23 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.set_rail_lights(True)
 
     ctx.comment('\n~~~~~~~~~~~~~~MIXING~~~~~~~~~~~~~~\n')
-    for dest in samples:
-        pick_up(m300)
-        m300.mix(6, 80, dest)
-        # bead_mixing(dest, m300, 100, reps=6)
-        drop_tip(m300)
-    if TEST_MODE:
-        ctx.delay(seconds=5)
-    else:
-        ctx.delay(minutes=5)
+    for _ in range(2):
+        for dest in samples:
+            pick_up(m300)
+            m300.mix(6, 80, dest)
+            # bead_mixing(dest, m300, 100, reps=6)
+            drop_tip(m300)
+        if TEST_MODE:
+            ctx.delay(seconds=3)
+        else:
+            ctx.delay(minutes=3)
 
     ctx.comment('\n~~~~~~~~~~~~~~ENGAGING MAGNET~~~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=2.5)
     else:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=2.5)
 
     ctx.comment('\n~~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~~~\n')
     remove_supernatant(95)
@@ -288,10 +295,12 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~~~WASHING BEADS TWICE WITH BUFFER~~~~~~~~~~~~\n')
     for wash in [wash_1, wash_2]:
         for i, dest in enumerate(samples):
+
             side = -1 if i % 2 == 0 else 1
+            print(side)
             pick_up(m300)
-            m300.aspirate(180, wash)
-            m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+            m300.aspirate(170, wash)
+            m300.dispense(170, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=1)
             m300.air_gap(100)
             drop_tip(m300)
 
@@ -301,9 +310,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
         mag_deck.engage(height_from_base=mag_height)
         if TEST_MODE:
-            ctx.delay(minutes=wash_delay_time)
+            ctx.delay(minutes=2.5)
         else:
-            ctx.delay(minutes=wash_delay_time)
+            ctx.delay(minutes=2.5)
 
         ctx.comment('\n~~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~~~\n')
         remove_supernatant(190)
@@ -315,7 +324,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         m300.aspirate(50, tris)
         m300.dispense(50, dest)
-        m300.mix(6, 40, dest)
+        m300.mix(15, 40, dest)
         # bead_mixing(dest, m300, 50, reps=6)
         drop_tip(m300)
 
@@ -346,9 +355,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment('\n~~~~~~~~~~~~~INCUBATING 5 MINUTES~~~~~~~~~~~~\n')
     if TEST_MODE:
-        ctx.delay(seconds=5)
+        ctx.delay(seconds=2.5)
     else:
-        ctx.delay(minutes=5)
+        ctx.delay(minutes=2.5)
 
     ctx.comment('\n~~~~~~~~~~~~~ENGAGING MAGNETIC MODULE~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
@@ -365,7 +374,7 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         pick_up(m300)
         m300.aspirate(180, wash_3)
-        m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=2)
+        m300.dispense(180, dest.bottom().move(types.Point(x=-side, y=0, z=5)), rate=1)
         m300.air_gap(100)
         drop_tip(m300)
 
@@ -378,9 +387,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
-        ctx.delay(minutes=wash_delay_time)
+        ctx.delay(minutes=5)
     else:
-        ctx.delay(minutes=wash_delay_time)
+        ctx.delay(minutes=5)
 
     ctx.comment('\n~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~\n')
     remove_supernatant(190)
@@ -393,11 +402,11 @@ def run(ctx: protocol_api.ProtocolContext):
         m20.aspirate(11.5, strand_primer_mix)
         m20.dispense(11.5, dest.bottom().move(types.Point(x=-side, y=0, z=3)))
 
-        for _ in range(10):
+        for _ in range(15):
             m20.aspirate(11*0.8, dest.bottom().move(types.Point(x=-side,
                                                   y=0, z=1)), rate=2)
             m20.dispense(11*0.8, dest.bottom().move(types.Point(x=-side,
-                                                  y=0, z=5)), rate=2)
+                                                  y=0, z=7)), rate=2)
         drop_tip(m20)
 
     if flash:
@@ -419,9 +428,9 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~~~SEPARATING RNA SOLUTION~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=1)
     else:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=1)
 
     ctx.comment('\n~~~~~~~~~~~~~MOVING RNA TO NEW PLATE~~~~~~~~~~~~\n')
     for i, (s, d) in enumerate(zip(samples, final_dest)):
