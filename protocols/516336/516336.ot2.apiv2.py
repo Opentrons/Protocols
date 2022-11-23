@@ -11,16 +11,16 @@ metadata = {
 
 def run(ctx):
 
-    [samples, m300_mount, p300_mount,
+    [samples, m300_mount, p300_mount, mag_gen,
         mag_engage_height] = get_values(  # noqa: F821
-        "samples", "m300_mount", "p300_mount", "mag_engage_height")
+        "samples", "m300_mount", "p300_mount", "mag_gen", "mag_engage_height")
 
     cols = math.ceil(samples/8)
 
     # Load Labware
     tc_mod = ctx.load_module('Thermocycler Module')
     tc_plate = tc_mod.load_labware('biorad_96_wellplate_200ul_pcr')
-    mag_mod = ctx.load_module('magnetic module', '1')
+    mag_mod = ctx.load_module(mag_gen, '1')
     mag_plate = mag_mod.load_labware(
         'thermofisher_96_midi_storage_plate_800ul')
     temp_mod = ctx.load_module('temperature module gen2', 3)

@@ -17,12 +17,13 @@ Explanation of parameters below:
 * `Number of Samples`: Specify the number of samples in multiples of 8 (Max: 96).
 * `P300 Multichannel GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.
 * `P300 Single GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.
+* `Magnetic Module Generation`: Specify whether using Gen 1 or Gen 2 magnetic module.
 * `Magnetic Module Engage Height from Well Bottom (mm)`: Specify the height of the magnets from the bottom of the well.
 
 ---
 
 ### Modules
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+* [Magnetic Module (GEN1)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
 

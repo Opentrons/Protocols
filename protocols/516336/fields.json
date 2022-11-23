@@ -24,6 +24,15 @@
       ]
     },
     {
+      "type": "dropDown",
+      "label": "Magnetic Module Generation",
+      "name": "mag_gen",
+      "options": [
+        { "label": "Gen 1", "value": "magnetic module" },
+        { "label": "Gen 2", "value": "magnetic module gen2" }
+      ]
+    },
+    {
         "type": "float",
         "label": "Magnetic Module Engage Height from Well Bottom (mm)",
         "name": "mag_engage_height",

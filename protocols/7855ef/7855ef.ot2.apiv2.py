@@ -52,7 +52,12 @@ def run(protocol):
         r1 = well.diameter / 2
         r2 = 0.6  # calculated manually
         h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
-        return h
+        if h > 10:
+            return 10
+        elif h < 3:
+            return 0.5
+        else:
+            return h
 
     # load reagents
     overage_coef = (overage_percent/100)+1
@@ -117,9 +122,7 @@ def run(protocol):
         else:
             amplify_mix_well = amplify_mix_1
         amplify_mix_well.liq_vol -= 7
-        ht = liq_height(
-            amplify_mix_well) - 2.5 if liq_height(
-                amplify_mix_well) > 3 else 0.5
+        ht = liq_height(amplify_mix_well)
         m20.aspirate(7, amplify_mix_well.bottom(ht))
         m20.move_to(amplify_mix_well.top(-2))
         protocol.delay(seconds=2)

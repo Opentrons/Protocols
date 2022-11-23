@@ -231,24 +231,6 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.air_gap(50)
         drop_tip(m300)
 
-    for i, dest in enumerate(samples_mag):
-        side = -1 if i % 2 == 0 else 1
-        pick_up(m20)
-        m20.move_to(dest.top())
-        ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
-        ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m20.aspirate(13, dest.bottom().move(types.Point(x=0, y=0, z=0.5)),
-                     rate=0.1)
-        ctx.delay(seconds=1)
-        m20.move_to(dest.top())
-        m20.aspirate(1, dest.top())
-        ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
-        ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        m20.dispense(m20.current_volume, trash)
-        m20.blow_out()
-        m20.aspirate(10, trash)
-        drop_tip(m20)
-
     ctx.comment('\n~~~~~~~~~~~~~~WASHING TWICE WITH ETHANOL~~~~~~~~~~~~~\n')
     for _ in range(2):
         pick_up(m300)
@@ -317,13 +299,19 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.delay(minutes=bead_delay_time)
 
     ctx.comment('\n~~~~~~~~~~~~~~MOVING cDNA TO FINAL PLATE~~~~~~~~~~~~~\n')
-    for i, (s, d) in enumerate(zip(samples_mag, final_dest)):
-        side = -1 if i % 2 == 0 else 1
+    for s, d in zip(samples_mag, final_dest):
         pick_up(m300)
-        m300.aspirate(50, s.bottom().move(types.Point(x=side, y=0, z=1)),
-                      rate=0.1)
+        m300.aspirate(50, s.bottom().move(types.Point(x=0, y=0, z=2)),
+                      rate=0.05)
         m300.dispense(50, d)
         drop_tip(m300)
+
+    for s, d in zip(samples_mag, final_dest):
+        pick_up(m20)
+        m20.aspirate(20, s.bottom().move(types.Point(x=0, y=0, z=0.7)),
+                      rate=0.1)
+        m20.dispense(20, d)
+        drop_tip(m20)
 
     if flash:
         if not ctx._hw_manager.hardware.is_simulator:
