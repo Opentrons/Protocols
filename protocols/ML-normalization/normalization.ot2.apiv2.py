@@ -1,3 +1,5 @@
+from opentrons import protocol_api
+
 # metadata
 metadata = {
     'protocolName': 'Normalization from .csv',
@@ -15,10 +17,15 @@ def run(ctx):
         'source_type', 'using_tempdeck', 'dest_type', 'reservoir_type')
 
     # labware
-    tempdeck = ctx.load_module('temperature module gen2', '1')
+
     if using_tempdeck:
+        tempdeck = ctx.load_module('temperature module gen2', '1')
         tempdeck.set_temperature(4)
-    source_plate = tempdeck.load_labware(source_type, 'source plate')
+        source_plate = tempdeck.load_labware(source_type, 'source plate')
+
+    else:
+        source_plate = ctx.load_labware(source_type, 1, 'source plate')
+
     destination_plate = ctx.load_labware(dest_type, '2', 'destination plate')
     water = ctx.load_labware(
         reservoir_type, '5',
@@ -35,6 +42,19 @@ def run(ctx):
     # pipettes
     p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
     p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
+
+    # Helper Functions
+    def pick_up(pip):
+        """Function that can be used instead of .pick_up_tip() that will pause
+        robot when robot runs out of tips, prompting user to replace tips
+        before resuming"""
+        try:
+            pip.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            pip.home()
+            ctx.pause("Replace the tips")
+            pip.reset_tipracks()
+            pip.pick_up_tip()
 
     # parse
     data = [
@@ -56,7 +76,7 @@ def run(ctx):
         # pre-transfer diluent
         pip = p300 if vol_w > 20 else p20
         if not pip.has_tip:
-            pip.pick_up_tip()
+            pick_up(pip)
 
         pip.transfer(vol_w, water, d.bottom(2), new_tip='never')
         pip.blow_out(d.top(-2))
@@ -79,7 +99,7 @@ def run(ctx):
         # transfer sample
         pip = p300 if vol_s > 20 else p20
         if vol_s != 0:
-            pip.pick_up_tip()
+            pick_up(pip)
             pip.transfer(vol_s, s, d, new_tip='never')
             pip.blow_out(d.top(-2))
             pip.drop_tip()
