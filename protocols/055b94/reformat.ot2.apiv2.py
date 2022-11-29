@@ -113,12 +113,20 @@ def run(ctx):
     def get_well_name(well):
         return well.display_name.split()[' '][0]
 
-    def wick(well, pip=m20, side=1, z=3):
+    def wick(well, pip=m20, side=1, magnitude_ratio=0.5, z=3):
         if hasattr(well, 'diameter'):
-            magnitude = well.diameter/2*0.8
+            magnitude = well.diameter/2*0.5
         else:
-            magnitude = well.width/2*0.8
-        pip.move_to(well.bottom().move(Point(x=side*magnitude, z=z)))
+            magnitude = well.width/2*0.5
+        pip.move_to(well.bottom().move(
+            Point(x=side*magnitude*magnitude_ratio, z=z)))
+
+    def slow_withdraw(well, pip=m20):
+        ctx.max_speeds['A'] = 25
+        ctx.max_speeds['Z'] = 25
+        pip.move_to(well.top())
+        del ctx.max_speeds['A']
+        del ctx.max_speeds['Z']
 
     def check_column(well):
         plate = well.parent
@@ -155,12 +163,13 @@ def run(ctx):
 
     # mm transfer
     pick_up(m20)
-    for i, s in enumerate(all_sources_multi):
+    for i, (s, d) in enumerate(zip(all_sources_multi, all_dests_multi)):
         mm_source = mm_strips[i//12][0]
         if check_column(s):
             m20.aspirate(protocol_info['vol_mm'], mm_source)
-            m20.dispense(protocol_info['vol_mm'], s)
-            wick(s, m20, z=10)
+            m20.dispense(protocol_info['vol_mm'], d)
+            wick(d, m20)
+            slow_withdraw(d, m20)
 
     # sample transfer
     for source, dest in zip(all_sources_multi, all_dests_multi):
@@ -168,11 +177,7 @@ def run(ctx):
             if not m20.has_tip:
                 pick_up(m20)
             m20.aspirate(protocol_info['vol_sample'], source)
-            ctx.max_speeds['A'] = 50
-            ctx.max_speeds['Z'] = 50
-            m20.move_to(source.top())
-            del ctx.max_speeds['A']
-            del ctx.max_speeds['Z']
+            slow_withdraw(source, m20)
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)
             wick(dest, m20)
@@ -189,9 +194,10 @@ def run(ctx):
                 ['Plate_Barcode', 'WellPos', 'SampleID', 'SourcePlateID',
                  'Chemagic_ID', 'PCRandSampleIDs'])
             for key, val in dest_plate_data.items():
-                well = [key for key in val.keys()][0]
-                sample_id = val[well]['sample_id']
-                barcode = val[well]['plate_barcode']
+                well = key
+                well96 = [key for key in val.keys()][0]
+                sample_id = val[well96]['sample_id']
+                barcode = val[well96]['plate_barcode']
                 well_position = well.display_name.split(' ')[0]
                 row = [scan_9000_plate_barcode, well_position, sample_id,
                        barcode, '',
