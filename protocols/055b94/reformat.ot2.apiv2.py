@@ -9,6 +9,8 @@ metadata = {
     'apiLevel': '2.12'
 }
 
+TEST_MODE = True
+
 
 def run(ctx):
 
@@ -111,12 +113,12 @@ def run(ctx):
     def get_well_name(well):
         return well.display_name.split()[' '][0]
 
-    def wick(well, pip=m20, side=1):
+    def wick(well, pip=m20, side=1, z=3):
         if hasattr(well, 'diameter'):
             magnitude = well.diameter/2*0.8
         else:
             magnitude = well.width/2*0.8
-        pip.move_to(well.bottom().move(Point(x=side*magnitude, z=3)))
+        pip.move_to(well.bottom().move(Point(x=side*magnitude, z=z)))
 
     def check_column(well):
         plate = well.parent
@@ -146,6 +148,10 @@ def run(ctx):
             for well in strip:
                 p300.transfer(vol_mm_per_well, tube, well, new_tip='never')
                 wick(well, p300)
+    if TEST_MODE:
+        p300.return_tip()
+    else:
+        p300.drop_tip()
 
     # mm transfer
     pick_up(m20)
@@ -154,7 +160,7 @@ def run(ctx):
         if check_column(s):
             m20.aspirate(protocol_info['vol_mm'], mm_source)
             m20.dispense(protocol_info['vol_mm'], s)
-            wick(s, m20)
+            wick(s, m20, z=10)
 
     # sample transfer
     for source, dest in zip(all_sources_multi, all_dests_multi):
@@ -162,9 +168,18 @@ def run(ctx):
             if not m20.has_tip:
                 pick_up(m20)
             m20.aspirate(protocol_info['vol_sample'], source)
+            ctx.max_speeds['A'] = 50
+            ctx.max_speeds['Z'] = 50
+            m20.move_to(source.top())
+            del ctx.max_speeds['A']
+            del ctx.max_speeds['Z']
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)
-            m20.drop_tip()
+            wick(dest, m20)
+            if TEST_MODE:
+                m20.return_tip()
+            else:
+                m20.drop_tip()
 
     if not ctx.is_simulating():
         out_csv_path = f'{path}/{scan_9000_plate_barcode}.csv'
@@ -182,20 +197,3 @@ def run(ctx):
                        barcode, '',
                        f'{scan_qpcr_plate_barcode}_{scan_9000_plate_barcode}']
                 writer.writerow(row)
-#     else:
-#         out_csv_path = f'protocols/055b94/supplements/\
-# {scan_9000_plate_barcode}.csv'
-#         with open(out_csv_path, 'w') as file:
-#             writer = csv.writer(file)
-#             writer.writerow(
-#                 ['Plate_Barcode', 'WellPos', 'SampleID', 'SourcePlateID',
-#                  'Chemagic_ID', 'PCRandSampleIDs'])
-#             for key, val in dest_plate_data.items():
-#                 well = [key for key in val.keys()][0]
-#                 sample_id = val[well]['sample_id']
-#                 barcode = val[well]['plate_barcode']
-#                 well_position = well.display_name.split(' ')[0]
-#                 row = [scan_9000_plate_barcode, well_position, sample_id,
-#                        barcode, '',
-#                        f'{scan_qpcr_plate_barcode}_{scan_9000_plate_barcode}']
-#                 writer.writerow(row)

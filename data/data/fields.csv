@@ -992,8 +992,12 @@ plate2_samples,1
 plate3_samples,1
 plate4_samples,1
 plate_1_cols,6
+plate_1_csv,1
 plate_2_cols,4
+plate_2_csv,1
 plate_384,1
+plate_3_csv,1
+plate_4_csv,1
 plate_96,1
 plate_a_start_col,1
 plate_b_start_col,1
@@ -1035,6 +1039,7 @@ primer_start,1
 primer_vol,1
 primer_volume,2
 process,1
+protocol_type,1
 prototype,1
 puncture_agar,1
 puncture_depth,1
@@ -1167,6 +1172,8 @@ sampplate,1
 samps,7
 sampvol,1
 sape_vol,1
+scan_9000_plate_barcode,1
+scan_qpcr_plate_barcode,1
 sds_buffer_vol,1
 sec_ex,1
 sec_plate,1
@@ -1433,7 +1440,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 udi_start_col,1
-uploaded_csv,18
+uploaded_csv,19
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
