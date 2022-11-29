@@ -148,13 +148,15 @@ def run(ctx):
     # mm pre-aliquot
     mm_tubes = tuberack.wells()[:4]
     mm_strips = strips.columns()[:4]
-    total_vol_mm_per_strip = protocol_info['vol_mm']*96*1.1
+    total_vol_mm_per_strip = protocol_info['vol_mm']*96*1.05
     vol_mm_per_well = total_vol_mm_per_strip/8
     p300.pick_up_tip()
     for barcode_bool, tube, strip in zip(source_barcodes, mm_tubes, mm_strips):
         if barcode_bool:
             for well in strip:
-                p300.transfer(vol_mm_per_well, tube, well, new_tip='never')
+                p300.aspirate(vol_mm_per_well, tube)
+                slow_withdraw(tube, p300)
+                p300.dispense(vol_mm_per_well, well)
                 wick(well, p300)
                 slow_withdraw(well, p300)
     if TEST_MODE:
@@ -169,7 +171,7 @@ def run(ctx):
         if check_column(s):
             m20.aspirate(protocol_info['vol_mm'], mm_source)
             m20.dispense(protocol_info['vol_mm'], d)
-            wick(d, m20)
+            wick(d, m20, magnitude_ratio=0.6)
             slow_withdraw(d, m20)
 
     # sample transfer
@@ -181,7 +183,8 @@ def run(ctx):
             slow_withdraw(source, m20)
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)
-            wick(dest, m20)
+            ctx.delay(seconds=1)
+            wick(dest, m20, magnitude_ratio=0.6)
             slow_withdraw(dest, m20)
             if TEST_MODE:
                 m20.return_tip()
