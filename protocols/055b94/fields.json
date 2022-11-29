@@ -1,7 +1,7 @@
 [
   {
     "type": "dropDown",
-    "label": "protocol_type",
+    "label": "protocol type",
     "name": "protocol_type",
     "options": [
       {"label": "BioGX", "value": "biogx"},

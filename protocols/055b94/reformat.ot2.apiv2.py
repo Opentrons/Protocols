@@ -38,7 +38,6 @@ def run(ctx):
             'vol_mm': 5.0,
             'plate_type': 'kingfisher_96_wellplate_200ul'}
     }
-    
     protocol_info = protocol_map[protocol_type]
 
     source_plates = [
