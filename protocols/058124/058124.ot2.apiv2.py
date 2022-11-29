@@ -143,27 +143,27 @@ def run(ctx):
     params = {
      1: {"diluent vol": [990, 450, 150],
          "sample vol": 10,
-         "mix count": 10,
+         "mix count": 15,
          "serial vol": [50, 150]},
      2: {"diluent vol": [990, 150],
          "sample vol": 10,
-         "mix count": 10,
+         "mix count": 15,
          "serial vol": [150]},
      3: {"diluent vol": [490, 450, 150],
          "sample vol": 10,
-         "mix count": 5,
+         "mix count": 15,
          "serial vol": [50, 150]},
      4: {"diluent vol": [380, 450, 100],
          "sample vol": 20,
-         "mix count": 3,
+         "mix count": 15,
          "serial vol": [50, 100]},
      5: {"diluent vol": [990, 450, 450, 100],
          "sample vol": 10,
-         "mix count": 10,
+         "mix count": 15,
          "serial vol": [50, 50, 100]},
      6: {"diluent vol": [490, 450, 450, 100],
          "sample vol": 10,
-         "mix count": 5,
+         "mix count": 15,
          "serial vol": [50, 50, 100]}
          }
 
@@ -278,13 +278,13 @@ def run(ctx):
             for i, vol, column in zip(
              [*range(tfercount)], tfervols, destination):
 
-                # tip height - 3/4 of the way down liquid column
-                mixht = 0.25*liq_height(column[0])
+                # tip height - top of liquid column
+                mixht = liq_height(column[0])
 
                 # premix
                 for rep in range(params[key]['mix count']):
-                    p300m.aspirate(100, column[0].bottom(mixht))
-                    p300m.dispense(100, column[0].bottom(mixht))
+                    p300m.aspirate(200, column[0].bottom(1))
+                    p300m.dispense(200, column[0].bottom(mixht))
 
                 p300m.aspirate(vol, column[0].bottom(1))
                 ctx.delay(seconds=1)
@@ -297,7 +297,9 @@ def run(ctx):
                 if i == tfercount - 1:
 
                     # final postmix in last column
-                    p300m.mix(4, 100, disploc.bottom(mixht))
+                    for rep in range(15):
+                        p300m.aspirate(200, disploc.bottom(1))
+                        p300m.dispense(200, disploc.bottom(mixht))
                     ctx.delay(seconds=1)
                     slow_tip_withdrawal(p300m, disploc)
                     p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
