@@ -1,0 +1,48 @@
+[
+  {
+    "type": "dropDown",
+    "label": "protocol_type",
+    "name": "protocol_type",
+    "options": [
+      {"label": "BioGX", "value": "biogx"},
+      {"label": "LGC", "value": "lgc"},
+      {"label": "PKamp", "value": "pkamp"}
+    ]
+  },
+  {
+    "type": "str",
+    "label": "scan 9000 plate barcode",
+    "name": "scan_9000_plate_barcode",
+    "default": ""
+  },
+  {
+    "type": "str",
+    "label": "scan qPCR plate barcode",
+    "name": "scan_qpcr_plate_barcode",
+    "default": ""
+  },
+  {
+    "type": "textFile",
+    "label": "8000 plate 1 .csv file",
+    "name": "plate_1_csv",
+    "default": "Plate_Barcode,WellPos,SampleId,RunBinId,RunLane,RunPos,RunUsername,RunInstrument\n8000032228,A3,,1000000054,Bar Code Cassette1_001,1,TEST,North America\n8000032228,A4,7000398622,1000000054,Bar Code Cassette1_001,2,TEST,North America\n8000032228,A5,7000398623,1000000054,Bar Code Cassette1_001,3,TEST,North America\n8000032228,A6,7000398624,1000000054,Bar Code Cassette1_001,4,TEST,North America\n8000032228,A7,7000398625,1000000054,Bar Code Cassette1_001,5,TEST,North America\n8000032228,A8,7000398626,1000000054,Bar Code Cassette1_001,6,TEST,North America\n8000032228,A9,7000398627,1000000054,Bar Code Cassette1_001,7,TEST,North America\n8000032228,A10,7000398628,1000000054,Bar Code Cassette1_001,8,TEST,North America\n8000032228,A11,7000398629,1000000054,Bar Code Cassette1_001,9,TEST,North America\n8000032228,A12,,1000000054,Bar Code Cassette1_001,10,TEST,North America\n8000032228,B1,7000398631,1000000054,Bar Code Cassette1_001,11,TEST,North America\n8000032228,B2,7000398632,1000000054,Bar Code Cassette1_001,12,TEST,North America\n8000032228,B3,7000398633,1000000054,Bar Code Cassette1_001,13,TEST,North America\n8000032228,B4,7000398634,1000000054,Bar Code Cassette1_001,14,TEST,North America\n8000032228,B5,7000398635,1000000054,Bar Code Cassette1_001,15,TEST,North America\n8000032228,B6,7000398636,1000000054,Bar Code Cassette1_001,16,TEST,North America\n8000032228,A1,Negative\n8000032228,A2,Positive,,,,,\n"
+  },
+  {
+    "type": "textFile",
+    "label": "8000 plate 1 .csv file",
+    "name": "plate_2_csv",
+    "default": ""
+  },
+  {
+    "type": "textFile",
+    "label": "8000 plate 1 .csv file",
+    "name": "plate_3_csv",
+    "default": ""
+  },
+  {
+    "type": "textFile",
+    "label": "8000 plate 1 .csv file",
+    "name": "plate_4_csv",
+    "default": ""
+  }
+]
