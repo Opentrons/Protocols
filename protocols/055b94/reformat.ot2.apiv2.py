@@ -9,7 +9,7 @@ metadata = {
     'apiLevel': '2.12'
 }
 
-TEST_MODE = True
+TEST_MODE = False
 
 
 def run(ctx):
@@ -156,6 +156,7 @@ def run(ctx):
             for well in strip:
                 p300.transfer(vol_mm_per_well, tube, well, new_tip='never')
                 wick(well, p300)
+                slow_withdraw(well, p300)
     if TEST_MODE:
         p300.return_tip()
     else:
@@ -181,6 +182,7 @@ def run(ctx):
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)
             wick(dest, m20)
+            slow_withdraw(dest, m20)
             if TEST_MODE:
                 m20.return_tip()
             else:
