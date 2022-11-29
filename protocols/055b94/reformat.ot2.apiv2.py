@@ -9,7 +9,7 @@ metadata = {
     'apiLevel': '2.12'
 }
 
-TEST_MODE = True
+TEST_MODE = False
 
 
 def run(ctx):
