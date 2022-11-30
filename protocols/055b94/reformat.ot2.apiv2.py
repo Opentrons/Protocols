@@ -186,7 +186,7 @@ def run(ctx):
         if check_column(source):
             if not m20.has_tip:
                 pick_up(m20)
-            m20.aspirate(protocol_info['vol_sample'], source)
+            m20.aspirate(protocol_info['vol_sample'], source.bottom(3))
             slow_withdraw(source, m20)
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)
