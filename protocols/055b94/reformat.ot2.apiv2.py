@@ -45,7 +45,7 @@ def run(ctx):
     source_plates = [
         ctx.load_labware(protocol_info['plate_type'], slot,
                          f'source plate {i+1}')
-        for i, slot in enumerate(['1', '4', '3', '6'])]
+        for i, slot in enumerate(['4', '6', '1', '3'])]
     dest_plate = ctx.load_labware('microamp_384_wellplate_40ul', '2',
                                   '384 well plate')
     strips = ctx.load_labware('custom_96_wellplate_200ul', '5',
