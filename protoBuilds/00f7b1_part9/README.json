@@ -1,0 +1,37 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "NEBNext Ultra II Directional RNA Library Prep Kit for Illumina"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol adds barcode primers and master mix to samples to prepare for PCR enrichment as outlined in the NEBNext Ultra II Directional RNA Library Prep Kit",
+    "internal": "00f7b1_part9",
+    "labware": "\nThermo Fisher 96 Well Plate 200 \u00b5L #AB-3396\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nNEST 1 Well Reservoir 195 mL #360103\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* NGS Library Prep\n\t* NEBNext Ultra II Directional RNA Library Prep Kit for Illumina\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+9/deck.png)\n\n\n",
+        "description": "This protocol adds barcode primers and master mix to samples to prepare for PCR enrichment as outlined in the NEBNext Ultra II Directional RNA Library Prep Kit\n\n\n",
+        "internal": "00f7b1_part9\n",
+        "labware": "* Thermo Fisher 96 Well Plate 200 \u00b5L #AB-3396\n* [Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "0. Temperature module is cooled to 4 C\n1. 25 uL of master mix is added to each sample. NOTE: If more than 6 columns (48 samples) are specified, the master mix is split evenly between two strips on the temperature deck. The OT-2 will alternate between the two strips as it adds to the plate.\n2. The foil covering the primer plate is pierced with a P300 tip before the P20 is used to add 10 uL of primer to each sample. A new set of tips is used for each pierce and addition.\n3. Samples are mixed 6 times\n4. The OT-2 will flash to alert on protocol completion\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+9/reagents.png)\n\n\n",
+        "title": "NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 9: PCR Enrichment"
+    },
+    "modules": [
+        "Opentrons Magnetic Module (GEN2)",
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nTemperature module is cooled to 4 C\n25 uL of master mix is added to each sample. NOTE: If more than 6 columns (48 samples) are specified, the master mix is split evenly between two strips on the temperature deck. The OT-2 will alternate between the two strips as it adds to the plate.\nThe foil covering the primer plate is pierced with a P300 tip before the P20 is used to add 10 uL of primer to each sample. A new set of tips is used for each pierce and addition.\nSamples are mixed 6 times\nThe OT-2 will flash to alert on protocol completion\n",
+    "reagent-setup": "",
+    "title": "NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 9: PCR Enrichment"
+}
