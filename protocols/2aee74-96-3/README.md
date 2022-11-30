@@ -1,11 +1,11 @@
-# Olink Target 96 Part 3/3: Detection
+# Olink® Target 96 Part 3/3: Detection
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Proteins & Proteomics
-	* Olink Target 96
+	* Olink® Target 96
 
 ## Description
 
@@ -14,10 +14,11 @@ Links:
 * [Part 2: Extension](./2aee74-2)
 * [Part 3: Detection](./2aee74-3)
 
-This protocol accomplishes part 3/3: Detection for the [Olink Target 96 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery. Primers are transferred to the left 96 wells of the Fluidigm detection plate, and samples are transferred to the right 96 wells. The transfer mapping for these plates is shown in the following images:  
+This protocol accomplishes part 3/3: Detection for use with the [Olink® Target 96 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery. Primers are transferred to the left 96 wells of the Fluidigm detection plate, and samples are transferred to the right 96 wells. The transfer mapping for these plates is shown in the following images:  
 ![scheme1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme1-2.png)
 ![scheme2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme2-2.png)
-
+</br>
+Olink® is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.
 ---
 
 ### Labware
@@ -31,7 +32,7 @@ This protocol accomplishes part 3/3: Detection for the [Olink Target 96 protocol
 * [P20 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
-* [Olink Target 96](https://www.olink.com/products-services/target/)
+* [Olink® Target 96](https://www.olink.com/products-services/target/)
 
 ---
 
