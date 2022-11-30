@@ -106,7 +106,7 @@ def run(ctx):
         try:
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            pip.pause("Replace tipracks before resuming.")
+            ctx.pause("Replace tipracks before resuming.")
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -144,6 +144,13 @@ def run(ctx):
          for row in dest_plate.rows()[:2]
          for j in range(2)
          for i in range(12)]
+
+    if not ctx.is_simulating():
+        out_csv_path = f'{path}/{scan_9000_plate_barcode}.csv'
+        with open(out_csv_path, 'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                [f'Protocol for {scan_9000_plate_barcode} was not completed.'])
 
     # mm pre-aliquot
     mm_tubes = tuberack.wells()[:4]
