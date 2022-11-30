@@ -31,7 +31,7 @@ Each protocol run generates an output .csv file that is compatible with Quantstu
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/055b94/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/055b94/deckv2.png)
 * yellow on 96-wellplates: sample
 * blue on tuberack: prepared mastermix
 * purple on strips: mastermix strips for plating (loaded empty)
