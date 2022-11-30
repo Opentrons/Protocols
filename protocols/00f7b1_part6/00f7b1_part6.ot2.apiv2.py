@@ -5,7 +5,8 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 6: End Prep of cDNA',
+    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for \
+Illumina Part 6: End Prep of cDNA',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
