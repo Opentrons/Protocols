@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS Library Prep
+	* NEBNext Ultra II Directional RNA Library Prep Kit for Illumina
 
 
 ## Description
-This protocol does stuff!
+This protocol adds barcode primers and master mix to samples to prepare for PCR enrichment as outlined in the NEBNext Ultra II Directional RNA Library Prep Kit
 
 
 ### Modules
@@ -33,15 +33,19 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part9/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+9/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part9/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+9/reagents.png)
 
 
 ### Protocol Steps
-1. Step 1...
+0. Temperature module is cooled to 4 C
+1. 25 uL of master mix is added to each sample. NOTE: If more than 6 columns (48 samples) are specified, the master mix is split evenly between two strips on the temperature deck. The OT-2 will alternate between the two strips as it adds to the plate.
+2. The foil covering the primer plate is pierced with a P300 tip before the P20 is used to add 10 uL of primer to each sample. A new set of tips is used for each pierce and addition.
+3. Samples are mixed 6 times
+4. The OT-2 will flash to alert on protocol completion
 
 
 ### Process

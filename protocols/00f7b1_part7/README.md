@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS Library Prep
+	*  NEBNext Ultra II Directional RNA Library Prep Kit for Illumina
 
 
 ## Description
-This protocol does stuff!
+This protocol adds the necessary reagents for the second cDNA strand synthesis in the  NEBNext Ultra II Directional RNA Library Prep Kit for Illumina.
 
 
 ### Modules
@@ -33,15 +33,18 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part7/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+7/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part7/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+7/reagents.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. 2.5 uL of diluted adapter is added to each sample
+2. 31 uL of the combined master mix and ligation enzyme is added to each sample. NOTE: If more than 6 columns (48 samples) are specified, the master mix/ligation enzyme is split evenly between two strips on the temperature deck. The OT-2 will alternate between the two strips as it adds to the plate.
+3. The OT-2 flashes and alerts the user to move the sample plate to an off-deck thermocycler
+4. The sample plate is replaced post-thermocycler and 3 uL of user enzyme is added to the samples
 
 
 ### Process

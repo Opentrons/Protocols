@@ -56,11 +56,13 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "m300_mount", "flash")
 
-    TEST_MODE = True
+    TEST_MODE = False
     bead_delay_time = 2
     wash_delay_time = 2
     supernatant_headspeed_modulator = 10
     mag_height = 3.5
+    print(bead_delay_time, wash_delay_time, supernatant_headspeed_modulator,
+          mag_height)
     ctx.max_speeds['Z'] = 400
     ctx.max_speeds['A'] = 400
     # Setup for flashing lights notification to empty trash
@@ -77,17 +79,21 @@ def run(ctx: protocol_api.ProtocolContext):
     temp_deck = ctx.load_module('temperature module gen2', '3')
     print(num_columns)
 
+    if not TEST_MODE:
+        temp_deck.set_temperature(4)
+
     # load labware
     mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')
     temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
                                         'pcr_strip_200ul')
     # dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
     # final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
-    trash = ctx.load_labware('nest_1_reservoir_195ml', '8').wells()[0].top()
+    trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
+    print(trash)
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7', '10']]
+               for slot in ['7', '8', '10']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
               for slot in ['11']]
     # load instrument
@@ -125,7 +131,7 @@ def run(ctx: protocol_api.ProtocolContext):
         if pip == m300:
             tips_dropped += 8
         else:
-            tips_dropped += 1
+            tips_dropped += 3
         if tips_dropped == 288:
             if flash:
                 if not ctx._hw_manager.hardware.is_simulator:
@@ -167,27 +173,20 @@ def run(ctx: protocol_api.ProtocolContext):
 
     samples = mag_plate.rows()[0][:num_columns]
     rxn_buffer = temp_plate.rows()[0][0]
-    enzyme_mix = temp_plate.rows()[0][2]
+    # enzyme_mix = temp_plate.rows()[0][2]
 
     # protocol
-    ctx.comment('\n~~~~~~~~~~~ADDING REACTION BUFFER~~~~~~~~~~~\n')
+    ctx.comment('\n~~~~~~~~~~~ADDING REACTION BUFFER & ENZYME MIX~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m20)
-        m20.aspirate(7, rxn_buffer, rate=0.5)
-        m20.dispense(7, dest)
-        drop_tip(m20)
-
-    ctx.comment('\n~~~~~~~~~~~ADDING ENZYME MIX~~~~~~~~~~~\n')
-    for dest in samples:
-        pick_up(m20)
-        m20.aspirate(3, enzyme_mix, rate=0.5)
-        m20.dispense(3, dest)
+        m20.aspirate(10, rxn_buffer, rate=0.25)
+        m20.dispense(10, dest, 0.25)
         drop_tip(m20)
 
     ctx.comment('\n~~~~~~~~~~~MIXING~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m300)
-        m300.mix(6, 70, dest)
+        m300.mix(6, 50, dest)
         drop_tip(m300)
 
     if flash:
@@ -201,6 +200,3 @@ def run(ctx: protocol_api.ProtocolContext):
         cancellationToken.set_false()  # stop light flashing after home
         thread.join()
     ctx.set_rail_lights(True)
-
-    for c in ctx.commands():
-        print(c)

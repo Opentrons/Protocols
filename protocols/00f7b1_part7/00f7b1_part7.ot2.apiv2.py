@@ -5,7 +5,8 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 4: Second cDNA Strand Synthesis',
+    'protocolName': 'NEBNext Ultra II Directional RNA Library Prep Kit for \
+Illumina Part 7: Adaptor Ligation',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -56,13 +57,15 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "m300_mount", "flash")
 
-    TEST_MODE = True
+    TEST_MODE = False
     bead_delay_time = 2
     wash_delay_time = 2
     supernatant_headspeed_modulator = 10
     mag_height = 3.5
-    ctx.max_speeds['Z'] = 400
-    ctx.max_speeds['A'] = 400
+    print(bead_delay_time, wash_delay_time, supernatant_headspeed_modulator,
+          mag_height)
+    ctx.max_speeds['Z'] = 125
+    ctx.max_speeds['A'] = 125
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
@@ -77,17 +80,21 @@ def run(ctx: protocol_api.ProtocolContext):
     temp_deck = ctx.load_module('temperature module gen2', '3')
     print(num_columns)
 
+    if not TEST_MODE:
+        temp_deck.set_temperature(4)
+
     # load labware
     mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_200ul')
     temp_plate = temp_deck.load_labware('opentrons_96_aluminumblock_generic_'
                                         'pcr_strip_200ul')
     # dwp = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
     # final_plate = ctx.load_labware('thermofisher_96_wellplate_200ul', '2')
-    trash = ctx.load_labware('nest_1_reservoir_195ml', '8').wells()[0].top()
+    trash = ctx.load_labware('nest_1_reservoir_195ml', '9').wells()[0].top()
+    print(trash)
     # load tipracks
 
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['7', '10']]
+               for slot in ['7', '8', '10']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
               for slot in ['11']]
     # load instrument
@@ -125,7 +132,7 @@ def run(ctx: protocol_api.ProtocolContext):
         if pip == m300:
             tips_dropped += 8
         else:
-            tips_dropped += 1
+            tips_dropped += 3
         if tips_dropped == 288:
             if flash:
                 if not ctx._hw_manager.hardware.is_simulator:
@@ -167,23 +174,28 @@ def run(ctx: protocol_api.ProtocolContext):
 
     samples = mag_plate.rows()[0][:num_columns]
     dil_adapter = temp_plate.rows()[0][0]
-    mm_ligation = temp_plate.rows()[0][2]
+    mm_ligation = temp_plate.rows()[0][2:2+math.ceil(num_columns/6)]*12
     user_enzyme = temp_plate.rows()[0][4]
 
     # protocol
     ctx.comment('\n~~~~~~~~~~~ADDING DILUTED ADAPTER~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m20)
-        m20.aspirate(2.5, dil_adapter)
+        m20.aspirate(2.5, dil_adapter, rate=0.5)
         m20.dispense(2.5, dest)
         drop_tip(m20)
 
-    ctx.comment('\n~~~~~~~~~~~ADDING LIGATION ENHANCER/MASTER MIX~~~~~~~~~~~\n')
-    for dest in samples:
+    ctx.comment('\n~~~~~~~~~~ADDING LIGATION ENHANCER/MASTER MIX~~~~~~~~~~~\n')
+    for src, dest in zip(mm_ligation, samples):
         pick_up(m300)
-        m300.aspirate(31, mm_ligation)
-        m300.dispense(31, dest)
-        m300.mix(6, 80, dest)
+        m300.aspirate(31, src, rate=0.2)
+        ctx.delay(seconds=2)
+        m300.dispense(31, dest, rate=0.2)
+        ctx.delay(seconds=2)
+        m300.mix(8, 80, dest)
+        ctx.delay(seconds=2)
+        m300.move_to(dest.top())
+        m300.aspirate(20, dest.top(2))
         drop_tip(m300)
 
     if flash:
@@ -205,7 +217,8 @@ def run(ctx: protocol_api.ProtocolContext):
     for dest in samples:
         pick_up(m20)
         pick_up(m300)
-        m20.aspirate(3, user_enzyme)
+        m20.aspirate(3, user_enzyme, rate=0.2)
+        ctx.delay(seconds=1)
         m20.dispense(3, dest)
         m300.mix(6, 80, dest)
         drop_tip(m300)

@@ -6,12 +6,14 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS Library Prep
+	* NEBNext® Ultra™ II Directional RNA Library Prep
 
 
 ## Description
-This protocol does stuff!
+This protocol performs the end prep for cDNA in the NEBNext Ultra II Directional RNA Library Prep Kit.
+Reaction buffer and enzyme mix are added to samples before mixing. The sample plate is then moved to
+an off-deck thermocycler.
 
 
 ### Modules
@@ -33,15 +35,19 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part6/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+6/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1_part6/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00f7b1/Part+6/reagents.png)
 
 
 ### Protocol Steps
-1. Step 1...
+0. Temperature module cools down to 4 C
+1. 7 uL of reaction buffer is added to each sample
+2. 3 uL of enzyme mix is added to each sample
+3. Samples with buffer and enzyme mix added are mixed via pipetting
+4. OT-2 flashes on completion
 
 
 ### Process
