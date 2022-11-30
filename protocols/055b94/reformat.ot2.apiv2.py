@@ -45,7 +45,7 @@ def run(ctx):
     source_plates = [
         ctx.load_labware(protocol_info['plate_type'], slot,
                          f'source plate {i+1}')
-        for i, slot in enumerate(['1', '4', '3', '6'])]
+        for i, slot in enumerate(['4', '6', '1', '3'])]
     dest_plate = ctx.load_labware('microamp_384_wellplate_40ul', '2',
                                   '384 well plate')
     strips = ctx.load_labware('custom_96_wellplate_200ul', '5',
@@ -106,7 +106,7 @@ def run(ctx):
         try:
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            pip.pause("Replace tipracks before resuming.")
+            ctx.pause("Replace tipracks before resuming.")
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -145,6 +145,13 @@ def run(ctx):
          for j in range(2)
          for i in range(12)]
 
+    if not ctx.is_simulating():
+        out_csv_path = f'{path}/{scan_9000_plate_barcode}.csv'
+        with open(out_csv_path, 'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                [f'Protocol for {scan_9000_plate_barcode} was not completed.'])
+
     # mm pre-aliquot
     mm_tubes = tuberack.wells()[:4]
     mm_strips = strips.columns()[:4]
@@ -179,7 +186,7 @@ def run(ctx):
         if check_column(source):
             if not m20.has_tip:
                 pick_up(m20)
-            m20.aspirate(protocol_info['vol_sample'], source)
+            m20.aspirate(protocol_info['vol_sample'], source.bottom(3))
             slow_withdraw(source, m20)
             m20.dispense(protocol_info['vol_sample'], dest)
             m20.mix(3, 10, dest)

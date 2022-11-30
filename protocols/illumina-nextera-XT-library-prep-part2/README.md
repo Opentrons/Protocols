@@ -16,7 +16,7 @@ Links:
 * [Part 3: Normalize Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part3)
 * [Part 4: Pool Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part4)
 
-With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-05.pdf).
+With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-06.pdf).
 
 This is Part 2 of the protocol, which consists of just step (3) of the overall process: clean up libraries. This step uses AMPure XP beads to purify the library DNA and remove short library fragments after the previous step, library amplification.
 

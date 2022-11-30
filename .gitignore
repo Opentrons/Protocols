@@ -114,3 +114,6 @@ protocols/**/supplements
 
 # credentials
 data/salesforce/credentials.json
+
+# vs code
+.vscode

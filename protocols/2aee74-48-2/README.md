@@ -1,11 +1,11 @@
-# Olink Target 48 Part 2/3: Extension
+# Olink® Target 48 Part 2/3: Extension
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Proteins & Proteomics
-	* Olink Target 48
+	* Olink® Target 48
 
 ## Description
 
@@ -14,7 +14,9 @@ Links:
 * [Part 2: Extension](./2aee74-48-2)
 * [Part 3: Detection](./2aee74-48-3)
 
-This protocol accomplishes part 2/3: Extension for the [Olink Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.
+This protocol accomplishes part 2/3: Extension for the [Olink® Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.
+</br>
+Olink® is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.
 
 ---
 
@@ -27,7 +29,7 @@ This protocol accomplishes part 2/3: Extension for the [Olink Target 48 protocol
 * [P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
-* [Olink Target 48](https://www.olink.com/products-services/target/)
+* [Olink® Target 48](https://www.olink.com/products-services/target/)
 
 ---
 
