@@ -35,9 +35,9 @@ def run(ctx):
         raise Exception(
          'p20 flow rate for mix must be 1 and 3 times the default rate.')
 
-    if not clearance_rna >= 1:
+    if not clearance_rna >= 0:
         raise Exception(
-         'Well bottom clearance must be 1 mm or greater.')
+         'Well bottom clearance must be 0 mm or greater.')
 
     if not clearance_dest >= 1:
         raise Exception(
@@ -125,7 +125,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return (self.well.bottom(self.height))
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -141,9 +141,9 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return (self.well.bottom(self.height))
             else:
-                return(self.well.top())
+                return (self.well.top())
 
     water_tubes = []
     num_tubes = math.ceil(sum([float(
