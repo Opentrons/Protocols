@@ -175,14 +175,14 @@ def run(ctx: protocol_api.ProtocolContext):
     samples = mag_plate.rows()[0][:num_columns]
     dil_adapter = temp_plate.rows()[0][0]
     mm_ligation = temp_plate.rows()[0][2:2+math.ceil(num_columns/6)]*12
-    user_enzyme = temp_plate.rows()[0][4]
+    user_enzyme = temp_plate.rows()[0][5]
 
     # protocol
     ctx.comment('\n~~~~~~~~~~~ADDING DILUTED ADAPTER~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m20)
-        m20.aspirate(2.5, dil_adapter, rate=0.5)
-        m20.dispense(2.5, dest)
+        m20.aspirate(2.5, dil_adapter, rate=0.2)
+        m20.dispense(2.5, dest, rate=0.2)
         drop_tip(m20)
 
     ctx.comment('\n~~~~~~~~~~ADDING LIGATION ENHANCER/MASTER MIX~~~~~~~~~~~\n')
@@ -219,7 +219,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         m20.aspirate(3, user_enzyme, rate=0.2)
         ctx.delay(seconds=1)
-        m20.dispense(3, dest)
+        m20.dispense(3, dest, rate=0.2)
         m300.mix(6, 80, dest)
         drop_tip(m300)
         drop_tip(m20)
