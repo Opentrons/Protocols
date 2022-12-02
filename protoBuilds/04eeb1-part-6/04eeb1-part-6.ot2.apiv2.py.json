@@ -123,5 +123,18 @@
         "description": "Custom Protocol Request",
         "protocolName": "Illumina COVIDSeq Test: Amplify Tagmented Amplicons"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Master Mix Reservoir on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 3 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "magdeck"
+        }
+    ]
 }

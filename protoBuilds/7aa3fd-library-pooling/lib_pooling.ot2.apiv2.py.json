@@ -1201,7 +1201,7 @@
             "type": "opentrons_96_filtertiprack_10ul"
         },
         {
-            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN1 on 4",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
@@ -1231,5 +1231,18 @@
         "protocolName": "NGS Prep Part 3/3: Library Pooling",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module on 1 lw None",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

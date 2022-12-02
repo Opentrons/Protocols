@@ -180,5 +180,12 @@
         "protocolName": "DNA Purification",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

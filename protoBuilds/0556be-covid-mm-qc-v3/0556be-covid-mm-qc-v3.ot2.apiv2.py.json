@@ -74,5 +74,12 @@
         "description": "Custom Protocol Request",
         "protocolName": "COVID MM-QC-v3 Protocol"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 10 lw Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "tempdeck"
+        }
+    ]
 }

@@ -1524,5 +1524,12 @@
         "protocolName": "Temperature Controlled PCR Prep With Tube Strips",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }

@@ -98,7 +98,7 @@ def run(ctx):
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(85)
 
-    ctx._implementation._hw_manager.hardware._attached_instruments[
+    ctx._hw_manager.hardware._attached_instruments[
         m300._implementation.get_mount()].update_config_item(
             'pick_up_current', 0.5)
 

@@ -1299,5 +1299,12 @@
         "protocolName": "Nucleic Acid Purification with Magnetic Beads",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 6 lw YDP-96-2.2-SC 96_wellplate_2200ul on Magnetic Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "magdeck"
+        }
+    ]
 }

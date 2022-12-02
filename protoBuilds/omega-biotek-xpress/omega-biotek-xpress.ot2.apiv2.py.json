@@ -179,5 +179,18 @@
         "author": "Nick <ndiehl@opentrons.com",
         "protocolName": "Omega Biotek Mag-Bind Viral RNA XPress Kit"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

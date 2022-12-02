@@ -6779,5 +6779,12 @@
         "protocolName": "qPCR Prep with 384 Well Plate",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Biorad 96 Aluminum Block 200 \u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

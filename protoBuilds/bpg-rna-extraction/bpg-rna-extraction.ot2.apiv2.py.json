@@ -1216,7 +1216,7 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "NEST 1mL Deep Well Plate on Magnetic Module GEN1 on 4",
+            "name": "NEST 1mL Deep Well Plate on Magnetic Module on 4",
             "share": false,
             "slot": "4",
             "type": "nest_96_wellplate_1000ul"
@@ -1248,7 +1248,7 @@
     },
     "modules": [
         {
-            "name": "MagneticModuleContext at Magnetic Module GEN1 on 4 lw NEST 1mL Deep Well Plate on Magnetic Module GEN1 on 4",
+            "name": "MagneticModuleContext at Magnetic Module on 4 lw NEST 1mL Deep Well Plate on Magnetic Module on 4",
             "share": false,
             "slot": "4",
             "type": "magdeck"

@@ -1620,7 +1620,7 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "PCR plate on Temperature Module GEN1 on 10",
+            "name": "PCR plate on Temperature Module on 10",
             "share": false,
             "slot": "10",
             "type": "biozym_96_aluminumblock_200ul"
@@ -1644,5 +1644,12 @@
         "protocolName": "Nucleic Acid Purification and PCR Prep",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 10 lw PCR plate on Temperature Module on 10",
+            "share": false,
+            "slot": "10",
+            "type": "tempdeck"
+        }
+    ]
 }
