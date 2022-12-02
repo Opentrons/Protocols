@@ -9,6 +9,7 @@ install:
   - pip install -e otcustomizers
   - pip install -r protolib/requirements.txt
   - pip install flake8==3.8.4 pytest
+  - deactivate
   - make setup
 
 addons:
