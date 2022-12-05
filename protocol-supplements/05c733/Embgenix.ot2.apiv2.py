@@ -78,6 +78,13 @@ def run(ctx):
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
 
+    def slow_withdraw(well, pip=m20):
+        ctx.max_speeds['A'] = 25
+        ctx.max_speeds['Z'] = 25
+        pip.move_to(well.top())
+        del ctx.max_speeds['A']
+        del ctx.max_speeds['Z']
+
     def column_distribute(volume, source, distribution_column,
                           final_destinations_s=samples_s,
                           final_destinations_m=samples_m, mix_reps=10,
@@ -109,11 +116,12 @@ def run(ctx):
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
-                pip.transfer(volume, distribution_column[0].bottom(),
+                pip.transfer(volume, distribution_column[0].bottom(-2),
                              s.bottom(1), new_tip='never')
                 if mix_reps > 0:
                     pip.mix(mix_reps, volume*0.8, s.bottom(1))
-                wick(pip, s)
+                # wick(pip, s)
+                slow_withdraw(s, pip)
                 if new_tip:
                     pip.drop_tip()
             if pip.has_tip:
@@ -125,9 +133,10 @@ def run(ctx):
             for s in final_destinations_s:
                 if not pip.has_tip:
                     pick_up(pip, 1)
-                pip.transfer(volume, source, s.bottom(1), new_tip='never')
+                pip.transfer(volume, source, s.bottom(-2), new_tip='never')
                 pip.mix(mix_reps, volume*0.8, s.bottom(1))
-                wick(pip, s)
+                # wick(pip, s)
+                slow_withdraw(s, pip)
                 if new_tip:
                     pip.drop_tip()
             if pip.has_tip:
