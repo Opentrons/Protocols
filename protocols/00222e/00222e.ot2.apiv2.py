@@ -1,5 +1,4 @@
 """OPENTRONS."""
-from opentrons import protocol_api
 import math
 
 metadata = {
@@ -39,13 +38,13 @@ def run(ctx):
                                'safelock_snapcap', '4')
 
     # load tipracks
-    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-               for slot in ['1']]
+    tip300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+              for slot in ['1']]
     tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
               for slot in ['2']]
 
     # load instrument
-    p300 = ctx.load_instrument('p300_single_gen2', p300_side, tip_racks=tips300)
+    p300 = ctx.load_instrument('p300_single_gen2', p300_side, tip_racks=tip300)
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips20)
 
     # reagents
