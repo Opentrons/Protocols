@@ -30,15 +30,56 @@ def run(ctx):
         'biogx': {
             'vol_sample': 5.0,
             'vol_mm': 15.0,
-            'plate_type': 'kingfisher_96_deepwell_plate_2ml'},
+            'plate_type': 'kingfisher_96_deepwell_plate_2ml',
+            'header': [['* Instrument Type = QuantStudio(TM) 7 Flex System'],
+                       ['* Passive Reference ='],
+                       [],
+                       ['[Sample Setup]'],
+                       ['Well', 'Well Position', 'Sample Name', 'Target Name',
+                        'Target Color', 'Task', 'Reporter', 'Quencher', '#']],
+            'target_names': ['RNase P', 'N1', 'IAC'],
+            'target_colors': ['RGB(0,0,255)', 'RGB(176,23,31)',
+                              'RGB(0,139,69)'],
+            'tasks': ['UNKNOWN', 'UNKNOWN', 'UNKNOWN'],
+            'reporters': ['FAM', 'ROX', 'CY5'],
+            'quenchers': ['NONE', 'NONE', 'NONE']
+        },
         'lgc': {
             'vol_sample': 5.0,
             'vol_mm': 10.0,
-            'plate_type': 'kingfisher_96_wellplate_200ul'},
+            'plate_type': 'kingfisher_96_wellplate_200ul',
+            'header': [['* Instrument Type = QuantStudio(TM) 7 Flex System'],
+                       ['* Passive Reference ='],
+                       [],
+                       ['[Sample Setup]'],
+                       ['Well', 'Well Position', 'Sample Name', 'Target Name',
+                        'Target Color', 'Task', 'Reporter', 'Quencher', '#']],
+            'target_names': ['influenza A virus-InfA_m', 'r SARS-CoV-2-SC2_m',
+                             'RP-RNaseP', 'influenza B virus-InfB_m'],
+            'target_colors': ['RGB(0,0,255)', 'RGB(176,23,31)',
+                              'RGB(255,0,0)', 'RGB(0,139,69)'],
+            'tasks': ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN'],
+            'reporters': ['FAM', 'ROX', 'CY5', 'VIC'],
+            'quenchers': ['NONE', 'NONE', 'NONE', 'NONE']
+        },
         'pkamp': {
             'vol_sample': 10.0,
             'vol_mm': 5.0,
-            'plate_type': 'kingfisher_96_wellplate_200ul'}
+            'plate_type': 'kingfisher_96_wellplate_200ul',
+            'header': [['* Instrument Type = QuantStudio(TM) 7 Flex System'],
+                       ['* Passive Reference ='],
+                       [],
+                       ['[Sample Setup]'],
+                       ['Well', 'Well Position', 'Sample Name', 'Target Name',
+                        'Target Color', 'Task', 'Reporter', 'Quencher', '#']],
+            'target_names': ['SARS CoV-2', 'Influenza A', 'Influenza B',
+                             'RSV', 'RNase P'],
+            'target_colors': ['RGB(0,0,255)', 'RGB(176,23,31)', 'RGB(255,0,0)',
+                              'RGB(246,0,0)', 'RGB(0,139,69)'],
+            'tasks': ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN'],
+            'reporters': ['FAM', 'ROX', 'CY5', 'CY5.5', 'VIC'],
+            'quenchers': ['NONE', 'NONE', 'NONE', 'NONE', 'NONE']
+        }
     }
     protocol_info = protocol_map[protocol_type]
 
@@ -215,3 +256,31 @@ def run(ctx):
                        barcode, '',
                        f'{scan_qpcr_plate_barcode}_{scan_9000_plate_barcode}']
                 writer.writerow(row)
+
+        # QS file
+        qs_plate_ordered = [
+            well for row in dest_plate.rows() for well in row]
+
+        out_csv_path_qs = f'{path}/{scan_9000_plate_barcode}_\
+    {scan_qpcr_plate_barcode}_QS5_Fire.txt'
+        with open(out_csv_path_qs, 'w') as file:
+            writer = csv.writer(file, delimiter='\t')
+            for line in protocol_info['header']:
+                writer.writerow(line)
+            for i, (key, val) in enumerate(dest_plate_data.items()):
+                well = key
+                well96 = [key for key in val.keys()][0]
+                sample_id = val[well96]['sample_id']
+                well_position = well.display_name.split(' ')[0]
+                for j, (target_name, target_color, task, reporter,
+                        quencher) in enumerate(
+                            zip(protocol_info['target_names'],
+                                protocol_info['target_colors'],
+                                protocol_info['tasks'],
+                                protocol_info['reporters'],
+                                protocol_info['quenchers'])):
+                    well_num = str(qs_plate_ordered.index(well) + 1)
+                    num = str((i+1)*len(protocol_info['target_names'])+j)
+                    row = [well_num, well_position, sample_id, target_name,
+                           target_color, task, reporter, quencher, num]
+                    writer.writerow(row)
