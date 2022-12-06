@@ -894,7 +894,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,108
+p20_mount,109
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -942,6 +942,7 @@ p50mnt,3
 p5_mix_vol,1
 p_csv,1
 pan_dil,1
+parameters_csv,1
 park,2
 park_tips,27
 patient_sample_count,1
@@ -1158,6 +1159,7 @@ sample_num,1
 sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
+sample_positions_csv,1
 sample_quant_csv,2
 sample_rows,1
 sample_size,1
@@ -1185,6 +1187,7 @@ sep_time,2
 sep_time_bind,6
 sep_time_elu,6
 sep_time_wash,6
+serial_boolean,1
 serial_csv,1
 set_tip_max,2
 settling_1,1
@@ -1258,6 +1261,8 @@ start_index_tip,1
 start_tip,1
 start_urea_vol,1
 starting_conc,2
+starting_diluent_vol,1
+starting_plasma_vol,1
 starting_position,1
 starting_tip_col,2
 starting_tip_position,1
@@ -1443,7 +1448,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 udi_start_col,1
-uploaded_csv,19
+uploaded_csv,18
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
