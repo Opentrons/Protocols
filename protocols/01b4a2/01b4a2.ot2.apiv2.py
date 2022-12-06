@@ -59,7 +59,7 @@ def run(ctx):
         p1000.pick_up_tip()
         p1000.transfer(transfer_vol, buff.bottom(h),
                        dest_well, new_tip='never', touch_tip=True)
-        p1000.mix(15, transfer_vol/2, dest_well)
+        p1000.mix(15, transfer_vol/2 if transfer_vol/2 < 1000 else 1000, dest_well)  # noqa:E501
         p1000.touch_tip()
         p1000.drop_tip()
         adjust_height(transfer_vol)
