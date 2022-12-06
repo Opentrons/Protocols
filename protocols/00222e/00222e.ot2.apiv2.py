@@ -125,6 +125,7 @@ def run(ctx):
     # p20.aspirate(20, stock)
     # p20.dispense(20, tube_24.wells()[0])
     # p20.drop_tip()
+    ctx.pause("PLEASE ADD 20 uL OF STOCK SOLUTION TO TUBE A1, ROBOT WILL MIX")
 
     # mix with p300
     p300.pick_up_tip()

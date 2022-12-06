@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Serial Dilution and Screening
 
 
 ## Description
-This protocol does stuff!
+This protocol adds a serially diluted stock solution to 12 plasma filled vials. The serial dilution can be toggled on and off in the variables. This protocol also predicts diluent and plasma height based on known labware dimensions. The initial liquid level needs to be specified for this to be accurate.
 
 
 ### Labware
@@ -35,7 +35,14 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+0. Steps 1-4 only are performed if serial dilution is selected in the variable feeds
+1. Diluent is added to tubes 2-12 (rows A and B) in the 24 tube rack
+2. 980 uL of diluent is added to tube A1 in the 24 tube rack, mixed well
+3. The protocol is paused to allow a user to add 20 uL of stock solution to tube A1 in the 24 tube rack
+4. A serial dilution is performed from tube 1-12 (rows A and B) by moving 20 uL from tube A to tube A+1
+5. 100 uL plasma is added to tubes 13-24 (rows C and D)
+6. 10 uL from tube A1 is added to C1, this is repeated for all of rows A and B
+
 
 
 ### Process
