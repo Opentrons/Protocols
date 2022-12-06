@@ -13,8 +13,14 @@
   },
   {
     "type": "textFile",
-    "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
-    "name": "uploaded_csv",
-    "default": "SAMPLE_COUNT,V(Sample),ACN_CONC,WORKING_PLATE,FINAL_PLATE,DIG_VESSEL,V(EtOH),V(ACN),V(RED first time),V(ALK),V(RED second time),V(Bead Mixture),V(DIG)\n3,10,50,redefinedbiorad_96_wellplate_200ul,redefinedbiorad_96_wellplate_200ul,opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap,50000,50000,20,18,20,20,200\n"
+    "label": "Upload Sample Position CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
+    "name": "sample_positions_csv",
+    "default": "Sample Position\nA1\nB2\nC4\n"
+  },
+  {
+    "type": "textFile",
+    "label": "Upload Parameter CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
+    "name": "parameters_csv",
+    "default": "V(Sample),ACN_CONC,WORKING_PLATE,FINAL_PLATE,DIG_VESSEL,V(EtOH),V(ACN),V(RED first time),V(ALK),V(RED second time),V(Bead Mixture),V(DIG)\n10,50,redefinedbiorad_96_wellplate_200ul,redefinedbiorad_96_wellplate_200ul,opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap,50000,50000,20,18,20,20,200\n"
   }
 ]

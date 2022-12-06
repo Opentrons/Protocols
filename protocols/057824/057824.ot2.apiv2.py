@@ -15,13 +15,20 @@ def run(ctx):
 
     # get parameter values from json above
     [engage_height, target_temp_passive_cooling,
-     uploaded_csv] = get_values(  # noqa: F821
-      'engage_height', 'target_temp_passive_cooling', 'uploaded_csv')
+     sample_positions_csv, parameters_csv] = get_values(  # noqa: F821
+      'engage_height', 'target_temp_passive_cooling', 'sample_positions_csv',
+      'parameters_csv')
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    csvinput = [line for line in csv.DictReader(uploaded_csv.splitlines())]
+    csvinput = [line for line in csv.DictReader(parameters_csv.splitlines())]
+
+    samplepositions = [line[
+     'Sample Position'] for line in csv.DictReader(
+     sample_positions_csv.splitlines())]
+
+    count_samples = len(samplepositions)
 
     # filter tips, p20 single, p300 single
     tips20 = [
@@ -84,14 +91,14 @@ def run(ctx):
      well for row in eppendorfrack.rows(
      ) for well in row if well.well_name not in [
       'A1', 'A2', 'A3']][:math.ceil((float(
-       csvinput[0]['V(DIG)'])*int(csvinput[0]['SAMPLE_COUNT']))/1400)]
+       csvinput[0]['V(DIG)'])*count_samples)/1400)]
 
     # initial volume in dig source tubes
     for well in diglist:
         if '6x15ml' in csvinput[0]['DIG_VESSEL'].split('_'):
             # 15 mL tube filled with V(DIG) uL per sample plus 100 uL deadvol
             well.liq_vol = float(
-             csvinput[0]['V(DIG)'])*int(csvinput[0]['SAMPLE_COUNT']) + 100
+             csvinput[0]['V(DIG)'])*count_samples + 100
         else:
             # eppendorfs always filled with 1500 uL
             well.liq_vol = 1500
@@ -137,6 +144,16 @@ def run(ctx):
              '''\n***\nPlanned {} volume {}
              exceeds well capacity {} in {}\n***\n'''.format(
               v[1], v[0], limit, plate))
+
+    # check list of sample locations
+    if not 1 <= count_samples <= 96:
+        raise Exception(
+             '''\n***\nSpecified sample count {} must be 1-96\n***\n'''.format(
+              count_samples))
+
+    if not len(set(samplepositions)) == count_samples:
+        raise Exception(
+             '''\n***\nSpecified sample positions must be unique\n***\n''')
 
     # return liquid height in a well
     def liq_height(well, effective_diameter=None):
@@ -195,7 +212,8 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for well in hs_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [hs_plate.wells_by_name()[
+     name] for name in samplepositions]:
 
         sideways_offset = well.diameter / 2
 
@@ -206,16 +224,18 @@ def run(ctx):
          types.Point(x=0, y=sideways_offset, z=0))
 
         for rep in range(reps):
+
             pipette.move_to(source.top())
             if volpreairgap:
                 pipette.air_gap(volpreairgap)
             pipette.aspirate(v, source.bottom(1))
+            pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
             pipette.move_to(well.top())
             pipette.move_to(well.top(vertical_offset))
             pipette.move_to(disp_loc)
             pipette.dispense(v+volpreairgap, disp_loc, rate=2)
             ctx.delay(seconds=0.5)
-            pipette.blow_out(disp_loc)
 
     pipette.drop_tip()
 
@@ -230,22 +250,28 @@ def run(ctx):
     # wait
     ctx.delay(seconds=29)
 
-    # stop shaking
-    hs_mod.deactivate_shaker()
+    # shake at 1000 rpm
+    hs_mod.set_and_wait_for_shake_speed(rpm=1000)
+    ctx.delay(seconds=1)
+    ctx.comment(
+     "\n***\nHeater-Shaker rpm {}\n***\n".format(hs_mod.current_speed))
 
     ctx.comment(
      """\n***\nSTEP 4-5 - 30 min incubation
-     with passive cooling of heater shaker\n***\n""")
+     with passive cooling and 1000 rpm shaking of heater shaker\n***\n""")
 
     # stop heating
     hs_mod.deactivate_heater()
 
-    # wait and report current temperature
+    # incubate while cooling and report current temperature
     for rep in range(10):
         ctx.delay(minutes=3)
         ctx.comment(
          "\n***\nHeater Shaker current temperature {}\n***\n".format(
           hs_mod.current_temperature))
+
+    # stop shaking
+    hs_mod.deactivate_shaker()
 
     ctx.comment(
      "\n***\nSTEP 6 - wait for room temp, distribute V(ALK) to samples\n***\n")
@@ -275,7 +301,7 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for well in hs_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [hs_plate.wells_by_name()[name] for name in samplepositions]:
 
         sideways_offset = well.diameter / 2
 
@@ -290,12 +316,13 @@ def run(ctx):
             if volpreairgap:
                 pipette.air_gap(volpreairgap)
             pipette.aspirate(v, source.bottom(1))
+            pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
             pipette.move_to(well.top())
             pipette.move_to(well.top(vertical_offset))
             pipette.move_to(disp_loc)
             pipette.dispense(v+volpreairgap, disp_loc, rate=2)
             ctx.delay(seconds=0.5)
-            pipette.blow_out(disp_loc)
 
     pipette.drop_tip()
 
@@ -310,12 +337,19 @@ def run(ctx):
     # wait
     ctx.delay(seconds=29)
 
-    # stop shaking
-    hs_mod.deactivate_shaker()
+    # shake at 1000 rpm
+    hs_mod.set_and_wait_for_shake_speed(rpm=1000)
+    ctx.delay(seconds=1)
+    ctx.comment(
+     "\n***\nHeater-Shaker rpm {}\n***\n".format(hs_mod.current_speed))
 
-    ctx.comment("\n***\nSTEP 8 - 30 min incubation\n***\n")
+    ctx.comment(
+     "\n***\nSTEP 8 - 30 min incubation with 1000 rpm shaking\n***\n")
 
     ctx.delay(minutes=30)
+
+    # stop shaking
+    hs_mod.deactivate_shaker()
 
     ctx.comment(
      "\n***\nSTEP 9 - Distribute V(RED second time) to samples\n***\n")
@@ -336,7 +370,7 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for well in hs_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [hs_plate.wells_by_name()[name] for name in samplepositions]:
 
         sideways_offset = well.diameter / 2
 
@@ -347,22 +381,34 @@ def run(ctx):
          types.Point(x=sideways_offset, y=0, z=0))
 
         for rep in range(reps):
+
             pipette.move_to(source.top())
             if volpreairgap:
                 pipette.air_gap(volpreairgap)
             pipette.aspirate(v, source.bottom(1))
+            pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
             pipette.move_to(well.top())
             pipette.move_to(well.top(vertical_offset))
             pipette.move_to(disp_loc)
             pipette.dispense(v+volpreairgap, disp_loc, rate=2)
             ctx.delay(seconds=0.5)
-            pipette.blow_out(disp_loc)
 
     pipette.drop_tip()
 
-    ctx.comment("\n***\nSTEP 10 - 15 min incubation\n***\n")
+    ctx.comment(
+     "\n***\nSTEP 10 - 15 min incubation with 1000 rpm shaking\n***\n")
+
+    # shake at 1000 rpm
+    hs_mod.set_and_wait_for_shake_speed(rpm=1000)
+    ctx.delay(seconds=1)
+    ctx.comment(
+     "\n***\nHeater-Shaker rpm {}\n***\n".format(hs_mod.current_speed))
 
     ctx.delay(minutes=15)
+
+    # stop shaking
+    hs_mod.deactivate_shaker()
 
     ctx.comment(
      "\n***\nSTEP 11 - Distribute V(Bead Mixture) to samples\n***\n")
@@ -383,7 +429,7 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for well in hs_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [hs_plate.wells_by_name()[name] for name in samplepositions]:
 
         sideways_offset = well.diameter / 2
 
@@ -394,18 +440,20 @@ def run(ctx):
          types.Point(x=-sideways_offset, y=0, z=0))
 
         for rep in range(reps):
+
             pipette.move_to(source.top())
             if volpreairgap:
                 pipette.air_gap(volpreairgap)
             # slower flow rate and delay for beads
             pipette.aspirate(v, source.bottom(1), rate=0.5)
             ctx.delay(seconds=0.5)
+            pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
             pipette.move_to(well.top())
             pipette.move_to(well.top(vertical_offset))
             pipette.move_to(disp_loc)
             pipette.dispense(v+volpreairgap, disp_loc, rate=2)
             ctx.delay(seconds=0.5)
-            pipette.blow_out(disp_loc)
 
     pipette.drop_tip()
 
@@ -430,7 +478,7 @@ def run(ctx):
 
     volpreairgap = 0
 
-    volpostairgap = 15
+    volpostairgap = 30
 
     pipette = p300s
 
@@ -446,7 +494,7 @@ def run(ctx):
 
     parkingspot = parkingspots()
 
-    for well in hs_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [hs_plate.wells_by_name()[name] for name in samplepositions]:
 
         pipette.pick_up_tip()
 
@@ -462,6 +510,7 @@ def run(ctx):
             pipette.aspirate(v, source.bottom(ht))
             if volpostairgap:
                 pipette.air_gap(volpostairgap)
+
             # if it is a first repeat, dispense at top
             if (reps > 1 and not rep):
                 pipette.dispense(v+volpreairgap+volpostairgap, well.top())
@@ -507,16 +556,16 @@ def run(ctx):
     hs_mod.deactivate_shaker()
 
     ctx.comment(
-     """\n***\nSTEP 15 - relocate plate from heater shaker (slot 1)
-     to magnetic module (slot 3)\n***\n""")
+     """\n***\nSTEP 15 - relocate plate from heater shaker (slot 3)
+     to magnetic module (slot 1)\n***\n""")
 
     # open latch
     hs_mod.open_labware_latch()
     ctx.comment(" latch status {}".format(hs_mod.labware_latch_status))
 
     ctx.pause(
-     """\n***\nrelocate plate from heater shaker (slot 1)
-     to magnetic module (slot 3). Resume\n***\n""")
+     """\n***\nrelocate plate from heater shaker (slot 3)
+     to magnetic module (slot 1). Resume\n***\n""")
 
     # close latch
     hs_mod.close_labware_latch()
@@ -543,23 +592,28 @@ def run(ctx):
 
     offset_x = 1
 
-    for index, well in enumerate(
-     mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+    reps = 1 if sum(
+     [float(csvinput[0]['V(Sample)']),
+      float(csvinput[0]['V(RED first time)']),
+      float(csvinput[0]['V(ALK)']),
+      float(csvinput[0]['V(RED second time)']),
+      float(csvinput[0]['V(Bead Mixture)']),
+      v_acn_calculated]) <= 180 else 2
+
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
         pipette.pick_up_tip(next(parkingspot))
 
-        for rep in range(2):
+        side = 1 if math.floor(mag_plate.wells().index(well) / 8) % 2 else -1
+
+        for rep in range(reps):
 
             pipette.move_to(well.top())
             if volpreairgap:
                 pipette.air_gap(volpreairgap)
-            if not rep:
-                pipette.aspirate(vol, well.bottom(4), rate=0.2)
-            else:
-                loc = well.bottom(1).move(
-                 types.Point(x={True: 1}.get(
-                  not math.ceil((index + 1) / 8) % 2, -1)*offset_x, y=0, z=0))
-                pipette.aspirate(vol, loc, rate=0.2)
+            loc = well.bottom(1).move(
+             types.Point(x=side*offset_x, y=0, z=0))
+            pipette.aspirate(vol, loc, rate=0.2)
             if volpostairgap:
                 pipette.air_gap(volpostairgap)
 
@@ -582,7 +636,7 @@ def run(ctx):
 
         vol = 100
 
-        volpostairgap = 15
+        volpostairgap = 30
 
         pipette = p300s
 
@@ -590,7 +644,8 @@ def run(ctx):
 
         pipette.pick_up_tip()
 
-        for well in mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+        for well in [mag_plate.wells_by_name()[
+         name] for name in samplepositions]:
 
             source.liq_vol -= vol
 
@@ -613,10 +668,13 @@ def run(ctx):
 
         parkingspot = parkingspots()
 
-        for index, well in enumerate(
-         mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+        for well in [mag_plate.wells_by_name()[
+         name] for name in samplepositions]:
 
             pipette.pick_up_tip(next(parkingspot))
+
+            side = 1 if math.floor(
+             mag_plate.wells().index(well) / 8) % 2 else -1
 
             for repeat in range(10):
 
@@ -625,8 +683,7 @@ def run(ctx):
                 clearance_mixdispense = 6 if repeat % 2 else 3
 
                 disp_loc = well.bottom(clearance_mixdispense).move(
-                 types.Point(x={True: -1}.get(
-                  not math.ceil((index + 1) / 8) % 2, 1)*offset_x, y=0, z=0))
+                 types.Point(x=side*offset_x, y=0, z=0))
 
                 pipette.aspirate(vol, well.bottom(1))
                 pipette.dispense(vol, disp_loc, rate=3)
@@ -657,31 +714,27 @@ def run(ctx):
 
         offset_x = 1
 
-        for index, well in enumerate(
-         mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+        for well in [mag_plate.wells_by_name()[
+         name] for name in samplepositions]:
 
             pipette.pick_up_tip(next(parkingspot))
 
-            for repeat in range(2):
+            side = -1 if math.floor(
+             mag_plate.wells().index(well) / 8) % 2 else 1
 
-                pipette.move_to(well.top())
-                if volpreairgap:
-                    pipette.air_gap(volpreairgap)
-                if not repeat:
-                    pipette.aspirate(vol, well.bottom(4), rate=0.2)
-                else:
-                    loc = well.bottom(1).move(
-                     types.Point(x={True: 1}.get(
-                      not math.ceil(
-                       (index + 1) / 8) % 2, -1)*offset_x, y=0, z=0))
-                    pipette.aspirate(vol, loc, rate=0.2)
-                if volpostairgap:
-                    pipette.air_gap(volpostairgap)
+            pipette.move_to(well.top())
+            if volpreairgap:
+                pipette.air_gap(volpreairgap)
+            loc = well.bottom(1).move(
+             types.Point(x=side*offset_x, y=0, z=0))
+            pipette.aspirate(vol, loc, rate=0.2)
+            if volpostairgap:
+                pipette.air_gap(volpostairgap)
 
-                pipette.dispense(vol+volpreairgap+volpostairgap,
-                                 reservoir.wells()[0].top(), rate=2)
-                ctx.delay(seconds=0.5)
-                pipette.blow_out(reservoir.wells()[0].top())
+            pipette.dispense(vol+volpreairgap+volpostairgap,
+                             reservoir.wells()[0].top(), rate=2)
+            ctx.delay(seconds=0.5)
+            pipette.blow_out(reservoir.wells()[0].top())
 
             # return tip for continued reuse
             pipette.return_tip()
@@ -694,7 +747,7 @@ def run(ctx):
 
     vol = 100
 
-    volpostairgap = 15
+    volpostairgap = 30
 
     pipette = p300s
 
@@ -702,7 +755,7 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for well in mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]:
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
         source.liq_vol -= vol
 
@@ -725,10 +778,11 @@ def run(ctx):
 
     parkingspot = parkingspots()
 
-    for index, well in enumerate(
-     mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
         pipette.pick_up_tip(next(parkingspot))
+
+        side = 1 if math.floor(mag_plate.wells().index(well) / 8) % 2 else -1
 
         for repeat in range(10):
 
@@ -737,8 +791,7 @@ def run(ctx):
             clearance_mixdispense = 6 if repeat % 2 else 3
 
             disp_loc = well.bottom(clearance_mixdispense).move(
-             types.Point(x={True: -1}.get(
-              not math.ceil((index + 1) / 8) % 2, 1)*offset_x, y=0, z=0))
+             types.Point(x=side*offset_x, y=0, z=0))
 
             pipette.aspirate(vol, well.bottom(1))
             pipette.dispense(vol, disp_loc, rate=3)
@@ -768,30 +821,25 @@ def run(ctx):
 
     offset_x = 1
 
-    for index, well in enumerate(
-     mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
         pipette.pick_up_tip(next(parkingspot))
 
-        for repeat in range(2):
+        side = -1 if math.floor(mag_plate.wells().index(well) / 8) % 2 else 1
 
-            pipette.move_to(well.top())
-            if volpreairgap:
-                pipette.air_gap(volpreairgap)
-            if not repeat:
-                pipette.aspirate(vol, well.bottom(4), rate=0.2)
-            else:
-                loc = well.bottom(1).move(
-                 types.Point(x={True: 1}.get(
-                  not math.ceil((index + 1) / 8) % 2, -1)*offset_x, y=0, z=0))
-                pipette.aspirate(vol, loc, rate=0.2)
-            if volpostairgap:
-                pipette.air_gap(volpostairgap)
+        pipette.move_to(well.top())
+        if volpreairgap:
+            pipette.air_gap(volpreairgap)
+        loc = well.bottom(1).move(
+         types.Point(x=side*offset_x, y=0, z=0))
+        pipette.aspirate(vol, loc, rate=0.2)
+        if volpostairgap:
+            pipette.air_gap(volpostairgap)
 
-            pipette.dispense(vol+volpreairgap+volpostairgap,
-                             reservoir.wells()[0].top(), rate=2)
-            ctx.delay(seconds=0.5)
-            pipette.blow_out(reservoir.wells()[0].top())
+        pipette.dispense(vol+volpreairgap+volpostairgap,
+                         reservoir.wells()[0].top(), rate=2)
+        ctx.delay(seconds=0.5)
+        pipette.blow_out(reservoir.wells()[0].top())
 
         # return tip for continued reuse
         pipette.drop_tip()
@@ -822,12 +870,12 @@ def run(ctx):
 
     pipette.pick_up_tip()
 
-    for index, well in enumerate(
-     mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
+
+        side = 1 if math.floor(mag_plate.wells().index(well) / 8) % 2 else -1
 
         disp_loc = well.top(2).move(
-         types.Point(x={True: -1}.get(
-          not math.ceil((index + 1) / 8) % 2, 1)*offset_x, y=0, z=0))
+         types.Point(x=side*offset_x, y=0, z=0))
 
         for rep in range(reps):
 
@@ -853,16 +901,16 @@ def run(ctx):
     pipette.drop_tip()
 
     ctx.comment(
-     """\n***\nSTEP 30 - relocate plate from magnetic module (slot 3)
-     to heater shaker (slot 1)\n***\n""")
+     """\n***\nSTEP 30 - relocate plate from magnetic module (slot 1)
+     to heater shaker (slot 3)\n***\n""")
 
     # open latch
     hs_mod.open_labware_latch()
     ctx.comment(" latch status {}".format(hs_mod.labware_latch_status))
 
     ctx.pause(
-     """\n***\nrelocate plate from magnetic module (slot 3)
-     to heater shaker (slot 1). Resume\n***\n""")
+     """\n***\nrelocate plate from magnetic module (slot 1)
+     to heater shaker (slot 3). Resume\n***\n""")
 
     # close latch
     hs_mod.close_labware_latch()
@@ -904,15 +952,15 @@ def run(ctx):
     hs_mod.deactivate_shaker()
     hs_mod.deactivate_heater()
 
-    ctx.comment("""\n***\nSTEP 33 - relocate plate from heater shaker (slot 1)
-    to magnetic module (slot 3)\n***\n""")
+    ctx.comment("""\n***\nSTEP 33 - relocate plate from heater shaker (slot 3)
+    to magnetic module (slot 1)\n***\n""")
 
     # open latch
     hs_mod.open_labware_latch()
     ctx.comment(" latch status {}".format(hs_mod.labware_latch_status))
 
-    ctx.pause("""\n***\nrelocate plate from heater shaker (slot 1)
-    to magnetic module (slot 3). Resume\n***\n""")
+    ctx.pause("""\n***\nrelocate plate from heater shaker (slot 3)
+    to magnetic module (slot 1). Resume\n***\n""")
 
     # close latch
     hs_mod.close_labware_latch()
@@ -922,7 +970,7 @@ def run(ctx):
     ctx.comment("\n***\nSTEP 34 - engage magnets and wait\n***\n")
 
     mag.engage(height_from_base=engage_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=5)
 
     ctx.comment("""\n***\nSTEP 35 - transfer bead pellet supernatants
     to final plate (slot 9)\n***\n""")
@@ -931,21 +979,22 @@ def run(ctx):
 
     pipette = p300s
 
-    offset_x = 1
+    offset_x = 1.5
 
-    for index, well in enumerate(
-     mag_plate.wells()[:int(csvinput[0]['SAMPLE_COUNT'])]):
+    for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
         pipette.pick_up_tip()
 
-        asp_loc = well.bottom(1).move(
-         types.Point(x={True: 1}.get(
-          not math.ceil((index + 1) / 8) % 2, -1)*offset_x, y=0, z=0))
+        side = -1 if math.floor(mag_plate.wells().index(well) / 8) % 2 else 1
 
-        pipette.aspirate(vol, asp_loc, rate=0.2)
+        asp_loc = well.bottom(1.5).move(
+         types.Point(x=side*offset_x, y=0, z=0))
+
+        pipette.aspirate(vol, asp_loc, rate=0.15)
         ctx.delay(seconds=0.5)
 
-        pipette.dispense(vol, final_plate.wells()[index].bottom(1))
+        pipette.dispense(
+         vol, final_plate.wells()[mag_plate.wells().index(well)].bottom(1))
 
         pipette.drop_tip()
 
