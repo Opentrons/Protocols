@@ -17,18 +17,23 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # variables
     input_csv = _input_csv  # CSV: Well, Sample Vol, Dilutent Vol
-    reaction_mix = _reaction_mix # Bool - create reaction mix on deck or not
-    replicates = _replicates # number of replicates
-    
+    reaction_mix = _reaction_mix  # Bool - create reaction mix on deck or not
+    replicates = _replicates  # number of replicates
+
     # labware
-    tips = [ctx.load_labware('opentrons_96_tiprack_20ul', s) for s in range(7, 11)]
+    tips = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', s) for s in range(7, 11)]
     all_20_tips = [well for rack in tips for well in rack.wells()]
     tip_20_ctr = 0
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', 11)]
-    dest_plates = [ctx.load_labware('thermofishermicroamp_96_aluminumblock_200ul', s) for s in [1, 2, 3]]
+    dest_plates = [
+        ctx.load_labware(
+            'thermofishermicroamp_96_aluminumblock_200ul',
+            s) for s in [1, 2, 3]]
     src_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 4)
     norm_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 5)
-    tube_rack = ctx.load_labware('opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 6)
+    tube_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 6)
 
     # pipettes
     p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tips)
@@ -52,7 +57,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def drop_tip(pip):
         nonlocal tip_20_ctr
-        """Function that can will drop used p20 tips in empty tip racks (saving space in waste bin)"""
+        """Function that can will drop used p20 tips in empty tip racks
+        (saving space in waste bin)"""
         if pip == p300:
             pip.drop_tip()
         else:
@@ -105,9 +111,12 @@ def run(ctx: protocol_api.ProtocolContext):
             well.liq_vol = 1500
             total_dil -= 1500
         if well.liq_vol > 1500:
-            raise Exception("There aren't enough wells to accomodate this volume of dilutent.")
+            raise Exception("There aren't enough wells to accomodate this \
+            volume of dilutent.")
         if well.liq_vol > 0:
-            ctx.comment(f"Please ensure there is {well.liq_vol}uL of dilutent in {well}\n")
+            ctx.comment(
+                f"Please ensure there is {well.liq_vol}uL of dilutent in \
+                {well}\n")
 
     # reaction mix
     samp_chunks = [0]
@@ -119,11 +128,13 @@ def run(ctx: protocol_api.ProtocolContext):
     for chunk, tube in zip(samp_chunks, reaction_mixes):
         if reaction_mix:
             supermix_vol = 11 * round(((chunk+1) * 3.4), 0)
-            ctx.comment(f"Please ensure that there is {supermix_vol}uL of 2x ddPCR Supermix for Probes in {tube}\n")
+            ctx.comment(f"Please ensure that there is {supermix_vol}uL of \
+            2x ddPCR Supermix for Probes in {tube}\n")
             tube.liq_vol = supermix_vol
         else:
             total_vol = 18 * round(((chunk+1) * 3.4), 0)
-            ctx.comment(f"Please ensure that there is {total_vol}uL of Reaction Mix in {tube}\n")
+            ctx.comment(f"Please ensure that there is {total_vol}uL of \
+            Reaction Mix in {tube}\n")
             tube.liq_vol = total_vol
 
     if reaction_mix:
@@ -139,10 +150,12 @@ def run(ctx: protocol_api.ProtocolContext):
         }
         reagent_vol = round(vol_reagents * round(((num_samps+1) * 3.4), 0))
         for label, src in components.items():
-            ctx.comment(f"Please ensure that there is {reagent_vol}uL of {label} in {src}\n")
+            ctx.comment(f"Please ensure that there is {reagent_vol}uL of \
+            {label} in {src}\n")
         water_tube = vol_water * round((num_samps + 1) * 3.4)
         water_src = tube_rack['D2']
-        ctx.comment(f"Please ensure that there is {water_tube}uL of H2O in {water_src}\n")
+        ctx.comment(f"Please ensure that there is {water_tube}uL of H2O in \
+        {water_src}\n")
 
     # perform normalization
     dil_iter = iter(dil_h20)
@@ -157,7 +170,8 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             dil_vol = float(dil_vol)
             pip = p20 if dil_vol <= 20 else p300
-            dil_src = next(dil_iter) if dil_src.liq_vol < dil_vol + 20 else dil_src
+            if dil_src.liq_vol < dil_vol + 20:
+                dil_src = next(dil_iter)
             dil_src.liq_vol -= dil_vol
             dest = norm_plate[loc]
             if not pip.has_tip:
@@ -178,7 +192,7 @@ def run(ctx: protocol_api.ProtocolContext):
         src = src_plate[loc]
         dest = norm_plate[loc]
         pip = p20 if samp_vol <= 20 else p300
-        
+
         # transfer sample
         pip.pick_up_tip()
         pip.mix(2, samp_vol, src)
@@ -200,7 +214,8 @@ def run(ctx: protocol_api.ProtocolContext):
             transfer_vol = round(vol_reagents * round((tube_v + 1) * 3.4), 1)
             pip = p20 if transfer_vol <= 20 else p300
             for label, src in components.items():
-                ctx.comment(f"\nTransferring {transfer_vol}uL of {label} from {src} to {tube}.")
+                ctx.comment(f"\nTransferring {transfer_vol}uL of {label} \
+                from {src} to {tube}.")
                 pip.pick_up_tip()
                 # custom pip.mix()
                 pip.aspirate(transfer_vol, src)
@@ -210,7 +225,8 @@ def run(ctx: protocol_api.ProtocolContext):
                 drop_tip(pip)
             water_vol = vol_water * round((tube_v + 1) * 3.4)
             pip = p20 if water_vol <= 20 else p300
-            ctx.comment(f"\nTransferring {water_vol}uL of water from {water_src} to {tube}.")
+            ctx.comment(f"\nTransferring {water_vol}uL of water from \
+            {water_src} to {tube}.")
             pip.pick_up_tip()
             # custom pip.mix()
             pip.aspirate(transfer_vol, src)
@@ -220,8 +236,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # transfer reaction mix
     ctx.comment(f"Transferring Reaction Mix to {num_samps*replicates} wells")
-    dest_wells = [well for plate in dest_plates for well in plate.wells()][:num_samps*replicates]
-    for idx, dest in enumerate(dest_wells):
+    dest_wells = [well for plate in dest_plates for well in plate.wells()]
+    for idx, dest in enumerate(dest_wells[:num_samps*replicates]):
         src = reaction_mixes[idx//(24*replicates)]
         if not p20.has_tip:
             p20.pick_up_tip()
@@ -231,12 +247,12 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.dispense(18, dest)
         if idx % (24*replicates) == (24 * replicates - 1):
             drop_tip(p20)
-    
+
     if p20.has_tip:
         drop_tip(p20)
     # transfer samples + mix
     ctx.comment("Transferring normalized samples to destination plate(s).")
-    for idx, dest in enumerate(dest_wells):
+    for idx, dest in enumerate(dest_wells[:num_samps*replicates]):
         src == norm_plate.wells()[idx//replicates]
         pick_up(p20)
         custom_mix(p20, src, 2, 10)
