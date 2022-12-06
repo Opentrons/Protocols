@@ -14,7 +14,7 @@ Links:
 * [Part 2: Extension](./2aee74-48-2)
 * [Part 3: Detection](./2aee74-48-3)
 
-This protocol accomplishes part 2/3: Extension for the [Olink® Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.
+This protocol accomplishes part 2/3: Extension for use with the [Olink® Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.
 </br>
 Olink® is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.
 
