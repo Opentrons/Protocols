@@ -69,7 +69,8 @@ def run(ctx: protocol_api.ProtocolContext):
                 pip.drop_tip(all_20_tips[tip_20_ctr-96])
 
     def liq_height(well):
-        """Function that can be used to approximate liquid height within well"""
+        """Function that can be used to approximate
+        liquid height within well"""
         r1 = well.diameter / 2
         r2 = 2.69349  # calculated manually
         h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
