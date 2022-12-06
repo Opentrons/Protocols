@@ -1,4 +1,4 @@
-# NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 4: Second cDNA Strand Synthesis
+# NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 7: Adapter Ligation
 
 
 ### Author
@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol adds the necessary reagents for the second cDNA strand synthesis in the  NEBNext Ultra II Directional RNA Library Prep Kit for Illumina.
+This protocol adds the necessary reagents for the adapter ligation in the  NEBNext Ultra II Directional RNA Library Prep Kit for Illumina.
 
 
 ### Modules

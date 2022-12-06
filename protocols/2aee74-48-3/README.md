@@ -14,7 +14,7 @@ Links:
 * [Part 2: Extension](./2aee74-48-2)
 * [Part 3: Detection](./2aee74-48-3)
 
-This protocol accomplishes part 3/3: Detection for the [Olink® Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery. Primers are transferred to the left 48 wells of the Fluidigm detection plate, and samples are transferred to the right 48 wells. The transfer mapping for these plates is shown in the following image:  
+This protocol accomplishes part 3/3: Detection for use with the [Olink® Target 48 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery. Primers are transferred to the left 48 wells of the Fluidigm detection plate, and samples are transferred to the right 48 wells. The transfer mapping for these plates is shown in the following image:  
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74-48/transfer_scheme.png)
 </br>
 Olink® is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.

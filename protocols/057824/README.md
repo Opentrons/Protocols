@@ -12,9 +12,11 @@
 This protocol uses the heater-shaker module, magnetic module, single-channel P20, and single-channel P300 pipette to perform mass spec sample prep for up to 96 input samples. A user-input-specified volume of reducing agent is added to samples on the heater-shaker at 60 degrees C followed by shaking at 1500 rpm for 30 seconds. After a 30 minute incubation, a user-input-specified volume of alkylating agent is added followed by shaking and incubation at room temperature. A second addition of reducing agent is followed by a series of incubations, shaking, bead binding, washes, digestion and recovery of digestion products to the final plate. Run-specific user input (number of samples, sample volume, reagent source volumes, liquid transfer volumes) is provided by csv file upload (see example file below).
 
 Links:
-* [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/example_csv.csv)</br>
+* [example parameter input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/parameters_csv.csv)</br>
+* [example sample position csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/sample_positions.csv)</br>
 
-![input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/screenshot-examplecsv.png)</br>
+![parameter input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/screenshot-parameters.png)</br>
+![sample position csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/screenshot-samplepositions.png)</br>
 
 Values for CSV file input:
 * SAMPLE COUNT  1-96
@@ -48,7 +50,9 @@ Values for CSV file input:
 * Opentrons single-channel P20 and single-channel P300 Gen2 Pipettes (https://shop.opentrons.com/pipettes/)
 
 
+
 ---
+
 
 ### Deck Setup
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/057824/screenshot-deck.png)
@@ -98,7 +102,7 @@ Values for CSV file input:
 
 
 ### Process
-1. Input your protocol parameters and csv file using the parameters section on this page, then download your protocol.
+1. Input your protocol parameters and csv files using the parameters section on this page, then download your protocol.
 2. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
 3. Set up your deck and run labware position check using the OT App. For tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 4. Hit 'Run'.

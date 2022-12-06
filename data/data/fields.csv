@@ -10,6 +10,7 @@ _elution_vol,1
 _filter_tips,1
 _fin_wash,1
 _inc_time,1
+_input_csv,1
 _m20_mount,6
 _m300_mount,3
 _mag_height,1
@@ -31,6 +32,8 @@ _pip_model,1
 _pip_mount,1
 _profile_type,1
 _ratio_beads_dna,1
+_reaction_mix,1
+_replicates,1
 _samp_cols,3
 _samp_labware,1
 _source_type,2
