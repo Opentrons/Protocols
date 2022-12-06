@@ -65,7 +65,7 @@ def run(ctx: protocol_api.ProtocolContext):
     wash_delay_time = 10
     supernatant_headspeed_modulator = 10
     mag_height = 8
-    air_dry_time = 5
+    air_dry_time = 3
     ctx.max_speeds['Z'] = 125
     ctx.max_speeds['A'] = 125
     num_columns = math.ceil(num_samples/8)
@@ -192,23 +192,23 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.move_to(beads.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        m300.dispense(87, dest, rate=0.5)
+        m300.dispense(87, dest.center(), rate=0.5)
         bead_mixing(dest, m300, 170, reps=6)
         m300.blow_out(dest.top())
         drop_tip(m300)
 
     ctx.comment('\n~~~~~~~~~~~~~~INCUBATING SAMPLES WITH BEADS~~~~~~~~~~~~~\n')
     if TEST_MODE:
-        ctx.delay(seconds=bead_delay_time)
+        ctx.delay(seconds=5)
     else:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=5)
 
     mag_deck.engage(height_from_base=mag_height)
     ctx.comment('\n~~~~~~~~~~~~~~SEPARATING BEADS~~~~~~~~~~~~~\n')
     if TEST_MODE:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=5)
     else:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=5)
 
     ctx.comment('\n~~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~~\n')
     for i, dest in enumerate(samples_mag):
@@ -217,14 +217,14 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.move_to(dest.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m300.aspirate(178, dest.bottom().move(types.Point(x=side,
+        m300.aspirate(165, dest.bottom().move(types.Point(x=side,
                                                           y=0, z=1)),
                       rate=0.1)
         ctx.delay(seconds=1)
         m300.move_to(dest.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        m300.dispense(178, trash)
+        m300.dispense(165, trash)
         m300.blow_out()
         m300.air_gap(50)
         m300.dispense(50, trash)
@@ -283,7 +283,8 @@ def run(ctx: protocol_api.ProtocolContext):
         for _ in range(10):
             m20.aspirate(15, dest)
             m20.dispense(15,
-                         dest.bottom().move(types.Point(x=-side, y=0, z=9)))
+                         dest.bottom().move(types.Point(x=-side, y=0, z=7)),
+                         rate=2)
         for _ in range(10):
             m20.aspirate(15, dest)
             m20.dispense(15, dest.bottom(3))
@@ -300,9 +301,9 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~~~~SEPARATING BEADS~~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=5)
     else:
-        ctx.delay(minutes=bead_delay_time)
+        ctx.delay(minutes=5)
 
     ctx.comment('\n~~~~~~~~~~~~~~MOVING PRODUCT TO FINAL PLATE~~~~~~~~~~~~~\n')
     for i, (s, d) in enumerate(zip(samples_mag, final_dest)):

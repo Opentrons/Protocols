@@ -44,10 +44,9 @@ an off-deck thermocycler.
 
 ### Protocol Steps
 0. Temperature module cools down to 4 C
-1. 7 uL of reaction buffer is added to each sample
-2. 3 uL of enzyme mix is added to each sample
-3. Samples with buffer and enzyme mix added are mixed via pipetting
-4. OT-2 flashes on completion
+1. 10 uL of reaction buffer and enzyme mix is added to each sample
+2. Samples with buffer and enzyme mix added are mixed via pipetting
+3. OT-2 flashes on completion
 
 
 ### Process
