@@ -17,7 +17,7 @@
 ![Standard BioTools Logo](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standard-bio-logo-200-TM.jpg)
 </br>
 This protocol transfers 4 µL of samples and assays from 96-well plates to the Standard BioTools 96.96 IFC (Integrated Fluidic Circuit)</br>
-![Standard BioTools 48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons_IFC_96.jpg)
+![Standard BioTools 48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_96.96+IFC.jpg)
 </br>
 **Preparation**:</br>
 Before beginning the protocol on the OT-2, perform the following preparation steps:
@@ -35,7 +35,7 @@ Before beginning the protocol on the OT-2, perform the following preparation ste
 
 
 ### Labware
-* Standard BioTools 48.48 Dynamic Array IFC
+* Standard BioTools 96.96 Dynamic Array IFC
 * [Opentrons 96 Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
 * [NEST 96-Well PCR Plate, 100µL](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
 * [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
