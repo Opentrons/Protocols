@@ -61,6 +61,7 @@ def run(ctx):
                        dest_well, new_tip='never', touch_tip=True)
         p1000.mix(15, transfer_vol/2 if transfer_vol/2 < 1000 else 1000, dest_well)  # noqa:E501
         p1000.touch_tip()
+        p1000.blow_out()
         p1000.drop_tip()
         adjust_height(transfer_vol)
 
@@ -75,7 +76,6 @@ def run(ctx):
         p300.touch_tip()
         for well in dest_col:
             p300.dispense(30, well)
-            p300.touch_tip()
         p300.dispense(30, source_well)
-        p300.touch_tip()
+        p300.blow_out()
         p300.drop_tip()
