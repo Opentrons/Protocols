@@ -15,7 +15,7 @@ def run(ctx):
         'num_samples', 'm20_mount', 'tip_track')
 
     # labware and modules
-    source_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    source_plate = ctx.load_labware('kingfisher_96_wellplate_200ul',
                                     '2', 'source plate')
     dest_plate = ctx.load_labware('biorad_96_wellplate_350ul', '3',
                                   'PCR plate')
