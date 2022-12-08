@@ -1,5 +1,5 @@
 {
-    "content": "import json\nimport os\nimport math\n\nmetadata = {\n    'protocolName': 'NGS Library Prep Part 1: PCR Setup I',\n    'author': 'Nick <protocols@opentrons.com>',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    num_samples, m20_mount, tip_track = get_values(  # noqa: F821\n        'num_samples', 'm20_mount', 'tip_track')\n\n    # labware and modules\n    source_plate = ctx.load_labware('kingfisher_96_wellplate_200ul',\n                                    '2', 'source plate')\n    dest_plate = ctx.load_labware('biorad_96_wellplate_350ul', '3',\n                                  'PCR plate')\n    tipracks_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '5')]\n    reagent_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                     '6', 'reagent plate')\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tipracks_20)\n\n    # samples and reagents\n    num_cols = math.ceil(num_samples/8)\n    sources = source_plate.rows()[0][:num_cols]\n    dests = dest_plate.rows()[0][:num_cols]\n    mm = reagent_plate.rows()[0][0]\n\n    tip_log = {val: {} for val in ctx.loaded_instruments.values()}\n\n    folder_path = '/data/tip_track'\n    tip_file_path = folder_path + '/tip_log.json'\n    if tip_track and not ctx.is_simulating():\n        if os.path.isfile(tip_file_path):\n            with open(tip_file_path) as json_file:\n                data = json.load(json_file)\n                for pip in tip_log:\n                    if pip.name in data:\n                        tip_log[pip]['count'] = data[pip.name]\n                    else:\n                        tip_log[pip]['count'] = 0\n        else:\n            for pip in tip_log:\n                tip_log[pip]['count'] = 0\n    else:\n        for pip in tip_log:\n            tip_log[pip]['count'] = 0\n\n    for pip in tip_log:\n        if pip.type == 'multi':\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.rows()[0]]\n        else:\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.wells()]\n        tip_log[pip]['max'] = len(tip_log[pip]['tips'])\n\n    def _pick_up(pip, loc=None):\n        if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:\n            ctx.pause('Replace ' + str(pip.max_volume) + '\u00b5l tipracks before \\\nresuming.')\n            pip.reset_tipracks()\n            tip_log[pip]['count'] = 0\n        if loc:\n            pip.pick_up_tip(loc)\n        else:\n            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])\n            tip_log[pip]['count'] += 1\n\n    # transfer mastermix\n    _pick_up(m20)\n    for d in dests:\n        m20.transfer(15, mm.bottom(0.5), d.bottom(1), touch_tip=True,\n                     new_tip='never')\n\n    # transfer each corresponding sample\n    for s, d in zip(sources, dests):\n        if not m20.has_tip:\n            _pick_up(m20)\n        m20.transfer(10, s.bottom(0.5), d.bottom(1), touch_tip=True,\n                     new_tip='never')\n        m20.air_gap(2)  # aspirate remaining droplets to avoid contamination\n        m20.drop_tip()\n\n    # track final used tip\n    if tip_track and not ctx.is_simulating():\n        if not os.path.isdir(folder_path):\n            os.mkdir(folder_path)\n        data = {pip.name: tip_log[pip]['count'] for pip in tip_log}\n        with open(tip_file_path, 'w') as outfile:\n            json.dump(data, outfile)\n",
+    "content": "import json\nimport os\nimport math\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'NGS Library Prep Part 1: PCR Setup I',\n    'author': 'Nick <protocols@opentrons.com>',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    num_samples, m20_mount, m300_mount, tip_track = get_values(  # noqa: F821\n        'num_samples', 'm20_mount', 'm300_mount', 'tip_track')\n\n    engage_height = 10.0\n    vol_initial_1 = 25.0\n    vol_beads_1 = 25.0\n    time_minutes_incubation_binding = 5.0\n    time_minutes_mag_binding = 3.0\n    time_minutes_mag_wash = 3.0\n    time_minutes_airdry_wash = 2.0\n    time_minutes_incubation_elution = 2.0\n    time_minutes_mag_elution = 2.0\n    z_offset_supernatant = 0.5\n    x_offset_beads_ratio = 0.6\n    z_offset_beads = 3.0\n    vol_elution_buffer_1 = 60.0\n    vol_elution_final_1 = 50.0\n    vol_pcr_mm = 35.0\n\n    vol_initial_2 = 10.0\n    vol_beads_2 = 57.0\n    vol_elution_buffer_2 = 55.0\n    vol_elution_final_2 = 20.0\n\n    # labware and modules\n    elution_plate = ctx.load_labware('biorad_96_wellplate_350ul', '1',\n                                     'PCR plate')\n    barcode_plate = ctx.load_labware('biorad_96_wellplate_350ul', '2',\n                                     'barcode plate')\n    magdeck = ctx.load_module('magnetic module gen2', '4')\n    mag_plate = magdeck.load_labware('biorad_96_wellplate_350ul')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5')\n    tipracks_300 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['3', '6', '7', '8', '9', '10']]\n    tipracks_20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '11')]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tipracks_20)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tipracks_300)\n\n    tip_log = {val: {} for val in ctx.loaded_instruments.values()}\n\n    def pick_up(pip, loc=None):\n        if not loc:\n            if tip_log[pip]['count'] == tip_log[pip]['max']:\n                ctx.pause('Replace ' + str(pip.max_volume) + '\u00b5l tipracks \\\nbefore resuming.')\n                pip.reset_tipracks()\n                tip_log[pip]['count'] = 0\n            loc = tip_log[pip]['tips'][tip_log[pip]['count']]\n            tip_log[pip]['count'] += 1\n        pip.pick_up_tip(loc)\n        return loc\n\n    # samples and reagents\n    num_cols = math.ceil(num_samples/8)\n    mag_samples = mag_plate.rows()[0][:num_cols]\n    elution_samples = elution_plate.rows()[0][:num_cols]\n    barcodes = barcode_plate.rows()[0][:num_cols]\n\n    beads = reservoir.wells()[0]\n    ethanol = reservoir.wells()[1:9]\n    elution_buffer = reservoir.wells()[9]\n    pcr_mm = reservoir.wells()[10]\n    waste = ctx.loaded_labwares[12].wells()[0].top()\n\n    tip_log = {val: {} for val in ctx.loaded_instruments.values()}\n\n    folder_path = '/data/tip_track'\n    tip_file_path = folder_path + '/tip_log.json'\n    if tip_track and not ctx.is_simulating():\n        if os.path.isfile(tip_file_path):\n            with open(tip_file_path) as json_file:\n                data = json.load(json_file)\n                for pip in tip_log:\n                    if pip.name in data:\n                        tip_log[pip]['count'] = data[pip.name]\n                    else:\n                        tip_log[pip]['count'] = 0\n        else:\n            for pip in tip_log:\n                tip_log[pip]['count'] = 0\n    else:\n        for pip in tip_log:\n            tip_log[pip]['count'] = 0\n\n    for pip in tip_log:\n        if pip.type == 'multi':\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.rows()[0]]\n        else:\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.wells()]\n        tip_log[pip]['max'] = len(tip_log[pip]['tips'])\n\n    def remove_supernatant(pip, vol, z_offset=z_offset_supernatant,\n                           wells=mag_samples, parking_spots=None,\n                           dispense_liquid=True):\n        if not parking_spots:\n            parking_spots = [None for _ in range(num_cols)]\n\n        pip.flow_rate.aspirate /= 5\n        for m, spot in zip(wells, parking_spots):\n            if not pip.has_tip:\n                pick_up(pip, spot)\n            asp_loc = m.bottom(0.5)\n            pip.move_to(m.center())\n            pip.aspirate(vol, asp_loc)\n            slow_withdraw(pip, m)\n            if dispense_liquid:\n                pip.dispense(vol, waste)\n                pip.blow_out(waste)\n                pip.air_gap(1)\n            pip.drop_tip()\n        pip.flow_rate.aspirate *= 5\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def bind(vol_beads, vol_initial, beads=beads):\n        magdeck.disengage()\n\n        parking_set = []\n        if not m300.has_tip:\n            tip = pick_up(m300)\n        else:\n            tip = m300._last_tip_picked_up_from\n        parking_set.append(tip)\n        for _ in range(20):\n            m300.aspirate(200, beads.bottom(2))\n            m300.dispense(200, beads.bottom(10))\n\n        for s in mag_samples:\n            if not m300.has_tip:\n                tip = pick_up(m300)\n                parking_set.append(tip)\n            m300.aspirate(vol_beads, beads)\n            slow_withdraw(m300, beads)\n            m300.dispense(vol_beads, s)\n            m300.mix(6, vol_beads*0.8, s)\n            slow_withdraw(m300, s)\n            m300.drop_tip(tip)\n\n        ctx.delay(minutes=time_minutes_incubation_binding, msg=f'Incubating \\\n{time_minutes_mag_wash} min')\n        magdeck.engage(engage_height)\n        ctx.delay(minutes=time_minutes_mag_binding, msg=f'Incubating \\\n{time_minutes_mag_binding} min')\n\n        remove_supernatant(m300, vol_beads+vol_initial,\n                           parking_spots=parking_set)\n\n    def wash(wash_set, vol_wash=190, air_dry=False):\n        magdeck.disengage()\n        pick_up(m300)\n        for i, s in enumerate(mag_samples):\n            source = wash_set[i//6]\n            m300.aspirate(vol_wash, source)\n            slow_withdraw(m300, source)\n            m300.dispense(vol_wash, s.top(-1))\n\n        magdeck.engage(engage_height)\n        ctx.delay(minutes=time_minutes_mag_wash)\n\n        remove_supernatant(m300, vol_wash)\n\n        if air_dry:\n            ctx.delay(minutes=time_minutes_airdry_wash,\n                      msg=f'Airdrying {time_minutes_airdry_wash} min')\n\n    def elute(vol_elution_buffer, vol_elution_final):\n        magdeck.disengage()\n\n        for i, s in enumerate(mag_samples):\n            side = 1 if mag_samples.index(s) % 2 == 0 else -1\n            bead_loc = s.bottom().move(Point(\n                x=side*s.diameter/2*x_offset_beads_ratio, z=z_offset_beads))\n            pick_up(m300)\n            m300.aspirate(vol_elution_buffer, elution_buffer)\n            slow_withdraw(m300, elution_buffer)\n            m300.dispense(vol_elution_buffer, s)\n            for _ in range(6):  # mix\n                m300.aspirate(vol_elution_final, s.bottom(1))\n                m300.dispense(vol_elution_final, bead_loc)\n            slow_withdraw(m300, s)\n            m300.drop_tip()\n\n        ctx.delay(minutes=time_minutes_mag_elution, msg=f'Incubating \\\n{time_minutes_mag_elution} min')\n        magdeck.engage(engage_height)\n        ctx.delay(minutes=time_minutes_incubation_elution, msg=f'Incubating \\\n{time_minutes_incubation_elution} min')\n\n        # transfer to elution plate\n        for s, e in zip(mag_samples, elution_samples):\n            pick_up(m300)\n            m300.flow_rate.aspirate /= 5\n            m300.aspirate(vol_elution_final, s)\n            m300.flow_rate.aspirate *= 5\n            slow_withdraw(m300, s)\n            m300.dispense(vol_elution_final, e.bottom(1))\n            slow_withdraw(m300, e)\n            m300.drop_tip()\n\n    \"\"\" Cleanup 1 \"\"\"\n    bind(vol_beads_1, vol_initial_1)\n    wash(ethanol[0:2])\n    wash(ethanol[2:4], air_dry=True)\n    elute(vol_elution_buffer_1, vol_elution_final_1)\n\n    # add mastermix\n    pick_up(m300)\n    for s in elution_samples:\n        m300.aspirate(vol_pcr_mm, pcr_mm)\n        slow_withdraw(m300, pcr_mm)\n        m300.dispense(vol_pcr_mm, s.top(-1))\n\n    # elution to barcodes\n    for s, b in zip(elution_samples, barcodes):\n        pick_up(m20)\n        m20.aspirate(5, s)\n        slow_withdraw(m20, s)\n        m20.dispense(5, b)\n        slow_withdraw(m20, b)\n        m20.drop_tip()\n\n    ctx.pause('Remove plates and perform Index/Barcode PCR. Place PCR plate \\\nback on magnetic module after completed PCR. Place fresh plate 2 for final \\\nelution.')\n\n    \"\"\" Cleanup 2 \"\"\"\n    bind(vol_beads_2, vol_initial_2)\n    wash(ethanol[4:6])\n    wash(ethanol[6:8], air_dry=True)\n    elution_samples = [elution_plate.wells()[0]]*num_cols  # pool\n    elute(vol_elution_buffer_2, vol_elution_final_2)\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2375,6 +2375,21 @@
             "type": "dropDown"
         },
         {
+            "label": "P300 multi-channel GEN2 mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
             "label": "track tips across protocol runs",
             "name": "tip_track",
             "options": [
@@ -2392,34 +2407,80 @@
     ],
     "instruments": [
         {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
             "mount": "right",
             "name": "p20_multi_gen2"
         }
     ],
     "labware": [
         {
-            "name": "source plate on 2",
+            "name": "PCR plate on 1",
             "share": false,
-            "slot": "2",
-            "type": "kingfisher_96_wellplate_200ul"
-        },
-        {
-            "name": "PCR plate on 3",
-            "share": false,
-            "slot": "3",
+            "slot": "1",
             "type": "biorad_96_wellplate_350ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 5",
+            "name": "barcode plate on 2",
             "share": false,
-            "slot": "5",
-            "type": "opentrons_96_tiprack_20ul"
+            "slot": "2",
+            "type": "biorad_96_wellplate_350ul"
         },
         {
-            "name": "reagent plate on 6",
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 350 \u00b5L on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_350ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -2429,9 +2490,16 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.10",
+        "apiLevel": "2.12",
         "author": "Nick <protocols@opentrons.com>",
         "protocolName": "NGS Library Prep Part 1: PCR Setup I"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw Bio-Rad 96 Well Plate 350 \u00b5L on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

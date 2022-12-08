@@ -658,8 +658,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,68
-m300_mount,88
+m20_mount,69
+m300_mount,89
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -835,7 +835,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,142
+num_samples,143
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1362,7 +1362,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,46
+tip_track,47
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
