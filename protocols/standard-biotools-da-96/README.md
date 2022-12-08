@@ -1,4 +1,4 @@
-# Standard BioTools Dynamic Array 48.48: Load 4 uL
+# Standard BioTools Dynamic Array 96.96: Load 4 uL
 
 
 ### Author
@@ -16,24 +16,26 @@
 ## Description
 ![Standard BioTools Logo](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standard-bio-logo-200-TM.jpg)
 </br>
-This protocol transfers 4 µL of samples and assays from 96-well plates to the Standard BioTools 48.48 IFC (Integrated Fluidic Circuit)</br>
-![Standard BioTools 48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons_IFC_48.jpg)
+This protocol transfers 4 µL of samples and assays from 96-well plates to the Standard BioTools 96.96 IFC (Integrated Fluidic Circuit)</br>
+![Standard BioTools 96](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons_Fig_96.jpg)
 </br>
 **Preparation**:</br>
 Before beginning the protocol on the OT-2, perform the following preparation steps:
 1. Prepare the Samples, the Assays, and the IFC Referring as described in one of the following workflows from the Standard BioTools X9 User Guide:
-- Gene Expression Using the 48.48 IFC-X with TaqMan Assays
-2. Prepare a Sample Plate by transferring 6 µL of sample to 48 wells of a 96-well plate
-3. Prepare an Assay Plate by transferring 6 µL of assay to 48 wells of a 96-well plate
+- Gene Expression Using the 96.96 IFC with TaqMan Assays
+- Genotyping Using the 96.96 IFC with SNP Type Assays
+- Genotyping Using the 96.96 IFC with TaqMan Assays
+2. Prepare a Sample Plate by transferring 6 µL of sample to all wells of a 96-well plate
+3. Prepare an Assay Plate by transferring 6 µL of assay to all wells of a 96-well plate
 4. *NOTE*: All wells (indicated below in blue) must have liquid
 5. Centrifuge the Sample and Assay plates to ensure liquids are at the bottom of the wells
-6. Prepare the 48.48 IFC:
+6. Prepare the 96.96 IFC:
 - Add control line fluid to the accumulators according to the workflow selected in step 1 (Indicated above by red arrows)
 - Remove the protective film from the bottom of the IFC
 
 
 ### Labware
-* Standard BioTools 48.48 Dynamic Array IFC
+* Standard BioTools 96.96 Dynamic Array IFC
 * [Opentrons 96 Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
 * [NEST 96-Well PCR Plate, 100µL](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
 * [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
@@ -44,7 +46,7 @@ Before beginning the protocol on the OT-2, perform the following preparation ste
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_48.48+Layout.jpg)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_96.96+Layout.jpg)
 
 
 ### Protocol Steps
@@ -69,4 +71,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-standard-biotools-da-48
+standard-biotools-da-96
