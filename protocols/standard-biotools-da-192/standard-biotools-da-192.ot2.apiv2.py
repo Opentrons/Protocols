@@ -12,8 +12,6 @@ metadata = {
     "source": "Standard Biotools Inc",
 }
 
-# COPY FROM HERE ----------------------------------------------------------------------------------
-
 metadata2 = {
     "apiLevel": "2.12",
     "protocolName": "Singular BioTools Transfer Method Test V1.0.9",
@@ -159,7 +157,7 @@ class Dispense:
     retract_speed: float = 2
     air_purge: bool = False
     air_purge_z_offset: float = 2
-    method: str = "auto"  #'auto', 'one-to-one', 'one-to-many'
+    method: str = "auto"  # 'auto', 'one-to-one', 'one-to-many'
 
 
 @dataclass(frozen=True)
@@ -199,7 +197,7 @@ class Mix:
     """
 
     # TODO check if pipette is same as current pipette
-    mix_location: str = None  #'source' or 'destination'
+    mix_location: str = None  # 'source' or 'destination'
     cycles: int = 0
     volume: float = None
     aspirate_z_offset: float = 0
@@ -262,31 +260,31 @@ def sbi_transfer(
     # pull out the individual events and track the sequence order
     source = mix_1 = aspirate = dispense = mix_2 = destination = None
     for step in workflow:
-        if type(step) is type(Source()) and not source:
+        if isinstance(step, type(Source())) and not source:
             source: Source = step
 
         elif (
-            type(step) is type(Mix())
+            isinstance(step, type(Mix()))
             and step.mix_location == "source"
             and not mix_1
         ):
             # TODO check if we need and not aspirate
             mix_1: Mix = step
 
-        elif type(step) is type(Aspirate()) and not aspirate:
+        elif isinstance(step, type(Aspirate())) and not aspirate:
             aspirate: Aspirate = step
 
-        elif type(step) is type(Dispense()) and not dispense:
+        elif isinstance(step, type(Dispense())) and not dispense:
             dispense: Dispense = step
 
         elif (
-            type(step) is type(Mix())
+            isinstance(step, type(Mix()))
             and step.mix_location == "destination"
             and not mix_2
         ):
             mix_2: Mix = step
 
-        elif type(step) is type(Destination()) and not destination:
+        elif isinstance(step, type(Destination())) and not destination:
             destination: Destination = step
         else:
             raise TypeError("Step is either a duplicate or not recognized")

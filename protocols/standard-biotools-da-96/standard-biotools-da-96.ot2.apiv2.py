@@ -3,7 +3,7 @@ from opentrons import protocol_api
 metadata = {
     'apiLevel': '2.9',
     'protocolName': 'Standard Biotools Dynamic Array 96.96: Load 4 uL',
-    'description': '''Transfer Samples and Assays from 96 well plate to Dynamic Array''',
+    'description': 'Transfer Samples+Assays from PCR plate to Dynamic Array',
     'author': 'Standard Biotools Inc',
     'source': 'Standard Biotools Inc',
 }
@@ -37,8 +37,8 @@ def run(protocol: protocol_api.ProtocolContext):
         'p20_multi_gen2', 'right', tip_racks=tips20)
 
     # Set Assay Volumes
-    Vol_Asp     =   4.1  # aspriate 0.1ul more
-    Vol_Disp    =   4
+    Vol_Asp = 4.1  # aspriate 0.1ul more
+    Vol_Disp = 4
 
     # Tip Pickup Handler
     tips20_count = 0
@@ -91,7 +91,7 @@ def run(protocol: protocol_api.ProtocolContext):
             set_speed(Rate_Slow)
             m20.move_to(dest.top(5))
             set_speed(Rate_Slowest)
-            m20.dispense(Vol_Disp, dest.bottom(0)) #initial value is 0.2
+            m20.dispense(Vol_Disp, dest.bottom(0))  # initial value is 0.2
             protocol.delay(seconds=Delay_Disp)
             m20.move_to(dest.top(5))
             set_speed(Rate_Normal)
