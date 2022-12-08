@@ -25,8 +25,8 @@ def run(ctx):
 
     for index, sample in enumerate(csvrows):
 
-        if not 1 <= int(sample['dilution scheme']) <= 6:
-            raise Exception('Dilution scheme must be 1-6.')
+        if not 1 <= int(sample['dilution scheme']) <= 9:
+            raise Exception('Dilution scheme must be 1-9.')
 
         if not index:
             if not int(sample['sample number']) == 1:
@@ -98,7 +98,7 @@ def run(ctx):
     dilutions = {
      num+1: [*create_chunks([int(sample[
       'sample number']) for sample in csvrows if int(sample[
-       'dilution scheme']) == num+1], 8)] for num in range(6)}
+       'dilution scheme']) == num+1], 8)] for num in range(9)}
 
     # sample racks
     sample_racks = [
@@ -110,9 +110,9 @@ def run(ctx):
     sample_positions = [
      well for rack in sample_racks for well in rack.wells()][:len(csvrows)]
 
-    sample_cols_per_scheme = [len(dilutions[key+1]) for key in range(6)]
+    sample_cols_per_scheme = [len(dilutions[key+1]) for key in range(9)]
 
-    for scheme in range(6):
+    for scheme in range(9):
         ctx.comment(
          """\n***\nScheme {}, preparing dilutions
          for {} columns of samples\n***\n""".format(
@@ -164,7 +164,19 @@ def run(ctx):
      6: {"diluent vol": [490, 450, 450, 100],
          "sample vol": 10,
          "mix count": 15,
-         "serial vol": [50, 50, 100]}
+         "serial vol": [50, 50, 100]},
+     7: {"diluent vol": [788, 150, 100],
+         "sample vol": 10,
+         "mix count": 15,
+         "serial vol": [150, 100]},
+     8: {"diluent vol": [290, 270, 190],
+         "sample vol": 10,
+         "mix count": 15,
+         "serial vol": [30, 10]},
+     9: {"diluent vol": [188, 160, 160, 160, 160, 94],
+         "sample vol": 12,
+         "mix count": 15,
+         "serial vol": [40, 40, 40, 40, 50]}
          }
 
     # diluent reservoir fill volume - calculate and notify
@@ -195,8 +207,11 @@ def run(ctx):
         # for each column of 8 samples (last column may be < 8)
         for samplenums in value:
 
-            # yield 4-column destination for dilutions
-            destination = next(dest)
+            # construct destination for dilutions in 4-column increments
+            destination = []
+            numblocks = math.ceil(len(params[key]["diluent vol"]) / 4)
+            for block in range(numblocks):
+                destination.extend(next(dest))
 
             # destination wells - set current vol to 0
             for column in destination:
@@ -286,13 +301,38 @@ def run(ctx):
                     p300m.aspirate(200, column[0].bottom(1))
                     p300m.dispense(200, column[0].bottom(mixht))
 
-                p300m.aspirate(vol, column[0].bottom(1))
-                ctx.delay(seconds=1)
-                slow_tip_withdrawal(p300m, column[0])
-                p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
+                if vol >= 20:
+                    p300m.aspirate(vol, column[0].bottom(1))
+                    ctx.delay(seconds=1)
+                    slow_tip_withdrawal(p300m, column[0])
+                    p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
 
-                disploc = destination[destination.index(column)+1][0]
-                p300m.dispense(vol, disploc.bottom(1))
+                    disploc = destination[destination.index(column)+1][0]
+
+                    p300m.dispense(vol, disploc.bottom(1))
+
+                else:
+
+                    # p300 leaves well to allow p20s small vol transfer
+                    ctx.delay(seconds=1)
+                    slow_tip_withdrawal(p300m, disploc)
+                    p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
+                    # p20s small volume transfer to filled wells in column
+                    for j, well in enumerate(column[:len(samplenums)]):
+
+                        p20s.pick_up_tip()
+
+                        p20s.aspirate(vol, well.bottom(1))
+                        ctx.delay(seconds=1)
+                        slow_tip_withdrawal(p20s, well)
+                        p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)
+
+                        disploc = destination[destination.index(column)+1][j]
+
+                        p20s.dispense(vol, disploc.bottom(1))
+
+                        p20s.drop_tip()
 
                 if i == tfercount - 1:
 
