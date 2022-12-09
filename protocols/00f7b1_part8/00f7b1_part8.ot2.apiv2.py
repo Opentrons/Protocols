@@ -193,7 +193,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.dispense(87, dest.center(), rate=0.5)
-        bead_mixing(dest, m300, 170, reps=6)
+        bead_mixing(dest, m300, 150, reps=6)
         m300.blow_out(dest.top())
         drop_tip(m300)
 
@@ -280,6 +280,11 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m20)
         m20.aspirate(17, te)
         m20.dispense(17, dest.bottom().move(types.Point(x=-side, y=0, z=1)))
+        drop_tip(m20)
+
+    for i, (te, dest) in enumerate(zip(te_buff, samples_mag)):
+        pick_up(m20)
+        side = -1 if i % 2 == 0 else 1
         for _ in range(10):
             m20.aspirate(15, dest)
             m20.dispense(15,

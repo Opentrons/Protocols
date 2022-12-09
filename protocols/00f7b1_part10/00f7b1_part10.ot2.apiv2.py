@@ -288,11 +288,16 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         pick_up(m300)
         m300.aspirate(26, te)
-        m300.dispense(26, dest.bottom().move(types.Point(x=-side, y=0, z=1)))
+        m300.dispense(26, dest.bottom().move(types.Point(x=-side*2, y=0, z=3)))
+        drop_tip(m300)
+
+    for i, (te, dest) in enumerate(zip(te_buff, samples_mag)):
+        side = -1 if i % 2 == 0 else 1
+        pick_up(m300)
         for _ in range(10):
             m300.aspirate(20, dest)
             m300.dispense(20,
-                          dest.bottom().move(types.Point(x=-side, y=0, z=9)),
+                          dest.bottom().move(types.Point(x=-side*2, y=0, z=9)),
                           rate=2)
         for _ in range(10):
             m300.aspirate(20, dest)

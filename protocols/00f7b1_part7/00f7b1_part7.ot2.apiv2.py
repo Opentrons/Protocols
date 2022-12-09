@@ -192,7 +192,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.delay(seconds=2)
         m300.dispense(31, dest, rate=0.2)
         ctx.delay(seconds=2)
-        m300.mix(8, 80, dest)
+        m300.mix(8, 70, dest)
         ctx.delay(seconds=2)
         m300.move_to(dest.top())
         m300.aspirate(20, dest.top(2))
@@ -220,7 +220,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m20.aspirate(3, user_enzyme, rate=0.2)
         ctx.delay(seconds=1)
         m20.dispense(3, dest, rate=0.2)
-        m300.mix(6, 80, dest)
+        m300.mix(6, 70, dest)
         drop_tip(m300)
         drop_tip(m20)
 

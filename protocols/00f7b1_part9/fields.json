@@ -22,5 +22,11 @@
         {"label": "yes", "value": true},
         {"label": "no", "value": false}
       ]
+    },
+    {
+      "type": "int",
+      "label": "Starting Column (1-12)",
+      "name": "start_col",
+      "default": 1
     }
 ]

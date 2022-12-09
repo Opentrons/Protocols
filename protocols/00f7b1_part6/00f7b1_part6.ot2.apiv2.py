@@ -187,7 +187,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~MIXING~~~~~~~~~~~\n')
     for dest in samples:
         pick_up(m300)
-        m300.mix(6, 50, dest)
+        m300.mix(6, 45, dest)
         drop_tip(m300)
 
     if flash:
