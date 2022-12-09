@@ -53,9 +53,11 @@ def run(ctx: protocol_api.ProtocolContext):
     """PROTOCOLS."""
     [
      num_samples,
-     m300_mount, flash
+     m300_mount, flash, start_col
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples", "m300_mount", "flash")
+        "num_samples", "m300_mount", "flash", "start_col")
+
+    start_col = start_col - 1
     # num_samples = 16
     # m300_mount = 'right'
     # flash = True
@@ -176,7 +178,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     samples = mag_plate.rows()[0][:num_columns]
     master_mix = temp_plate.rows()[0][:math.ceil(num_columns/6)]*12
-    primers = primer_plate.rows()[0][:num_columns]
+    primers = primer_plate.rows()[0][start_col:start_col+num_columns]
 
     if not TEST_MODE:
         temp_deck.set_temperature(4)
