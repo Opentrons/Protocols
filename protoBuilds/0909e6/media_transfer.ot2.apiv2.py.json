@@ -1,0 +1,67 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\nfrom opentrons.protocol_api.labware import Well\n\nmetadata = {\n    'protocolName': 'Cell Culture',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    [csv_factors] = get_values(  # noqa: F821\n        'csv_factors')\n\n    class WellH(Well):\n        def __init__(self, well, height=5, min_height=3,\n                     comp_coeff=1.15, current_volume=0, min_vol=1000):\n            super().__init__(well._impl)\n            self.well = well\n            self.height = height\n            self.min_height = min_height\n            self.comp_coeff = comp_coeff\n            self.radius = self.diameter/2\n            self.current_volume = current_volume\n            self.min_vol = min_vol\n\n        def height_dec(self, vol):\n            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff\n            if self.height - dh > self.min_height:\n                self.height = self.height - dh\n            else:\n                self.height = self.min_height\n            if self.current_volume - vol > 0:\n                self.current_volume = self.current_volume - vol\n            else:\n                self.current_volume = 0\n            return(self.well.bottom(self.height))\n\n        def height_inc(self, vol):\n            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff\n            if self.height + dh < self.depth:\n                self.height = self.height + dh\n            else:\n                self.height = self.depth\n            self.current_volume += vol\n            return(self.well.bottom(self.height + 20))\n\n    # labware\n    tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',\n                                  '1', 'media tuberack')\n    tuberack15 = ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',\n                                  '4', 'factor tuberack')\n    plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')\n    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]\n    tiprack1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]\n\n    # pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', 'left',\n                               tip_racks=tiprack300)\n    p1000 = ctx.load_instrument('p1000_single_gen2', 'right',\n                                tip_racks=tiprack1000)\n\n    # reagents\n    media = [\n        WellH(well, current_volume=48000, height=well.depth*0.9)\n        for well in tuberack50.rows()[0]]\n\n    # parse data\n    data = [\n        [float(val) for val in line.split(',')]\n        for line in csv_factors.splitlines()]\n    num_factors = len(data[0]) - 3  # exclude total volume, media volume\n    factors = tuberack15.wells()[:num_factors]\n\n    def slow_withdraw(well, pip=p1000):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def split_media_vol(vol):\n        num_transfers = math.ceil(vol/1000)\n        vol_per_transfer = round(vol/num_transfers, 1)\n        return [vol_per_transfer]*num_transfers\n\n    iterator_media = iter(media)\n    current_media = next(iterator_media)\n\n    def check_media(vol):\n        nonlocal current_media\n        if current_media.current_volume - vol < current_media.min_vol:\n            current_media = next(iterator_media)\n\n    # transfer media\n    p1000.pick_up_tip()\n    for well, line in zip(plate.wells(), data):\n        vol_media_total = line[0]\n        vol_media_split = split_media_vol(vol_media_total)\n        for vol in vol_media_split:\n            check_media(vol)\n            p1000.aspirate(vol, current_media.height_dec(vol))\n            slow_withdraw(current_media, p1000)\n            p1000.dispense(vol, well.bottom(2))\n            slow_withdraw(well, p1000)\n\n    # transfer factors\n    for i, factor in enumerate(factors):\n        p300.pick_up_tip()\n        for well, line in zip(plate.wells(), data):\n            factor_vol = line[3+i]\n            if factor_vol > 0:\n                p300.aspirate(factor_vol, factor.bottom(1.5))\n                slow_withdraw(factor, p300)\n                p300.dispense(factor_vol, well.top(-2))\n        p300.drop_tip()\n\n    # mix\n    for well in plate.wells():\n        if not p1000.has_tip:\n            p1000.pick_up_tip()\n        p1000.mix(5, 800, well.bottom(2))\n        slow_withdraw(well, p1000)\n        p1000.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "1170,600,570,0,0,0,0,0,0,0,0,0,0,65,65\n1235,600,635,0,65,0,0,0,0,0,0,0,0,0,0\n1040,600,440,65,65,0,65,0,0,0,0,0,0,0,65\n975,600,375,0,65,65,65,65,0,0,0,0,0,0,65\n1053,600,453,0,0,65,65,0,52,0,0,0,0,65,0\n988,600,388,0,65,65,0,65,52,0,0,0,0,65,0\n845,600,245,65,65,65,65,0,0,65,0,0,0,65,65\n910,600,310,0,65,0,65,65,0,65,0,0,0,65,65\n858,600,258,65,65,65,0,65,52,65,0,0,0,0,65\n988,600,388,0,0,0,65,65,52,65,0,0,0,0,65\n1040,600,440,0,65,65,0,0,0,0,65,0,0,65,0\n1105,600,505,0,0,0,65,0,0,0,65,0,0,0,65\n1040,600,440,65,0,0,0,65,0,0,65,0,0,0,65\n923,600,323,65,0,65,0,0,52,0,65,0,0,65,65\n923,600,323,0,65,0,65,65,52,0,65,0,0,65,0\n923,600,323,65,0,65,65,65,52,0,65,0,0,0,0\n975,600,375,65,0,0,65,0,0,65,65,0,0,65,0\n1040,600,440,0,0,0,0,65,0,65,65,0,0,65,0\n910,600,310,65,65,65,0,65,0,65,65,0,0,0,0\n1053,600,453,0,0,65,0,0,52,65,65,0,0,0,0\n858,600,258,0,65,65,65,0,52,65,65,0,0,0,65\n793,600,193,65,65,0,0,65,52,65,65,0,0,65,65\n793,600,193,0,0,65,65,65,52,65,65,0,0,65,65\n975,600,375,65,65,65,0,0,0,0,0,65,0,0,65\n1040,600,440,65,0,65,65,0,0,0,0,65,0,0,0\n910,600,310,65,0,0,65,65,0,0,0,65,0,65,65\n1053,600,453,0,65,0,0,0,52,0,0,65,0,0,65\n728,600,128,65,65,65,65,65,52,0,0,65,0,65,65\n1040,600,440,0,0,0,65,0,0,65,0,65,0,0,65\n910,600,310,65,65,0,0,65,0,65,0,65,0,65,0\n1040,600,440,0,0,65,0,65,0,65,0,65,0,0,0\n858,600,258,65,0,65,0,0,52,65,0,65,0,65,65\n923,600,323,65,65,0,65,0,52,65,0,65,0,0,0\n1105,600,505,65,0,0,0,0,0,0,65,65,0,0,0\n910,600,310,65,65,0,65,65,0,0,65,65,0,0,0\n910,600,310,0,0,65,65,65,0,0,65,65,0,65,0\n923,600,323,65,65,0,0,0,52,0,65,65,0,65,0\n923,600,323,0,0,0,0,65,52,0,65,65,0,65,65\n793,600,193,65,65,65,0,65,52,0,65,65,0,0,65\n910,600,310,0,65,65,65,0,0,65,65,65,0,0,0\n780,600,180,0,65,65,0,65,0,65,65,65,0,65,65\n793,600,193,0,65,0,65,0,52,65,65,65,0,65,65\n793,600,193,65,0,65,65,0,52,65,65,65,0,0,65\n923,600,323,0,65,0,0,65,52,65,65,65,0,0,0\n793,600,193,65,0,65,0,65,52,65,65,65,0,65,0\n1118,600,518,0,0,65,0,0,0,0,0,0,52,0,65\n1118,600,518,0,0,0,65,65,0,0,0,0,52,0,0\n858,600,258,65,65,65,65,65,0,0,0,0,52,65,0\n1001,600,401,65,65,65,0,0,52,0,0,0,52,0,0\n936,600,336,0,65,0,65,0,52,0,0,0,52,65,65\n871,600,271,0,0,65,65,65,52,0,0,0,52,65,65\n988,600,388,0,65,65,0,0,0,65,0,0,52,65,0\n988,600,388,65,0,65,65,0,0,65,0,0,52,0,0\n988,600,388,0,65,0,0,65,0,65,0,0,52,0,65\n858,600,258,65,0,65,0,65,0,65,0,0,52,65,65\n871,600,271,65,0,0,65,0,52,65,0,0,52,65,65\n1001,600,401,65,0,0,0,65,52,65,0,0,52,0,0\n871,600,271,0,65,65,65,65,52,65,0,0,52,0,0\n923,600,323,65,65,0,0,0,0,0,65,0,52,65,65\n988,600,388,0,65,65,65,0,0,0,65,0,52,0,0\n1066,600,466,0,0,0,0,0,52,0,65,0,52,65,0\n806,600,206,65,65,0,65,65,52,0,65,0,52,0,65\n858,600,258,65,65,65,0,0,0,65,65,0,52,0,65\n858,600,258,0,0,65,65,0,0,65,65,0,52,65,65\n858,600,258,65,65,0,0,65,0,65,65,0,52,65,0\n793,600,193,65,0,0,65,65,0,65,65,0,52,65,65\n871,600,271,65,65,0,65,0,52,65,65,0,52,0,0\n741,600,141,65,65,65,65,0,52,65,65,0,52,65,0\n871,600,271,0,0,65,0,65,52,65,65,0,52,0,65\n988,600,388,65,0,65,0,0,0,0,0,65,52,65,0\n988,600,388,0,65,0,65,0,0,0,0,65,52,65,0\n858,600,258,0,65,65,0,65,0,0,0,65,52,65,65\n1001,600,401,65,0,0,0,0,52,0,0,65,52,0,65\n806,600,206,65,65,0,0,65,52,0,0,65,52,65,65\n871,600,271,65,0,65,65,65,52,0,0,65,52,0,0\n858,600,258,65,65,0,65,65,0,65,0,65,52,0,0\n858,600,258,0,0,65,65,65,0,65,0,65,52,65,0\n1001,600,401,0,0,0,0,0,52,65,0,65,52,65,0\n806,600,206,0,65,65,65,0,52,65,0,65,52,0,65\n871,600,271,0,0,0,0,65,52,65,0,65,52,65,65\n988,600,388,0,0,65,0,0,0,0,65,65,52,0,65\n858,600,258,65,65,65,0,65,0,0,65,65,52,0,0\n793,600,193,0,65,0,65,65,0,0,65,65,52,65,65\n793,600,193,65,0,65,65,65,0,0,65,65,52,0,65\n806,600,206,0,65,65,0,0,52,0,65,65,52,65,65\n806,600,206,65,0,0,65,65,52,0,65,65,52,65,0\n806,600,206,0,65,65,65,65,52,0,65,65,52,0,0\n663,600,63,65,65,65,65,0,0,65,65,65,52,65,65\n858,600,258,65,0,0,0,65,0,65,65,65,52,0,65\n728,600,128,0,65,65,65,65,0,65,65,65,52,0,65\n871,600,271,0,65,0,0,0,52,65,65,65,52,0,65\n936,600,336,0,0,0,65,0,52,65,65,65,52,0,0\n923,600,323,32.5,32.5,32.5,32.5,32.5,26,32.5,32.5,32.5,26,32.5,32.5\n923,600,323,32.5,32.5,32.5,32.5,32.5,26,32.5,32.5,32.5,26,32.5,32.5\n1300,600,700,0,0,0,0,0,0,0,0,0,0,0,0\n1300,600,700,0,0,0,0,0,0,0,0,0,0,0,0",
+            "label": "factor .csv file",
+            "name": "csv_factors",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "media tuberack on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "USA Scientific 96 Deep Well Plate 2.4 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "usascientific_96_wellplate_2.4ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "factor tuberack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_15_tuberack_falcon_15ml_conical"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.12",
+        "author": "Nick <ndiehl@opentrons.com",
+        "protocolName": "Cell Culture",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
