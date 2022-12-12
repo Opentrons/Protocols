@@ -1,27 +1,27 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "NGS Library Prep": [
+            "Generic"
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "This protocol performs sections 1 & 2 of the Ilumina TruSeq stranded mRNA SOP (Purify mRNA to the end of Fragment mRNA). Pauses are included in the protocol for user intervention. Pauses will include details from the SOP for the user to follow for manual steps - the user may see these details in the Opentrons App during the pause. In the event of tip depletion, the protocol will automatically pause prompting the user to refill tips. Magnetic engagement height should be determined and adjusted accordingly, since the plate on the magnetic module is not in the labware library. If reagents take more than one column in the reagent plate (BWB for example), then the reagent volume in each well should be per sample, otherwise, reagent liquid volume should be per protocol if reagent takes one column.",
     "internal": "0d868e",
-    "labware": "\nFroggabio 96 Well Plate 300 \u00b5L #1234\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "labware": "\nFroggabio 96 Well Plate 300 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d868e/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* NGS Library Prep\n\t* Generic\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d868e/pt1/Screen+Shot+2022-12-12+at+4.09.37+PM.png)\n\n\n",
+        "description": "This protocol performs sections 1 & 2 of the Ilumina TruSeq stranded mRNA SOP (Purify mRNA to the end of Fragment mRNA). Pauses are included in the protocol for user intervention. Pauses will include details from the SOP for the user to follow for manual steps - the user may see these details in the Opentrons App during the pause. In the event of tip depletion, the protocol will automatically pause prompting the user to refill tips. Magnetic engagement height should be determined and adjusted accordingly, since the plate on the magnetic module is not in the labware library. If reagents take more than one column in the reagent plate (BWB for example), then the reagent volume in each well should be per sample, otherwise, reagent liquid volume should be per protocol if reagent takes one column.\n\n\n",
         "internal": "0d868e\n",
-        "labware": "* Froggabio 96 Well Plate 300 \u00b5L #1234\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "labware": "* Froggabio 96 Well Plate 300 \u00b5L\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
         "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d868e/reagents.png)\n\n\n"
+        "protocol-steps": "1. This protocol performs sections 1 & 2 of the SOP (Purify mRNA to the end of Fragment mRNA).\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d868e/pt1/Screen+Shot+2022-12-12+at+4.10.20+PM.png)\n![reagents2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d868e/pt1/Screen+Shot+2022-12-12+at+4.10.11+PM.png)\n\n\n"
     },
     "modules": [
         "Opentrons Temperature Module (GEN2)",
@@ -30,6 +30,6 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
-    "reagent-setup": ""
+    "protocol-steps": "\nThis protocol performs sections 1 & 2 of the SOP (Purify mRNA to the end of Fragment mRNA).\n",
+    "reagent-setup": "\n"
 }
