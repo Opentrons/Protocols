@@ -7,6 +7,7 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+
 def run(ctx):
 
     [num_samp, p300_mount, p20_mount] = get_values(  # noqa: F821
@@ -314,7 +315,7 @@ def run(ctx):
 
             ctx.comment('\n---------------MOVING SAMPLES----------------\n\n')
             for i, (s_col, d_col) in enumerate(zip(old_samples, samples)):
-                side = -1 if i % 2 == 0 else 1
+                side = -1 if (i+num_col*2) % 2 == 0 else 1
                 pick_up(m300)
                 m300.move_to(s_col.top())
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
@@ -338,7 +339,7 @@ def run(ctx):
 
             for i, (s_col, d_col) in enumerate(zip(old_samples, samples)):
 
-                side = -1 if i % 2 == 0 else 1
+                side = -1 if (i+num_col*3) % 2 == 0 else 1
                 pick_up(m300)
                 m300.move_to(s_col.top())
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
