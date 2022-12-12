@@ -247,6 +247,7 @@ csv3_buff,1
 csv3_samp,1
 csv3_urea,1
 csv_aq,1
+csv_factors,1
 csv_file,2
 csv_file_1,1
 csv_file_2,1
@@ -828,7 +829,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,58
+num_samp,60
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -894,7 +895,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,109
+p20_mount,110
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -911,7 +912,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,131
+p300_mount,133
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1255,7 +1256,7 @@ stage2_height_after_disp,1
 standard_type,1
 start,1
 start_buff_vol,1
-start_col,1
+start_col,2
 start_column,1
 start_index_tip,1
 start_tip,1
