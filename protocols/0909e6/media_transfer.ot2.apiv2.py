@@ -1,5 +1,4 @@
 import math
-from opentrons.types import Point
 from opentrons.protocol_api.labware import Well
 
 metadata = {
