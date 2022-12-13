@@ -65,6 +65,7 @@ air_gap_bool,1
 air_gap_vol,3
 air_gap_volume,1
 airgap,1
+aliquot_vol,1
 am_bic_volume,1
 antibody_csv,1
 antibody_vol,1
@@ -829,14 +830,14 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,60
+num_samp,61
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,144
+num_samples,143
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -895,7 +896,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,110
+p20_mount,111
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1309,7 +1310,6 @@ tc_temp,1
 te_volume,2
 te_well,2
 temp,2
-temp_boolean,1
 temp_gen,1
 temp_mod,2
 temp_mod_lname,2
@@ -1336,6 +1336,7 @@ temperature2,1
 tempgen,1
 template_vol,1
 test_method,1
+test_mode,1
 test_plates,1
 tfer_vol,1
 time_airdry_minutes,1
@@ -1403,6 +1404,7 @@ trans_vol1,1
 transfer2,1
 transfer_csv,20
 transfer_scheme,2
+transfer_to_storage,1
 transfer_vol,9
 transfer_volume,3
 transfercsv,2
@@ -1511,7 +1513,7 @@ vol_start,1
 vol_start_rnase,1
 vol_start_tween,1
 vol_tests,1
-vol_trans,2
+vol_trans,1
 vol_tube1,1
 vol_tube2,1
 vol_tube3,1

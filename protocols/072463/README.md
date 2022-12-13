@@ -1,4 +1,4 @@
-# Custom Acid Digestion Assay Day 2
+# Simplified Fe Quantification Assay
 
 
 ### Author
@@ -7,52 +7,73 @@
 
 ## Categories
 * Sample Prep
-	* Specific Category
+	* Plate Filling
 
 
 ## Description
-This protocol is day 2 of a specialized assay. Samples and standards are added in triplicate from a custom aluminum
-vial holder to a quartz reaction vessel. After a 1 hour wait, deionized water and three different reagents are added as needed to all samples and standards.
+This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, the protocol will skip over all incubations and temperature changes. The protocol will automatically pause if tips have to be replaced, prompting the user. Pauses are included according to the protocol.
+
+
+### Modules
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
 
 
 ### Labware
+* RRL 1 Well Plate 180000 µL #v 1.0
+* RRL Custom 40 Well Plate 1500 µL #v 1.0
+* Zinsser 96 Well Plate 1898 µL
+* [USA Scientific 96 Deep Well Plate 2.4 mL #1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* Custom Aluminum Vial Holder
-* [Zinsser Quartz 96 Well Plate](https://www.zinsserna.com/reactor_plates.htm)
-* [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
 ### Pipettes
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 * [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/deck.png)
-NOTES ON SETUP:
-* Temperature module will only be loaded onto the deck if set below in the variables
-* Tiprack in slot 7 will change between 20 uL and 300 uL tips when transfer volume is set above or below 20 uL. Please double check in the Opentrons app when preparing the deck setup.
-* Standards are in the first seven wells of the listed plate, A1-B3. Only two are listed to show well order. This also applies to samples. They will populate top to bottom, left to right, from A1, A2, A3, A4, B1, B2, etc.
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.03+PM.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.20+PM.png)
+![reagents2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.41+PM.png)
+![reagents3](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.51+PM.png)
 
 
 ### Protocol Steps
-0. If temperature module is being used, it pre-heats to 95 C
-1. Samples are added in triplicate to the 96 well quartz plate from vials held in the custom aluminum plate. Volume is
-determined by the volume variable below.
-2. 36 uL deionized water is added to wells that will hold the standards
-3. Standards are added in triplicate to the 96 well quartz plate from vials held in the custom aluminum plate. Volume is determined by the volume variable below.
-Note: Standards are added to the wells immediately after the sample wells. E.g. if 4 samples are selected, wells A1-A12
-will have samples in triplicate and wells B1-C9 will have 7 standards in triplicate
-4. A 60 minute delay occurs, if the temperature module is being used it will heat to 95
-5. 46 uL of deionized water is added to all wells in the quartz plate
-6. 30 uL of Reagent A is added to all wells in the quartz plate
-7. 49 uL of Reagent B is added to all wells in the quartz plate
-8. 75 uL of Reagent C is added to all wells in the quartz plate
+1. User calibrates protocol on deck. 
+2. Deck starts with samples in the sample block and empty digestion plate in the heating module. The reagent
+block is on the deck but only has water in Well A1.
+3. Pipette 10-30 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the
+pipetted volume user selectable and consistent for all samples.
+4. Pipette 10-30 uL (same as in step 3) of each sample in triplicate from the sample block into the digestion plate.
+(1-24 x 30 uL tips)
+5. Add 990 uL of nitric acid from the acid block into each well of the digestion plate.
+a. Use 300 uL single or multi-channel pipette and transfer multiple times.
+b. Mix as a yes/no variable.
+6. Pause so user can cover the digestion plate.
+7. Raise heating block temperature to 95 °C and maintain for 12 h.
+8. Cool heating block to room temperature. Wait for 1 h to ensure all samples reach room temperature.
+9. Pause until user removes the cover from the digestion plate and places the reagent block and analysis plate on
+the deck.
+10. Transfer triplicate 10 uL aliquots from the 7 Fe calibration standards in the sample block into the analysis plate.
+(21 wells; 7 x 30 uL tips)
+11. Transfer 10 uL aliquots from each sample in the digestion plate into the analysis plate. (6-75 wells; 6-75 x 30 uL tips)
+12. Add 36 uL of water from the reagent block to each well in the analysis plate. (27-96 wells; 1 x 300 uL tip)
+13. Add 30 uL reagent A from the reagent block to each well in the analysis plate. (27-96 wells)
+a. Mixing step.
+14. Wait 1 h for reagent A to react with Fe in each well.
+15. Add 49 uL of reagent B from the reagent block to each well in the analysis plate. (27-96 wells; 1 x 300 uL tip)
+16. Add 75 uL of reagent C from the reagent block to each well in the analysis plate. (27-96 wells)
+a. Mixing step.
+17. OPTIONAL (yes/no variable) – transfer 200-900 uL from each well of the digestion plate into the sample storage
+block. Write this so that 200 uL are transferred now because we are using a standard plate. Later will be
+changed to 900 uL when we have custom labware with 1 mL shell vials. Samples may be stored for additional
+measurements for up to 2 weeks. OT2 provides a CSV file with sample/replicate labels corresponding to
+positions in the sample storage block. (6-75 x 300 uL tips)
 
 
 ### Process
