@@ -65,6 +65,7 @@ air_gap_bool,1
 air_gap_vol,3
 air_gap_volume,1
 airgap,1
+aliquot_vol,1
 am_bic_volume,1
 antibody_csv,1
 antibody_vol,1
@@ -253,7 +254,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,9
+csv_samp,10
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -289,6 +290,7 @@ denat_anneal_cycles,1
 desired_conc,2
 dest_flow_rate_mmx,1
 dest_flow_rate_sample,1
+dest_format,1
 dest_labware,1
 dest_lw,1
 dest_lw_def,1
@@ -660,7 +662,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,69
-m300_mount,89
+m300_mount,90
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -829,7 +831,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,60
+num_samp,61
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -876,7 +878,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,33
+p1000_mount,34
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -895,7 +897,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,110
+p20_mount,112
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -912,7 +914,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,133
+p300_mount,134
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1229,6 +1231,7 @@ source_csv_slot3,1
 source_csv_slot7,1
 source_csv_slot8,1
 source_csv_slot9,1
+source_format,1
 source_lw,1
 source_plate,2
 source_plate_type,1
@@ -1265,6 +1268,7 @@ starting_conc,2
 starting_diluent_vol,1
 starting_plasma_vol,1
 starting_position,1
+starting_tip,1
 starting_tip_col,2
 starting_tip_position,1
 starting_tip_well,1
@@ -1309,7 +1313,6 @@ tc_temp,1
 te_volume,2
 te_well,2
 temp,2
-temp_boolean,1
 temp_gen,1
 temp_mod,2
 temp_mod_lname,2
@@ -1336,6 +1339,7 @@ temperature2,1
 tempgen,1
 template_vol,1
 test_method,1
+test_mode,1
 test_plates,1
 tfer_vol,1
 time_airdry_minutes,1
@@ -1403,7 +1407,8 @@ trans_vol1,1
 transfer2,1
 transfer_csv,20
 transfer_scheme,2
-transfer_vol,9
+transfer_to_storage,1
+transfer_vol,10
 transfer_volume,3
 transfercsv,2
 transfervol,1
@@ -1511,7 +1516,7 @@ vol_start,1
 vol_start_rnase,1
 vol_start_tween,1
 vol_tests,1
-vol_trans,2
+vol_trans,1
 vol_tube1,1
 vol_tube2,1
 vol_tube3,1

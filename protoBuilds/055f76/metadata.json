@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "072463.ot2.apiv2.py"
+            "plate_fill.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/072463",
-    "slug": "072463",
+    "path": "protocols/055f76",
+    "slug": "055f76",
     "status": "ok"
 }

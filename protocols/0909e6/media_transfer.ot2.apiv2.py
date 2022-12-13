@@ -1,3 +1,5 @@
+from io import StringIO
+import csv
 import math
 from opentrons.protocol_api.labware import Well
 
@@ -68,9 +70,13 @@ def run(ctx):
         for well in tuberack50.rows()[0]]
 
     # parse data
-    data = [
-        [float(val) for val in line.split(',')]
-        for line in csv_factors.splitlines()]
+    f = StringIO(csv_factors)
+    reader = csv.reader(f, delimiter=',')
+    data = []
+    for i, row in enumerate(reader):
+        if i > 1:
+            content = [float(val) for val in row if val]
+            data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
     factors = tuberack15.wells()[:num_factors]
 
@@ -86,6 +92,7 @@ def run(ctx):
         vol_per_transfer = round(vol/num_transfers, 1)
         return [vol_per_transfer]*num_transfers
 
+    # iterate
     iterator_media = iter(media)
     current_media = next(iterator_media)
 
@@ -118,7 +125,7 @@ def run(ctx):
         p300.drop_tip()
 
     # mix
-    for well in plate.wells():
+    for well in plate.wells()[:len(data)]:
         if not p1000.has_tip:
             p1000.pick_up_tip()
         p1000.mix(5, 800, well.bottom(2))

@@ -1,4 +1,4 @@
-# Cell Culture
+# Plate Filling
 
 
 ### Author
@@ -6,32 +6,33 @@
 
 
 ## Categories
-* Sterile Workflows
-	* Cell Culture
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate. Please use [this example .csv template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/ex2.csv) to format your worklist! When uploading your file below, please ensure it is saved in the format `.csv`.
+This protocol performs a custom reagent plate filling for the [MagMax Core Protocol](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fmanuals%2FMAN0015944_MagMAXCORE_NA_Kit_UG.pdf).
 
 
 ### Labware
-* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [USA Scientific 96 Deep Well Plate 2.4 mL #1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
+* KingFisher 96 Well Plate 200 µL #97002540
+* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
+* [USA Scientific 12 Well Reservoir 22 mL #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * Opentrons 96 Filter Tip Rack 200 µL
 * Opentrons 96 Filter Tip Rack 1000 µL
 
 
 ### Pipettes
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 * [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/deck2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/055f76/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/reagents2.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/055f76/reagents.png)
 
 
 ### Process
@@ -49,4 +50,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-0909e6
+055f76

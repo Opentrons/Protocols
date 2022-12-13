@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "Select the format for the source and destination plates. See diagram below. If a 384 plate is selected for destination plate, it should always be in slot 2. If a 96 plate is selected for destination, it should always be in slot 1. Source plates always start from slot 3 to 9, and tip racks are always the same. You can select which tip the protocol will start on in the fields below. If the global transfer volume is over 20ul, then the P300 will be used. If the transfer volume is 20 or less, the P20 will be used. A value of \"8\" for the starting position of the tip would mean to start H1 of the tip rack, and a value of 10 would mean to start at B2 of the tip rack, since it iterates down by column. The csv should be formatted as such in the header:\nSource plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Destination plate barcode, Destination well",
+    "internal": "0f7910",
+    "labware": "\nCorning 384 Well Plate 112 \u00b5L Flat\nCorning 96 Well Plate 360 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/Screen+Shot+2022-12-13+at+4.21.58+PM.png)\n\n\n",
+        "description": "Select the format for the source and destination plates. See diagram below. If a 384 plate is selected for destination plate, it should always be in slot 2. If a 96 plate is selected for destination, it should always be in slot 1. Source plates always start from slot 3 to 9, and tip racks are always the same. You can select which tip the protocol will start on in the fields below. If the global transfer volume is over 20ul, then the P300 will be used. If the transfer volume is 20 or less, the P20 will be used. A value of \"8\" for the starting position of the tip would mean to start H1 of the tip rack, and a value of 10 would mean to start at B2 of the tip rack, since it iterates down by column. The csv should be formatted as such in the header:\n\n```\nSource plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Destination plate barcode, Destination well\n```\n\n\n",
+        "internal": "0f7910\n",
+        "labware": "* Corning 384 Well Plate 112 \u00b5L Flat\n* Corning 96 Well Plate 360 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Protocol will input the global transfer volume from source plates to destination plates according to the csv.\n\n\n",
+        "title": "Plate Filling with CSV Import"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nProtocol will input the global transfer volume from source plates to destination plates according to the csv.\n",
+    "title": "Plate Filling with CSV Import"
+}
