@@ -660,7 +660,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,69
-m300_mount,89
+m300_mount,90
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -836,7 +836,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,143
+num_samples,144
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -876,7 +876,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,33
+p1000_mount,34
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
