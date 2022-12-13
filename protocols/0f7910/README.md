@@ -6,33 +6,36 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+Select the format for the source and destination plates. See diagram below. If a 384 plate is selected for destination plate, it should always be in slot 2. If a 96 plate is selected for destination, it should always be in slot 1. Source plates always start from slot 3 to 9, and tip racks are always the same. You can select which tip the protocol will start on in the fields below. If the global transfer volume is over 20ul, then the P300 will be used. If the transfer volume is 20 or less, the P20 will be used. A value of "8" for the starting position of the tip would mean to start H1 of the tip rack, and a value of 10 would mean to start at B2 of the tip rack, since it iterates down by column. The csv should be formatted as such in the header:
+
+```
+Source plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Destination plate barcode, Destination well
+```
 
 
 ### Labware
-* [Corning 384 Well Plate 112 µL Flat #3640](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/384-Well-Microplates/Corning%C2%AE-384-well-Clear-Polystyrene-Microplates/p/corning384WellClearPolystyreneMicroplates)
+* Corning 384 Well Plate 112 µL Flat
+* Corning 96 Well Plate 360 µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+* [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
 ### Pipettes
 * [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/deck.png)
-
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/reagents.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/Screen+Shot+2022-12-13+at+4.21.58+PM.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Protocol will input the global transfer volume from source plates to destination plates according to the csv.
 
 
 ### Process
