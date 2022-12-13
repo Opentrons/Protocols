@@ -75,7 +75,7 @@ def run(ctx):
     data = []
     for i, row in enumerate(reader):
         if i > 1:
-            content = [float(val) for val in row[2:] if val]
+            content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
     factors = tuberack15.wells()[:num_factors]
