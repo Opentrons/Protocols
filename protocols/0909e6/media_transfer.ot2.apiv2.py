@@ -92,6 +92,7 @@ def run(ctx):
         vol_per_transfer = round(vol/num_transfers, 1)
         return [vol_per_transfer]*num_transfers
 
+    # iterate
     iterator_media = iter(media)
     current_media = next(iterator_media)
 
