@@ -24,11 +24,11 @@ def run(ctx):
     # labware
     temp_mod = ctx.load_module('temperature module gen2', 1)
     digestion_plate = temp_mod.load_labware('zinsser_96_wellplate_1898ul')
-    analysis_plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', 2)  # noqa: E501
+    analysis_plate = ctx.load_labware('corning_96_wellplate_200ul', 2)  # noqa: E501
     sample_block = ctx.load_labware('rrlcustom_40_wellplate_1500ul', 3)
     reagent_block = ctx.load_labware('nest_12_reservoir_15ml', 4)
     acid_block = ctx.load_labware('rrl_1_wellplate_180000ul', 5)
-    storage_block = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', 6)  # noqa: E501
+    storage_block = ctx.load_labware('corning_96_wellplate_200ul', 6)  # noqa: E501
     tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
               for slot in [10, 11]]
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)

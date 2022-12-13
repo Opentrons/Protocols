@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, the protocol will skip over all incubations and temperature changes. The protocol will automatically pause if tips have to be replaced, prompting the user. Pauses are included according to the protocol.
 
 
 ### Modules
@@ -21,7 +21,7 @@ This protocol does stuff!
 ### Labware
 * RRL 1 Well Plate 180000 µL #v 1.0
 * RRL Custom 40 Well Plate 1500 µL #v 1.0
-* Zinsser 96 Well Plate 1898 µL #3600600
+* Zinsser 96 Well Plate 1898 µL
 * [USA Scientific 96 Deep Well Plate 2.4 mL #1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
@@ -34,15 +34,46 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.03+PM.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.20+PM.png)
+![reagents2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.41+PM.png)
+![reagents3](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.51+PM.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. User calibrates protocol on deck. 
+2. Deck starts with samples in the sample block and empty digestion plate in the heating module. The reagent
+block is on the deck but only has water in Well A1.
+3. Pipette 10-30 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the
+pipetted volume user selectable and consistent for all samples.
+4. Pipette 10-30 uL (same as in step 3) of each sample in triplicate from the sample block into the digestion plate.
+(1-24 x 30 uL tips)
+5. Add 990 uL of nitric acid from the acid block into each well of the digestion plate.
+a. Use 300 uL single or multi-channel pipette and transfer multiple times.
+b. Mix as a yes/no variable.
+6. Pause so user can cover the digestion plate.
+7. Raise heating block temperature to 95 °C and maintain for 12 h.
+8. Cool heating block to room temperature. Wait for 1 h to ensure all samples reach room temperature.
+9. Pause until user removes the cover from the digestion plate and places the reagent block and analysis plate on
+the deck.
+10. Transfer triplicate 10 uL aliquots from the 7 Fe calibration standards in the sample block into the analysis plate.
+(21 wells; 7 x 30 uL tips)
+11. Transfer 10 uL aliquots from each sample in the digestion plate into the analysis plate. (6-75 wells; 6-75 x 30 uL tips)
+12. Add 36 uL of water from the reagent block to each well in the analysis plate. (27-96 wells; 1 x 300 uL tip)
+13. Add 30 uL reagent A from the reagent block to each well in the analysis plate. (27-96 wells)
+a. Mixing step.
+14. Wait 1 h for reagent A to react with Fe in each well.
+15. Add 49 uL of reagent B from the reagent block to each well in the analysis plate. (27-96 wells; 1 x 300 uL tip)
+16. Add 75 uL of reagent C from the reagent block to each well in the analysis plate. (27-96 wells)
+a. Mixing step.
+17. OPTIONAL (yes/no variable) – transfer 200-900 uL from each well of the digestion plate into the sample storage
+block. Write this so that 200 uL are transferred now because we are using a standard plate. Later will be
+changed to 900 uL when we have custom labware with 1 mL shell vials. Samples may be stored for additional
+measurements for up to 2 weeks. OT2 provides a CSV file with sample/replicate labels corresponding to
+positions in the sample storage block. (6-75 x 300 uL tips)
 
 
 ### Process
