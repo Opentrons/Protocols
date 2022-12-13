@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate.",
+    "description": "This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate. Please use this example .csv template to format your worklist! When uploading your file below, please ensure it is saved in the format .csv.",
     "internal": "0909e6",
     "labware": "\nOpentrons 6 Tube Rack with Falcon 50 mL Conical\nUSA Scientific 96 Deep Well Plate 2.4 mL #1896-2000\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 1000 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sterile Workflows\n\t* Cell Culture\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/deck.png)\n\n\n",
-        "description": "This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate.\n\n\n",
+        "description": "This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate. Please use [this example .csv template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/ex.csv) to format your worklist! When uploading your file below, please ensure it is saved in the format `.csv`.\n\n\n",
         "internal": "0909e6\n",
         "labware": "* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [USA Scientific 96 Deep Well Plate 2.4 mL #1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* Opentrons 96 Filter Tip Rack 1000 \u00b5L\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",

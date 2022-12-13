@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate.
+This protocol performs a custom 12-factor cell culture assay in a 96-deepwell plate. Please use [this example .csv template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/ex.csv) to format your worklist! When uploading your file below, please ensure it is saved in the format `.csv`.
 
 
 ### Labware
