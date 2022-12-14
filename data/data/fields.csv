@@ -205,6 +205,8 @@ clearance_tfa,1
 clearance_twintec,1
 clearance_water,2
 clearance_water_tube,1
+col_meoh,1
+col_mq,1
 cold,3
 cols,1
 column_count,2
@@ -758,9 +760,9 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,1
-mount_m300,4
+mount_m300,5
 mount_p20,7
-mount_p300,5
+mount_p300,6
 mount_side,1
 move_side,2
 move_vol,1
@@ -838,7 +840,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,143
+num_samples,144
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1364,6 +1366,7 @@ tip_start,5
 tip_start_1000,2
 tip_start_20,2
 tip_start_column,4
+tip_start_samples,1
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
@@ -1500,15 +1503,18 @@ vol_final_plate,1
 vol_h2o,2
 vol_ic,1
 vol_lys_buffer,1
+vol_meoh,1
 vol_mm,2
 vol_mobile_phase,1
+vol_mq,1
 vol_neutralization_buffer,1
 vol_peptide1,1
 vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,3
+vol_sample,4
+vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
