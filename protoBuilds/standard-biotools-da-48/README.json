@@ -1,7 +1,7 @@
 {
     "author": "Standard BioTools",
     "categories": {
-        "Sample Prep": [
+        "PCR": [
             "Standard BioTools"
         ]
     },
@@ -11,7 +11,7 @@
     "labware": "\nStandard BioTools 48.48 Dynamic Array IFC\nOpentrons 96 Well Aluminum Block\nNEST 96-Well PCR Plate, 100\u00b5L\nOpentrons 20\u00b5L Filter Tips\n",
     "markdown": {
         "author": "[Standard BioTools](https://www.standardbio.com/)\n\n",
-        "categories": "* Sample Prep\n\t* Standard BioTools\n\n\n",
+        "categories": "* PCR\n\t* Standard BioTools\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons+Protocols+Figs_48.48+Layout.jpg)\n\n\n",
         "description": "![Standard BioTools Logo](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/standard-bio-logo-200-TM.jpg)\n</br>\nThis protocol transfers 4 \u00b5L of samples and assays from 96-well plates to the Standard BioTools 48.48 IFC (Integrated Fluidic Circuit)</br>\n![Standard BioTools 48](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/standard-biotools/Opentrons_IFC_48.jpg)\n</br>\n**Preparation**:</br>\nBefore beginning the protocol on the OT-2, perform the following preparation steps:\n1. Prepare the Samples, the Assays, and the IFC Referring as described in one of the following workflows from the Standard BioTools X9 User Guide:\n- Gene Expression Using the 48.48 IFC-X with TaqMan Assays\n2. Prepare a Sample Plate by transferring 6 \u00b5L of sample to 48 wells of a 96-well plate\n3. Prepare an Assay Plate by transferring 6 \u00b5L of assay to 48 wells of a 96-well plate\n4. *NOTE*: All wells (indicated below in blue) must have liquid\n5. Centrifuge the Sample and Assay plates to ensure liquids are at the bottom of the wells\n6. Prepare the 48.48 IFC:\n- Add control line fluid to the accumulators according to the workflow selected in step 1 (Indicated above by red arrows)\n- Remove the protective film from the bottom of the IFC\n\n\n",
         "internal": "standard-biotools-da-48\n",

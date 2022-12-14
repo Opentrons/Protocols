@@ -9,7 +9,7 @@
 
 
 ## Categories
-* Sample Prep
+* PCR
 	* Standard BioTools
 
 
