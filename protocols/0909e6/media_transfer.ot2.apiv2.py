@@ -75,13 +75,26 @@ def run(ctx):
     f = StringIO(csv_factors)
     reader = csv.reader(f, delimiter=',')
     data = []
+    factor_volumes_ml = None
     for i, row in enumerate(reader):
-        if i > 1:
+        if i == 1:
+            factor_volumes_ml = [float(val) for val in row[1:] if val]
+        if i > 2:
             content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
-    factors = [
+
+    factor_tubes = [
         well for rack in tuberacks15 for well in rack.wells()][:num_factors]
+    factor_heights = [
+        # ensure tip is submerged
+        round(vol/15*tuberacks15[0].wells()[0].depth*0.9, 1)
+        for vol in factor_volumes_ml]
+    factors = [
+        WellH(well, current_volume=vol*1000, height=height)
+        for well, vol, height in zip(
+            factor_tubes, factor_volumes_ml, factor_heights)]
+    print(factor_volumes_ml, factor_heights)
 
     def slow_withdraw(well, pip=p1000):
         ctx.max_speeds['A'] = 25
