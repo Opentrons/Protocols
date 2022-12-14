@@ -336,17 +336,14 @@ def run(ctx):
     tip touch
     """.format(str(20 / div)))
 
-    if full_volume:
-        pip = p300s
-    else:
-        pip = p20s
+    pip = p300s
     meoh_flow_rates(pip)
     for index, dilution in enumerate(dilutions):
         pip.pick_up_tip()
-        pip.aspirate(20 / div, meoh_water.bottom(clearance_meoh_water))
-        pip.air_gap(5 / div)
+        pip.aspirate(20, meoh_water.bottom(clearance_meoh_water))
+        pip.air_gap(5)
         pip.dispense(
-         (20 / div)+(5 / div), dilution.bottom(clearance_dil_dispense))
+         (20)+(5), dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
                 pip.aspirate(
@@ -358,11 +355,11 @@ def run(ctx):
             source = unlabeled_soln_200um.bottom(1)
         else:
             source = dilutions[index-1].bottom(1)
-        pip.aspirate(20 / div, source)
-        pip.air_gap(5 / div)
+        pip.aspirate(20, source)
+        pip.air_gap(5)
         pip.dispense(
-         (20 / div)+(5 / div), dilution.bottom(clearance_dil_dispense))
-        pip.mix(mix_reps, 20 / div, dilution.bottom(clearance_dil_dispense))
+         (20)+(5), dilution.bottom(clearance_dil_dispense))
+        pip.mix(mix_reps, 20, dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
                 pip.aspirate(
@@ -529,26 +526,49 @@ def run(ctx):
     """.format(str(540 / div)))
     meoh_flow_rates(p300s)
     for sample in samples:
-        for rep in range(2):
-            pick_up_or_refill(p300s)
-            if tfa_source.current_volume < vol_dead:
-                try:
-                    tfa_source = next(tfa_well)
-                except StopIteration:
-                    ctx.comment("TFA supply is exhausted")
-                    ctx.pause("""Please replenish TFA in reservoir well A3
-                                 and resume""")
-            p300s.aspirate_h(270 / div, tfa_source)
-            p300s.air_gap(15)
-            p300s.dispense((270 / div)+15, sample.bottom(3))
-            p300s.move_to(sample.top(-12))
-            for rep in range(3):
-                if rep > 0:
-                    p300s.aspirate(180, sample.top(-12))
-                ctx.delay(seconds=1)
-                p300s.blow_out(sample.top(-12))
-            p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
-            p300s.drop_tip()
+        if full_volume:
+            for rep in range(2):
+                pick_up_or_refill(p300s)
+                if tfa_source.current_volume < vol_dead:
+                    try:
+                        tfa_source = next(tfa_well)
+                    except StopIteration:
+                        ctx.comment("TFA supply is exhausted")
+                        ctx.pause("""Please replenish TFA in reservoir well A3
+                                     and resume""")
+                p300s.aspirate_h(270 / div, tfa_source)
+                p300s.air_gap(15)
+                p300s.dispense((270 / div)+15, sample.bottom(3))
+                p300s.move_to(sample.top(-12))
+                for rep in range(3):
+                    if rep > 0:
+                        p300s.aspirate(180, sample.top(-12))
+                    ctx.delay(seconds=1)
+                    p300s.blow_out(sample.top(-12))
+                p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+                p300s.drop_tip()
+        else:
+            for rep in range(1):
+                pick_up_or_refill(p300s)
+                if tfa_source.current_volume < vol_dead:
+                    try:
+                        tfa_source = next(tfa_well)
+                    except StopIteration:
+                        ctx.comment("TFA supply is exhausted")
+                        ctx.pause("""Please replenish TFA in reservoir well A3
+                                     and resume""")
+                p300s.aspirate_h(270, tfa_source)
+                p300s.air_gap(15)
+                p300s.dispense((270)+15, sample.bottom(3))
+                p300s.move_to(sample.top(-12))
+                for rep in range(3):
+                    if rep > 0:
+                        p300s.aspirate(180, sample.top(-12))
+                    ctx.delay(seconds=1)
+                    p300s.blow_out(sample.top(-12))
+                p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+                p300s.drop_tip()
+
     default_flow_rates(p300s)
 
     pause_attention("Vortex tubes 10 min, spin 15 min, and return.")
@@ -571,18 +591,32 @@ def run(ctx):
     for index, sample in enumerate(samples):
         pick_up_or_refill(p300s)
         meoh_flow_rates(p300s)
-        for rep in range(2):
-            p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1))))
-            p300s.air_gap(15)
-            p300s.dispense((250 / div)+15, amicon_filters[index].top())
-            for rep in range(3):
-                if rep > 0:
-                    p300s.aspirate(
-                     180, amicon_filters[index].top())
-                ctx.delay(seconds=1)
-                p300s.blow_out(amicon_filters[index].top())
-            p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
-        p300s.drop_tip()
+        if full_volume:
+            for rep in range(2):
+                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-3)))
+                p300s.air_gap(15)
+                p300s.dispense((250 / div)+15, amicon_filters[index].top())
+                for rep in range(3):
+                    if rep > 0:
+                        p300s.aspirate(
+                         180, amicon_filters[index].top())
+                    ctx.delay(seconds=1)
+                    p300s.blow_out(amicon_filters[index].top())
+                p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            p300s.drop_tip()
+        else:
+            for rep in range(1):
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1)-3)))
+                p300s.air_gap(15)
+                p300s.dispense((250)+15, amicon_filters[index].top())
+                for rep in range(3):
+                    if rep > 0:
+                        p300s.aspirate(
+                         180, amicon_filters[index].top())
+                    ctx.delay(seconds=1)
+                    p300s.blow_out(amicon_filters[index].top())
+                p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            p300s.drop_tip()
     default_flow_rates(p300s)
 
     pause_attention("Spin filters 2.5 hours, dry 1.5 hours, return.")
@@ -591,9 +625,9 @@ def run(ctx):
     meoh_flow_rates(p300s)
     for filter in amicon_filters:
         pick_up_or_refill(p300s)
-        p300s.aspirate(40 / div, mecn.bottom(clearance_mecn))
+        p300s.aspirate(40, mecn.bottom(clearance_mecn))
         p300s.air_gap(15)
-        p300s.dispense((40 / div)+15, filter.bottom(5))
+        p300s.dispense((40)+15, filter.bottom(5))
         p300s.move_to(filter.top(-12))
         for rep in range(3):
             if rep > 0:
