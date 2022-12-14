@@ -60,7 +60,7 @@ def run(ctx):
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
     tiprack1000 = [
         ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot)
-        for slot in ['6', '9']]
+        for slot in ['6']]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', 'left',
