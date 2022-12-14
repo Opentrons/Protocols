@@ -2,7 +2,7 @@
   {
     "type": "int",
     "label": "Number of Samples (1-96)",
-    "name": "vol_effector_cell",
+    "name": "num_samp",
     "default": 24
   },
   {
