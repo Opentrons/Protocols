@@ -758,8 +758,8 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,1
-mount_m300,3
-mount_p20,6
+mount_m300,4
+mount_p20,7
 mount_p300,5
 mount_side,1
 move_side,2
