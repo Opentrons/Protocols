@@ -58,7 +58,9 @@ def run(ctx):
         for slot, factor_ids in zip(['4', '7'], ['1-15', '16-30'])]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
-    tiprack1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]
+    tiprack1000 = [
+        ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot)
+        for slot in ['6', '9']]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', 'left',
