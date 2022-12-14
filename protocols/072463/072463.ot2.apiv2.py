@@ -22,11 +22,11 @@ def run(ctx):
         raise Exception("Enter a sample number between 1-24")
 
     # labware
-    temp_mod = ctx.load_module('temperature module gen2', 1)
+    temp_mod = ctx.load_module('temperature module gen2', 4)
     digestion_plate = temp_mod.load_labware('zinsser_96_wellplate_1898ul')
     analysis_plate = ctx.load_labware('corning_96_wellplate_200ul', 2)  # noqa: E501
     sample_block = ctx.load_labware('rrlcustom_40_wellplate_1500ul', 3)
-    reagent_block = ctx.load_labware('nest_12_reservoir_15ml', 4)
+    reagent_block = ctx.load_labware('nest_12_reservoir_15ml', 1)
     acid_block = ctx.load_labware('rrl_1_wellplate_180000ul', 5)
     storage_block = ctx.load_labware('corning_96_wellplate_200ul', 6)  # noqa: E501
     tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
@@ -76,13 +76,13 @@ def run(ctx):
     well_ctr = 0
 
     for s_well, chunk in zip(samples, sample_chunks):
+        p20.pick_up_tip()
         for d_well in chunk:
-            p20.pick_up_tip()
             p20.aspirate(aliquot_vol, s_well)
             p20.dispense(aliquot_vol, d_well)
             p20.blow_out()
-            p20.drop_tip()
             well_ctr += 1
+        p20.drop_tip()
         ctx.comment('\n')
 
     ctx.comment('\n-----------ADDING ACID------------\n\n')
@@ -175,7 +175,7 @@ def run(ctx):
     if transfer_to_storage:
         ctx.comment('\n----TRANSFERRING TO STORAGE BLOCK----\n\n')
 
-        for s, d in zip(analysis_plate.rows()[0][:num_col],
+        for s, d in zip(digestion_plate.rows()[0][:num_col],
                         storage_block.rows()[0]):
             pick_up()
             m300.aspirate(200, s)

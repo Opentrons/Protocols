@@ -1,3 +1,5 @@
+# Ilumina TruSeq Stranded mRNA - Part 1
+
 ### Author
 [Opentrons](https://opentrons.com/)
 
@@ -8,7 +10,7 @@
 
 
 ## Description
-This protocol performs sections 1 & 2 of the Ilumina TruSeq stranded mRNA SOP (Purify mRNA to the end of Fragment mRNA). Pauses are included in the protocol for user intervention. Pauses will include details from the SOP for the user to follow for manual steps - the user may see these details in the Opentrons App during the pause. In the event of tip depletion, the protocol will automatically pause prompting the user to refill tips. Magnetic engagement height should be determined and adjusted accordingly, since the plate on the magnetic module is not in the labware library. If reagents take more than one column in the reagent plate (BWB for example), then the reagent volume in each well should be per sample, otherwise, reagent liquid volume should be per protocol if reagent takes one column.
+This protocol performs sections 1 & 2 of the Ilumina TruSeq Stranded mRNA SOP (Purify mRNA to the end of Fragment mRNA). Pauses are included in the protocol for user intervention. Pauses will include details from the SOP for the user to follow for manual steps - the user may see these details in the Opentrons App during the pause. In the event of tip depletion, the protocol will automatically pause prompting the user to refill tips. Magnetic engagement height should be determined and adjusted accordingly, since the plate on the magnetic module is not in the labware library. If reagents take more than one column in the reagent plate (BWB for example), then the reagent volume in each well should be per sample, otherwise, reagent liquid volume should be per protocol if reagent takes one column.
 
 
 ### Modules

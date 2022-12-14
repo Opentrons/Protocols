@@ -1,0 +1,114 @@
+{
+    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Reagent Preparation for Kingfisher Extraction',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_samp, m300_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"m300_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    num_col = math.ceil(num_samp/8)\n\n    # labware\n    reag_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1)\n    ethanol_res = ctx.load_labware('nest_1_reservoir_195ml', 2)\n    wash_buffer_res = ctx.load_labware('nest_1_reservoir_195ml', 3)\n    reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 5, label='Deepwell Plate')  # noqa: E501\n\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 4, label='Deepwell Plate')  # noqa: E501\n    ethanol_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot, label='Deepwell Plate')  # noqa: E501\n                      for slot in [7, 8]]\n    wash_buffer_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)\n                          for slot in [10, 11]]\n\n    elution_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 6, label='Deepwell Plate')  # noqa: E501\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n            for slot in [9]]\n\n    # pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips)\n\n    def pick_up():\n        try:\n            m300.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks.\")\n            m300.reset_tipracks()\n            pick_up()\n\n    # mapping\n    binding_buffer = reag_reservoir.wells()[:4][:math.ceil(num_col/3)]*12\n    ethanol = ethanol_res.wells()[0]\n    wash_buffer = wash_buffer_res.wells()[0]\n    binding_bead = reagent_plate.rows()[0][0]\n    elution_buffer = reagent_plate.rows()[0][-1]\n\n    # protocol\n    ctx.comment('\\n---------------ADDING ETHANOL TO PLATES---------------\\n\\n')\n    pick_up()\n    for plate in ethanol_plates:\n        for col in plate.rows()[0][:num_col]:\n            m300.transfer(1000, ethanol, col, new_tip='never')\n        ctx.comment('\\n')\n    m300.drop_tip()\n\n    ctx.comment('\\n------------ADDING WASH BUFFER TO PLATES--------------\\n\\n')\n    pick_up()\n    for plate in wash_buffer_plates:\n        for col in plate.rows()[0][:num_col]:\n            m300.transfer(1000, wash_buffer, col, new_tip='never')\n        ctx.comment('\\n')\n    m300.drop_tip()\n\n    ctx.comment('\\n---------ADDING BINDING SOLUTION TO PLATES---------\\n\\n')\n    for s, d in zip(binding_buffer, sample_plate.rows()[0][:num_col]):\n        pick_up()\n        m300.transfer(550, s, d, new_tip='never')\n        m300.mix(5, 200, d)\n        m300.drop_tip()\n    ctx.comment('\\n')\n\n    ctx.comment('\\n---------ADDING BINDING BEADS TO PLATES---------\\n\\n')\n    for col in sample_plate.rows()[0][:num_col]:\n        pick_up()\n        m300.mix(5, 200, binding_bead)\n        m300.transfer(50, binding_bead, d, new_tip='never')\n        m300.mix(10, 200, col)\n        m300.drop_tip()\n        ctx.comment('\\n')\n\n    ctx.comment('\\n---------ADDING ELUTION TO PLATES---------\\n\\n')\n    pick_up()\n    for col in elution_plate.rows()[0][:num_col]:\n        m300.transfer(50, elution_buffer, col, new_tip='never')\n    ctx.comment('\\n')\n    m300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 24,
+            "label": "Number of Samples (1-96)",
+            "name": "num_samp",
+            "type": "int"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Deepwell Plate on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Deepwell Plate on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Deepwell Plate on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Deepwell Plate on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Deepwell Plate on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Reagent Preparation for Kingfisher Extraction",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
