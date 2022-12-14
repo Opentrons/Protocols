@@ -34,7 +34,7 @@ This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-13+at+12.50.03+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/072463/Screen+Shot+2022-12-14+at+8.32.53+AM.png)
 
 
 ### Reagent Setup
@@ -44,7 +44,7 @@ This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, 
 
 
 ### Protocol Steps
-1. User calibrates protocol on deck. 
+1. User calibrates protocol on deck.
 2. Deck starts with samples in the sample block and empty digestion plate in the heating module. The reagent
 block is on the deck but only has water in Well A1.
 3. Pipette 10-30 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the

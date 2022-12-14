@@ -662,7 +662,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,69
-m300_mount,90
+m300_mount,91
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1491,6 +1491,7 @@ vol_dispense,1
 vol_dispensed,1
 vol_dna,1
 vol_dna_buff,1
+vol_effector_cell,1
 vol_elution,1
 vol_elution_buffer,1
 vol_elution_final,1
