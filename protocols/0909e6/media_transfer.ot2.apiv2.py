@@ -129,6 +129,8 @@ def run(ctx):
             slow_withdraw(current_media, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
+    p1000.return_tip()
+    p1000.reset_tipracks()
 
     # transfer factors
     for i, factor in enumerate(factors):
@@ -143,8 +145,7 @@ def run(ctx):
 
     # mix
     for well in plate.wells()[:len(data)]:
-        if not p1000.has_tip:
-            p1000.pick_up_tip()
+        p1000.pick_up_tip()
         p1000.mix(5, 800, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
