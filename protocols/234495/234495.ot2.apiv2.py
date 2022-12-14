@@ -606,7 +606,7 @@ def run(ctx):
             p300s.drop_tip()
         else:
             for rep in range(1):
-                p300s.aspirate(250, sample.bottom(round(16/(rep + 1)-3)))
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-3))
                 p300s.air_gap(15)
                 p300s.dispense((250)+15, amicon_filters[index].top())
                 for rep in range(3):
