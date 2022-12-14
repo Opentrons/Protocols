@@ -52,8 +52,10 @@ def run(ctx):
     # labware
     tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                   '1', 'media tuberack')
-    tuberack15 = ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
-                                  '4', 'factor tuberack')
+    tuberacks15 = [
+        ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
+                         slot, f'factor {factor_ids} tuberack')
+        for slot, factor_ids in zip(['4', '7'], ['1-15', '16-30'])]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
     tiprack1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]
@@ -78,7 +80,8 @@ def run(ctx):
             content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
-    factors = tuberack15.wells()[:num_factors]
+    factors = [
+        well for rack in tuberacks15 for well in rack.wells()][:num_factors]
 
     def slow_withdraw(well, pip=p1000):
         ctx.max_speeds['A'] = 25
