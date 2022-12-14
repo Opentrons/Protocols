@@ -831,7 +831,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,61
+num_samp,62
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -1491,7 +1491,6 @@ vol_dispense,1
 vol_dispensed,1
 vol_dna,1
 vol_dna_buff,1
-vol_effector_cell,1
 vol_elution,1
 vol_elution_buffer,1
 vol_elution_final,1
