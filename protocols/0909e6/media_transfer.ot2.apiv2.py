@@ -94,7 +94,6 @@ def run(ctx):
         WellH(well, current_volume=vol*1000, height=height)
         for well, vol, height in zip(
             factor_tubes, factor_volumes_ml, factor_heights)]
-    print(factor_volumes_ml, factor_heights)
 
     def slow_withdraw(well, pip=p1000):
         ctx.max_speeds['A'] = 25
@@ -135,7 +134,7 @@ def run(ctx):
         for well, line in zip(plate.wells(), data):
             factor_vol = line[3+i]
             if factor_vol > 0:
-                p300.aspirate(factor_vol, factor.bottom(1.5))
+                p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor, p300)
                 p300.dispense(factor_vol, well.top(-2))
         p300.drop_tip()
