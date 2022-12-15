@@ -125,10 +125,13 @@ def run(ctx):
         vol_media_split = split_media_vol(vol_media_total)
         for vol in vol_media_split:
             check_media(vol)
+            p1000.dispense(p1000.current_volume, current_media.top())
             p1000.aspirate(vol, current_media.height_dec(vol))
             slow_withdraw(current_media, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
+            p1000.blow_out(well.top())
+            p1000.aspirate(50, well.top())  # post-airgap to avoid dripping
     p1000.return_tip()
     p1000.reset_tipracks()
 
@@ -138,9 +141,12 @@ def run(ctx):
         for well, line in zip(plate.wells(), data):
             factor_vol = line[3+i]
             if factor_vol > 0:
+                p300.dispense(p300.current_volume, factor.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor, p300)
                 p300.dispense(factor_vol, well.top(-2))
+                p300.blow_out(well.top())
+                p300.aspirate(20, well.top())  # post-airgap to avoid dripping
         p300.drop_tip()
 
     # mix
