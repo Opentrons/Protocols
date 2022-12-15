@@ -1,0 +1,110 @@
+{
+    "content": "from opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'PCR',\n    'author': 'Nick Diehl <ndiehl@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [mount_m300, mount_p20] = get_values(  # noqa: F821\n        'mount_m300', 'mount_p20')\n\n    mix_reps_oligo = 5\n    mix_vol_oligo = 5.0\n    vol_pcr_reagent = 30.0\n    mix_reps_pcr_reagent = 5\n    mix_vol_pcr_reagent = 20.0\n\n    # modules and labware\n    tc = ctx.load_module('thermocycler')\n    tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr', 'pcr plate')\n    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '1')]\n    oligo_plates = [\n        ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,\n                         f'oligo source plate {i+1}')\n        for i, slot in enumerate(['5', '2'])]\n    reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4',\n                                     'reagent plate')\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['9', '6']]\n\n    # pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', mount_m300,\n                               tip_racks=tipracks200)\n    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,\n                              tip_racks=tipracks20)\n\n    # reagents\n    oligo_volumes = [10, 10, 10, 2.5, 2.5, 2.5, 2.5, 10, 2.5, 2.5, 2.5, 2.5,\n                     10, 2.5, 2.5, 2.5, 2.5, 10, 2.5, 2.5, 2.5, 2.5]\n    oligo_sources = [\n        oligo_plates[0].wells_by_name()[well_name]\n        for well_name in ['A6', 'C1', 'A1', 'A7', 'A8', 'A9', 'A10', 'B4',\n                          'A2', 'A3', 'A4', 'A5', 'A11', 'B5', 'B6', 'B7',\n                          'B8', 'C2', 'A12', 'B1', 'B2', 'B3']]\n    oligo_dests = [\n        tc_plate.wells_by_name()[well_name]\n        for well_name in ['A1', 'A1', 'B1', 'B1', 'B1', 'B1', 'B1', 'C1', 'C1',\n                          'C1', 'C1', 'C1', 'D1', 'D1', 'D1', 'D1', 'D1', 'E1',\n                          'E1', 'E1', 'E1', 'E1']]\n    pcr_reagent = reagent_plate.rows()[0][0]\n    pcr_reagent_dest = tc_plate.rows()[0][0]\n\n    def wick(well, pip, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))\n\n    def slow_withdraw(well, pip):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    # oligo transfer and mixing\n    for vol, source, dest in zip(oligo_volumes, oligo_sources, oligo_dests):\n        p20.pick_up_tip()\n        p20.aspirate(vol, source)\n        wick(source, p20)\n        slow_withdraw(source, p20)\n        p20.dispense(vol, dest)\n        p20.mix(mix_reps_oligo, mix_vol_oligo, dest)\n        wick(dest, p20)\n        slow_withdraw(dest, p20)\n        p20.drop_tip()\n\n    # PCR reagent addition\n    tc.open_lid()\n    tc.set_lid_temperature(105)\n    m300.pick_up_tip()\n    m300.aspirate(vol_pcr_reagent, pcr_reagent)\n    slow_withdraw(pcr_reagent, m300)\n    m300.dispense(vol_pcr_reagent, pcr_reagent_dest)\n    m300.mix(mix_reps_pcr_reagent, mix_vol_pcr_reagent, pcr_reagent_dest)\n    slow_withdraw(pcr_reagent_dest, m300)\n    m300.drop_tip()\n    tc.close_lid()\n\n    \"\"\" PCR \"\"\"\n    profile_denaturation = [\n        {'temperature': 98, 'hold_time_seconds': 20},\n        {'temperature': 60, 'hold_time_seconds': 20},\n        {'temperature': 72, 'hold_time_seconds': 30}]\n\n    # denaturation\n    tc.set_block_temperature(98, hold_time_seconds=30)\n    tc.execute_profile(steps=profile_denaturation, repetitions=30)\n\n    # extension\n    tc.set_block_temperature(72, hold_time_seconds=120)\n    tc.set_block_temperature(4)\n    tc.open_lid()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300 8-channel GEN2 pipette mount",
+            "name": "mount_m300",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 single-channel GEN2 pipette mount",
+            "name": "mount_p20",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "oligo source plate 2 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reagent plate on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "oligo source plate 1 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "pcr plate on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Nick Diehl <ndiehl@opentrons.com>",
+        "protocolName": "PCR",
+        "source": "Custom Protocol Request"
+    },
+    "modules": [
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw pcr plate on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        }
+    ]
+}
