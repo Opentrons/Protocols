@@ -137,17 +137,19 @@ def run(ctx):
 
     # transfer factors
     for i, factor in enumerate(factors):
-        p300.pick_up_tip()
         for well, line in zip(plate.wells(), data):
             factor_vol = line[3+i]
             if factor_vol > 0:
+                if not p300.has_tip:
+                    p300.pick_up_tip()
                 p300.dispense(p300.current_volume, factor.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor, p300)
                 p300.dispense(factor_vol, well.top(-2))
                 p300.blow_out(well.top())
                 p300.aspirate(20, well.top())  # post-airgap to avoid dripping
-        p300.drop_tip()
+        if p300.has_tip:
+            p300.drop_tip()
 
     # mix
     for well in plate.wells()[:len(data)]:
