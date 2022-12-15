@@ -1,7 +1,7 @@
 [
   {
     "type": "int",
-    "label": "Aliquot Volume (10-20ul)",
+    "label": "Aliquot Volume (5-20ul)",
     "name": "aliquot_vol",
     "default": 10
   },
@@ -10,6 +10,24 @@
     "label": "Number of Samples (1-24)",
     "name": "num_samp",
     "default": 24
+  },
+  {
+    "type": "int",
+    "label": "Digestion Temperature (in C)",
+    "name": "digestion_temp",
+    "default": 95
+  },
+  {
+    "type": "int",
+    "label": "Digestion Incubation Time (minutes)",
+    "name": "digestion_time",
+    "default": 720
+  },
+  {
+    "type": "int",
+    "label": "Sample Aliquot Volume from Digestion to Analysis Plate (step 11, 5-20ul)",
+    "name": "sample_vol",
+    "default": 10
   },
   {
     "type": "dropDown",

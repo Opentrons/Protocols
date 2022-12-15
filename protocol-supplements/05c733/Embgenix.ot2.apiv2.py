@@ -9,6 +9,12 @@ Amplification',
     'apiLevel': '2.12'
 }
 
+PERFORM_CELL_LYSIS_PREP = True
+PERFORM_WHOLE_GENOME_AMPLIFICATION_PREP = True
+PERFORM_DILUTION_OF_WHOLE_GENOME_AMPLIFICATION_PRODUCTS = True
+PERFORM_FRAGMENTATION_AND_ADAPTER_LIGATION = True
+PERFORM_LIBRARY_AMPLIFICATION_AND_INDEXING = True
+
 
 def run(ctx):
 
@@ -147,100 +153,103 @@ def run(ctx):
     """
 
     """ V:A — Cell Lysis/gDNA Extraction"""
+    if PERFORM_CELL_LYSIS_PREP:
+        vol_total_reaction = 30.0
+        vol_mm_ce = vol_total_reaction - vol_sample
+        column_distribute(vol_mm_ce, mm_ce, distribution_plate.columns()[0],
+                          mix_reps=0)
 
-    vol_total_reaction = 30.0
-    vol_mm_ce = vol_total_reaction - vol_sample
-    column_distribute(vol_mm_ce, mm_ce, distribution_plate.columns()[0],
-                      mix_reps=0)
-
-    ctx.pause('Proceed with steps V:A:4-7 and replace sample plate on \
+        ctx.pause('Proceed with steps V:A:4-7 and replace sample plate on \
 temperature module before resuming.')
 
     """ V:B — Whole Genome Amplification"""
-    vol_mm_wga = 45.0
-    column_distribute(vol_mm_wga, mm_wga, distribution_plate.columns()[1])
+    if PERFORM_WHOLE_GENOME_AMPLIFICATION_PREP:
+        vol_mm_wga = 45.0
+        column_distribute(vol_mm_wga, mm_wga, distribution_plate.columns()[1])
 
-    ctx.pause('Proceed with steps V:B:4-5 and replace sample plate on \
+        ctx.pause('Proceed with steps V:B:4-5 and replace sample plate on \
 temperature module before resuming.')
 
     """ V:C — Dilution of Whole Genome Amplified Products"""
-    vol_wd1 = 76.0
-    vol_wga_product = 4.0
-    # pre-transfer dilution buffer
-    column_distribute(vol_wd1, wd1, distribution_plate.columns()[2],
-                      final_destinations_m=dilution1_samples_m,
-                      final_destinations_s=dilution1_samples_s, mix_reps=0,
-                      new_tip=False)
+    if PERFORM_DILUTION_OF_WHOLE_GENOME_AMPLIFICATION_PRODUCTS:
+        vol_wd1 = 76.0
+        vol_wga_product = 4.0
+        # pre-transfer dilution buffer
+        column_distribute(vol_wd1, wd1, distribution_plate.columns()[2],
+                          final_destinations_m=dilution1_samples_m,
+                          final_destinations_s=dilution1_samples_s, mix_reps=0,
+                          new_tip=False)
 
-    # transfer sample to dilution and mix
-    for s, d in zip(samples_m, dilution1_samples_m):
-        pick_up(m20, 8)
-        m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
-                     new_tip='never')
-        wick(m20, d)
-        m20.drop_tip()
+        # transfer sample to dilution and mix
+        for s, d in zip(samples_m, dilution1_samples_m):
+            pick_up(m20, 8)
+            m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+                         new_tip='never')
+            wick(m20, d)
+            m20.drop_tip()
 
-    vol_wd2 = 55.0
-    vol_wga_product = 5.0
-    # pre-transfer dilution buffer
-    column_distribute(vol_wd2, wd2, distribution_plate.columns()[3],
-                      final_destinations_m=dilution2_samples_m,
-                      final_destinations_s=dilution2_samples_s, mix_reps=0,
-                      new_tip=False)
+        vol_wd2 = 55.0
+        vol_wga_product = 5.0
+        # pre-transfer dilution buffer
+        column_distribute(vol_wd2, wd2, distribution_plate.columns()[3],
+                          final_destinations_m=dilution2_samples_m,
+                          final_destinations_s=dilution2_samples_s, mix_reps=0,
+                          new_tip=False)
 
-    # transfer sample to dilution and mix
-    for s, d in zip(dilution1_samples_m, dilution2_samples_m):
-        pick_up(m20, 8)
-        m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
-                     new_tip='never')
-        wick(m20, d)
-        m20.drop_tip()
+        # transfer sample to dilution and mix
+        for s, d in zip(dilution1_samples_m, dilution2_samples_m):
+            pick_up(m20, 8)
+            m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+                         new_tip='never')
+            wick(m20, d)
+            m20.drop_tip()
 
     """
     VI. Library Preparation
     """
 
     """ VI:A — Fragmentation and Adapter Ligation"""
-    vol_stem_loop_adapters = 4.0
-    vol_wd2_product = 8.0
-    stem_loop_adapters = distribution_plate.rows()[0][4:4+num_cols]
-    for a, s, d in zip(
-            stem_loop_adapters, dilution2_samples_m, ligation_samples_m):
-        pick_up(m20, 8)
-        m20.transfer(vol_stem_loop_adapters, a, d,
-                     new_tip='never')
-        wick(m20, d)
+    if PERFORM_FRAGMENTATION_AND_ADAPTER_LIGATION:
+        vol_stem_loop_adapters = 4.0
+        vol_wd2_product = 8.0
+        stem_loop_adapters = distribution_plate.rows()[0][4:4+num_cols]
+        for a, s, d in zip(
+                stem_loop_adapters, dilution2_samples_m, ligation_samples_m):
+            pick_up(m20, 8)
+            m20.transfer(vol_stem_loop_adapters, a, d,
+                         new_tip='never')
+            wick(m20, d)
 
-        m20.transfer(vol_wd2_product, s, d, mix_after=(10, 10),
-                     new_tip='never')
-        wick(m20, d)
-        m20.drop_tip()
+            m20.transfer(vol_wd2_product, s, d, mix_after=(10, 10),
+                         new_tip='never')
+            wick(m20, d)
+            m20.drop_tip()
 
-    # library prep mm
-    vol_mm_library_prep = 10.5
-    column_distribute(vol_mm_library_prep, mm_library_prep,
-                      distribution_plate.columns()[4],
-                      final_destinations_m=ligation_samples_m, mix_reps=10,
-                      new_tip=False)
+        # library prep mm
+        vol_mm_library_prep = 10.5
+        column_distribute(vol_mm_library_prep, mm_library_prep,
+                          distribution_plate.columns()[4],
+                          final_destinations_m=ligation_samples_m, mix_reps=10,
+                          new_tip=False)
 
-    ctx.pause('Proceed with steps VI:A:7-8 and replace sample plate on \
+        ctx.pause('Proceed with steps VI:A:7-8 and replace sample plate on \
 temperature module before resuming.')
 
     """ VIB — Library Amplification and Indexing with UDI """
+    if PERFORM_LIBRARY_AMPLIFICATION_AND_INDEXING:
+        # library prep mm
+        vol_mm_library_amp = 25.5
+        column_distribute(vol_mm_library_amp, mm_library_amp,
+                          distribution_plate.columns()[5],
+                          final_destinations_m=ligation_samples_m, mix_reps=1,
+                          new_tip=False)
 
-    # library prep mm
-    vol_mm_library_amp = 25.5
-    column_distribute(vol_mm_library_amp, mm_library_amp,
-                      distribution_plate.columns()[5],
-                      final_destinations_m=ligation_samples_m, mix_reps=1,
-                      new_tip=False)
+        # transfer UDI primers
+        vol_udi = 2.0
+        for s, d in zip(udi_m, ligation_samples_m):
+            pick_up(m20, 8)
+            m20.transfer(vol_udi, s, d, mix_after=(10, 10), new_tip='never')
+            wick(m20, d)
+            m20.drop_tip()
 
-    # transfer UDI primers
-    vol_udi = 2.0
-    for s, d in zip(udi_m, ligation_samples_m):
-        pick_up(m20, 8)
-        m20.transfer(vol_udi, s, d, mix_after=(10, 10), new_tip='never')
-        wick(m20, d)
-        m20.drop_tip()
-
-    ctx.comment('Proceed with steps VI:B:5-7. Protocol complete.')
+        ctx.comment('Proceed with steps VI:B:5-7. Protocol complete.')

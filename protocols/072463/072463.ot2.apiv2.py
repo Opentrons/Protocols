@@ -11,10 +11,11 @@ metadata = {
 
 def run(ctx):
 
-    [aliquot_vol, num_samp,
+    [aliquot_vol, num_samp, digestion_temp, digestion_time, sample_vol,
         p20_mount, p300_mount,
         transfer_to_storage, test_mode] = get_values(  # noqa: F821
-        "aliquot_vol", "num_samp",
+        "aliquot_vol", "num_samp", "digestion_temp", "digestion_time",
+        "sample_vol",
         "p20_mount", "p300_mount",
             "transfer_to_storage", "test_mode")
 
@@ -85,22 +86,27 @@ def run(ctx):
         p20.drop_tip()
         ctx.comment('\n')
 
-    ctx.comment('\n-----------ADDING ACID------------\n\n')
+    ctx.comment('\n-----------ADDING ACID AND MIXING------------\n\n')
     well_ctr += 3
     num_col = math.ceil(well_ctr/8)
     pick_up()
     for col in digestion_plate.rows()[0][:num_col]:
-        m300.transfer(1000-aliquot_vol, acid, col.top(),
+        m300.transfer(1200, acid, col.top(),
                       new_tip='never', blow_out=True,
                       blowout_location='destination well')
     m300.drop_tip()
+
+    for col in digestion_plate.rows()[0][:num_col]:
+        m300.pick_up_tip()
+        m300.mix(15, 200, col)
+        m300.drop_tip()
     ctx.comment('\n\n\n')
 
     if not test_mode:
         ctx.pause('''Cover the digestion plate.
                      Temperature block will go to 95C for 12 hours.''')
-        temp_mod.set_temperature(95)
-        ctx.delay(minutes=720)
+        temp_mod.set_temperature(digestion_temp)
+        ctx.delay(minutes=digestion_time)
         temp_mod.set_temperature(25)
         ctx.delay(minutes=60)
 
@@ -120,14 +126,22 @@ def run(ctx):
         p20.drop_tip()
         ctx.comment('\n')
 
+    ctx.comment('\n---------MIXING DIGESTION PLATE----------\n\n')
+
+    for col in digestion_plate.rows()[0][:num_col]:
+
+        m300.pick_up_tip()
+        m300.mix(15, 200, col)
+        m300.drop_tip()
+
     ctx.comment('\n----TRANSFERRING SAMPLE TO ANALYSIS PLATE----\n\n')
 
     for s, d in zip(digestion_plate.wells()[:3+3*num_samp],
                     analysis_plate.wells()[21:]):
 
         p20.pick_up_tip()
-        p20.aspirate(10, s)
-        p20.dispense(10, d)
+        p20.aspirate(sample_vol, s)
+        p20.dispense(sample_vol, d)
         p20.blow_out()
         p20.drop_tip()
 
@@ -136,8 +150,8 @@ def run(ctx):
     num_col = math.ceil(num_wells/8)
     pick_up()
     for col in analysis_plate.rows()[0][:num_col]:
-        m300.aspirate(36, water)
-        m300.dispense(36, col.top())
+        m300.aspirate(36-sample_vol, water)
+        m300.dispense(36-sample_vol, col.top())
         m300.blow_out()
     m300.drop_tip()
 

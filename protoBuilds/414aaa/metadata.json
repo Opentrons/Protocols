@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "g42lab.ot2.apiv2.py"
+            "414aaa.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/g42lab",
-    "slug": "g42lab",
+    "path": "protocols/414aaa",
+    "slug": "414aaa",
     "status": "ok"
 }

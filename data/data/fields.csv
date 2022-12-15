@@ -309,6 +309,8 @@ destination_plate_lname,1
 destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
+digestion_temp,1
+digestion_time,1
 dil_csv_1,2
 dil_json_1,1
 dil_json_2,1
@@ -429,7 +431,7 @@ f_time,2
 fe_temp,2
 fe_time,2
 file_dilution,1
-file_input,3
+file_input,4
 fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
@@ -759,7 +761,7 @@ mother_plate_type,1
 mount,2
 mount_m20,1
 mount_m300,4
-mount_p20,7
+mount_p20,8
 mount_p300,5
 mount_side,1
 move_side,2
@@ -1169,7 +1171,7 @@ sample_size,1
 sample_slots,1
 sample_trans_vol,1
 sample_type,1
-sample_vol,23
+sample_vol,24
 sample_volume,5
 samples,42
 samples_csv,1
@@ -1500,6 +1502,8 @@ vol_final_plate,1
 vol_h2o,2
 vol_ic,1
 vol_lys_buffer,1
+vol_media1,1
+vol_media2,1
 vol_mm,2
 vol_mobile_phase,1
 vol_neutralization_buffer,1
