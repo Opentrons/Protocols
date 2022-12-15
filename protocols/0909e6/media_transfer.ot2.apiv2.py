@@ -7,7 +7,7 @@ metadata = {
     'protocolName': 'Cell Culture',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.12'
+    'apiLevel': '2.13'
 }
 
 
@@ -127,9 +127,9 @@ def run(ctx):
         vol_media_split = split_media_vol(vol_media_total)
         for vol in vol_media_split:
             check_media(vol)
-            p1000.dispense(p1000.current_volume, current_media.top())
+            p1000.dispense(p1000.current_volume, current_media.well.top())
             p1000.aspirate(vol, current_media.height_dec(vol))
-            slow_withdraw(current_media, p1000)
+            slow_withdraw(current_media.well, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
             p1000.blow_out(well.top())
@@ -144,9 +144,9 @@ def run(ctx):
             if factor_vol > 0:
                 if not p300.has_tip:
                     p300.pick_up_tip()
-                p300.dispense(p300.current_volume, factor.top())
+                p300.dispense(p300.current_volume, factor.well.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
-                slow_withdraw(factor, p300)
+                slow_withdraw(factor.well, p300)
                 p300.dispense(factor_vol, well.top(-2))
                 p300.blow_out(well.top())
                 p300.aspirate(20, well.top())  # post-airgap to avoid dripping
