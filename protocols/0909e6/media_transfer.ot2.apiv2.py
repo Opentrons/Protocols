@@ -13,8 +13,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors] = get_values(  # noqa: F821
-        'csv_factors')
+    [csv_factors, vol_media1, vol_media2] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media1', 'vol_media2')
 
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
@@ -70,8 +70,10 @@ def run(ctx):
 
     # reagents
     media = [
-        WellH(well, current_volume=48000, height=well.depth*0.9)
-        for well in tuberack50.rows()[0]]
+        WellH(well, current_volume=vol, height=well.depth*(vol/50000)*0.9)
+        for well, vol in zip(
+            tuberack50.rows()[0][:2],
+            [vol_media1*1000, vol_media2*1000])]
 
     # parse data
     f = StringIO(csv_factors)
