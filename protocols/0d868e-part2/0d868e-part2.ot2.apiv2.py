@@ -1,7 +1,7 @@
 from opentrons import types
 from opentrons import protocol_api
 metadata = {
-    'protocolName': '',
+    'protocolName': 'Ilumina TruSeq Stranded mRNA - Part 2',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'

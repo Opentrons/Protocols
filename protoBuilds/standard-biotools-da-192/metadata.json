@@ -11,7 +11,7 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
     "path": "protocols/standard-biotools-da-192",

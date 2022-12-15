@@ -52,11 +52,15 @@ def run(ctx):
     # labware
     tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                   '1', 'media tuberack')
-    tuberack15 = ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
-                                  '4', 'factor tuberack')
+    tuberacks15 = [
+        ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
+                         slot, f'factor {factor_ids} tuberack')
+        for slot, factor_ids in zip(['4', '7'], ['1-15', '16-30'])]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
-    tiprack1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]
+    tiprack1000 = [
+        ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot)
+        for slot in ['6']]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', 'left',
@@ -73,12 +77,25 @@ def run(ctx):
     f = StringIO(csv_factors)
     reader = csv.reader(f, delimiter=',')
     data = []
+    factor_volumes_ml = None
     for i, row in enumerate(reader):
-        if i > 1:
+        if i == 1:
+            factor_volumes_ml = [float(val) for val in row[1:] if val]
+        if i > 2:
             content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
-    factors = tuberack15.wells()[:num_factors]
+
+    factor_tubes = [
+        well for rack in tuberacks15 for well in rack.wells()][:num_factors]
+    factor_heights = [
+        # ensure tip is submerged
+        round(vol/15*tuberacks15[0].wells()[0].depth*0.9, 1)
+        for vol in factor_volumes_ml]
+    factors = [
+        WellH(well, current_volume=vol*1000, height=height)
+        for well, vol, height in zip(
+            factor_tubes, factor_volumes_ml, factor_heights)]
 
     def slow_withdraw(well, pip=p1000):
         ctx.max_speeds['A'] = 25
@@ -112,6 +129,8 @@ def run(ctx):
             slow_withdraw(current_media, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
+    p1000.return_tip()
+    p1000.reset_tipracks()
 
     # transfer factors
     for i, factor in enumerate(factors):
@@ -119,15 +138,14 @@ def run(ctx):
         for well, line in zip(plate.wells(), data):
             factor_vol = line[3+i]
             if factor_vol > 0:
-                p300.aspirate(factor_vol, factor.bottom(1.5))
+                p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor, p300)
                 p300.dispense(factor_vol, well.top(-2))
         p300.drop_tip()
 
     # mix
     for well in plate.wells()[:len(data)]:
-        if not p1000.has_tip:
-            p1000.pick_up_tip()
+        p1000.pick_up_tip()
         p1000.mix(5, 800, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
