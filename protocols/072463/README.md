@@ -47,9 +47,9 @@ This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, 
 1. User calibrates protocol on deck.
 2. Deck starts with samples in the sample block and empty digestion plate in the heating module. The reagent
 block is on the deck but only has water in Well A1.
-3. Pipette 10-30 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the
+3. Pipette 5-20 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the
 pipetted volume user selectable and consistent for all samples.
-4. Pipette 10-30 uL (same as in step 3) of each sample in triplicate from the sample block into the digestion plate.
+4. Pipette 5-20 uL (same as in step 3) of each sample in triplicate from the sample block into the digestion plate.
 (1-24 x 30 uL tips)
 5. Add 990 uL of nitric acid from the acid block into each well of the digestion plate.
 a. Use 300 uL single or multi-channel pipette and transfer multiple times.
@@ -61,7 +61,7 @@ b. Mix as a yes/no variable.
 the deck.
 10. Transfer triplicate 10 uL aliquots from the 7 Fe calibration standards in the sample block into the analysis plate.
 (21 wells; 7 x 30 uL tips)
-11. Transfer 10 uL aliquots from each sample in the digestion plate into the analysis plate. (6-75 wells; 6-75 x 30 uL tips)
+11. Transfer 5-20 uL aliquots from each sample in the digestion plate into the analysis plate. (6-75 wells; 6-75 x 30 uL tips)
 12. Add 36 uL of water from the reagent block to each well in the analysis plate. (27-96 wells; 1 x 300 uL tip)
 13. Add 30 uL reagent A from the reagent block to each well in the analysis plate. (27-96 wells)
 a. Mixing step.

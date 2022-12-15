@@ -309,6 +309,8 @@ destination_plate_lname,1
 destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
+digestion_temp,1
+digestion_time,1
 dil_csv_1,2
 dil_json_1,1
 dil_json_2,1
@@ -1169,7 +1171,7 @@ sample_size,1
 sample_slots,1
 sample_trans_vol,1
 sample_type,1
-sample_vol,23
+sample_vol,24
 sample_volume,5
 samples,42
 samples_csv,1

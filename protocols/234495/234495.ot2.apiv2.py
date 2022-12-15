@@ -325,7 +325,7 @@ def run(ctx):
         div = 1
 
     ctx.comment("""
-    add {} ul 1:1 MeOH:Water
+    add 20 ul 1:1 MeOH:Water
     to make 11 serial dilutions 1:2 from unlabelled 200 um solution in A1
 
     liquid handling method for methanol:water:
@@ -334,7 +334,7 @@ def run(ctx):
     delayed blowout after dispense (let meoh fall to bottom of tip first)
     repeat blowout (for complete dispense)
     tip touch
-    """.format(str(20 / div)))
+    """)
 
     pip = p300s
     meoh_flow_rates(pip)
@@ -606,6 +606,7 @@ def run(ctx):
             p300s.drop_tip()
         else:
             for rep in range(1):
+
                 p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-3))
                 p300s.air_gap(15)
                 p300s.dispense((250)+15, amicon_filters[index].top())
