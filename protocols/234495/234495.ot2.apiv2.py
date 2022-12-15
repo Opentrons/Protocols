@@ -334,7 +334,7 @@ def run(ctx):
     delayed blowout after dispense (let meoh fall to bottom of tip first)
     repeat blowout (for complete dispense)
     tip touch
-    """
+    """)
 
     pip = p300s
     meoh_flow_rates(pip)
