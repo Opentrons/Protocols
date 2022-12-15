@@ -13,8 +13,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors] = get_values(  # noqa: F821
-        'csv_factors')
+    [csv_factors, vol_media1, vol_media2] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media1', 'vol_media2')
 
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
@@ -70,8 +70,10 @@ def run(ctx):
 
     # reagents
     media = [
-        WellH(well, current_volume=48000, height=well.depth*0.9)
-        for well in tuberack50.rows()[0]]
+        WellH(well, current_volume=vol, height=well.depth*(vol/50000)*0.9)
+        for well, vol in zip(
+            tuberack50.rows()[0][:2],
+            [vol_media1*1000, vol_media2*1000])]
 
     # parse data
     f = StringIO(csv_factors)
@@ -125,23 +127,31 @@ def run(ctx):
         vol_media_split = split_media_vol(vol_media_total)
         for vol in vol_media_split:
             check_media(vol)
+            p1000.dispense(p1000.current_volume, current_media.top())
             p1000.aspirate(vol, current_media.height_dec(vol))
             slow_withdraw(current_media, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
+            p1000.blow_out(well.top())
+            p1000.aspirate(50, well.top())  # post-airgap to avoid dripping
     p1000.return_tip()
     p1000.reset_tipracks()
 
     # transfer factors
     for i, factor in enumerate(factors):
-        p300.pick_up_tip()
         for well, line in zip(plate.wells(), data):
             factor_vol = line[3+i]
             if factor_vol > 0:
+                if not p300.has_tip:
+                    p300.pick_up_tip()
+                p300.dispense(p300.current_volume, factor.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor, p300)
                 p300.dispense(factor_vol, well.top(-2))
-        p300.drop_tip()
+                p300.blow_out(well.top())
+                p300.aspirate(20, well.top())  # post-airgap to avoid dripping
+        if p300.has_tip:
+            p300.drop_tip()
 
     # mix
     for well in plate.wells()[:len(data)]:
