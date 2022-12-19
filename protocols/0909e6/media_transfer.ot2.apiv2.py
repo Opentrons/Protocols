@@ -7,7 +7,7 @@ metadata = {
     'protocolName': 'Cell Culture',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.12'
 }
 
 
@@ -140,11 +140,12 @@ def run(ctx):
     # transfer factors
     for i, factor in enumerate(factors):
         for well, line in zip(plate.wells(), data):
-            factor_vol = line[3+i]
+            factor_vol = line[1+i]
             if factor_vol > 0:
                 if not p300.has_tip:
                     p300.pick_up_tip()
-                p300.dispense(p300.current_volume, factor.well.top())
+                if p300.current_volume > 0:
+                    p300.dispense(p300.current_volume, factor.well.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor.well, p300)
                 p300.dispense(factor_vol, well.top(-2))
