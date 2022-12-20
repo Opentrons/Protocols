@@ -83,7 +83,7 @@ def run(ctx):
     for i, row in enumerate(reader):
         if i == 1:
             factor_volumes_ml = [float(val) for val in row[1:] if val]
-        if i > 2:
+        if i > 1:
             content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
