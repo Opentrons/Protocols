@@ -7,14 +7,14 @@ metadata = {
     'protocolName': 'Cell Culture',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.12'
 }
 
 
 def run(ctx):
 
-    [csv_factors, vol_media1, vol_media2] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media1', 'vol_media2')
+    [csv_factors, vol_media1, vol_media2, vol_mix] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media1', 'vol_media2', 'vol_mix')
 
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
@@ -140,7 +140,7 @@ def run(ctx):
     # transfer factors
     for i, factor in enumerate(factors):
         for well, line in zip(plate.wells(), data):
-            factor_vol = line[3+i]
+            factor_vol = line[1+i]
             if factor_vol > 0:
                 if not p300.has_tip:
                     p300.pick_up_tip()
@@ -156,6 +156,6 @@ def run(ctx):
     # mix
     for well in plate.wells()[:len(data)]:
         p1000.pick_up_tip()
-        p1000.mix(5, 800, well.bottom(2))
+        p1000.mix(5, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
