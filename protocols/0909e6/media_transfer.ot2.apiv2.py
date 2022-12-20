@@ -86,7 +86,7 @@ def run(ctx):
         if i > 1:
             content = [float(val) for val in row if val]
             data.append(content)
-    num_factors = len(data[0]) - 3  # exclude total volume, media volume
+    num_factors = len(data[0]) - 1  # exclude media volume
 
     factor_tubes = [
         well for rack in tuberacks15 for well in rack.wells()][:num_factors]
