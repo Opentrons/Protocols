@@ -593,7 +593,7 @@ def run(ctx):
         meoh_flow_rates(p300s)
         if full_volume:
             for rep in range(2):
-                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-3)))
+                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-8)))
                 p300s.air_gap(15)
                 p300s.dispense((250 / div)+15, amicon_filters[index].top())
                 for rep in range(3):
@@ -607,7 +607,7 @@ def run(ctx):
         else:
             for rep in range(1):
 
-                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-3))
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-8))
                 p300s.air_gap(15)
                 p300s.dispense((250)+15, amicon_filters[index].top())
                 for rep in range(3):

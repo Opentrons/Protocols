@@ -7,14 +7,14 @@ metadata = {
     'protocolName': 'Cell Culture',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.12'
 }
 
 
 def run(ctx):
 
-    [csv_factors, vol_media1, vol_media2] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media1', 'vol_media2')
+    [csv_factors, vol_media1, vol_media2, vol_mix] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media1', 'vol_media2', 'vol_mix')
 
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
@@ -38,7 +38,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return self.well.bottom(self.height)
 
         def height_inc(self, vol):
             dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
@@ -47,7 +47,7 @@ def run(ctx):
             else:
                 self.height = self.depth
             self.current_volume += vol
-            return(self.well.bottom(self.height + 20))
+            return self.well.bottom(self.height + 20)
 
     # labware
     tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
@@ -83,7 +83,7 @@ def run(ctx):
     for i, row in enumerate(reader):
         if i == 1:
             factor_volumes_ml = [float(val) for val in row[1:] if val]
-        if i > 2:
+        if i > 1:
             content = [float(val) for val in row if val]
             data.append(content)
     num_factors = len(data[0]) - 3  # exclude total volume, media volume
@@ -132,15 +132,16 @@ def run(ctx):
             slow_withdraw(current_media.well, p1000)
             p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
-            p1000.blow_out(well.top())
+            p1000.blow_out(well.bottom(7))
             p1000.aspirate(50, well.top())  # post-airgap to avoid dripping
     p1000.return_tip()
     p1000.reset_tipracks()
 
     # transfer factors
+    wells_ordered = [well for row in plate.rows() for well in row]
     for i, factor in enumerate(factors):
-        for well, line in zip(plate.wells(), data):
-            factor_vol = line[3+i]
+        for well, line in zip(wells_ordered, data):
+            factor_vol = line[1+i]
             if factor_vol > 0:
                 if not p300.has_tip:
                     p300.pick_up_tip()
@@ -148,7 +149,7 @@ def run(ctx):
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor.well, p300)
                 p300.dispense(factor_vol, well.top(-2))
-                p300.blow_out(well.top())
+                p300.blow_out(well.top(-2))
                 p300.aspirate(20, well.top())  # post-airgap to avoid dripping
         if p300.has_tip:
             p300.drop_tip()
@@ -156,6 +157,6 @@ def run(ctx):
     # mix
     for well in plate.wells()[:len(data)]:
         p1000.pick_up_tip()
-        p1000.mix(5, 800, well.bottom(2))
+        p1000.mix(5, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
