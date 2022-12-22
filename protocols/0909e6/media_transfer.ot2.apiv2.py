@@ -16,6 +16,9 @@ def run(ctx):
     [csv_factors, vol_media1, vol_media2, vol_mix] = get_values(  # noqa: F821
         'csv_factors', 'vol_media1', 'vol_media2', 'vol_mix')
 
+    vol_pre_airgap_1000 = 50.0
+    vol_pre_airgap_300 = 20.0
+
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
                      comp_coeff=1.15, current_volume=0, min_vol=1000):
@@ -107,7 +110,7 @@ def run(ctx):
         del ctx.max_speeds['Z']
 
     def split_media_vol(vol):
-        num_transfers = math.ceil(vol/1000)
+        num_transfers = math.ceil(vol/(1000-vol_pre_airgap_1000))
         vol_per_transfer = round(vol/num_transfers, 1)
         return [vol_per_transfer]*num_transfers
 
@@ -128,9 +131,11 @@ def run(ctx):
         for vol in vol_media_split:
             check_media(vol)
             p1000.dispense(p1000.current_volume, current_media.well.top())
+            # pre-air_gap to fully void tip on blow_out
+            p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
             p1000.aspirate(vol, current_media.height_dec(vol))
             slow_withdraw(current_media.well, p1000)
-            p1000.dispense(vol, well.bottom(2))
+            p1000.dispense(p1000.current_volume, well.bottom(2))
             slow_withdraw(well, p1000)
             p1000.blow_out(well.bottom(7))
             p1000.aspirate(50, well.top())  # post-airgap to avoid dripping
@@ -146,9 +151,11 @@ def run(ctx):
                 if not p300.has_tip:
                     p300.pick_up_tip()
                 p300.dispense(p300.current_volume, factor.well.top())
+                # pre-air_gap to fully void tip on blow_out
+                p300.aspirate(vol_pre_airgap_300, factor.well.top())
                 p300.aspirate(factor_vol, factor.height_dec(factor_vol))
                 slow_withdraw(factor.well, p300)
-                p300.dispense(factor_vol, well.top(-2))
+                p300.dispense(p300.current_volume, well.top(-2))
                 p300.blow_out(well.top(-2))
                 p300.aspirate(20, well.top())  # post-airgap to avoid dripping
         if p300.has_tip:
