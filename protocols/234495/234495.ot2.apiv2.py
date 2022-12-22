@@ -607,7 +607,7 @@ def run(ctx):
         else:
             for rep in range(1):
 
-                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-8))
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-9))
                 p300s.air_gap(15)
                 p300s.dispense((250)+15, amicon_filters[index].top())
                 for rep in range(3):
