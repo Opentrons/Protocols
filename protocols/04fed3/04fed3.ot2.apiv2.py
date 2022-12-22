@@ -1,5 +1,6 @@
 import csv
 
+
 metadata = {
     'protocolName': 'Custom Normalization',
     'author': 'Steve Plonk <protocols@opentrons.com>',
@@ -22,8 +23,6 @@ def run(ctx):
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     for tfer in tfers:
-        if not 2 <= float(tfer['Sample volume (uL)']) <= 15:
-            raise Exception('Invalid sample volume (must be 2-15 uL)')
         if not 150 <= float(tfer['Diluent Volume(ul)']) <= 300:
             raise Exception('Invalid buffer volume (must be 150-300 uL)')
 
@@ -59,10 +58,23 @@ def run(ctx):
     p300m.drop_tip()
 
     # p20s sample transfer
-    p20s.transfer(
-     [float(tfer['Sample volume (uL)']) for tfer in tfers],
-     [ctx.loaded_labwares[int(tfer['Source slot'])].wells_by_name()[
-      tfer['Source well']].bottom(1) for tfer in tfers],
-     [destplate.wells_by_name()[
-      tfer['Destination well']].bottom(1) for tfer in tfers],
-     mix_before=(6, 20), mix_after=(3, 20), new_tip='always')
+    csv_lines = [[val.strip() for val in line.split(',')]
+                 for line in uploaded_csv.splitlines()
+                 if line.split(',')[0].strip()][1:]
+
+    for line in csv_lines:
+        s_slot = int(line[0])
+        s_well_name = line[1]
+        s_well = ctx.loaded_labwares[s_slot].wells_by_name()[s_well_name]
+        d_well = line[2]
+        vol = float(line[3])
+
+        p20s.pick_up_tip()
+        p20s.mix(6, 20, s_well)
+        p20s.transfer(vol, s_well,
+                      destplate.wells_by_name()[d_well] if vol <= 20
+                      else destplate.wells_by_name()[d_well].top(),
+                      new_tip='never')
+        p20s.mix(3, 20, s_well)
+        p20s.drop_tip()
+        ctx.comment('\n')
