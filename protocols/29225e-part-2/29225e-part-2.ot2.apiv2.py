@@ -108,7 +108,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return self.well.bottom(self.height)
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -124,9 +124,9 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return self.well.bottom(self.height)
             else:
-                return(self.well.top())
+                return self.well.top()
 
     # water tube (vol and liquid height tracking)
     pip = pip20
@@ -238,8 +238,8 @@ def run(ctx):
         if pip20.name == "p20_single_gen2":
             distribute_water(pip20, water_transfers, 2)
         else:
-            pause_attention("""Please manually dispense the indicated volumes of
-            water to the corresponding PCR plate wells and then resume
+            pause_attention("""Please manually dispense the indicated volumes
+            of water to the corresponding PCR plate wells and then resume
             {}.""".format(["{0} ul to {1}".format(
              tfer['water vol'], tfer['dest well']
              ) for tfer in water_transfers]))
@@ -263,11 +263,11 @@ def run(ctx):
                 dest = (dest for dest in current_transfers['dest'])
                 if not p300s.has_tip:
                     p300s.pick_up_or_refill()
-                p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
                 for chunk in create_chunks(
                  current_transfers['vol'], math.floor(
                   tips300[0].wells()[0].max_volume / 20)):
                     asp_vol = sum(chunk)
+                    p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
                     p300s.aspirate(
                      asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                     p300s.delay(1)
@@ -279,16 +279,20 @@ def run(ctx):
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
                         p300s.delay(1)
                         p300s.slow_tip_withdrawal(10, d)
-                    p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
+                    if p300s.current_volume > 0:
+                        p300s.dispense(p300s.current_volume,
+                                       mm_source.height_inc(
+                                            p300s.current_volume),
+                                       rate=0.3)
 
         else:
             dest = (dest for dest in current_transfers['dest'])
             if not p300s.has_tip:
                 p300s.pick_up_or_refill()
-            p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
             for chunk in create_chunks(current_transfers['vol'], math.floor(
              tips300[0].wells()[0].max_volume / 20)):
                 asp_vol = sum(chunk)
+                p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
                 p300s.aspirate(
                  asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                 p300s.delay(1)
@@ -300,7 +304,11 @@ def run(ctx):
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, d)
             try:
-                p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
+                if p300s.current_volume > 0:
+                    p300s.dispense(p300s.current_volume,
+                                   mm_source.height_inc(
+                                        p300s.current_volume),
+                                   rate=0.3)
                 mm_source = next(mm)
                 p300s.drop_tip()
             except StopIteration:
@@ -333,10 +341,10 @@ def run(ctx):
 
     # transfer normalized RNA to PCR plate
     pip = pip20
-    rna_tfers = sorted([tfer for tfer in tfers if (tfer['dest well'] in [
+    rna_tfers = [tfer for tfer in tfers if (tfer['dest well'] in [
      'A'+str(num+1) for num in range(12)] and tfer['source well'] in [
-     'A'+str(num+1) for num in range(12)])], key=itemgetter('dest well')
-     ) if pip20.name == "p20_multi_gen2" else tfers
+     'A'+str(num+1) for num in range(12)])] if pip20.name == \
+        "p20_multi_gen2" else tfers
     for tfer in rna_tfers:
         pip20.pick_up_or_refill()
         vol = float(tfer['source vol'])
