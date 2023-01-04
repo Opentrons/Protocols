@@ -68,23 +68,10 @@ def run(ctx: protocol_api.ProtocolContext):
             else:
                 pip.drop_tip(all_20_tips[tip_20_ctr-96])
 
-    def liq_height(well):
-        """Function that can be used to approximate
-        liquid height within well"""
-        r1 = well.diameter / 2
-        r2 = 2.69349  # calculated manually
-        h = (3 * well.liq_vol)/(math.pi*((r1**2) + (r1*r2) + (r2**2)))
-        if h > 28:
-            return 28
-        elif h < 2:
-            return 0.5
-        else:
-            return h
-
     def custom_mix(pip, well, mix_num, vol):
         """Custom function for mixing"""
         loc1 = well.bottom(1)
-        ht = liq_height(well) if well.liq_vol > 0 else 3
+        ht = 3
         loc2 = well.bottom(ht)
         for _ in range(mix_num):
             pip.aspirate(vol, loc1)
@@ -128,14 +115,14 @@ def run(ctx: protocol_api.ProtocolContext):
 
     for chunk, tube in zip(samp_chunks, reaction_mixes):
         if reaction_mix:
-            supermix_vol = 11 * round(((chunk+1) * 3.4), 0)
-            ctx.comment(f"Please ensure that there is {supermix_vol}uL of \
-            2x ddPCR Supermix for Probes in {tube}\n")
-            tube.liq_vol = supermix_vol
+            num_ddpcr_tubes = math.ceil((3*11*num_samps*1.15)/1200)
+            ctx.comment(f"Please ensure that there is {num_ddpcr_tubes} tubes \
+            of 2x ddPCR Supermix column 4, all with at least \
+            1200ul of 2x ddPCR\n")  # FIX COMMENT
         else:
-            total_vol = 18 * round(((chunk+1) * 3.4), 0)
+            total_vol = 18 * round(((chunk+1) * 3.15), 0)
             ctx.comment(f"Please ensure that there is {total_vol}uL of \
-            Reaction Mix in {tube}\n")
+            Reaction Mix in {tube}\n")  # FIX COMMENT
             tube.liq_vol = total_vol
 
     if reaction_mix:
@@ -149,14 +136,9 @@ def run(ctx: protocol_api.ProtocolContext):
             'RRE Reverse': tube_rack['B3'],
             'RRE Probe': tube_rack['C3']
         }
-        reagent_vol = round(vol_reagents * round(((num_samps+1) * 3.4), 0))
-        for label, src in components.items():
-            ctx.comment(f"Please ensure that there is {reagent_vol}uL of \
-            {label} in {src}\n")
-        water_tube = vol_water * round((num_samps + 1) * 3.4)
+
+        # water_tube = vol_water * round((num_samps) * 3)
         water_src = tube_rack['D2']
-        ctx.comment(f"Please ensure that there is {water_tube}uL of H2O in \
-        {water_src}\n")
 
     # perform normalization
     dil_iter = iter(dil_h20)
@@ -177,9 +159,8 @@ def run(ctx: protocol_api.ProtocolContext):
             dest = norm_plate[loc]
             if not pip.has_tip:
                 pip.pick_up_tip()
-            ht = liq_height(dil_src)
             dest.liq_vol = dil_vol
-            pip.transfer(dil_vol, dil_src.bottom(ht), dest, new_tip='never')
+            pip.transfer(dil_vol, dil_src.bottom(1), dest, new_tip='never')
 
     for pip in [p20, p300]:
         if pip.has_tip:
@@ -205,6 +186,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # create reaction mix
     if reaction_mix:
+        ctx.comment('Creating Reaction Mix')
         tube_vols = [0]
         for i in range(num_samps):
             if tube_vols[-1] == 24:
@@ -212,7 +194,8 @@ def run(ctx: protocol_api.ProtocolContext):
             tube_vols[-1] += 1
 
         for tube, tube_v in zip(reaction_mixes, tube_vols):
-            transfer_vol = round(vol_reagents * round((tube_v + 1) * 3.4), 1)
+            transfer_vol = round(vol_reagents * round((tube_v) * 3), 1)
+            transfer_vol *= 1.15
             pip = p20 if transfer_vol <= 20 else p300
             for label, src in components.items():
                 ctx.comment(f"\nTransferring {transfer_vol}uL of {label} \
@@ -221,19 +204,43 @@ def run(ctx: protocol_api.ProtocolContext):
                 # custom pip.mix()
                 pip.aspirate(transfer_vol, src)
                 pip.dispense(transfer_vol, tube)
-                tube.liq_vol += transfer_vol
                 # custom pip.mix()
                 drop_tip(pip)
-            water_vol = vol_water * round((tube_v + 1) * 3.4)
+            water_vol = vol_water * round((tube_v) * 3)
+            water_vol *= 1.15
             pip = p20 if water_vol <= 20 else p300
             ctx.comment(f"\nTransferring {water_vol}uL of water from \
             {water_src} to {tube}.")
             pip.pick_up_tip()
             # custom pip.mix()
-            pip.aspirate(transfer_vol, src)
-            pip.dispense(transfer_vol, tube)
+            pip.aspirate(water_vol, src)
+            pip.dispense(water_vol, tube)
             # custom pip.mix()
             drop_tip(pip)
+
+            pick_up(p300)
+            ddpcr_vol = 3*11*num_samps*1.15
+            ctx.comment(f"\nTransferring {ddpcr_vol}uL of ddpcr from \
+            column 4 to A1.")
+
+            num_transfers = math.ceil(ddpcr_vol/300)
+            starting_tube_vol = 1200
+            tube_ctr = 0
+
+            for _ in range(num_transfers):
+                transfer_vol = 300 if ddpcr_vol >= 300 else ddpcr_vol
+                if starting_tube_vol < transfer_vol:
+                    tube_ctr += 1
+                    starting_tube_vol = 1200
+                p300.aspirate(transfer_vol,
+                              tube_rack.columns()[3][tube_ctr])
+                p300.dispense(transfer_vol,
+                              tube_rack.wells()[0].top())
+                starting_tube_vol -= transfer_vol
+                ddpcr_vol -= transfer_vol
+
+            p300.mix(25, 300, tube_rack.wells()[0])
+            drop_tip(p300)
 
     # transfer reaction mix
     ctx.comment(f"Transferring Reaction Mix to {num_samps*replicates} wells")
@@ -242,9 +249,7 @@ def run(ctx: protocol_api.ProtocolContext):
         src = reaction_mixes[idx//(24*replicates)]
         if not p20.has_tip:
             p20.pick_up_tip()
-        src.liq_vol -= 18
-        ht = liq_height(src)
-        p20.aspirate(18, src.bottom(ht))
+        p20.aspirate(18, src.bottom(1))
         p20.dispense(18, dest)
         if idx % (24*replicates) == (24 * replicates - 1):
             drop_tip(p20)
@@ -253,8 +258,9 @@ def run(ctx: protocol_api.ProtocolContext):
         drop_tip(p20)
     # transfer samples + mix
     ctx.comment("Transferring normalized samples to destination plate(s).")
+    ctr = 0
     for idx, dest in enumerate(dest_wells[:num_samps*replicates]):
-        src == norm_plate.wells()[idx//replicates]
+        src = norm_plate.wells()[idx//replicates]
         pick_up(p20)
         custom_mix(p20, src, 2, 10)
         p20.aspirate(4, src)
@@ -262,5 +268,15 @@ def run(ctx: protocol_api.ProtocolContext):
         dest.liq_vol = 22
         custom_mix(p20, dest, 3, 15)
         drop_tip(p20)
+        ctr += 1
+
+    leftover = ctr % 8
+    ctx.comment('\n\n\n\n\n')
+
+    pick_up(p300)
+    for well in dest_wells[ctr:ctr+leftover]:
+        p300.aspirate(22, water_src)
+        p300.dispense(22, well)
+    drop_tip(p300)
 
     ctx.comment("Protocol complete.")
