@@ -840,7 +840,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,143
+num_samples,144
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1069,7 +1069,7 @@ rate_asp_l,1
 rate_asp_r,1
 rate_disp_l,1
 rate_disp_r,1
-ratio_beads,1
+ratio_beads,2
 rdnase_vol,1
 reaction_plate,3
 reag1_vol,1
@@ -1513,7 +1513,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,3
+vol_sample,4
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
