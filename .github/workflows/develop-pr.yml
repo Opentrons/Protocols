@@ -26,5 +26,5 @@ jobs:
           ### Overview
 
           This PR adds all changes made to **develop**, making the changes live on the [Protocol Library](https://protocols.opentrons.com)
-        pr_reviewer: chazmanc
-        pr_assignee: chazmanc
+        pr_reviewer: ncdiehl11
+        pr_assignee: ncdiehl11
