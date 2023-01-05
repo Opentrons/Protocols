@@ -19,11 +19,15 @@ def run(ctx):
     tempdeck = ctx.load_module('temperature module gen2', '3')
 
     # load labware
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
+                                    'cleanup plate')
     sampleplate = ctx.load_labware(
-            'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2')
-    tempplate = tempdeck.load_labware('biorad_96_wellplate_200ul_pcr')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5')
+            'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2',
+            'sample plate')
+    tempplate = tempdeck.load_labware('biorad_96_wellplate_200ul_pcr',
+                                      'reagent plate')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5',
+                                 'reagent reservoir')
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['4', '6', '9']]
