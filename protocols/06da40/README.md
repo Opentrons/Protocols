@@ -38,11 +38,13 @@ The protocol finishes by adding 4µL of each sample to a well containing reactio
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/Screen+Shot+2023-01-04+at+10.07.20+AM.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/reagents.png)
+![reagents2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/Screen+Shot+2023-01-04+at+9.59.50+AM.png)
+![reagents1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/Screen+Shot+2023-01-04+at+10.00.02+AM.png)
+
 
 
 ### Protocol Steps
