@@ -654,7 +654,7 @@ loc_csv,1
 loc_rnase,1
 loc_tween,1
 lw_checkit,1
-lw_deepwell_plate,1
+lw_deepwell_plate,2
 lw_dmso,1
 lw_hplc,1
 lw_tiprack300,1
@@ -727,7 +727,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
-mixreps,2
+mixreps,3
 mixreps_dilution,1
 mm,3
 mm1_col,1
@@ -840,7 +840,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,143
+num_samples,145
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1069,7 +1069,7 @@ rate_asp_l,1
 rate_asp_r,1
 rate_disp_l,1
 rate_disp_r,1
-ratio_beads,1
+ratio_beads,2
 rdnase_vol,1
 reaction_plate,3
 reag1_vol,1
@@ -1344,13 +1344,13 @@ test_method,1
 test_mode,1
 test_plates,1
 tfer_vol,1
-time_airdry_minutes,1
+time_airdry_minutes,2
 time_dry,18
 time_engage,19
 time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
-time_settling_minutes,1
+time_settling_minutes,2
 time_shake,1
 tip_disp,3
 tip_immersion,1
@@ -1497,7 +1497,7 @@ vol_elution,1
 vol_elution_buffer,1
 vol_elution_final,1
 vol_etoh,1
-vol_final_elution,1
+vol_final_elution,2
 vol_final_plate,1
 vol_h2o,2
 vol_ic,1
@@ -1513,7 +1513,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,3
+vol_sample,4
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
