@@ -123,41 +123,80 @@ def run(ctx):
         if current_media.current_volume - vol < current_media.min_vol:
             current_media = next(iterator_media)
 
+    def custom_distribute(info, pip):
+        pip_volume = pip.tip_racks[0].wells()[0].max_volume
+        vol_pre_airgap = vol_pre_airgap_300 if pip == \
+            p300 else vol_pre_airgap_1000
+        max_vol = pip_volume - vol_pre_airgap
+        sets = []
+        running = []
+        current_vol = 0
+        for d in info:
+            well = [key for key in d.keys()][0]
+            vol = [val for val in d.values()][0]
+            if vol > 0:
+                if current_vol + vol > max_vol:
+                    sets.append(running)
+                    running = []
+                    current_vol = 0
+                else:
+                    running.append({well: vol})
+                    current_vol += vol
+        return sets
+
     # transfer media
     p1000.pick_up_tip()
-    for well, line in zip(plate.wells(), data):
-        vol_media_total = line[0]
-        vol_media_split = split_media_vol(vol_media_total)
-        for vol in vol_media_split:
-            check_media(vol)
-            p1000.dispense(p1000.current_volume, current_media.well.top())
-            # pre-air_gap to fully void tip on blow_out
-            p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
-            p1000.aspirate(vol, current_media.height_dec(vol))
-            slow_withdraw(current_media.well, p1000)
-            p1000.dispense(p1000.current_volume, well.bottom(2))
+    wells = plate.wells()
+    vols_media = [line[0] for line in data]
+    media_info = []
+    for well, vol_media in zip(wells, vols_media):
+        vols_split = split_media_vol(vol_media)
+        for vol in vols_split:
+            media_info.append({well: vol})
+
+    media_sets = custom_distribute(media_info, pip=p1000)
+    for media_set in media_sets:
+        total_media_vol = sum([sum(d.values()) for d in media_set])
+        check_media(total_media_vol)
+        p1000.dispense(p1000.current_volume, current_media.well.top())
+        # pre-air_gap to fully void tip on blow_out
+        p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
+        p1000.aspirate(total_media_vol,
+                       current_media.height_dec(total_media_vol))
+        slow_withdraw(current_media.well, p1000)
+        for i, d in enumerate(media_set):
+            well = [key for key in d.keys()][0]
+            vol = [val for val in d.values()][0]
+            p1000.dispense(vol, well.bottom(2))
             slow_withdraw(well, p1000)
-            p1000.blow_out(well.bottom(7))
-            p1000.aspirate(50, well.top())  # post-airgap to avoid dripping
+            if i == len(media_set) - 1:
+                p1000.blow_out(well.bottom(7))
     p1000.return_tip()
     p1000.reset_tipracks()
 
     # transfer factors
     wells_ordered = [well for row in plate.rows() for well in row]
     for i, factor in enumerate(factors):
-        for well, line in zip(wells_ordered, data):
-            factor_vol = line[1+i]
-            if factor_vol > 0:
-                if not p300.has_tip:
-                    p300.pick_up_tip()
-                p300.dispense(p300.current_volume, factor.well.top())
-                # pre-air_gap to fully void tip on blow_out
-                p300.aspirate(vol_pre_airgap_300, factor.well.top())
-                p300.aspirate(factor_vol, factor.height_dec(factor_vol))
-                slow_withdraw(factor.well, p300)
-                p300.dispense(p300.current_volume, well.top(-2))
-                p300.blow_out(well.top(-2))
-                p300.aspirate(20, well.top())  # post-airgap to avoid dripping
+        factor_vols = [line[1+i] for line in data]
+        factor_info = [
+            {well: vol}
+            for well, vol in zip(wells_ordered, factor_vols)]
+        factor_sets = custom_distribute(factor_info, pip=p300)
+        for factor_set in factor_sets:
+            # aspirate total vol needed
+            if not p300.has_tip:
+                p300.pick_up_tip()
+            # pre-air_gap to fully void tip on blow_out
+            p300.aspirate(vol_pre_airgap_300, factor.well.top())
+            total_factor_vol = sum([sum(dict.values()) for dict in factor_set])
+            p300.aspirate(total_factor_vol,
+                          factor.height_dec(total_factor_vol))
+            slow_withdraw(factor.well, p300)
+            for i, dict in enumerate(factor_set):
+                for well, vol in dict.items():
+                    p300.dispense(vol, well.top(-2))
+                if i == len(factor_set) - 1:
+                    p300.blow_out(well.top(-2))
         if p300.has_tip:
             p300.drop_tip()
 
