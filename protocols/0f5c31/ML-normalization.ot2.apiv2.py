@@ -29,10 +29,9 @@ def run(ctx):
                                     '5', 'filter plate')
     res12 = ctx.load_labware('nest_12_reservoir_15ml', '1',
                              'H lysate reservoir (column 1)')
-    res1 = ctx.load_labware('nest_1_reservoir_195ml', '2')
     tiprack200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['3']]
+        for slot in ['2', '3']]
     tiprack20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['6']]
@@ -44,7 +43,7 @@ def run(ctx):
 
     # reagents and variables
     h_lysate = res12.rows()[0][0]
-    l_lysate = res1.rows()[0][0]
+    l_lysate = res12.rows()[0][1]
 
     vol_l_lysate = 68.64
     reps_mix = 5
@@ -82,7 +81,7 @@ def run(ctx):
                           wick_after: bool = True,
                           pick_up_tip: bool = True,
                           drop_tip: bool = True) -> None:
-       
+
         vol_available_asp = pip.max_volume
         if pick_up_tip and not pip.has_tip:
             pick_up(pip)
