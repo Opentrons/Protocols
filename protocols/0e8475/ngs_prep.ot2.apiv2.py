@@ -1,5 +1,6 @@
-import math
+from opentrons import protocol_api
 from opentrons.types import Point
+import math
 
 metadata = {
     'protocolName': 'Illumina GUIDE-seq NGS Prep: Cleanup',
@@ -30,10 +31,10 @@ def run(ctx):
                                  'reagent reservoir')
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['4', '6', '9']]
+        for slot in ['4']]
     tipracks200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['7', '8', '10', '11']]
+        for slot in ['6', '9']]
 
     # load pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', 'left',
@@ -59,6 +60,17 @@ def run(ctx):
 
     tempdeck.set_temperature(4)
 
+    def pick_up(pip):
+        try:
+            pip.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            msg = f'\n\n\n\nReplace the \
+{pip.tip_racks[0].wells()[0].max_volume}ul tips in slot \
+{", ".join([rack.parent for rack in pip.tip_racks])}'
+            ctx.pause(msg)
+            pip.reset_tipracks()
+            pip.pick_up_tip()
+
     # advanced liquid handling function definitions
 
     def wick(well, pip, side=1):
@@ -78,7 +90,7 @@ def run(ctx):
         source_list = [source]*num_cols if not type(source) == list else source
         pip = m20 if vol <= 20 else m300
         for s, source_well in zip(sample_set, source_list):
-            pip.pick_up_tip()
+            pick_up(pip)
             if reps_mix_asp > 0:
                 pip.mix(reps_mix_asp, vol_mix_asp, source_well)
             pip.aspirate(vol, source_well)
@@ -102,7 +114,7 @@ cycling. Replace when finished.\n\n\n\n')
                            z_disp=1.0, do_wick=False):
         for s, d in mag_samples, dests:
             if not pip.has_tip:
-                pip.pick_up_tip()
+                pick_up(pip)
             pip.move_to(s.top())
             ctx.max_speeds['A'] = 25
             ctx.max_speeds['Z'] = 25
@@ -119,7 +131,7 @@ cycling. Replace when finished.\n\n\n\n')
 
     def wash(vol, source=etoh, pip=m300, time_incubation_seconds=30.0,
              vol_residual=0, dests=liquid_trash):
-        pip.pick_up_tip()
+        pick_up(pip)
         for s in mag_samples:
             pip.aspirate(vol, source)
             slow_withdraw(source, pip)
@@ -138,7 +150,7 @@ cycling. Replace when finished.\n\n\n\n')
 
     total_vol = vol_sample + 7.5 + 30
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(total_vol, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -176,7 +188,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols:num_cols*2]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -213,7 +225,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*2:num_cols*3]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -254,7 +266,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*3:num_cols*4]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(30, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
