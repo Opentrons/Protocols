@@ -1,5 +1,6 @@
-import math
+from opentrons import protocol_api
 from opentrons.types import Point
+import math
 
 metadata = {
     'protocolName': 'Illumina GUIDE-seq NGS Prep: Cleanup',
@@ -17,6 +18,7 @@ def run(ctx):
     # load modules
     magdeck = ctx.load_module('magnetic module gen2', '1')
     tempdeck = ctx.load_module('temperature module gen2', '3')
+    tc = ctx.load_module('thermocycler')
 
     # load labware
     magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
@@ -24,16 +26,17 @@ def run(ctx):
     sampleplate = ctx.load_labware(
             'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2',
             'sample plate')
+    sampleplate = tc.load_labware('biorad_96_wellplate_200ul_pcr')
     tempplate = tempdeck.load_labware('biorad_96_wellplate_200ul_pcr',
                                       'reagent plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5',
                                  'reagent reservoir')
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['4', '6', '9']]
+        for slot in ['4']]
     tipracks200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['7', '8', '10', '11']]
+        for slot in ['6', '9']]
 
     # load pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', 'left',
@@ -58,6 +61,20 @@ def run(ctx):
     liquid_trash = reservoir.rows()[0][10:]
 
     tempdeck.set_temperature(4)
+    tc.open_lid()
+    tc.set_block_temperature(37)
+    tc.set_lid_temperature(85)
+
+    def pick_up(pip):
+        try:
+            pip.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            msg = f'\n\n\n\nReplace the \
+{pip.tip_racks[0].wells()[0].max_volume}ul tips in slot \
+{", ".join([rack.parent for rack in pip.tip_racks])}'
+            ctx.pause(msg)
+            pip.reset_tipracks()
+            pip.pick_up_tip()
 
     # advanced liquid handling function definitions
 
@@ -73,12 +90,12 @@ def run(ctx):
 
     def transfer_mix(vol, source, sample_set=samples, reps_mix_asp=0,
                      vol_mix_asp=0, reps_mix_dest=10, vol_mix_dest=20,
-                     prompt=True):
+                     prompt=False):
 
         source_list = [source]*num_cols if not type(source) == list else source
         pip = m20 if vol <= 20 else m300
         for s, source_well in zip(sample_set, source_list):
-            pip.pick_up_tip()
+            pick_up(pip)
             if reps_mix_asp > 0:
                 pip.mix(reps_mix_asp, vol_mix_asp, source_well)
             pip.aspirate(vol, source_well)
@@ -95,14 +112,14 @@ def run(ctx):
             slow_withdraw(s, pip)
             pip.drop_tip()
         if prompt:
-            ctx.pause('\n\n\n\nRemove reaction plate (slot 2) for thermal \
+            ctx.pause('\n\n\n\nRemove thermocycler plate for thermal \
 cycling. Replace when finished.\n\n\n\n')
 
     def remove_supernatant(vol, pip=m300, dests=liquid_trash, z_asp=0.2,
                            z_disp=1.0, do_wick=False):
         for s, d in mag_samples, dests:
             if not pip.has_tip:
-                pip.pick_up_tip()
+                pick_up(pip)
             pip.move_to(s.top())
             ctx.max_speeds['A'] = 25
             ctx.max_speeds['Z'] = 25
@@ -119,7 +136,7 @@ cycling. Replace when finished.\n\n\n\n')
 
     def wash(vol, source=etoh, pip=m300, time_incubation_seconds=30.0,
              vol_residual=0, dests=liquid_trash):
-        pip.pick_up_tip()
+        pick_up(pip)
         for s in mag_samples:
             pip.aspirate(vol, source)
             slow_withdraw(source, pip)
@@ -131,6 +148,12 @@ cycling. Replace when finished.\n\n\n\n')
         remove_supernatant(vol, pip=pip, dests=dests, z_disp=dests[0].depth)
 
     transfer_mix(7.5, mm_frag)
+    tc.close_lid()
+    tc.set_block_temperature(37, hold_time_minutes=30,
+                             block_max_volume=vol_sample+7.5)
+    tc.set_block_temperature(4)
+    tc.open_lid()
+    tc.deactivate_lid()
 
     transfer_mix(30*ratio_beads, beads, reps_mix_asp=5, vol_mix_asp=200,
                  reps_mix_dest=10, vol_mix_dest=50)
@@ -138,7 +161,7 @@ cycling. Replace when finished.\n\n\n\n')
 
     total_vol = vol_sample + 7.5 + 30
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(total_vol, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -165,7 +188,26 @@ cycling. Replace when finished.\n\n\n\n')
     magdeck.disengage()
 
     transfer_mix(2, mm_phos, sample_set=samples, reps_mix_dest=10,
-                 vol_mix_dest=8)
+                 vol_mix_dest=8, prompt=False)
+    tc.close_lid()
+    tc.set_lid_temperature(105)
+    tc.set_block_temperature(37, hold_time_minutes=30,
+                             block_max_volume=10)
+    tc.set_block_temperature(65, hold_time_minutes=20,
+                             block_max_volume=10)
+    tc.set_block_temperature(4)
+    tc.open_lid()
+    tc.deactivate_lid()
+    ctx.pause('Fragmentated DNA denaturation, 95C for 3min and put in ice \
+water immediately')
+
+    tc.close_lid()
+    tc.set_lid_temperature(50)
+    tc.set_block_temperature(25, hold_time_minutes=30,
+                             block_max_volume=30)
+    tc.set_block_temperature(4)
+    tc.open_lid()
+    tc.deactivate_lid()
 
     transfer_mix(20, mm_lig, sample_set=samples, reps_mix_dest=10,
                  vol_mix_dest=20)
@@ -176,7 +218,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols:num_cols*2]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -205,7 +247,7 @@ cycling. Replace when finished.\n\n\n\n')
     magdeck.disengage()
 
     transfer_mix(9, mm_pcr1, sample_set=samples, reps_mix_dest=0, prompt=False)
-    transfer_mix(1, y_xx, sample_set=samples, reps_mix_dest=0)
+    transfer_mix(1, y_xx, sample_set=samples, reps_mix_dest=0, prompt=True)
 
     transfer_mix(30*ratio_beads, beads, sample_set=samples, reps_mix_asp=5,
                  vol_mix_asp=200, reps_mix_dest=10, vol_mix_dest=50)
@@ -213,7 +255,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*2:num_cols*3]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
@@ -245,7 +287,7 @@ cycling. Replace when finished.\n\n\n\n')
     transfer_mix(13.5, mm_pcr2, sample_set=samples, reps_mix_dest=0,
                  prompt=False)
     transfer_mix(0.5, y_xx, sample_set=samples, reps_mix_dest=0, prompt=False)
-    transfer_mix(1, i753_xx, sample_set=samples, reps_mix_dest=0)
+    transfer_mix(1, i753_xx, sample_set=samples, reps_mix_dest=0, prompt=True)
 
     transfer_mix(30*ratio_beads*0.7, source=beads, sample_set=samples,
                  reps_mix_asp=5, vol_mix_asp=200, reps_mix_dest=10,
@@ -254,7 +296,7 @@ cycling. Replace when finished.\n\n\n\n')
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*3:num_cols*4]
     for s, m in zip(samples, mag_samples):
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.transfer(30, s, m, new_tip='never')
         slow_withdraw(m, m300)
         m300.drop_tip()
