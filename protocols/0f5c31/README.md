@@ -1,49 +1,58 @@
-# Normalization from .csv
+# Thermal Proteome Profiling (TPP)
+
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
+
 ## Categories
-* Sample Prep
-	* Normalization
+* Proteins & Proteiomics
+	* TPP
+
 
 ## Description
-This protocol performs a custom sample normalization from a source PCR plate to a second PCR plate, diluting with water from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
+This protocol performs a custom Thermal Proteome Profiling (TPP) protocol using the Opentrons Thermocycler and Temperature Modules. The user is prompted as necessary to replace plates, reagents, and tips as needed throughout the protocol.
 
-```
-source plate well,destination plate well,volume sample (µl),volume diluent (µl)
-A1, A1, 2, 28
-```
 
-You can download an example .csv to edit directly [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ml-normalization/example_csv.csv).
+### Modules
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
+* [Opentrons Thermocycler Module](https://shop.opentrons.com/thermocycler-module-1/)
 
----
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Bio-Rad 96 Well Plate 200 µL PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
-* [NEST 1-channel reservoir 195ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* [Opentrons 10µl and 300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
-* [Opentrons P10 and P300 GEN1 pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
+### Labware
+* Pall 96 Well Plate 350 µL #8036
+* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
+* [Opentrons 96 Well Aluminum Block with NEST Well Plate 100 µL](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
+* Opentrons 96 Filter Tip Rack 200 µL
+* Opentrons 96 Filter Tip Rack 20 µL
 
----
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-NEST 1-channel reservoir (slot 1)
-* channel 1: water for dilution
+### Pipettes
+* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
-### Robot
-* [OT-2](https://opentrons.com/ot-2)
 
-## Process
-1. Input the normalization .csv file, and the respective mount sides for your P10 and P50 GEN1 single-channel pipettes.
-2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-6. Hit "Run".
+### Deck Setup
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/deck.png)
+
+
+### Reagent Setup
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/reagents.png)
+
+
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit "Run".
+
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
+
 ###### Internal
-8nhsa0-norm
+0f5c31

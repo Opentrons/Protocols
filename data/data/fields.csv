@@ -818,6 +818,7 @@ num_col,8
 num_cols,3
 num_columns,1
 num_daughter_plates,1
+num_drug_plates,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
@@ -1316,6 +1317,7 @@ te_volume,2
 te_well,2
 temp,2
 temp_gen,1
+temp_lysate,1
 temp_mod,2
 temp_mod_lname,2
 temp_mod_on,2

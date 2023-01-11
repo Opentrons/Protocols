@@ -1,9 +1,21 @@
 [
   {
+    "type": "int",
+    "label": "number of drug plates",
+    "name": "num_drug_plates",
+    "default": 2
+  },
+  {
     "type": "float",
     "label": "volume of H lysate (ul)",
     "name": "vol_h_lysate",
-    "default": 10.0
+    "default": 2.58
+  },
+  {
+    "type": "float",
+    "label": "lysate hld temperature (degrees C)",
+    "name": "temp_lysate",
+    "default": 4.0
   },
   {
     "type": "dropDown",
