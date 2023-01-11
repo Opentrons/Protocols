@@ -37,6 +37,7 @@ def run(ctx):
     tiprack200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['2', '3', '6']]
+
     tiprack20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['9']]
