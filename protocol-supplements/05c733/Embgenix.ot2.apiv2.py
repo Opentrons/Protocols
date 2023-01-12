@@ -230,7 +230,7 @@ temperature module before resuming.')
         column_distribute(vol_mm_library_prep, mm_library_prep,
                           distribution_plate.columns()[4],
                           final_destinations_m=ligation_samples_m, mix_reps=10,
-                          new_tip=False)
+                          new_tip=True)
 
         ctx.pause('Proceed with steps VI:A:7-8 and replace sample plate on \
 temperature module before resuming.')
