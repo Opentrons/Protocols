@@ -141,6 +141,7 @@ def run(ctx):
                     current_vol = 0
                 running.append({well: vol})
                 current_vol += vol
+        sets.append(running)
         return sets
 
     # transfer media
@@ -169,9 +170,9 @@ def run(ctx):
             well = [key for key in d.keys()][0]
             vol = [val for val in d.values()][0]
             p1000.dispense(vol, well.bottom(well.depth/2))
-            slow_withdraw(well, p1000)
             if i == len(media_set) - 1:
-                p1000.blow_out(well.bottom(7))
+                p1000.blow_out(well.bottom(well.depth/2))
+            slow_withdraw(well, p1000)
     p1000.return_tip()
     p1000.reset_tipracks()
 
