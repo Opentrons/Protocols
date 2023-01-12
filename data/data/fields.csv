@@ -759,8 +759,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,1
-mount_m300,4
+mount_m20,2
+mount_m300,5
 mount_p20,8
 mount_p300,5
 mount_side,1
@@ -818,6 +818,7 @@ num_col,8
 num_cols,3
 num_columns,1
 num_daughter_plates,1
+num_drug_plates,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
@@ -1316,6 +1317,7 @@ te_volume,2
 te_well,2
 temp,2
 temp_gen,1
+temp_lysate,1
 temp_mod,2
 temp_mod_lname,2
 temp_mod_on,2
@@ -1500,6 +1502,7 @@ vol_etoh,1
 vol_final_elution,2
 vol_final_plate,1
 vol_h2o,2
+vol_h_lysate,1
 vol_ic,1
 vol_lys_buffer,1
 vol_media1,1
