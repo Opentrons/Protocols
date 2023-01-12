@@ -95,7 +95,7 @@ def run(ctx):
     def column_distribute(volume, source, distribution_column,
                           final_destinations_s=samples_s,
                           final_destinations_m=samples_m, mix_reps=10,
-                          new_tip=True, drop_tip=True):
+                          mix_vol=10, new_tip=True, drop_tip=True):
         if num_cols > 1:
             vol_per_row = volume*num_cols*1.1  # overage
             pip = m300 if vol_per_row > 20 else m20
@@ -126,7 +126,7 @@ def run(ctx):
                 pip.transfer(volume, distribution_column[0].bottom(-2),
                              s.bottom(1), new_tip='never')
                 if mix_reps > 0:
-                    pip.mix(mix_reps, volume*0.8, s.bottom(1))
+                    pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
                 if new_tip:
@@ -142,7 +142,7 @@ def run(ctx):
                 if not pip.has_tip:
                     pick_up(pip, 1)
                 pip.transfer(volume, source, s.bottom(-2), new_tip='never')
-                pip.mix(mix_reps, volume*0.8, s.bottom(1))
+                pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
                 if new_tip:
@@ -168,7 +168,8 @@ temperature module before resuming.')
     """ V:B — Whole Genome Amplification"""
     if PERFORM_WHOLE_GENOME_AMPLIFICATION_PREP:
         vol_mm_wga = 45.0
-        column_distribute(vol_mm_wga, mm_wga, distribution_plate.columns()[1])
+        column_distribute(vol_mm_wga, mm_wga, distribution_plate.columns()[1],
+                          mix_vol=75*0.6)
 
         ctx.pause('Proceed with steps V:B:4-5 and replace sample plate on \
 temperature module before resuming.')
@@ -186,7 +187,7 @@ temperature module before resuming.')
         # transfer sample to dilution and mix
         for s, d in zip(samples_m, dilution1_samples_m):
             pick_up(m20, 8)
-            m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+            m20.transfer(vol_wga_product, s, d, mix_after=(10, 20),
                          new_tip='never')
             wick(m20, d)
             m20.drop_tip()
@@ -202,7 +203,7 @@ temperature module before resuming.')
         # transfer sample to dilution and mix
         for s, d in zip(dilution1_samples_m, dilution2_samples_m):
             pick_up(m20, 8)
-            m20.transfer(vol_wga_product, s, d, mix_after=(10, 10),
+            m20.transfer(vol_wga_product, s, d, mix_after=(10, 20),
                          new_tip='never')
             wick(m20, d)
             m20.drop_tip()
@@ -221,12 +222,14 @@ temperature module before resuming.')
                           distribution_plate.columns()[4],
                           final_destinations_m=ligation_samples_m,
                           mix_reps=0,
-                          new_tip=False)
+                          new_tip=False,
+                          drop_tip=False)
 
         for s, d in zip(dilution2_samples_m, ligation_samples_m):
-            pick_up(m20, 8)
+            if not m20.has_tip:
+                pick_up(m20, 8)
             wick(m20, d)
-            m20.transfer(vol_wd2_product, s, d, mix_after=(10, 10),
+            m20.transfer(vol_wd2_product, s, d, mix_after=(10, 20),
                          new_tip='never')
             wick(m20, d)
             m20.drop_tip()
@@ -254,7 +257,7 @@ temperature module before resuming.')
         vol_udi = 2.0
         for s, d in zip(udi_m, ligation_samples_m):
             pick_up(m20, 8)
-            m20.transfer(vol_udi, s, d, mix_after=(10, 10), new_tip='never')
+            m20.transfer(vol_udi, s, d, mix_after=(10, 20), new_tip='never')
             wick(m20, d)
             m20.drop_tip()
 
