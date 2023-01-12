@@ -4,9 +4,9 @@ from opentrons.types import Point
 
 metadata = {
     'protocolName': 'Reagent Addition',
-    'author': 'John C. Lynch <john.lynch@opentrons.com>',
+    'author': 'Nick Diehl <ndiehl@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.13'
 }
 
 
@@ -30,7 +30,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300_mount = 'right'
 
     # load labware
-    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '1')
+    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '4')
     plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')
     vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '7')
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)

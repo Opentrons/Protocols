@@ -139,17 +139,17 @@ def run(ctx):
                     sets.append(running)
                     running = []
                     current_vol = 0
-                else:
-                    running.append({well: vol})
-                    current_vol += vol
+                running.append({well: vol})
+                current_vol += vol
+        sets.append(running)
         return sets
 
     # transfer media
     p1000.pick_up_tip()
-    wells = plate.wells()
+    wells_ordered = [well for row in plate.rows() for well in row]
     vols_media = [line[0] for line in data]
     media_info = []
-    for well, vol_media in zip(wells, vols_media):
+    for well, vol_media in zip(wells_ordered, vols_media):
         vols_split = split_media_vol(vol_media)
         for vol in vols_split:
             media_info.append({well: vol})
@@ -158,24 +158,25 @@ def run(ctx):
     for media_set in media_sets:
         total_media_vol = sum([sum(d.values()) for d in media_set])
         check_media(total_media_vol)
-        p1000.dispense(p1000.current_volume, current_media.well.top())
+        if p1000.current_volume:
+            p1000.dispense(p1000.current_volume, current_media.well.top())
         # pre-air_gap to fully void tip on blow_out
-        p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
+        if vol_pre_airgap_1000:
+            p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
         p1000.aspirate(total_media_vol,
                        current_media.height_dec(total_media_vol))
         slow_withdraw(current_media.well, p1000)
         for i, d in enumerate(media_set):
             well = [key for key in d.keys()][0]
             vol = [val for val in d.values()][0]
-            p1000.dispense(vol, well.bottom(2))
-            slow_withdraw(well, p1000)
+            p1000.dispense(vol, well.bottom(well.depth/2))
             if i == len(media_set) - 1:
-                p1000.blow_out(well.bottom(7))
+                p1000.blow_out(well.bottom(well.depth/2))
+            slow_withdraw(well, p1000)
     p1000.return_tip()
     p1000.reset_tipracks()
 
     # transfer factors
-    wells_ordered = [well for row in plate.rows() for well in row]
     for i, factor in enumerate(factors):
         factor_vols = [line[1+i] for line in data]
         factor_info = [
@@ -187,14 +188,15 @@ def run(ctx):
             if not p300.has_tip:
                 p300.pick_up_tip()
             # pre-air_gap to fully void tip on blow_out
-            p300.aspirate(vol_pre_airgap_300, factor.well.top())
+            if vol_pre_airgap_300:
+                p300.aspirate(vol_pre_airgap_300, factor.well.top())
             total_factor_vol = sum([sum(dict.values()) for dict in factor_set])
             p300.aspirate(total_factor_vol,
                           factor.height_dec(total_factor_vol))
             slow_withdraw(factor.well, p300)
             for i, dict in enumerate(factor_set):
                 for well, vol in dict.items():
-                    p300.dispense(vol, well.top(-2))
+                    p300.dispense(vol, well.bottom(well.depth/2))
                 if i == len(factor_set) - 1:
                     p300.blow_out(well.top(-2))
         if p300.has_tip:
