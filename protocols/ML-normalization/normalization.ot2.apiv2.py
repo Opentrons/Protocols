@@ -100,6 +100,6 @@ def run(ctx):
         pip = p300 if vol_s > 20 else p20
         if vol_s != 0:
             pick_up(pip)
-            pip.transfer(vol_s, s, d, new_tip='never')
+            pip.transfer(vol_s, s.bottom(3), d, new_tip='never')
             pip.blow_out(d.top(-2))
             pip.drop_tip()
