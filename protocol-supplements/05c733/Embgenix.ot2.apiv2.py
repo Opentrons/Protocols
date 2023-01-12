@@ -47,6 +47,11 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tipracks200)
 
+    m20.flow_rate.aspirate /= 3
+    m20.flow_rate.dispense /= 3
+    m300.flow_rate.aspirate /= 3
+    m300.flow_rate.dispense /= 3
+
     # reagents
     num_cols = math.ceil(num_samples/8)
 
@@ -55,8 +60,8 @@ def run(ctx):
     dilution1_samples_s = sample_plate.wells()[num_samples:num_samples*2]
     dilution1_samples_m = sample_plate.rows()[0][num_cols:num_cols*2]
     dilution2_samples_s = sample_plate.wells()[num_samples*2:num_samples*3]
-    dilution2_samples_m = sample_plate.rows()[0][num_cols*3:num_cols*4]
-    ligation_samples_m = sample_plate.rows()[0][num_cols*4:num_cols*5]
+    dilution2_samples_m = sample_plate.rows()[0][num_cols*2:num_cols*3]
+    ligation_samples_m = sample_plate.rows()[0][num_cols*3:num_cols*4]
     udi_m = udi_plate.rows()[0][:num_cols]
 
     mm_ce = tuberack.wells_by_name()['A1']
@@ -257,7 +262,11 @@ temperature module before resuming.')
         vol_udi = 2.0
         for s, d in zip(udi_m, ligation_samples_m):
             pick_up(m20, 8)
-            m20.transfer(vol_udi, s, d, mix_after=(10, 20), new_tip='never')
+            m20.aspirate(vol_udi, s)
+            m20.move_to(s.top(5))
+            ctx.delay(seconds=10)
+            m20.dispense(vol_udi, d)
+            m20.mix(10, 20, d)
             wick(m20, d)
             m20.drop_tip()
 
