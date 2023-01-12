@@ -19,7 +19,7 @@ This protocol performs the [EmbgenixTM PGT-A Kit: Preparation of Whole Genome Am
 * [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/05c733/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/05c733/deck3.png)
 
 ### Reagent Setup
 ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/05c733/reagents.png)  
@@ -30,7 +30,7 @@ This protocol performs the [EmbgenixTM PGT-A Kit: Preparation of Whole Genome Am
 * D1 on Tuberack (slot 4): WD2
 * A2 on Tuberack (slot 4): Library Prep Master Mix
 * B2 on Tuberack (slot 4): Library Amplification Master Mix
-* Columns 5-6 on Mix Distribution Plate (slot 5): Stem Loop Adapters
+* C2 on Tuberack (slot 4): Stem Loop Adapters
 * Columns 1-2 on UDI Plate (slot 6): UDI
 
 ### Process
