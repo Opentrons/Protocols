@@ -81,7 +81,7 @@ def run(protocol_context):
     else:
         dilution_destination_sets = plate.columns()[1:num_of_dilutions]
         dilution_source_sets = plate.columns()[:num_of_dilutions-1]
-        blank_set = plate.columns()[num_of_dilutions]
+        blank_set = plate.columns()[num_of_dilutions+1]
 
     all_diluent_destinations = [
         well for set in dilution_destination_sets for well in set]
