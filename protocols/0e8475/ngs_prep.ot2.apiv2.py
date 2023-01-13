@@ -65,16 +65,19 @@ def run(ctx):
     tc.set_block_temperature(37)
     tc.set_lid_temperature(85)
 
-    def pick_up(pip):
-        try:
-            pip.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            msg = f'\n\n\n\nReplace the \
+    def pick_up(pip, tip=None):
+        if not tip:
+            try:
+                pip.pick_up_tip()
+            except protocol_api.labware.OutOfTipsError:
+                msg = f'\n\n\n\nReplace the \
 {pip.tip_racks[0].wells()[0].max_volume}ul tips in slot \
 {", ".join([rack.parent for rack in pip.tip_racks])}'
-            ctx.pause(msg)
-            pip.reset_tipracks()
-            pip.pick_up_tip()
+                ctx.pause(msg)
+                pip.reset_tipracks()
+                pip.pick_up_tip()
+        else:
+            pip.pick_up_tip(tip)
 
     # advanced liquid handling function definitions
 
@@ -88,10 +91,12 @@ def run(ctx):
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
 
+    parked_tips = []
+
     def transfer_mix(vol, source, sample_set=samples, reps_mix_asp=0,
                      vol_mix_asp=0, reps_mix_dest=10, vol_mix_dest=20,
-                     prompt=False):
-
+                     prompt=False, park=False):
+        nonlocal parked_tips
         source_list = [source]*num_cols if not type(source) == list else source
         pip = m20 if vol <= 20 else m300
         for s, source_well in zip(sample_set, source_list):
@@ -110,16 +115,26 @@ def run(ctx):
             if reps_mix_dest > 0:
                 pip.mix(reps_mix_dest, vol_mix_dest, s)
             slow_withdraw(s, pip)
-            pip.drop_tip()
+            if park:
+                parked_tips.append(pip._last_tip_picked_up_from)
+                pip.return_tip()
+            else:
+                pip.drop_tip()
         if prompt:
             ctx.pause('\n\n\n\nRemove thermocycler plate for thermal \
 cycling. Replace when finished.\n\n\n\n')
 
-    def remove_supernatant(vol, pip=m300, dests=liquid_trash, z_asp=0.2,
-                           z_disp=1.0, do_wick=False):
-        for s, d in mag_samples, dests:
+    def remove_supernatant(vol, pip=None, dests=liquid_trash, z_asp=0.2,
+                           z_disp=1.0, do_wick=False, park=False):
+        nonlocal parked_tips
+        if not pip:
+            pip = m300 if vol >= 20 else m20
+        for i, (s, d) in enumerate(zip(mag_samples, dests)):
             if not pip.has_tip:
-                pick_up(pip)
+                if park:
+                    pick_up(pip, parked_tips[i])
+                else:
+                    pick_up(pip)
             pip.move_to(s.top())
             ctx.max_speeds['A'] = 25
             ctx.max_speeds['Z'] = 25
@@ -133,6 +148,7 @@ cycling. Replace when finished.\n\n\n\n')
             if do_wick:
                 wick(d, pip)
             pip.drop_tip()
+        parked_tips = []
 
     def wash(vol, source=etoh, pip=m300, time_incubation_seconds=30.0,
              vol_residual=0, dests=liquid_trash):
@@ -156,18 +172,18 @@ cycling. Replace when finished.\n\n\n\n')
     tc.deactivate_lid()
 
     transfer_mix(30*ratio_beads, beads, reps_mix_asp=5, vol_mix_asp=200,
-                 reps_mix_dest=10, vol_mix_dest=50)
+                 reps_mix_dest=10, vol_mix_dest=50, park=True)
     ctx.delay(minutes=5, msg='\n\n\n\n5 minute bead incubation.\n\n\n\n')
 
     total_vol = vol_sample + 7.5 + 30
-    for s, m in zip(samples, mag_samples):
-        pick_up(m300)
+    for i, (s, m) in enumerate(zip(samples, mag_samples)):
+        pick_up(m300, parked_tips[i])
         m300.transfer(total_vol, s, m, new_tip='never')
         slow_withdraw(m, m300)
-        m300.drop_tip()
+        m300.drop_tip(parked_tips[i])
     magdeck.engage(mag_height)
     ctx.delay(minutes=2, msg='\n\n\n\nBinding.\n\n\n\n')
-    remove_supernatant(total_vol-3.0)
+    remove_supernatant(total_vol-3.0, park=True)
 
     wash(100)
     wash(150)
@@ -177,14 +193,16 @@ cycling. Replace when finished.\n\n\n\n')
     ctx.delay(minutes=2, msg='\n\n\n\nAir dry.\n\n\n\n')
     magdeck.disengage()
 
-    transfer_mix(10, rsb, mag_samples, reps_mix_dest=10, vol_mix_dest=8)
+    transfer_mix(10, rsb, mag_samples, reps_mix_dest=10, vol_mix_dest=8,
+                 park=True)
     ctx.delay(minutes=2, msg='RSB incubation.')
     magdeck.engage(height=5)
     ctx.delay(minutes=2, msg='Binding')
 
     # reassign samples in plate
     samples = sampleplate.rows()[0][num_cols:num_cols*2]
-    remove_supernatant(8, m20, dests=samples, z_asp=0.1, do_wick=True)
+    remove_supernatant(8, m20, dests=samples, z_asp=0.1, do_wick=True,
+                       park=True)
     magdeck.disengage()
 
     transfer_mix(2, mm_phos, sample_set=samples, reps_mix_dest=10,
@@ -213,19 +231,19 @@ water immediately')
                  vol_mix_dest=20)
 
     transfer_mix(30*ratio_beads, beads, sample_set=samples, reps_mix_asp=5,
-                 vol_mix_asp=200, reps_mix_dest=10, vol_mix_dest=50)
+                 vol_mix_asp=200, reps_mix_dest=10, vol_mix_dest=50, park=True)
 
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols:num_cols*2]
-    for s, m in zip(samples, mag_samples):
-        pick_up(m300)
+    for i, (s, m) in enumerate(zip(samples, mag_samples)):
+        pick_up(m300, parked_tips[i])
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
-        m300.drop_tip()
+        m300.drop_tip(parked_tips[i])
     ctx.delay(minutes=5, msg='\n\n\n\nIncubating.\n\n\n\n')
     magdeck.engage(mag_height)
     ctx.delay(minutes=5, msg='\n\n\n\nBinding.\n\n\n\n')
-    remove_supernatant(60-4.0)
+    remove_supernatant(60-4.0, park=True)
 
     wash(100)
     wash(150)
@@ -236,33 +254,35 @@ water immediately')
     magdeck.disengage()
 
     # resuspend
-    transfer_mix(21, rsb, mag_samples, reps_mix_dest=10, vol_mix_dest=8)
+    transfer_mix(21, rsb, mag_samples, reps_mix_dest=10, vol_mix_dest=8,
+                 park=True)
     ctx.delay(minutes=2, msg='RSB incubation.')
     magdeck.engage(mag_height)
     ctx.delay(minutes=3, msg='Binding')
 
     # reassign samples in plate
     samples = sampleplate.rows()[0][num_cols*2:num_cols*3]
-    remove_supernatant(20, m20, dests=samples, z_asp=0.1, do_wick=True)
+    remove_supernatant(20, m300, dests=samples, z_asp=0.1, do_wick=True,
+                       park=True)
     magdeck.disengage()
 
     transfer_mix(9, mm_pcr1, sample_set=samples, reps_mix_dest=0, prompt=False)
     transfer_mix(1, y_xx, sample_set=samples, reps_mix_dest=0, prompt=True)
 
     transfer_mix(30*ratio_beads, beads, sample_set=samples, reps_mix_asp=5,
-                 vol_mix_asp=200, reps_mix_dest=10, vol_mix_dest=50)
+                 vol_mix_asp=200, reps_mix_dest=10, vol_mix_dest=50, park=True)
 
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*2:num_cols*3]
-    for s, m in zip(samples, mag_samples):
-        pick_up(m300)
+    for i, (s, m) in enumerate(zip(samples, mag_samples)):
+        pick_up(m300, parked_tips[i])
         m300.transfer(60, s, m, new_tip='never')
         slow_withdraw(m, m300)
-        m300.drop_tip()
+        m300.drop_tip(parked_tips[i])
     ctx.delay(minutes=5, msg='\n\n\n\nIncubating.\n\n\n\n')
     magdeck.engage(mag_height)
     ctx.delay(minutes=3, msg='\n\n\n\nBinding.\n\n\n\n')
-    remove_supernatant(60-3.0)
+    remove_supernatant(60-3.0, park=True)
 
     wash(100)
     wash(150)
@@ -274,14 +294,15 @@ water immediately')
 
     # resuspend
     transfer_mix(16, rsb, sample_set=mag_samples, reps_mix_dest=10,
-                 vol_mix_dest=13)
+                 vol_mix_dest=13, park=True)
     ctx.delay(minutes=2, msg='RSB incubation.')
     magdeck.engage(mag_height)
     ctx.delay(minutes=3, msg='Binding')
 
     # reassign samples in plate
     samples = sampleplate.rows()[0][num_cols*3:num_cols*4]
-    remove_supernatant(15, m20, dests=samples, z_asp=0.1, do_wick=True)
+    remove_supernatant(15, m20, dests=samples, z_asp=0.1, do_wick=True,
+                       park=True)
     magdeck.disengage()
 
     transfer_mix(13.5, mm_pcr2, sample_set=samples, reps_mix_dest=0,
@@ -291,19 +312,19 @@ water immediately')
 
     transfer_mix(30*ratio_beads*0.7, source=beads, sample_set=samples,
                  reps_mix_asp=5, vol_mix_asp=200, reps_mix_dest=10,
-                 vol_mix_dest=45)
+                 vol_mix_dest=45, park=True)
 
     # reassign samples in magplate
     mag_samples = magplate.rows()[0][num_cols*3:num_cols*4]
-    for s, m in zip(samples, mag_samples):
-        pick_up(m300)
+    for i, (s, m) in enumerate(zip(samples, mag_samples)):
+        pick_up(m300, parked_tips[i])
         m300.transfer(30, s, m, new_tip='never')
         slow_withdraw(m, m300)
-        m300.drop_tip()
+        m300.drop_tip(parked_tips[i])
     ctx.delay(minutes=5, msg='\n\n\n\nIncubating.\n\n\n\n')
     magdeck.engage(mag_height)
     ctx.delay(minutes=3, msg='\n\n\n\nBinding.\n\n\n\n')
-    remove_supernatant(30-3.0)
+    remove_supernatant(30-3.0, park=True)
 
     wash(100)
     wash(150)
@@ -316,8 +337,9 @@ water immediately')
     # elution
     elution_samples = magplate.rows()[0][num_cols*4:num_cols*5]
     transfer_mix(22, rsb, sample_set=mag_samples, reps_mix_dest=10,
-                 vol_mix_dest=15)
+                 vol_mix_dest=15, park=True)
     ctx.delay(minutes=2, msg='RSB incubation.')
     magdeck.engage(mag_height)
     ctx.delay(minutes=3, msg='Binding')
-    remove_supernatant(20, pip=m20, dests=elution_samples, do_wick=True)
+    remove_supernatant(20, pip=m300, dests=elution_samples, do_wick=True,
+                       park=True)
