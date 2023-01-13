@@ -1,0 +1,56 @@
+{
+    "content": "from opentrons import protocol_api\nfrom opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': 'Illumina COVIDSeq - Part 1: Anneal RNA',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [num_samples] = get_values(  # noqa: F821\n        'num_samples')\n\n    # tuning parameters\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n\n    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                    '3', 'sample plate')\n    cdna_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                  '2', 'cDNA plate')\n    reagent_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                     '5', 'reagent plate')\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '200\u00b5l filtertiprack')\n        for slot in ['7']]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tips20)\n\n    # reagents and variables\n    eph3 = reagent_plate.rows()[0][0]\n\n    vol_eph3 = 8.5\n    vol_sample = 8.5\n    num_cols = math.ceil(num_samples/8)\n    ref_well = cdna_plate.wells()[0]\n    if ref_well.width:\n        radius = ref_well.width/2\n    else:\n        radius = ref_well.diameter/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.8, z=3)))\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def pick_up(pip, spot=None):\n        if spot:\n            pip.pick_up_tip(spot)\n        else:\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                ctx.pause(\"\\n\\n\\n\\nReplace 200ul filtertipracks before \\\nresuming.\\n\\n\\n\\n\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n    pick_up(m20)\n    for d in cdna_plate.rows()[0][:num_cols]:\n        m20.aspirate(vol_eph3, eph3.bottom(0.5))\n        slow_withdraw(m20, eph3)\n        m20.dispense(vol_eph3, d.bottom(0.5))\n        wick(m20, d)\n\n    for s, d in zip(cdna_plate.rows()[0][:num_cols],\n                    sample_plate.rows()[0][:num_cols]):\n        if not m20.has_tip:\n            pick_up(m20)\n        m20.aspirate(vol_sample, s.bottom(0.5))\n        slow_withdraw(m20, s)\n        m20.dispense(vol_sample, d.bottom(2))\n        wick(m20, d)\n        m20.drop_tip()\n\n    ctx.comment('\\n\\n\\n\\nProtocol complete.\\nSeal and shake at 1600 rpm for 1 \\\nminute.\\nCentrifuge at 1000 \u00d7 g for 1 minute.\\nPlace on the preprogrammed \\\nthermal cycler and run the COVIDSeq FSS program.\\n\\n\\n\\n')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "cDNA plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "sample plate on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "reagent plate on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Illumina COVIDSeq - Part 1: Anneal RNA"
+    },
+    "modules": []
+}
