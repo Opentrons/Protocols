@@ -88,7 +88,7 @@
   {
     "type": "dropDown",
     "label": "45ul of TFA or 90ul?",
-    "name": "include_standards_only",
+    "name": "div_tfa",
     "options": [
       { "label": "90ul TFA", "value": "1" },
       { "label": "45ul TFA", "value": "2" }

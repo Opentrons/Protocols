@@ -508,7 +508,7 @@ include_multi,1
 include_ntc,2
 include_pause,1
 include_sample_step,1
-include_standards_only,1
+include_standards_only,2
 include_wash1,1
 include_wash2,1
 include_wash3,1
