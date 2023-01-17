@@ -19,14 +19,16 @@ def run(ctx):
     [count_samples, full_volume, include_standards_only,
      labware_tuberack, clearance_meoh_water, clearance_dil_dispense,
      touch_radius, touch_v_offset, track_start, clearance_tfa, clearance_mecn,
-     mix_reps, vol_dead] = get_values(  # noqa: F821
+     mix_reps, vol_dead, div_tfa] = get_values(  # noqa: F821
       'count_samples', 'full_volume', 'include_standards_only',
       'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
       'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
-      'clearance_mecn', 'mix_reps', 'vol_dead')
+      'clearance_mecn', 'mix_reps', 'vol_dead', 'div_tfa')
 
     ctx.delay(seconds=10)
     ctx.set_rail_lights(True)
+
+    div_tfa = int(div_tfa)
 
     if not 12 <= count_samples <= 27:
         raise Exception('Invalid number of samples (must be 12-27).')
@@ -378,7 +380,7 @@ def run(ctx):
     reduced aspirate and dispense speeds
     slow tip withdrawal from plasma
     avoid over-immersion of tip (liquid height tracking)
-    """.format(str(90 / div)))
+    """.format(str(90 / div_tfa)))
 
     plasma_flow_rates(p300s)
     p300s.pick_up_tip()
@@ -388,13 +390,13 @@ def run(ctx):
     increment = (starting_clearance - ending_clearance) / len(samples)
     p300s.aspirate(35 / div, golden_plasma.bottom(starting_clearance))
     for sample in samples:
-        p300s.aspirate(90 / div, golden_plasma.bottom(tracking_clearance))
+        p300s.aspirate(90 / div_tfa, golden_plasma.bottom(tracking_clearance))
         slow_tip_withdrawal(p300s, golden_plasma)
         if tracking_clearance >= ending_clearance + increment:
             tracking_clearance -= increment
         else:
             tracking_clearance = ending_clearance
-        p300s.dispense(90 / div, sample.bottom(2))
+        p300s.dispense(90 / div_tfa, sample.bottom(2))
         slow_tip_withdrawal(p300s, sample)
     p300s.drop_tip()
     default_flow_rates(p300s)

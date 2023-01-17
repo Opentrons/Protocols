@@ -84,5 +84,14 @@
     "label": "Volume at Which to Move on to Next Reservoir Well (uL)",
     "name": "vol_dead",
     "default": 2000
+  },
+  {
+    "type": "dropDown",
+    "label": "45ul of TFA or 90ul?",
+    "name": "include_standards_only",
+    "options": [
+      { "label": "90ul TFA", "value": "1" },
+      { "label": "45ul TFA", "value": "2" }
+    ]
   }
 ]
