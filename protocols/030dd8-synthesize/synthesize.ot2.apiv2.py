@@ -3,29 +3,39 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': 'Illumina COVIDSeq - Part 2: Synthesize First Strand cDNA',
+    'protocolName': '2. Illumina COVIDSeq - Synthesize First Strand cDNA \
+(n=96)',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
 
+TEST_MODE_TEMP = True
+TEST_MODE_DROP = True
+
 
 def run(ctx):
 
-    [num_samples] = get_values(  # noqa: F821
-        'num_samples')
+    num_samples = 96
 
     # tuning parameters
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
-    cdna_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    # modules
+    tempdeck = ctx.load_module('temperature module gen2', '4')
+    magdeck = ctx.load_module('magnetic module gen2', '7')
+    if not TEST_MODE_TEMP:
+        tempdeck.set_temperature(4)
+    magdeck.disengage()
+
+    # labware
+    cdna_plate = ctx.load_labware('agilentwithnonskirted_96_wellplate_200ul',
                                   '2', 'cDNA plate')
-    reagent_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                     '5', 'reagent plate')
+    reagent_plate = tempdeck.load_labware(
+        'quantgene_96_aluminumblock_200ul', 'reagent plate')
     tips20 = [
-        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
-                         '200µl filtertiprack')
-        for slot in ['7']]
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+        for slot in ['3']]
 
     # load P300M pipette
     m20 = ctx.load_instrument(
@@ -43,7 +53,7 @@ def run(ctx):
         radius = ref_well.diameter/2
 
     def wick(pip, well, side=1):
-        pip.move_to(well.bottom().move(Point(x=side*radius*0.8, z=3)))
+        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
 
     def slow_withdraw(pip, well):
         ctx.max_speeds['A'] = 25
@@ -70,8 +80,11 @@ resuming.\n\n\n\n")
         m20.aspirate(vol_mm, mm.bottom(0.5))
         slow_withdraw(m20, mm)
         m20.dispense(vol_mm, d.bottom(2))
-        wick(m20, d)
-        m20.drop_tip()
+        slow_withdraw(m20, d)
+        if TEST_MODE_DROP:
+            m20.return_tip()
+        else:
+            m20.drop_tip()
 
     ctx.comment('\n\n\n\nProtocol complete.\nSeal and shake at 1600 rpm for 1 \
 minute. Centrifuge at 1000 × g for 1 minute. Place on the preprogrammed \
