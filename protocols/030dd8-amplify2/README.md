@@ -1,4 +1,4 @@
-# Illumina COVIDSeq - Part 1: Anneal RNA
+# 6. Illumina COVIDSeq - Amplify Tagmented Amplicons
 
 
 ### Author
@@ -14,21 +14,31 @@
 This protocol does stuff!
 
 
+### Modules
+* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
+
+
 ### Labware
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
+* Quantgene 96 Aluminum Block 200 µL
+* Agilent 96 Well Plate 200 µL #5042-8502
+* Agilent With Nonskirted 96 Well Plate 200 µL
 * Opentrons 96 Filter Tip Rack 20 µL
+* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* Opentrons 96 Filter Tip Rack 200 µL
 
 
 ### Pipettes
 * [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-ngs-anneal/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-amplify2/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-ngs-anneal/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-amplify2/reagents.png)
 
 
 ### Protocol Steps
@@ -50,4 +60,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-030dd8-ngs-anneal
+030dd8-amplify2

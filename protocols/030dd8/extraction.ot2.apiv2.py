@@ -39,8 +39,10 @@ def run(ctx):
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
+    # load modules
     magdeck = ctx.load_module('magnetic module gen2', '1')
     magdeck.disengage()
+
     magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
                                     'deepwell plate')
     elutionplate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',

@@ -3,8 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '6. Illumina COVIDSeq - Amplify Tagmented Amplicons \
-(n=16)',
+    'protocolName': '6. Illumina COVIDSeq - Amplify Tagmented Amplicons',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -14,10 +13,11 @@ TEST_MODE_BIND_INCUBATE = True
 TEST_MODE_TEMP = True
 TEST_MODE_DROP = True
 
+num_samples = 16
+
 
 def run(ctx):
 
-    num_samples = 16
     if TEST_MODE_BEADS:
         mixreps = 1
     else:
@@ -221,7 +221,7 @@ MagDeck for {time_settling_minutes} minutes.')
             m300.return_tip()
         else:
             m300.drop_tip()
-    
+
     for s, d in zip(index_adapters, mag_samples):
         pick_up(m20)
         m20.aspirate(vol_index_adapter, s.bottom(0.5))

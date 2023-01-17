@@ -1,4 +1,4 @@
-# Illumina COVIDSeq - Part 1: Anneal RNA
+# 1. Illumina COVIDSeq - Anneal RNA
 
 
 ### Author
@@ -14,8 +14,15 @@
 This protocol does stuff!
 
 
+### Modules
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
+* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
+
+
 ### Labware
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
+* Quantgene 96 Aluminum Block 200 µL
+* Agilent 96 Well Plate 200 µL #5042-8502
+* Agilent With Nonskirted 96 Well Plate 200 µL
 * Opentrons 96 Filter Tip Rack 20 µL
 
 

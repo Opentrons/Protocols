@@ -3,8 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '2. Illumina COVIDSeq - Synthesize First Strand cDNA \
-(n=96)',
+    'protocolName': '2. Illumina COVIDSeq - Synthesize First Strand cDNA',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -12,10 +11,10 @@ metadata = {
 TEST_MODE_TEMP = True
 TEST_MODE_DROP = True
 
+num_samples = 96
+
 
 def run(ctx):
-
-    num_samples = 96
 
     # tuning parameters
     ctx.max_speeds['X'] = 200

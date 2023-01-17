@@ -3,7 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '1. Illumina COVIDSeq - Anneal RNA (n=96)',
+    'protocolName': '1. Illumina COVIDSeq - Anneal RNA',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -11,10 +11,10 @@ metadata = {
 TEST_MODE_TEMP = True
 TEST_MODE_DROP = True
 
+num_samples = 96
+
 
 def run(ctx):
-
-    num_samples = 96
 
     # tuning parameters
     ctx.max_speeds['X'] = 200

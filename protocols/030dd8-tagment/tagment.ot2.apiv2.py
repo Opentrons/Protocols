@@ -3,7 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '4. Illumina COVIDSeq - Tagment PCR Amplicons (n=96)',
+    'protocolName': '4. Illumina COVIDSeq - Tagment PCR Amplicons',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -11,10 +11,10 @@ metadata = {
 TEST_MODE_TEMP = True
 TEST_MODE_DROP = True
 
+num_samples = 96
+
 
 def run(ctx):
-
-    num_samples = 96
 
     # tuning parameters
     ctx.max_speeds['X'] = 200
@@ -83,20 +83,21 @@ resuming.\n\n\n\n")
                 pip.reset_tipracks()
                 pip.pick_up_tip()
 
-    for s1, s2, d in zip(cov1_plate.rows()[0][:num_cols],
-                         cov2_plate.rows()[0][:num_cols],
-                         tag1_plate.rows()[0][:num_cols]):
-        pick_up(m20)
-        m20.aspirate(vol_amplicon, s1.bottom(0.5))
-        slow_withdraw(m20, s1)
-        m20.aspirate(vol_amplicon, s2.bottom(0.5))
-        slow_withdraw(m20, s2)
-        m20.dispense(m20.current_volume, d.bottom(2))
-        slow_withdraw(m20, d)
-        if TEST_MODE_DROP:
-            m20.return_tip()
-        else:
-            m20.drop_tip()
+    for i, cov_plate in enumerate([cov1_plate, cov2_plate]):
+        for s, d in zip(cov_plate.rows()[0][:num_cols],
+                        tag1_plate.rows()[0][:num_cols]):
+            pick_up(m20)
+            m20.aspirate(vol_amplicon, s.bottom(0.5))
+            slow_withdraw(m20, s)
+            m20.dispense(m20.current_volume, d.bottom(0.5))
+            if i == 0:
+                wick(m20, d)
+            else:
+                slow_withdraw(m20, d)
+            if TEST_MODE_DROP:
+                m20.return_tip()
+            else:
+                m20.drop_tip()
 
     for i, d in enumerate(tag1_plate.rows()[0][:num_cols]):
         mm_source = mm[i//6]

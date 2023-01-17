@@ -3,7 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '5. Illumina COVIDSeq - Post Tagmentation Clean Up (n=16)',
+    'protocolName': '5. Illumina COVIDSeq - Post Tagmentation Clean Up',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -13,10 +13,11 @@ TEST_MODE_BIND_INCUBATE = True
 TEST_MODE_TEMP = True
 TEST_MODE_DROP = True
 
+num_samples = 16
+
 
 def run(ctx):
 
-    num_samples = 16
     if TEST_MODE_BEADS:
         mixreps = 1
     else:

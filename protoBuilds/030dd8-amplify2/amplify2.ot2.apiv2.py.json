@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\nfrom opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': '2. Illumina COVIDSeq - Synthesize First Strand cDNA',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\nTEST_MODE_TEMP = True\nTEST_MODE_DROP = True\n\nnum_samples = 96\n\n\ndef run(ctx):\n\n    # tuning parameters\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n\n    # modules\n    tempdeck = ctx.load_module('temperature module gen2', '4')\n    magdeck = ctx.load_module('magnetic module gen2', '7')\n    if not TEST_MODE_TEMP:\n        tempdeck.set_temperature(4)\n    magdeck.disengage()\n\n    # labware\n    cdna_plate = ctx.load_labware('agilentwithnonskirted_96_wellplate_200ul',\n                                  '2', 'cDNA plate')\n    reagent_plate = tempdeck.load_labware(\n        'quantgene_96_aluminumblock_200ul', 'reagent plate')\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['3']]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tips20)\n\n    # reagents and variables\n    mm = reagent_plate.rows()[0][1]\n\n    vol_mm = 8.0\n    num_cols = math.ceil(num_samples/8)\n    ref_well = cdna_plate.wells()[0]\n    if ref_well.width:\n        radius = ref_well.width/2\n    else:\n        radius = ref_well.diameter/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def pick_up(pip, spot=None):\n        if spot:\n            pip.pick_up_tip(spot)\n        else:\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                ctx.pause(\"\\n\\n\\n\\nReplace 200ul filtertipracks before \\\nresuming.\\n\\n\\n\\n\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n    for d in cdna_plate.rows()[0][:num_cols]:\n        if not m20.has_tip:\n            pick_up(m20)\n        m20.aspirate(vol_mm, mm.bottom(0.5))\n        slow_withdraw(m20, mm)\n        m20.dispense(vol_mm, d.bottom(2))\n        slow_withdraw(m20, d)\n        if TEST_MODE_DROP:\n            m20.return_tip()\n        else:\n            m20.drop_tip()\n\n    ctx.comment('\\n\\n\\n\\nProtocol complete.\\nSeal and shake at 1600 rpm for 1 \\\nminute. Centrifuge at 1000 \u00d7 g for 1 minute. Place on the preprogrammed \\\nthermal cycler and run the COVIDSeq FSS program.\\n\\n\\n\\n')\n",
+    "content": "from opentrons import protocol_api\nfrom opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': '6. Illumina COVIDSeq - Amplify Tagmented Amplicons',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\nTEST_MODE_BEADS = True\nTEST_MODE_BIND_INCUBATE = True\nTEST_MODE_TEMP = True\nTEST_MODE_DROP = True\n\nnum_samples = 16\n\n\ndef run(ctx):\n\n    if TEST_MODE_BEADS:\n        mixreps = 1\n    else:\n        mixreps = 15\n    time_settling_minutes = 3.0\n    vol_mix = 70\n    z_offset = 3.0\n    radial_offset_fraction = 0.3  # fraction of radius\n    engage_height = 8.5\n\n    # tuning parameters\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n\n    # modules\n    tempdeck = ctx.load_module('temperature module gen2', '4')\n    magdeck = ctx.load_module('magnetic module gen2', '7')\n    if not TEST_MODE_TEMP:\n        tempdeck.set_temperature(4)\n    magdeck.disengage()\n\n    # labware\n    tag1_plate = magdeck.load_labware(\n            'agilentwithnonskirted_96_wellplate_200ul', 'TAG1 plate')\n    index_plate = ctx.load_labware(\n        'agilent_96_wellplate_200ul', '5', 'index adapter plate')\n    reagent_plate = tempdeck.load_labware(\n        'quantgene_96_aluminumblock_200ul', 'reagent plate')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8',\n                                 'reagent reservoir')\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['3', '6']]\n    tips200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['9', '11']]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tips20)\n    m300 = ctx.load_instrument(\n         'p300_multi_gen2', 'left', tip_racks=tips200)\n\n    # reagents and variables\n    num_cols = math.ceil(num_samples/8)\n    mag_samples = tag1_plate.rows()[0][:num_cols]\n    index_adapters = index_plate.rows()[0][:num_cols]\n    mm = reagent_plate.rows()[0][9:]\n    liquid_trash = [\n        well.top()\n        for well in reservoir.rows()[0][10:10+(math.ceil(num_cols/6))]]\n\n    vol_mm = 40.0\n    vol_index_adapter = 10.0\n    vol_wash = 100.0\n    ref_well = tag1_plate.wells()[0]\n    if ref_well.width:\n        radius = ref_well.width/2\n    else:\n        radius = ref_well.diameter/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def pick_up(pip, spot=None):\n        if spot:\n            pip.pick_up_tip(spot)\n        else:\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                ctx.pause(\"\\n\\n\\n\\nReplace 200ul filtertipracks before \\\nresuming.\\n\\n\\n\\n\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n    parked_tips = []\n\n    def remove_supernatant(vol, pip=None, z_asp=0.2, park=True):\n        nonlocal parked_tips\n        if not pip:\n            pip = m300 if vol >= 20 else m20\n        for i, s in enumerate(mag_samples):\n            if not pip.has_tip:\n                if park:\n                    pick_up(pip, parked_tips[i])\n                else:\n                    pick_up(pip)\n            pip.move_to(s.top())\n            ctx.max_speeds['A'] = 25\n            ctx.max_speeds['Z'] = 25\n            side = 0\n            pip.aspirate(vol, s.bottom().move(Point(x=side, z=z_asp)))\n            pip.move_to(s.top())\n            del ctx.max_speeds['A']\n            del ctx.max_speeds['Z']\n            pip.dispense(vol, liquid_trash[i//6])\n            if TEST_MODE_DROP:\n                pip.return_tip()\n            else:\n                pip.drop_tip()\n        parked_tips = []\n\n    def resuspend(location, reps=mixreps, vol=vol_mix,\n                  samples=mag_samples, x_mix_fraction=radial_offset_fraction,\n                  z_mix=z_offset, dispense_height_rel=2.0):\n        m300.flow_rate.aspirate *= 4\n        m300.flow_rate.dispense *= 4\n        side_x = 1 if samples.index(location) % 2 == 0 else -1\n        m300.move_to(location.center())\n        for r_ind in range(reps):\n            bead_loc = location.bottom().move(\n                Point(x=side_x*radius*radial_offset_fraction,\n                      z=z_mix))\n            m300.aspirate(vol, bead_loc)\n            m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))\n        m300.flow_rate.aspirate /= 4\n        m300.flow_rate.dispense /= 4\n\n    def wash(vol, reagent, time_incubation=0,\n             time_settling=0, premix=False,\n             do_discard_supernatant=True, do_resuspend=False,\n             vol_supernatant=0, park=True):\n        nonlocal parked_tips\n\n        columns_per_channel = 12//len(reagent)\n        num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)\n        vol_per_transfer = round(vol/num_transfers, 2)\n\n        last_source = None\n\n        for i, well in enumerate(mag_samples):\n            source = reagent[i//columns_per_channel]\n            pick_up(m300)\n            if park:\n                parked_tips.append(m300._last_tip_picked_up_from)\n            if premix and last_source != source:\n                m300.flow_rate.aspirate *= 4\n                m300.flow_rate.dispense *= 4\n                for _ in range(5):\n                    m300.aspirate(200, source.bottom(0.5))\n                    m300.dispense(200, source.bottom(5))\n                m300.flow_rate.aspirate /= 4\n                m300.flow_rate.dispense /= 4\n            last_source = source\n            for _ in range(num_transfers):\n                m300.aspirate(vol_per_transfer, source)\n                slow_withdraw(m300, source)\n                m300.dispense(vol_per_transfer, well.top())\n            if do_resuspend:\n                resuspend(well)\n            else:\n                if mixreps > 0:\n                    m300.flow_rate.aspirate *= 4\n                    m300.flow_rate.dispense *= 4\n                    m300.mix(mixreps, vol_mix, well.bottom(2))\n                    m300.flow_rate.aspirate /= 4\n                    m300.flow_rate.dispense /= 4\n            m300.air_gap(20)\n            if park or TEST_MODE_DROP:\n                m300.return_tip()\n            else:\n                m300.drop_tip()\n\n        if not TEST_MODE_BIND_INCUBATE:\n            ctx.delay(minutes=time_incubation,\n                      msg=f'Incubating off MagDeck for \\\n{time_incubation} minutes.')\n        if do_discard_supernatant:\n            magdeck.engage(engage_height)\n            if not TEST_MODE_BEADS:\n                ctx.delay(minutes=time_settling, msg=f'Incubating on \\\nMagDeck for {time_settling} minutes.')\n\n            remove_supernatant(vol_supernatant)\n            magdeck.disengage()\n\n    # remove previous supernatant\n    magdeck.engage(engage_height)\n    if not TEST_MODE_BEADS:\n        ctx.delay(minutes=time_settling_minutes, msg=f'Incubating on \\\nMagDeck for {time_settling_minutes} minutes.')\n    remove_supernatant(vol_wash, pip=m300, park=False)\n    remove_supernatant(10, pip=m20, z_asp=0.1, park=False)\n\n    for i, d in enumerate(mag_samples):\n        pick_up(m300)\n        source_mm = mm[i//4]\n        m300.aspirate(vol_mm, source_mm.bottom(0.5))\n        slow_withdraw(m300, source_mm)\n        m300.dispense(vol_mm, d.bottom(2))\n        slow_withdraw(m300, d)\n        if TEST_MODE_DROP:\n            m300.return_tip()\n        else:\n            m300.drop_tip()\n\n    for s, d in zip(index_adapters, mag_samples):\n        pick_up(m20)\n        m20.aspirate(vol_index_adapter, s.bottom(0.5))\n        slow_withdraw(m20, s)\n        m20.dispense(vol_index_adapter, d.bottom(2))\n        slow_withdraw(m20, d)\n        if TEST_MODE_DROP:\n            m20.return_tip()\n        else:\n            m20.drop_tip()\n\n    ctx.comment('\\n\\n\\n\\nSeal and shake at 1600 rpm for 1 minute. If liquid \\\nis visible on the seal, centrifuge at 500 x g for 1 minute. Inspect to make \\\nsure beads are resuspended. To resuspend, set your pipette to 35 \u00b5l with the \\\nplunger down, and then slowly pipette to mix. Place on the preprogrammed \\\nthermal cycler and run the COVIDSeq TAG PCR program')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -3390,17 +3390,15 @@
     ],
     "instruments": [
         {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
             "mount": "right",
             "name": "p20_multi_gen2"
         }
     ],
     "labware": [
-        {
-            "name": "cDNA plate on 2",
-            "share": false,
-            "slot": "2",
-            "type": "agilentwithnonskirted_96_wellplate_200ul"
-        },
         {
             "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
             "share": false,
@@ -3414,6 +3412,42 @@
             "type": "quantgene_96_aluminumblock_200ul"
         },
         {
+            "name": "index adapter plate on 5",
+            "share": false,
+            "slot": "5",
+            "type": "agilent_96_wellplate_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "TAG1 plate on Magnetic Module GEN2 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "agilentwithnonskirted_96_wellplate_200ul"
+        },
+        {
+            "name": "reagent reservoir on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
             "name": "Opentrons Fixed Trash on 12",
             "share": false,
             "slot": "12",
@@ -3423,7 +3457,7 @@
     "metadata": {
         "apiLevel": "2.13",
         "author": "Opentrons <protocols@opentrons.com>",
-        "protocolName": "2. Illumina COVIDSeq - Synthesize First Strand cDNA"
+        "protocolName": "6. Illumina COVIDSeq - Amplify Tagmented Amplicons"
     },
     "modules": [
         {
@@ -3433,7 +3467,7 @@
             "type": "tempdeck"
         },
         {
-            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw None",
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw TAG1 plate on Magnetic Module GEN2 on 7",
             "share": false,
             "slot": "7",
             "type": "magdeck"

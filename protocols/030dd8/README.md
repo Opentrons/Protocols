@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-	* Zymo Quick-DNA/RNA™ Viral MagBead Extraction
+* Broad Category
+	* Specific Category
 
 
 ## Description
-This protocol performs DNA/RNA extraction on up to 96 samples using the [Zymo Quick-DNA/RNA™ Viral MagBead Extraction kit](https://files.zymoresearch.com/protocols/_r2140_r2141_quick-dna-rna_viral_magbead.pdf) using the Opentrons Magnetic Module.
+This protocol does stuff!
 
 
 ### Modules
@@ -36,6 +36,10 @@ This protocol performs DNA/RNA extraction on up to 96 samples using the [Zymo Qu
 
 ### Reagent Setup
 ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8/reagents.png)
+
+
+### Protocol Steps
+1. Step 1...
 
 
 ### Process
