@@ -350,6 +350,7 @@ dispension_height_mm,2
 dispmode,1
 disposal_vol,2
 disposal_volume,1
+div_tfa,1
 dmsovol,1
 dna,1
 dna_asp_rate,1
@@ -841,7 +842,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,145
+num_samples,152
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
