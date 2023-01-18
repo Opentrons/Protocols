@@ -49,7 +49,7 @@ This protocol performs the Simplified Fe Quantification Assay. If in Test Mode, 
 2. Deck starts with samples in the sample block and empty digestion plate in the heating module. The reagent block is on the deck but only has water in Well A1.
 3. Pipette 5-20 uL of water in triplicate from the reagent block into the digestion plate. (1 x 30 uL tip). Make the pipetted volume user selectable and consistent for all samples.
 4. Pipette 5-20 uL (same as in step 3) of each sample in triplicate from the sample block into the digestion plate. (1-24 x 30 uL tips)
-5. Add 1200 uL of nitric acid from the acid block into each well of the digestion plate. a. Use 300 uL single or multi-channel pipette and transfer multiple times.
+5. Add 1200 uL of nitric acid from the acid block into each well of the digestion plate. The solution is mixed 15 times at 200ul with the multi-channel pipette
 6. Pause so user can cover the digestion plate.
 7. Raise heating block temperature to 95 °C (this is actually now variable, per email on 12/15/22) and maintain for 12 h (this is actually now variable, per email on 12/15/22).
 8. Cool heating block to room temperature. Wait for 1 h to ensure all samples reach room temperature.
