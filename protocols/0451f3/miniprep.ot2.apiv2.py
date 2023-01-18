@@ -114,8 +114,8 @@ def run(ctx):
                 m300.aspirate(vol_per_transfer, m.bottom(z_asp))
                 slow_withdraw(m)
                 m300.dispense(vol_per_transfer, dest.bottom(z_disp))
-                ctx.delay(seconds=2)
-                m300.air_gap(5)
+                m300.blow_out(dest.bottom(z_disp))
+                slow_withdraw(dest, m300)
             m300.drop_tip()
         m300.flow_rate.aspirate *= 5
 
