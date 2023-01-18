@@ -1,4 +1,4 @@
-# Zymo Quick-DNA/RNA™ Viral MagBead Extraction
+# 1. Illumina COVIDSeq - Anneal RNA
 
 
 ### Author
@@ -15,27 +15,27 @@ This protocol does stuff!
 
 
 ### Modules
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
 
 
 ### Labware
-* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
-* [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
-* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* Opentrons 96 Filter Tip Rack 200 µL
+* Quantgene 96 Aluminum Block 200 µL
+* Agilent 96 Well Plate 200 µL #5042-8502
+* Agilent With Nonskirted 96 Well Plate 200 µL
+* Opentrons 96 Filter Tip Rack 20 µL
 
 
 ### Pipettes
-* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-ngs-anneal/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/030dd8-ngs-anneal/reagents.png)
 
 
 ### Protocol Steps
@@ -57,4 +57,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-030dd8
+030dd8-ngs-anneal
