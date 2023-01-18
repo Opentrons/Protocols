@@ -25,7 +25,7 @@ def run(ctx):
     # labware
     temp_mod = ctx.load_module('temperature module gen2', 4)
     digestion_plate = temp_mod.load_labware('zinsser_96_wellplate_1898ul')
-    analysis_plate = ctx.load_labware('corning_96_wellplate_200ul', 2)  # noqa: E501
+    analysis_plate = ctx.load_labware('hellma_96_wellplate_300ul', 2)  # noqa: E501
     sample_block = ctx.load_labware('rrlcustom_40_wellplate_1500ul', 3)
     reagent_block = ctx.load_labware('nest_12_reservoir_15ml', 1)
     acid_block = ctx.load_labware('rrl_1_wellplate_180000ul', 5)
@@ -145,13 +145,23 @@ def run(ctx):
         p20.blow_out()
         p20.drop_tip()
 
+    if not test_mode:
+        ctx.pause('''Move analysis plate on slot 2 to slot 4 temp. module''')
+        temp_mod.set_temperature(95)
+        ctx.delay(minutes=60)
+        temp_mod.set_temperature(25)
+        ctx.delay(minutes=60)
+
+        ctx.pause('''Remove analysis plate and move back to slot 2.
+                     Put digestion plate back on temp. mod on slot 4.''')
+
     ctx.comment('\n----TRANSFERRING WATER TO ANALYSIS PLATE----\n\n')
     num_wells = num_samp*3+3+21  # + water wells + cal wells
     num_col = math.ceil(num_wells/8)
     pick_up()
     for col in analysis_plate.rows()[0][:num_col]:
-        m300.aspirate(36-sample_vol, water)
-        m300.dispense(36-sample_vol, col.top())
+        m300.aspirate(46, water)
+        m300.dispense(46, col.top())
         m300.blow_out()
     m300.drop_tip()
 
