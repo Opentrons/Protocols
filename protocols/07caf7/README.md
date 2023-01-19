@@ -29,7 +29,7 @@ This protocol performs a custom mass spec sample prep.
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/07caf7/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/07caf7/deckv2.png)
 
 
 ### Reagent Setup
