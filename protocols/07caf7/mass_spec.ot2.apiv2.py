@@ -35,7 +35,7 @@ def run(ctx):
     tipracks300m = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['6', '11']]
-    collection_plate = ctx.load_labware('greinerbioone_96_wellplate_2000ul',
+    collection_plate = ctx.load_labware('greiner_96_wellplate_2000ul',
                                         '7', 'collection plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')
     final_plate = ctx.load_labware('axygen_96_plate_200ul_pcr', '10')
