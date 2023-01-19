@@ -761,7 +761,7 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,2
-mount_m300,5
+mount_m300,6
 mount_p20,8
 mount_p300,5
 mount_side,1
