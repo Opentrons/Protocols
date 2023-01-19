@@ -28,9 +28,10 @@ def run(ctx):
             'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot,
             f'source plate {i+1}')
         for i, slot in enumerate(['1', '2', '3'][:num_racks])]
-    tipracks300s = [ctx.load_labware('opentrons_96_tiprack_300ul', '4')]
-    stacked_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
-                                     'SPE stacked on collection plate')
+    tipracks300s = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    stacked_plate = ctx.load_labware(
+        'spestackedoncollection_96_wellplate_1600ul', '5',
+        'SPE stacked on collection plate')
     tipracks300m = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['6', '11']]
