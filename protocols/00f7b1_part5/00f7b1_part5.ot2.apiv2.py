@@ -301,8 +301,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n~~~~~~~~~~~~~~MOVING cDNA TO FINAL PLATE~~~~~~~~~~~~~\n')
     for s, d in zip(samples_mag, final_dest):
         pick_up(m300)
-        m300.aspirate(50, s.bottom().move(types.Point(x=0, y=0, z=2)),
-                      rate=0.05)
+        m300.aspirate(50, s,
+                      rate=0.1)
         m300.dispense(50, d)
         drop_tip(m300)
 

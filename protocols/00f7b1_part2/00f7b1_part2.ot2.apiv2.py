@@ -1,5 +1,6 @@
 # flake8: noqa
 
+
 """OPENTRONS."""
 from opentrons import protocol_api
 import math
@@ -61,7 +62,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     'Global variables'
     TEST_MODE = False
-    bead_delay_time = 7
+    bead_delay_time = 2.5
     wash_delay_time = 7
     supernatant_headspeed_modulator = 10
     mag_height = 8
@@ -349,9 +350,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment('\n~~~~~~~~~~~~~INCUBATING 5 MINUTES~~~~~~~~~~~~\n')
     if TEST_MODE:
-        ctx.delay(seconds=2.5)
+        ctx.delay(seconds=5)
     else:
-        ctx.delay(minutes=2.5)
+        ctx.delay(minutes=5)
 
     ctx.comment('\n~~~~~~~~~~~~~ENGAGING MAGNETIC MODULE~~~~~~~~~~~~\n')
     mag_deck.engage(height_from_base=mag_height)
@@ -381,9 +382,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     mag_deck.engage(height_from_base=mag_height)
     if TEST_MODE:
-        ctx.delay(minutes=5)
+        ctx.delay(minutes=2.5)
     else:
-        ctx.delay(minutes=5)
+        ctx.delay(minutes=2.5)
 
     ctx.comment('\n~~~~~~~~~~~~~REMOVING SUPERNATANT~~~~~~~~~~~~\n')
     remove_supernatant(190)

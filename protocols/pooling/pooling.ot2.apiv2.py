@@ -58,7 +58,7 @@ def run(ctx):
         pip = p300 if vol_s > 20 else p20
         if vol_s != 0:
             pip.pick_up_tip()
-            pip.transfer(vol_s, source, pooling_tube.bottom(2),
+            pip.transfer(vol_s, source.bottom(3), pooling_tube.bottom(2),
                          new_tip='never')
             pip.blow_out(pooling_tube.bottom(2))
             pip.move_to(pooling_tube.bottom().move(Point(

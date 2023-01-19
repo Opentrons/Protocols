@@ -10,8 +10,8 @@
     "label": "Automate Reaction Mix Creation",
     "name": "_reaction_mix",
     "options": [
-      { "label": "Yes", "value": "true" },
-      { "label": "No", "value": "false" }
+      { "label": "Yes", "value": true },
+      { "label": "No", "value": false }
     ]
   },
   {

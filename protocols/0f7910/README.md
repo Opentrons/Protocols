@@ -31,7 +31,7 @@ Source plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Desti
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/Screen+Shot+2022-12-13+at+4.21.58+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f7910/Screen+Shot+2022-12-20+at+10.41.56+AM.png)
 
 
 ### Protocol Steps

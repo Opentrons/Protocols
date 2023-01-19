@@ -19,14 +19,16 @@ def run(ctx):
     [count_samples, full_volume, include_standards_only,
      labware_tuberack, clearance_meoh_water, clearance_dil_dispense,
      touch_radius, touch_v_offset, track_start, clearance_tfa, clearance_mecn,
-     mix_reps, vol_dead] = get_values(  # noqa: F821
+     mix_reps, vol_dead, div_tfa] = get_values(  # noqa: F821
       'count_samples', 'full_volume', 'include_standards_only',
       'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
       'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
-      'clearance_mecn', 'mix_reps', 'vol_dead')
+      'clearance_mecn', 'mix_reps', 'vol_dead', 'div_tfa')
 
     ctx.delay(seconds=10)
     ctx.set_rail_lights(True)
+
+    div_tfa = int(div_tfa)
 
     if not 12 <= count_samples <= 27:
         raise Exception('Invalid number of samples (must be 12-27).')
@@ -325,7 +327,7 @@ def run(ctx):
         div = 1
 
     ctx.comment("""
-    add {} ul 1:1 MeOH:Water
+    add 20 ul 1:1 MeOH:Water
     to make 11 serial dilutions 1:2 from unlabelled 200 um solution in A1
 
     liquid handling method for methanol:water:
@@ -334,7 +336,7 @@ def run(ctx):
     delayed blowout after dispense (let meoh fall to bottom of tip first)
     repeat blowout (for complete dispense)
     tip touch
-    """.format(str(20 / div)))
+    """)
 
     pip = p300s
     meoh_flow_rates(pip)
@@ -378,7 +380,7 @@ def run(ctx):
     reduced aspirate and dispense speeds
     slow tip withdrawal from plasma
     avoid over-immersion of tip (liquid height tracking)
-    """.format(str(90 / div)))
+    """.format(str(90 / div_tfa)))
 
     plasma_flow_rates(p300s)
     p300s.pick_up_tip()
@@ -388,13 +390,13 @@ def run(ctx):
     increment = (starting_clearance - ending_clearance) / len(samples)
     p300s.aspirate(35 / div, golden_plasma.bottom(starting_clearance))
     for sample in samples:
-        p300s.aspirate(90 / div, golden_plasma.bottom(tracking_clearance))
+        p300s.aspirate(90 / div_tfa, golden_plasma.bottom(tracking_clearance))
         slow_tip_withdrawal(p300s, golden_plasma)
         if tracking_clearance >= ending_clearance + increment:
             tracking_clearance -= increment
         else:
             tracking_clearance = ending_clearance
-        p300s.dispense(90 / div, sample.bottom(2))
+        p300s.dispense(90 / div_tfa, sample.bottom(2))
         slow_tip_withdrawal(p300s, sample)
     p300s.drop_tip()
     default_flow_rates(p300s)
@@ -593,7 +595,7 @@ def run(ctx):
         meoh_flow_rates(p300s)
         if full_volume:
             for rep in range(2):
-                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-3)))
+                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-8)))
                 p300s.air_gap(15)
                 p300s.dispense((250 / div)+15, amicon_filters[index].top())
                 for rep in range(3):
@@ -606,7 +608,8 @@ def run(ctx):
             p300s.drop_tip()
         else:
             for rep in range(1):
-                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-3))
+
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1))-9))
                 p300s.air_gap(15)
                 p300s.dispense((250)+15, amicon_filters[index].top())
                 for rep in range(3):

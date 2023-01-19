@@ -311,6 +311,8 @@ destination_plate_lname,1
 destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
+digestion_temp,1
+digestion_time,1
 dil_csv_1,2
 dil_json_1,1
 dil_json_2,1
@@ -350,6 +352,7 @@ dispension_height_mm,2
 dispmode,1
 disposal_vol,2
 disposal_volume,1
+div_tfa,1
 dmsovol,1
 dna,1
 dna_asp_rate,1
@@ -431,7 +434,7 @@ f_time,2
 fe_temp,2
 fe_time,2
 file_dilution,1
-file_input,3
+file_input,4
 fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
@@ -654,7 +657,7 @@ loc_csv,1
 loc_rnase,1
 loc_tween,1
 lw_checkit,1
-lw_deepwell_plate,1
+lw_deepwell_plate,2
 lw_dmso,1
 lw_hplc,1
 lw_tiprack300,1
@@ -727,7 +730,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
-mixreps,2
+mixreps,3
 mixreps_dilution,1
 mm,3
 mm1_col,1
@@ -759,10 +762,10 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,1
-mount_m300,5
+mount_m20,2
+mount_m300,6
 mount_p20,7
-mount_p300,6
+mount_p300,5
 mount_side,1
 move_side,2
 move_vol,1
@@ -818,6 +821,7 @@ num_col,8
 num_cols,3
 num_columns,1
 num_daughter_plates,1
+num_drug_plates,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
@@ -840,7 +844,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,144
+num_samples,143
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -899,7 +903,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,112
+p20_mount,113
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1069,7 +1073,7 @@ rate_asp_l,1
 rate_asp_r,1
 rate_disp_l,1
 rate_disp_r,1
-ratio_beads,1
+ratio_beads,2
 rdnase_vol,1
 reaction_plate,3
 reag1_vol,1
@@ -1171,7 +1175,7 @@ sample_size,1
 sample_slots,1
 sample_trans_vol,1
 sample_type,1
-sample_vol,23
+sample_vol,24
 sample_volume,5
 samples,42
 samples_csv,1
@@ -1316,6 +1320,7 @@ te_volume,2
 te_well,2
 temp,2
 temp_gen,1
+temp_lysate,1
 temp_mod,2
 temp_mod_lname,2
 temp_mod_on,2
@@ -1344,13 +1349,13 @@ test_method,1
 test_mode,1
 test_plates,1
 tfer_vol,1
-time_airdry_minutes,1
+time_airdry_minutes,2
 time_dry,18
 time_engage,19
 time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
-time_settling_minutes,1
+time_settling_minutes,2
 time_shake,1
 tip_disp,3
 tip_immersion,1
@@ -1498,12 +1503,12 @@ vol_elution,1
 vol_elution_buffer,1
 vol_elution_final,1
 vol_etoh,1
-vol_final_elution,1
+vol_final_elution,2
 vol_final_plate,1
 vol_h2o,2
+vol_h_lysate,1
 vol_ic,1
 vol_lys_buffer,1
-vol_meoh,1
 vol_mm,2
 vol_mobile_phase,1
 vol_mq,1
@@ -1513,8 +1518,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,4
-vol_sample_redissolved,1
+vol_sample,3
 vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1

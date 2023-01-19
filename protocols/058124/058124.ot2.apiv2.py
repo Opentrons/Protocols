@@ -134,8 +134,7 @@ def run(ctx):
         lst = [
          chunk for plate in dilution_plates for chunk in create_chunks(
           plate.columns(), 4)]
-
-        yield from lst
+        return lst
 
     dest = thirds()
 
@@ -211,7 +210,7 @@ def run(ctx):
             destination = []
             numblocks = math.ceil(len(params[key]["diluent vol"]) / 4)
             for block in range(numblocks):
-                destination.extend(next(dest))
+                destination.extend(dest[block])
 
             # destination wells - set current vol to 0
             for column in destination:
