@@ -23,15 +23,16 @@ def run(ctx):
     reag_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1)
     ethanol_res = ctx.load_labware('nest_1_reservoir_195ml', 2)
     wash_buffer_res = ctx.load_labware('nest_1_reservoir_195ml', 3)
-    reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 5, label='Deepwell Plate')  # noqa: E501
+    reagent_plate = ctx.load_labware('kingfisher_96_wellplate_2000ul', 5, label='Deepwell Plate')  # noqa: E501
 
-    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 4, label='Deepwell Plate')  # noqa: E501
-    ethanol_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot, label='Deepwell Plate')  # noqa: E501
+    sample_plate = ctx.load_labware('kingfisher_96_wellplate_2000ul', 4, label='Deepwell Plate')  # noqa: E501
+    ethanol_plates = [ctx.load_labware('kingfisher_96_wellplate_2000ul', slot, label='Deepwell Plate')  # noqa: E501
                       for slot in [7, 8]]
-    wash_buffer_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)
+    wash_buffer_plates = [ctx.load_labware('kingfisher_96_wellplate_2000ul',
+                          slot)
                           for slot in [10, 11]]
 
-    elution_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 6, label='Deepwell Plate')  # noqa: E501
+    elution_plate = ctx.load_labware('kingfisher_96_wellplate_2000ul', 6, label='Deepwell Plate')  # noqa: E501
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
             for slot in [9]]
 

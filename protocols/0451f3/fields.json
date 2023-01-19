@@ -37,5 +37,14 @@
     "label": "volume of final elution (in ul)",
     "name": "vol_final_elution",
     "default": 35.0
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 8-channel GEN2 pipette mount",
+    "name": "mount_m300",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
   }
 ]

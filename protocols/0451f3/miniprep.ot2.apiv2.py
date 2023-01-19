@@ -15,9 +15,10 @@ TEST_MODE_AIRDRY = False
 
 def run(ctx):
 
-    [num_samples, mixreps,
-     time_airdry_minutes, vol_final_elution] = get_values(  # noqa: F821
-        'num_samples', 'mixreps', 'time_airdry_minutes', 'vol_final_elution')
+    [num_samples, mixreps, time_airdry_minutes, vol_final_elution,
+     mount_m300] = get_values(  # noqa: F821
+        'num_samples', 'mixreps', 'time_airdry_minutes', 'vol_final_elution',
+        'mount_m300')
 
     if TEST_MODE_BEADS:
         mixreps = 1
@@ -56,7 +57,7 @@ def run(ctx):
 
     # load P300M pipette
     m300 = ctx.load_instrument(
-        'p300_multi_gen2', 'left', tip_racks=tips300)
+        'p300_multi_gen2', mount_m300, tip_racks=tips300)
 
     """
     Here is where you can define the locations of your reagents.
