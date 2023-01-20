@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "onsite-bms.ot2.apiv2.py"
+            "onsite-bms-48plate.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
