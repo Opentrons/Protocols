@@ -17,7 +17,7 @@ def run(ctx):
     tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     plate = ctx.load_labware('corning_96_wellplate_360ul_flat', 9)
 
-    plates_384 = [ctx.load_labware('appliedbiosystemsthermofisherlife4309849withbarcode_384_wellplate_30ul', slot)  # noqa: E501
+    plates_384 = [ctx.load_labware('appliedbiosystemsthermofisherlife4309849withbarcode_384_wellplate_30ul', slot, label='384 Plate')  # noqa: E501
                   for slot in [2, 3, 5, 6]]
     plates_384 = plates_384
     tips = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
@@ -46,32 +46,45 @@ def run(ctx):
 
     num_cols = 8
     m20.pick_up_tip()
-    for well in slot_5_all_cols[:num_cols*2]:
-        m20.aspirate(10, plate.rows()[0][0].bottom(0.5))
+    wells = slot_5_all_cols[:num_cols*2]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][0].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+
+        for j in range(2):
+            m20.dispense(10, slot_5_all_cols[:num_cols*2][i+j].bottom(0.5))
+            m20.move_to(slot_5_all_cols[:num_cols*2][i+j].bottom(1.5))
+            ctx.delay(seconds=1)
+        ctx.comment('\n')
+
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_5_all_cols[num_cols*2:num_cols*4]:
-        m20.aspirate(10, plate.rows()[0][1].bottom(0.5))
+    wells = slot_5_all_cols[num_cols*2:num_cols*4]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][1].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_5_all_cols[num_cols*4:num_cols*8]:
-        m20.aspirate(10, plate.rows()[0][2].bottom(0.5))
+    wells = slot_5_all_cols[num_cols*4:num_cols*8]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][2].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))
+            m20.move_to(wells[i+j].bottom(1.5))
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
@@ -80,32 +93,42 @@ def run(ctx):
                        for col in range(24) for row in range(2)]
 
     m20.pick_up_tip()
-    for well in slot_6_all_cols[:num_cols*2]:
-        m20.aspirate(10, plate.rows()[0][3].bottom(0.5))
+    wells = slot_6_all_cols[:num_cols*2]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][3].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))
+            m20.move_to(wells[i+j].bottom(1.5))
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_6_all_cols[num_cols*2:num_cols*4]:
-        m20.aspirate(10, plate.rows()[0][4].bottom(0.5))
+    wells = slot_6_all_cols[num_cols*2:num_cols*4]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][4].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_6_all_cols[num_cols*4:num_cols*8]:
-        m20.aspirate(10, plate.rows()[0][5].bottom(0.5))
+    wells = slot_6_all_cols[num_cols*4:num_cols*8]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][5].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
@@ -114,32 +137,41 @@ def run(ctx):
                        for col in range(24) for row in range(2)]
 
     m20.pick_up_tip()
-    for well in slot_2_all_cols[:num_cols*2]:
-        m20.aspirate(10, plate.rows()[0][6].bottom(0.5))
+    wells = slot_2_all_cols[:num_cols*2]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][6].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_2_all_cols[num_cols*2:num_cols*4]:
-        m20.aspirate(10, plate.rows()[0][7].bottom(0.5))
+    wells = slot_2_all_cols[num_cols*2:num_cols*4]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][7].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_2_all_cols[num_cols*4:num_cols*8]:
-        m20.aspirate(10, plate.rows()[0][8].bottom(0.5))
+    wells = slot_2_all_cols[num_cols*4:num_cols*8]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][8].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
@@ -148,32 +180,41 @@ def run(ctx):
                        for col in range(24) for row in range(2)]
 
     m20.pick_up_tip()
-    for well in slot_3_all_cols[:num_cols*2]:
-        m20.aspirate(10, plate.rows()[0][9].bottom(0.5))
+    wells = slot_3_all_cols[:num_cols*2]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][9].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_3_all_cols[num_cols*2:num_cols*4]:
-        m20.aspirate(10, plate.rows()[0][10].bottom(0.5))
+    wells = slot_3_all_cols[num_cols*2:num_cols*4]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][10].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
     m20.pick_up_tip()
-    for well in slot_3_all_cols[num_cols*4:num_cols*8]:
-        m20.aspirate(10, plate.rows()[0][11].bottom(0.5))
+    wells = slot_3_all_cols[num_cols*4:num_cols*8]
+    for i in range(0, len(wells), 2):
+        m20.aspirate(20, plate.rows()[0][11].bottom(0.5))
         ctx.delay(seconds=1)
-        m20.dispense(10, well.bottom(0.5))
-        m20.move_to(well.bottom(1.5))
-        ctx.delay(seconds=1)
+        for j in range(2):
+            m20.dispense(10,
+                         wells[i+j].bottom(0.5))  # noqa: E501
+            m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
+            ctx.delay(seconds=1)
     m20.drop_tip()
     ctx.comment('\n\n\n\n')
 
@@ -196,12 +237,13 @@ def run(ctx):
         dispense_wells = [ctx.loaded_labwares[slot].rows()[row][col-1]
                           for col in disp_col_list for row in range(2)]
         m20.pick_up_tip()
+        m20.aspirate(13, tc_plate.rows()[0][i].bottom(0.5))
+        ctx.delay(seconds=1)
         for well in dispense_wells:
-            m20.aspirate(2, tc_plate.rows()[0][i].bottom(0.5))
-            ctx.delay(seconds=1)
+
             m20.dispense(1, well.bottom(0.5))
             m20.move_to(well.bottom(1.5))
             ctx.delay(seconds=1)
-            m20.blow_out(ctx.loaded_labwares[12].wells()[0].top())
+        m20.blow_out(ctx.loaded_labwares[12].wells()[0].top())
         m20.drop_tip()
         ctx.comment('\n\n\n\n')

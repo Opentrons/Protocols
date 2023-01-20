@@ -256,7 +256,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,10
+csv_samp,11
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -534,7 +534,7 @@ init_vol,3
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
-init_vol_dil,1
+init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
@@ -884,7 +884,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,34
+p1000_mount,35
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -903,7 +903,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,113
+p20_mount,114
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1375,7 +1375,7 @@ tip_start_samples,1
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,47
+tip_track,48
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
