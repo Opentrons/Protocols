@@ -11,12 +11,12 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, tip_start_samples, vol_sample, vol_meoh, vol_mq,
-     col_meoh, col_mq, vol_sample_redissolved, mount_p300, mount_m300
+    [num_samples, tip_start_samples, well_start_samples, vol_sample, vol_meoh,
+     vol_mq, col_meoh, col_mq, vol_sample_redissolved, mount_p300, mount_m300
      ] = get_values(  # noqa: F821
-        'num_samples', 'tip_start_samples', 'vol_sample', 'vol_meoh', 'vol_mq',
-         'col_meoh', 'col_mq', 'vol_sample_redissolved', 'mount_p300',
-         'mount_m300')
+        'num_samples', 'tip_start_samples', 'well_start_samples', 'vol_sample',
+        'vol_meoh', 'vol_mq', 'col_meoh', 'col_mq', 'vol_sample_redissolved',
+        'mount_p300', 'mount_m300')
 
     num_racks = math.ceil(num_samples/24)
     num_cols = math.ceil(num_samples/8)
@@ -64,8 +64,16 @@ def run(ctx):
     # reagents
     samples_source = [
         well for rack in source_racks for well in rack.wells()][:num_samples]
-    samples_stacked_s = stacked_plate.wells()[:num_samples]
-    samples_stacked_m = stacked_plate.rows()[0][:num_cols]
+    stacked_starting_index = stacked_plate.wells().index(
+        stacked_plate.wells_by_name()[well_start_samples])
+    samples_stacked_s = stacked_plate.wells()[
+        stacked_starting_index:stacked_starting_index+num_samples]
+    samples_stacked_m = []
+    for well in samples_stacked_s:
+        col_reference = stacked_plate.columns()[
+            stacked_plate.wells().index(well)//8][0]
+        if col_reference not in samples_stacked_m:
+            samples_stacked_m.append(col_reference)
     samples_collection_m = collection_plate.rows()[0][:num_cols]
     samples_final_m = final_plate.rows()[0][:num_cols]
     meoh = reservoir.rows()[0][col_meoh-1]

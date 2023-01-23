@@ -1562,6 +1562,7 @@ wb_col,1
 well_disp_height,1
 well_edge_offset,1
 well_plate,3
+well_start_samples,1
 well_vol,2
 wells_skipped,1
 wells_to_be_pooled,1

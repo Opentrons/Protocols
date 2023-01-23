@@ -12,6 +12,12 @@
     "default": "A1"
   },
   {
+    "type": "str",
+    "label": "sample starting well destination (slot 5)",
+    "name": "well_start_samples",
+    "default": "A1"
+  },
+  {
     "type": "float",
     "label": "initial sample volume (in ul)",
     "name": "vol_sample",
