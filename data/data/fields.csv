@@ -352,7 +352,6 @@ dispension_height_mm,2
 dispmode,1
 disposal_vol,2
 disposal_volume,1
-div_tfa,1
 dmsovol,1
 dna,1
 dna_asp_rate,1
@@ -1350,6 +1349,7 @@ template_vol,1
 test_method,1
 test_mode,1
 test_plates,1
+tfa_540,1
 tfer_vol,1
 time_airdry_minutes,2
 time_dry,18
