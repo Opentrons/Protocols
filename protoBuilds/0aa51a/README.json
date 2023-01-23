@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module.",
+    "description": "This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module. The worklist input for where to transfer oligos should be specified in the following format, including header line:\nPipettor,Slot 5 well (Oligo source plate),Slot 10 well (Destination plate),Volume uL\nP20 single channel,A6,A1,10\nP20 single channel,C1,A1,10\nP20 single channel,A1,B1,10\nP20 single channel,A7,B1,2.5\nP20 single channel,A8,B1,2.5\nP20 single channel,A9,B1,2.5\n...\nYou can download a template .csv file here.",
     "internal": "0aa51a",
     "labware": "\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* PCR\n\t* Complete PCR Workflow\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0aa51a/deck.png)\n\n\n",
-        "description": "This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module.\n\n\n",
+        "description": "This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module. The worklist input for where to transfer oligos should be specified in the following format, **including header line**:\n\n```\nPipettor,Slot 5 well (Oligo source plate),Slot 10 well (Destination plate),Volume uL\nP20 single channel,A6,A1,10\nP20 single channel,C1,A1,10\nP20 single channel,A1,B1,10\nP20 single channel,A7,B1,2.5\nP20 single channel,A8,B1,2.5\nP20 single channel,A9,B1,2.5\n...\n```\n\nYou can download a template .csv file [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0aa51a/ex.csv).\n\n\n",
         "internal": "0aa51a\n",
         "labware": "* [Bio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
         "modules": "* [Opentrons Thermocycler Module](https://shop.opentrons.com/thermocycler-module-1/)\n\n\n",

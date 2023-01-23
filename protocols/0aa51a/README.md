@@ -11,7 +11,20 @@
 
 
 ## Description
-This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module.
+This protocol performs a PCR plating and PCR reaction on the Opentrons Thermocycler Module. The worklist input for where to transfer oligos should be specified in the following format, **including header line**:
+
+```
+Pipettor,Slot 5 well (Oligo source plate),Slot 10 well (Destination plate),Volume uL
+P20 single channel,A6,A1,10
+P20 single channel,C1,A1,10
+P20 single channel,A1,B1,10
+P20 single channel,A7,B1,2.5
+P20 single channel,A8,B1,2.5
+P20 single channel,A9,B1,2.5
+...
+```
+
+You can download a template .csv file [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0aa51a/ex.csv).
 
 
 ### Modules
