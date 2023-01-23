@@ -10,8 +10,9 @@ metadata = {
 
 def run(ctx):
 
-    [mount_m300, mount_p20] = get_values(  # noqa: F821
-        'mount_m300', 'mount_p20')
+    [worklist, do_deactivate_tc, mount_m300,
+     mount_p20] = get_values(  # noqa: F821
+        'worklist', 'do_deactivate_tc', 'mount_m300', 'mount_p20')
 
     mix_reps_oligo = 5
     mix_vol_oligo = 5.0
@@ -39,19 +40,21 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', mount_p20,
                               tip_racks=tipracks20)
 
+    # parse
+    data = [
+        [val.strip() for val in line.split(',')]
+        for line in worklist.splitlines()[1:]
+        if line and line.split(',')[0].strip()]
+
     # reagents
-    oligo_volumes = [10, 10, 10, 2.5, 2.5, 2.5, 2.5, 10, 2.5, 2.5, 2.5, 2.5,
-                     10, 2.5, 2.5, 2.5, 2.5, 10, 2.5, 2.5, 2.5, 2.5]
+    oligo_volumes = [float(line[3]) for line in data]
     oligo_sources = [
-        oligo_plates[0].wells_by_name()[well_name]
-        for well_name in ['A6', 'C1', 'A1', 'A7', 'A8', 'A9', 'A10', 'B4',
-                          'A2', 'A3', 'A4', 'A5', 'A11', 'B5', 'B6', 'B7',
-                          'B8', 'C2', 'A12', 'B1', 'B2', 'B3']]
+        oligo_plates[0].wells_by_name()[line[1]]
+        for line in data]
     oligo_dests = [
-        tc_plate.wells_by_name()[well_name]
-        for well_name in ['A1', 'A1', 'B1', 'B1', 'B1', 'B1', 'B1', 'C1', 'C1',
-                          'C1', 'C1', 'C1', 'D1', 'D1', 'D1', 'D1', 'D1', 'E1',
-                          'E1', 'E1', 'E1', 'E1']]
+        tc_plate.wells_by_name()[line[2]]
+        for line in data]
+
     pcr_reagent = reagent_plate.rows()[0][0]
     pcr_reagent_dest = tc_plate.rows()[0][0]
 
@@ -78,15 +81,22 @@ def run(ctx):
         p20.drop_tip()
 
     # PCR reagent addition
+    pcr_reagent_dests = []
+    for well in oligo_dests:
+        col_reference = tc_plate.columns()[tc_plate.wells().index(well)//8][0]
+        if col_reference not in pcr_reagent_dests:
+            pcr_reagent_dests.append(col_reference)
+
     tc.open_lid()
     tc.set_lid_temperature(105)
-    m300.pick_up_tip()
-    m300.aspirate(vol_pcr_reagent, pcr_reagent)
-    slow_withdraw(pcr_reagent, m300)
-    m300.dispense(vol_pcr_reagent, pcr_reagent_dest)
-    m300.mix(mix_reps_pcr_reagent, mix_vol_pcr_reagent, pcr_reagent_dest)
-    slow_withdraw(pcr_reagent_dest, m300)
-    m300.drop_tip()
+    for dest in pcr_reagent_dests:
+        m300.pick_up_tip()
+        m300.aspirate(vol_pcr_reagent, pcr_reagent)
+        slow_withdraw(pcr_reagent, m300)
+        m300.dispense(vol_pcr_reagent, dest)
+        m300.mix(mix_reps_pcr_reagent, mix_vol_pcr_reagent, dest)
+        slow_withdraw(pcr_reagent_dest, m300)
+        m300.drop_tip()
     tc.close_lid()
 
     """ PCR """
@@ -103,3 +113,7 @@ def run(ctx):
     tc.set_block_temperature(72, hold_time_seconds=120)
     tc.set_block_temperature(4)
     tc.open_lid()
+
+    if do_deactivate_tc:
+        tc.deactivate_lid()
+        tc.deactivate_block()
