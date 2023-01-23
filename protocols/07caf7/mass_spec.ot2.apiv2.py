@@ -85,12 +85,15 @@ def run(ctx):
         for col in col_mq.split(',')]
 
     # transfer sample
+    num_trans = math.ceil(vol_sample/p300.tip_racks[0].wells()[0].max_volume)
+    vol_per_trans = round(vol_sample/num_trans, 2)
     for s, d in zip(samples_source, samples_stacked_s):
         p300.pick_up_tip()
-        p300.aspirate(vol_sample, s.bottom(height_sample))
-        slow_withdraw(s, p300)
-        p300.dispense(vol_sample, d.bottom(2))
-        slow_withdraw(d, p300)
+        for _ in range(num_trans):
+            p300.aspirate(vol_per_trans, s.bottom(height_sample))
+            slow_withdraw(s, p300)
+            p300.dispense(vol_per_trans, d.bottom(2))
+            slow_withdraw(d, p300)
         p300.drop_tip()
 
     ctx.pause('RESUME WHEN READY')
@@ -98,24 +101,28 @@ def run(ctx):
     meoh_index = 0
     meoh_vol_count = 0
     meoh_vol_max = 12000
+    num_trans = math.ceil(
+        vol_meoh/(m300.tip_racks[0].wells()[0].max_volume-vol_air_gap))
+    vol_per_trans = round(vol_meoh/num_trans, 2)
     for _ in range(2):
         m300.pick_up_tip()
         for d in samples_stacked_m:
-            if meoh_vol_count + vol_meoh*m300.channels > meoh_vol_max:
-                meoh_index += 1
-                meoh_vol_count = 0
-            if meoh_index == len(meoh):
-                ctx.pause('Refill MeOH')
-                meoh_index = 0
-                meoh_vol_count = 0
-            meoh_source = meoh[meoh_index]
-            meoh_vol_count += vol_meoh*m300.channels
+            for _ in range(num_trans):
+                if meoh_vol_count + vol_per_trans*m300.channels > meoh_vol_max:
+                    meoh_index += 1
+                    meoh_vol_count = 0
+                if meoh_index == len(meoh):
+                    ctx.pause('Refill MeOH')
+                    meoh_index = 0
+                    meoh_vol_count = 0
+                meoh_source = meoh[meoh_index]
+                meoh_vol_count += vol_per_trans*m300.channels
 
-            m300.aspirate(vol_air_gap, meoh_source.top())  # pre air gap
-            m300.aspirate(vol_meoh, meoh_source)
-            slow_withdraw(meoh_source, m300)
-            m300.aspirate(vol_air_gap, meoh_source.top())
-            m300.dispense(m300.current_volume, d.top(-1))
+                m300.aspirate(vol_air_gap, meoh_source.top())  # pre air gap
+                m300.aspirate(vol_per_trans, meoh_source)
+                slow_withdraw(meoh_source, m300)
+                m300.aspirate(vol_air_gap, meoh_source.top())
+                m300.dispense(m300.current_volume, d.top(-1))
         m300.drop_tip()
 
         ctx.pause('RESUME WHEN READY')
@@ -123,20 +130,23 @@ def run(ctx):
     mq_index = 0
     mq_vol_count = 0
     mq_vol_max = 12000
+    num_trans = math.ceil(vol_mq/(m300.tip_racks[0].wells()[0].max_volume))
+    vol_per_trans = round(vol_meoh/num_trans, 2)
     m300.pick_up_tip()
     for d in samples_stacked_m:
-        if mq_vol_count + vol_mq*m300.channels > mq_vol_max:
-            mq_index += 1
-            mq_vol_count = 0
-        if mq_index == len(mq):
-            ctx.pause('Refill MQ')
-            mq_index = 0
-            mq_vol_count = 0
-        mq_source = mq[mq_index]
-        mq_vol_count += vol_mq*m300.channels
-        m300.aspirate(vol_mq, mq_source)
-        slow_withdraw(mq_source, m300)
-        m300.dispense(m300.current_volume, d.top(-1))
+        for _ in range(num_trans):
+            if mq_vol_count + vol_per_trans*m300.channels > mq_vol_max:
+                mq_index += 1
+                mq_vol_count = 0
+            if mq_index == len(mq):
+                ctx.pause('Refill MQ')
+                mq_index = 0
+                mq_vol_count = 0
+            mq_source = mq[mq_index]
+            mq_vol_count += vol_per_trans*m300.channels
+            m300.aspirate(vol_per_trans, mq_source)
+            slow_withdraw(mq_source, m300)
+            m300.dispense(m300.current_volume, d.top(-1))
     m300.drop_tip()
 
     ctx.pause('RESUME WHEN READY')
