@@ -11,12 +11,13 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, tip_start_samples, well_start_samples, vol_sample, vol_meoh,
-     vol_mq, col_meoh, col_mq, vol_sample_redissolved, mount_p300, mount_m300
+    [num_samples, tip_start_samples, well_start_samples, vol_sample, 
+     height_sample, vol_meoh, vol_mq, col_meoh, col_mq, vol_sample_redissolved,
+     mount_p300, mount_m300
      ] = get_values(  # noqa: F821
         'num_samples', 'tip_start_samples', 'well_start_samples', 'vol_sample',
-        'vol_meoh', 'vol_mq', 'col_meoh', 'col_mq', 'vol_sample_redissolved',
-        'mount_p300', 'mount_m300')
+        'height_sample', 'vol_meoh', 'vol_mq', 'col_meoh', 'col_mq',
+        'vol_sample_redissolved', 'mount_p300', 'mount_m300')
 
     num_racks = math.ceil(num_samples/24)
     num_cols = math.ceil(num_samples/8)
@@ -82,7 +83,7 @@ def run(ctx):
     # transfer sample
     for s, d in zip(samples_source, samples_stacked_s):
         p300.pick_up_tip()
-        p300.aspirate(vol_sample, s)
+        p300.aspirate(vol_sample, s.bottom(height_sample))
         slow_withdraw(s, p300)
         p300.dispense(vol_sample, d.bottom(2))
         slow_withdraw(d, p300)

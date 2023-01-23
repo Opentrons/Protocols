@@ -24,6 +24,12 @@
     "default": 300.0
   },
   {
+    "type": "float",
+    "label": "aspiration height samples (in mm, from bottom)",
+    "name": "height_sample",
+    "default": 15.0
+  },
+  {
     "type": "int",
     "label": "MeOH column",
     "name": "col_meoh",
