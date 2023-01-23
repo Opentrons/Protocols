@@ -77,8 +77,12 @@ def run(ctx):
             samples_stacked_m.append(col_reference)
     samples_collection_m = collection_plate.rows()[0][:num_cols]
     samples_final_m = final_plate.rows()[0][:num_cols]
-    meoh = reservoir.rows()[0][col_meoh-1]
-    mq = reservoir.rows()[0][col_mq-1]
+    meoh = [
+        reservoir.rows()[0][int(col)-1]
+        for col in col_meoh.split(',')]
+    mq = [
+        reservoir.rows()[0][int(col)-1]
+        for col in col_mq.split(',')]
 
     # transfer sample
     for s, d in zip(samples_source, samples_stacked_s):
@@ -91,22 +95,47 @@ def run(ctx):
 
     ctx.pause('RESUME WHEN READY')
 
+    meoh_index = 0
+    meoh_vol_count = 0
+    meoh_vol_max = 12000
     for _ in range(2):
         m300.pick_up_tip()
         for d in samples_stacked_m:
-            m300.aspirate(vol_air_gap, meoh.top())  # pre air gap
-            m300.aspirate(vol_meoh, meoh)
-            slow_withdraw(meoh, m300)
-            m300.aspirate(vol_air_gap, meoh.top())
+            if meoh_vol_count + vol_meoh*m300.channels > meoh_vol_max:
+                meoh_index += 1
+                meoh_vol_count = 0
+            if meoh_index == len(mq):
+                ctx.pause('Refill MQ')
+                meoh_index = 0
+                mq_vol_count = 0
+            meoh_source = meoh[meoh_index]
+            meoh_vol_count += vol_meoh*m300.channels
+
+            m300.aspirate(vol_air_gap, meoh_source.top())  # pre air gap
+            m300.aspirate(vol_meoh, meoh_source)
+            slow_withdraw(meoh_source, m300)
+            m300.aspirate(vol_air_gap, meoh_source.top())
             m300.dispense(m300.current_volume, d.top(-1))
         m300.drop_tip()
 
         ctx.pause('RESUME WHEN READY')
 
+    mq_index = 0
+    mq_vol_count = 0
+    mq_vol_max = 12000
     m300.pick_up_tip()
     for d in samples_stacked_m:
-        m300.aspirate(vol_mq, mq)
-        slow_withdraw(mq, m300)
+        if mq_vol_count + vol_mq*m300.channels > mq_vol_max:
+            mq_index += 1
+            mq_vol_count = 0
+        if mq_index == len(mq):
+            ctx.pause('Refill MQ')
+            mq_index = 0
+            mq_vol_count = 0
+        mq_source = mq[mq_index]
+        mq_vol_count += vol_mq*m300.channels
+        m300.aspirate(vol_mq, mq_source)
+        slow_withdraw(mq_source, m300)
         m300.dispense(m300.current_volume, d.top(-1))
     m300.drop_tip()
 

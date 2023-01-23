@@ -30,16 +30,16 @@
     "default": 15.0
   },
   {
-    "type": "int",
-    "label": "MeOH column",
+    "type": "str",
+    "label": "MeOH columns (separate by ,)",
     "name": "col_meoh",
-    "default": 3
+    "default": "1,2,3,4"
   },
   {
-    "type": "int",
-    "label": "MQ column",
+    "type": "str",
+    "label": "MQ columns (separate by ,)",
     "name": "col_mq",
-    "default": 4
+    "default": "5,6"
   },
   {
     "type": "float",
