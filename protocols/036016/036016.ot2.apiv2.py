@@ -72,7 +72,7 @@ def run(ctx):
             m20.move_to(wells[i+j].bottom(1.5))  # noqa: E501
             ctx.delay(seconds=1)
     m20.drop_tip()
-    ctx.comment('\n\n\n\n')
+    ctx.comment('\n\n\n')
 
     m20.pick_up_tip()
     wells = slot_5_all_cols[num_cols*4:num_cols*8]
