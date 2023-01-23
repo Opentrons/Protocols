@@ -363,6 +363,7 @@ dna_vol,1
 dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
+do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
 do_sds_step,1
@@ -1568,6 +1569,7 @@ well_vol,2
 wells_skipped,1
 wells_to_be_pooled,1
 wet_tip,1
+worklist,1
 x,1
 x_offset,1
 x_offset_bead_pellet,6
