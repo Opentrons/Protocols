@@ -1,0 +1,103 @@
+{
+    "content": "from opentrons import protocol_api\nfrom opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': '1. Illumina DNA Prep - Tagment Genomic DNA',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\nTEST_MODE_TEMP = False\nTEST_MODE_DROP = False\nTEST_MODE_MIX = False\n\n\ndef run(ctx):\n\n    num_samples, vol_dna = get_values(  # noqa: F821\n        \"num_samples\", \"vol_dna\")\n\n    # tuning parameters\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n    reps_mix = 0 if TEST_MODE_MIX else 10\n\n    # modules\n    tempdeck = ctx.load_module('temperature module gen2', '4')\n    magdeck = ctx.load_module('magnetic module gen2', '7')\n    if not TEST_MODE_TEMP:\n        tempdeck.set_temperature(4)\n    magdeck.disengage()\n\n    # labware\n    pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                 '1', 'PCR plate')\n    dna_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                 '2', 'source DNA plate')\n    reagent_plate = tempdeck.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['3', '6']]\n    tips200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['9', '11']]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tips20)\n    m300 = ctx.load_instrument(\n         'p300_multi_gen2', 'left', tip_racks=tips200)\n\n    # reagents and variables\n    mm = reagent_plate.rows()[0][:2]\n    water = reservoir.rows()[0][0]\n\n    vol_water = 30 - vol_dna\n    vol_mm = 20.0\n    num_cols = math.ceil(num_samples/8)\n    ref_well = pcr_plate.wells()[0]\n    if ref_well.width:\n        radius = ref_well.width/2\n    else:\n        radius = ref_well.diameter/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    def pick_up(pip, spot=None):\n        if spot:\n            pip.pick_up_tip(spot)\n        else:\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                ctx.pause(\"\\n\\n\\n\\nReplace 200ul filtertipracks before \\\nresuming.\\n\\n\\n\\n\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n    # transfer water and sample\n    if vol_water > 0:\n        pip = m20 if vol_water <= 20 else m300\n        for d in pcr_plate.rows()[0][:num_cols]:\n            pip.aspirate(vol_water, water)\n            slow_withdraw(pip, water)\n            pip.dispense(vol_water, d.bottom(0.5))\n            pip.blow_out(d.bottom(2))\n            slow_withdraw(pip, d)\n\n    pip = m20 if vol_dna <= 20 else m300\n    for s, d in zip(dna_plate.rows()[0][:num_cols],\n                    pcr_plate.rows()[0][:num_cols]):\n        if not pip.has_tip:\n            pick_up(pip)\n        pip.aspirate(vol_dna, s.bottom(0.5))\n        slow_withdraw(pip, s)\n        pip.dispense(vol_dna, d.bottom(0.5))\n        ctx.delay(seconds=2)\n        pip.blow_out(d.bottom(2))\n        ctx.delay(seconds=2)\n        slow_withdraw(pip, d)\n        if TEST_MODE_DROP:\n            pip.return_tip()\n        else:\n            pip.drop_tip()\n\n    for pip in [m20, m300]:\n        if pip.has_tip:\n            if not TEST_MODE_DROP:\n                pip.drop_tip()\n            else:\n                pip.return_tip()\n\n    # transfer tagmentation mastermix\n    for i, d in enumerate(pcr_plate.rows()[0][:num_cols]):\n        mm_source = mm[i//6]\n        pick_up(m300)\n        m300.aspirate(vol_mm, mm_source.bottom(0.5))\n        slow_withdraw(m300, mm_source)\n        m300.dispense(vol_mm, d.bottom(0.5))\n        ctx.delay(seconds=2)\n        m300.mix(reps_mix, 30, d.bottom(2))\n        m300.blow_out(d.bottom(2))\n        ctx.delay(seconds=2)\n        slow_withdraw(m300, d)\n        if TEST_MODE_DROP:\n            m300.return_tip()\n        else:\n            m300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "default": 30.0,
+            "label": "volume of DNA (in ul, 2-30)",
+            "name": "vol_dna",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "PCR plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "source DNA plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "reagent plate on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "reservoir on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "1. Illumina DNA Prep - Tagment Genomic DNA"
+    },
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw reagent plate on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 7 lw None",
+            "share": false,
+            "slot": "7",
+            "type": "magdeck"
+        }
+    ]
+}
