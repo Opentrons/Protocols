@@ -19,7 +19,7 @@ This protocol preps (4) 384 well plates with a source plate on the Thermocycler 
 
 
 ### Labware
-* Applied Biosystems (ThermoFisher/Life) 4309849 With Barcode 384 Well Plate 30 µL #4309849
+* Applied Biosystems (ThermoFisher/Life) 4309849 With Barcode 384 Well Plate 30 µL 
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
 * [Corning 96 Well Plate 360 µL Flat #3650](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)
