@@ -104,10 +104,10 @@ def run(ctx):
             if meoh_vol_count + vol_meoh*m300.channels > meoh_vol_max:
                 meoh_index += 1
                 meoh_vol_count = 0
-            if meoh_index == len(mq):
-                ctx.pause('Refill MQ')
+            if meoh_index == len(meoh):
+                ctx.pause('Refill MeOH')
                 meoh_index = 0
-                mq_vol_count = 0
+                meoh_vol_count = 0
             meoh_source = meoh[meoh_index]
             meoh_vol_count += vol_meoh*m300.channels
 
