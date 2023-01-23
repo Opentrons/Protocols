@@ -1,0 +1,30 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P300 single-channel GEN2 pipette mount",
+    "name": "p300_mount",
+    "options": [
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 single-channel GEN2 pipette mount",
+    "name": "p20_mount",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "reservoir type",
+    "name": "res_type",
+    "options": [
+      { "label": "USA Scientific 12 Reservoir 22ml", "value": "usascientific_12_reservoir_22ml" },
+      { "label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml" }
+    ]
+  }
+]
+  
