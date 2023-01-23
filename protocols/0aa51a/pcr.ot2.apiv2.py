@@ -56,7 +56,6 @@ def run(ctx):
         for line in data]
 
     pcr_reagent = reagent_plate.rows()[0][0]
-    pcr_reagent_dest = tc_plate.rows()[0][0]
 
     def wick(well, pip, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
@@ -95,7 +94,7 @@ def run(ctx):
         slow_withdraw(pcr_reagent, m300)
         m300.dispense(vol_pcr_reagent, dest)
         m300.mix(mix_reps_pcr_reagent, mix_vol_pcr_reagent, dest)
-        slow_withdraw(pcr_reagent_dest, m300)
+        slow_withdraw(dest, m300)
         m300.drop_tip()
     tc.close_lid()
 
