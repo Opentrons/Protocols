@@ -260,15 +260,15 @@ def run(ctx):
      """\n***\nSTEP 4-5 - 30 min incubation
      with passive cooling and 1000 rpm shaking of heater shaker\n***\n""")
 
-    # stop heating
-    hs_mod.deactivate_heater()
-
     # incubate while cooling and report current temperature
     for rep in range(10):
         ctx.delay(minutes=3)
         ctx.comment(
          "\n***\nHeater Shaker current temperature {}\n***\n".format(
           hs_mod.current_temperature))
+
+    # stop heating
+    hs_mod.deactivate_heater()
 
     # stop shaking
     hs_mod.deactivate_shaker()
@@ -530,7 +530,7 @@ def run(ctx):
 
     ctx.comment(
      """\n***\nSTEP 14 - 9 iterations of
-     (1500 rpm 30 sec, 100 rpm 90 sec)\n***\n""")
+     (1500 rpm 30 sec, 1000 rpm 90 sec)\n***\n""")
 
     for rep in range(9):
 
@@ -544,7 +544,7 @@ def run(ctx):
         ctx.delay(seconds=29)
 
         # shake 100 rpm
-        hs_mod.set_and_wait_for_shake_speed(rpm=200)
+        hs_mod.set_and_wait_for_shake_speed(rpm=1000)
         ctx.delay(seconds=1)
         ctx.comment(
          "\n***\nHeater-Shaker rpm {}\n***\n".format(hs_mod.current_speed))
@@ -575,16 +575,21 @@ def run(ctx):
     ctx.comment("\n***\nSTEP 16 - engage magnets and wait\n***\n")
 
     mag.engage(height_from_base=engage_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=1.5)
 
     ctx.comment(
      "\n***\nSTEP 17 - discard bead pellet supernatants to reservoir\n***\n")
 
-    vol = 180
+    vol = sum(
+     [float(csvinput[0]['V(Sample)']),
+      float(csvinput[0]['V(RED first time)']),
+      float(csvinput[0]['V(ALK)']),
+      float(csvinput[0]['V(RED second time)']),
+      float(csvinput[0]['V(Bead Mixture)'])])
 
     volpreairgap = 20
 
-    volpostairgap = 0
+    volpostairgap = 20
 
     pipette = p300s
 
@@ -592,13 +597,7 @@ def run(ctx):
 
     offset_x = 1
 
-    reps = 1 if sum(
-     [float(csvinput[0]['V(Sample)']),
-      float(csvinput[0]['V(RED first time)']),
-      float(csvinput[0]['V(ALK)']),
-      float(csvinput[0]['V(RED second time)']),
-      float(csvinput[0]['V(Bead Mixture)']),
-      v_acn_calculated]) <= 180 else 2
+    reps = 1 if vol <= 160 else 2
 
     for well in [mag_plate.wells_by_name()[name] for name in samplepositions]:
 
@@ -696,17 +695,17 @@ def run(ctx):
         ctx.comment("\n***\nSTEP 21 - engage magnets and wait\n***\n")
 
         mag.engage(height_from_base=engage_height)
-        ctx.delay(minutes=3)
+        ctx.delay(minutes=1.5)
 
         ctx.comment(
          """\n***\nSTEP 22 - discard bead pellet supernatants
          to reservoir\n***\n""")
 
-        vol = 165
+        vol = 110
 
         volpreairgap = 20
 
-        volpostairgap = 15
+        volpostairgap = 20
 
         pipette = p300s
 
@@ -804,16 +803,16 @@ def run(ctx):
     ctx.comment("\n***\nSTEP 26 - engage magnets and wait\n***\n")
 
     mag.engage(height_from_base=engage_height)
-    ctx.delay(minutes=3)
+    ctx.delay(minutes=1.5)
 
     ctx.comment(
      "\n***\nSTEP 27 - discard bead pellet supernatants to reservoir\n***\n")
 
-    vol = 165
+    vol = 110
 
     volpreairgap = 20
 
-    volpostairgap = 15
+    volpostairgap = 20
 
     pipette = p300s
 
