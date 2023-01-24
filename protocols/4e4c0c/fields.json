@@ -32,5 +32,23 @@
       { "label": "nest_1_reservoir_195ml", "value": "nest_1_reservoir_195ml" },
       { "label": "agilent_1_reservoir_290ml", "value": "agilent_1_reservoir_290ml" }
     ]
-  }
+  },
+  {
+  "type": "dropDown",
+  "label": "P300 Multi-Channel Mount",
+  "name": "m300_mount",
+  "options": [
+    {"label": "Left", "value": "left"},
+    {"label": "Right", "value": "right"}
+  ]
+},
+{
+  "type": "dropDown",
+  "label": "P20 Multi-Channel Mount",
+  "name": "m20_mount",
+  "options": [
+    {"label": "Right", "value": "right"},
+    {"label": "Left", "value": "left"}
+  ]
+}
 ]
