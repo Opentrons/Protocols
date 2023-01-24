@@ -199,9 +199,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment('\n~~~~~~~~~~~~~~INCUBATING SAMPLES WITH BEADS~~~~~~~~~~~~~\n')
     if TEST_MODE:
-        ctx.delay(seconds=5)
+        ctx.delay(seconds=10)
     else:
-        ctx.delay(minutes=5)
+        ctx.delay(minutes=10)
 
     mag_deck.engage(height_from_base=mag_height)
     ctx.comment('\n~~~~~~~~~~~~~~SEPARATING BEADS~~~~~~~~~~~~~\n')

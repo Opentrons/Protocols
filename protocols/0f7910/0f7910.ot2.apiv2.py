@@ -25,6 +25,17 @@ def run(ctx):
         "p300_mount",
         "p20_mount")
 
+    # mapping
+    csv_lines = [[val.strip() for val in line.split(',')]
+                 for line in csv_samp.splitlines()
+                 if line.split(',')[0].strip()][1:]
+
+    unique_list = []
+    for row in csv_lines:
+        source_plate_slot = int(row[1])
+        if source_plate_slot not in unique_list:
+            unique_list.append(source_plate_slot)
+
     starting_tip -= starting_tip
 
     # labware
@@ -32,15 +43,15 @@ def run(ctx):
                      'corning_96_wellplate_360ul_flat'
                      if source_format == "384"
                      else "corning_384_wellplate_112ul_flat", slot)
-                     for slot in [3, 4, 5, 6, 7, 8, 9]]
+                     for slot in unique_list]
     source_plates = source_plates
 
     dest_plate = ctx.load_labware(
                      'corning_96_wellplate_360ul_flat'
+                     if dest_format == "96"
+                     else "corning_384_wellplate_112ul_flat", 2
                      if dest_format == "384"
-                     else "corning_384_wellplate_112ul_flat", 1
-                     if dest_format == "384"
-                     else 2)
+                     else 1)
 
     if transfer_vol > 20:
         tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -66,11 +77,6 @@ def run(ctx):
             pip.reset_tipracks()
             pick_up(pip)
 
-    # mapping
-    csv_lines = [[val.strip() for val in line.split(',')]
-                 for line in csv_samp.splitlines()
-                 if line.split(',')[0].strip()][1:]
-
     # protocol
     pip = p20 if transfer_vol <= 20 else p300
     pip.flow_rate.aspirate = 1
@@ -91,3 +97,4 @@ def run(ctx):
         pip.transfer(transfer_vol, source.bottom(z=0.2), dest, new_tip='never',
                      blow_out=True, blowout_location='destination well')
         pip.drop_tip()
+        ctx.comment('\n\n')
