@@ -12,22 +12,34 @@
     "default": "A1"
   },
   {
+    "type": "str",
+    "label": "sample starting well destination (slot 5)",
+    "name": "well_start_samples",
+    "default": "A1"
+  },
+  {
     "type": "float",
     "label": "initial sample volume (in ul)",
     "name": "vol_sample",
     "default": 300.0
   },
   {
-    "type": "int",
-    "label": "MeOH column",
-    "name": "col_meoh",
-    "default": 3
+    "type": "float",
+    "label": "aspiration height samples (in mm, from bottom)",
+    "name": "height_sample",
+    "default": 15.0
   },
   {
-    "type": "int",
-    "label": "MQ column",
+    "type": "str",
+    "label": "MeOH columns (separate by ,)",
+    "name": "col_meoh",
+    "default": "1,2,3,4"
+  },
+  {
+    "type": "str",
+    "label": "MQ columns (separate by ,)",
     "name": "col_mq",
-    "default": 4
+    "default": "5,6"
   },
   {
     "type": "float",

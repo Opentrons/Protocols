@@ -352,7 +352,6 @@ dispension_height_mm,2
 dispmode,1
 disposal_vol,2
 disposal_volume,1
-div_tfa,1
 dmsovol,1
 dna,1
 dna_asp_rate,1
@@ -363,6 +362,7 @@ dna_vol,1
 dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
+do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
 do_sds_step,1
@@ -485,6 +485,7 @@ height_final,1
 height_intermediate_high,1
 height_intermediate_low,1
 height_intermediate_middle,1
+height_sample,1
 height_source,1
 hs_rpm,1
 hs_temp,1
@@ -763,7 +764,7 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,2
-mount_m300,7
+mount_m300,8
 mount_p20,8
 mount_p300,6
 mount_side,1
@@ -844,7 +845,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,153
+num_samples,154
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1348,6 +1349,7 @@ template_vol,1
 test_method,1
 test_mode,1
 test_plates,1
+tfa_540,1
 tfer_vol,1
 time_airdry_minutes,2
 time_dry,18
@@ -1562,10 +1564,12 @@ wb_col,1
 well_disp_height,1
 well_edge_offset,1
 well_plate,3
+well_start_samples,1
 well_vol,2
 wells_skipped,1
 wells_to_be_pooled,1
 wet_tip,1
+worklist,1
 x,1
 x_offset,1
 x_offset_bead_pellet,6
