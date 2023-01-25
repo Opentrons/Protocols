@@ -205,6 +205,6 @@ def run(ctx):
     # mix
     for well in plate.wells()[:len(data)]:
         p1000.pick_up_tip()
-        p1000.mix(5, vol_mix, well.bottom(2))
+        p1000.mix(3, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
