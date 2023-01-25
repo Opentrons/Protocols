@@ -101,7 +101,7 @@ def run(ctx):
 
     for col in digestion_plate.rows()[0][:num_col]:
         m300.pick_up_tip()
-        m300.mix(15, 200, col)
+        m300.mix(15, 200, col.bottom(2))
         m300.drop_tip()
     ctx.comment('\n\n\n')
 
@@ -134,7 +134,7 @@ def run(ctx):
     for col in digestion_plate.rows()[0][:num_col]:
 
         m300.pick_up_tip()
-        m300.mix(15, 200, col)
+        m300.mix(15, 200, col.bottom(2))
         m300.drop_tip()
 
     ctx.comment('\n----TRANSFERRING SAMPLE TO ANALYSIS PLATE----\n\n')
@@ -174,7 +174,7 @@ def run(ctx):
         pick_up()
         m300.aspirate(30, reag_A)
         m300.dispense(30, col)
-        m300.mix(10, 45, col)
+        m300.mix(10, 45, col.bottom(2))
         m300.blow_out()
         m300.drop_tip()
 
@@ -195,7 +195,7 @@ def run(ctx):
         pick_up()
         m300.aspirate(75, reag_C)
         m300.dispense(75, col)
-        m300.mix(10, 150, col)
+        m300.mix(10, 150, col.bottom(2))
         m300.blow_out()
         m300.drop_tip()
 
