@@ -11,10 +11,12 @@ metadata = {
 
 def run(ctx):
 
-    [aliquot_vol, num_samp, digestion_temp, digestion_time, sample_vol,
+    [aliquot_vol, use_single_source,
+        num_samp, digestion_temp, digestion_time, sample_vol,
         p20_mount, p300_mount,
         transfer_to_storage, test_mode] = get_values(  # noqa: F821
-        "aliquot_vol", "num_samp", "digestion_temp", "digestion_time",
+        "aliquot_vol", "use_single_source", "num_samp",
+            "digestion_temp", "digestion_time",
         "sample_vol",
         "p20_mount", "p300_mount",
             "transfer_to_storage", "test_mode")
@@ -79,7 +81,8 @@ def run(ctx):
     for s_well, chunk in zip(samples, sample_chunks):
         p20.pick_up_tip()
         for d_well in chunk:
-            p20.aspirate(aliquot_vol, s_well)
+            p20.aspirate(aliquot_vol,
+                         s_well if not use_single_source else sample_block.wells()[0])  # noqa: E501
             p20.dispense(aliquot_vol, d_well)
             p20.blow_out()
             well_ctr += 1
@@ -188,13 +191,13 @@ def run(ctx):
 
     ctx.comment('\n----TRANSFERRING REAG C TO ANALYSIS PLATE----\n\n')
 
-    pick_up()
     for col in analysis_plate.rows()[0][:num_col]:
+        pick_up()
         m300.aspirate(75, reag_C)
         m300.dispense(75, col)
         m300.mix(10, 150, col)
         m300.blow_out()
-    m300.drop_tip()
+        m300.drop_tip()
 
     if transfer_to_storage:
         ctx.comment('\n----TRANSFERRING TO STORAGE BLOCK----\n\n')

@@ -6,6 +6,15 @@
     "default": 10
   },
   {
+    "type": "dropDown",
+    "label": "Use Single Source Well (this should always be A1 in slot 3)?",
+    "name": "use_single_source",
+    "options": [
+      {"label": "No, iterate through samples", "value": false},
+      {"label": "Yes, always pull from A1 on slot 3", "value": true}
+    ]
+  },
+  {
     "type": "int",
     "label": "Number of Samples (1-24)",
     "name": "num_samp",
