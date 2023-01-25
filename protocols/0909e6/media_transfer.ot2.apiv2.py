@@ -13,8 +13,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors, vol_media1, vol_media2, vol_mix] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media1', 'vol_media2', 'vol_mix')
+    [csv_factors, vol_media_tubes, vol_mix,
+     reps_mix] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix')
 
     vol_pre_airgap_1000 = 50.0
     vol_pre_airgap_300 = 20.0
@@ -72,11 +73,13 @@ def run(ctx):
                                 tip_racks=tiprack1000)
 
     # reagents
+    vol_media_list = [float(val) for val in vol_media_tubes.split(',')]
+    media_rows_ordered = [tube for row in tuberack50.rows() for tube in row]
     media = [
         WellH(well, current_volume=vol, height=well.depth*(vol/50000)*0.9)
         for well, vol in zip(
-            tuberack50.rows()[0][:2],
-            [vol_media1*1000, vol_media2*1000])]
+            media_rows_ordered[:len(vol_media_list)],
+            [vol_media_tube*1000 for vol_media_tube in vol_media_list])]
 
     # parse data
     f = StringIO(csv_factors)
@@ -205,6 +208,6 @@ def run(ctx):
     # mix
     for well in plate.wells()[:len(data)]:
         p1000.pick_up_tip()
-        p1000.mix(3, vol_mix, well.bottom(2))
+        p1000.mix(reps_mix, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()
