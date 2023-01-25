@@ -77,7 +77,7 @@ asp_delay_time,1
 asp_flow_rate,2
 asp_flowrate_p10,1
 asp_flowrate_p50,1
-asp_height,24
+asp_height,25
 asp_height_1,1
 asp_height_m20,1
 asp_height_recipient,1
@@ -257,6 +257,9 @@ csv_file_2,1
 csv_input,3
 csv_oil,1
 csv_samp,11
+csv_samp1,1
+csv_samp2,1
+csv_samp3,1
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
@@ -406,7 +409,7 @@ empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
-engage_height,19
+engage_height,20
 engage_offset,4
 engage_time,17
 enz_asp_rate,1
@@ -664,8 +667,13 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
+<<<<<<< HEAD
 m20_mount,70
 m300_mount,92
+=======
+m20_mount,69
+m300_mount,91
+>>>>>>> f6bd158ab (fix trailing whitespace)
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -827,7 +835,7 @@ num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,27
+num_plates,28
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -835,7 +843,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,61
+num_samp,62
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -918,7 +926,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,132
+p300_mount,134
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -949,6 +957,7 @@ p50mnt,3
 p5_mix_vol,1
 p_csv,1
 pan_dil,1
+parameters_csv,1
 park,2
 park_tips,27
 patient_sample_count,1
@@ -1165,6 +1174,7 @@ sample_num,1
 sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
+sample_positions_csv,1
 sample_quant_csv,2
 sample_rows,1
 sample_size,1
@@ -1309,6 +1319,7 @@ supernat_2_vol,1
 supernat_3_vol,1
 t_csv,1
 t_per_block,1
+target_temp_passive_cooling,1
 tc_num_reps,1
 tc_temp,1
 te_volume,2
