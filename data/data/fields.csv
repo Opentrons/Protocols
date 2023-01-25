@@ -1277,7 +1277,9 @@ starting_diluent_vol,1
 starting_plasma_vol,1
 starting_position,1
 starting_tip,1
-starting_tip_col,2
+starting_tip_col,1
+starting_tip_col_20,1
+starting_tip_col_300,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
