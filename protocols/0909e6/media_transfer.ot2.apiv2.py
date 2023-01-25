@@ -4,7 +4,7 @@ import math
 from opentrons.protocol_api.labware import Well
 
 metadata = {
-    'protocolName': 'Cell Culture',
+    'protocolName': 'DOE',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.12'
@@ -13,8 +13,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors, vol_media1, vol_media2, vol_mix] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media1', 'vol_media2', 'vol_mix')
+    [csv_factors, vol_media_tubes, vol_mix,
+     reps_mix] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix')
 
     vol_pre_airgap_1000 = 50.0
     vol_pre_airgap_300 = 20.0
@@ -72,11 +73,13 @@ def run(ctx):
                                 tip_racks=tiprack1000)
 
     # reagents
+    vol_media_list = [float(val) for val in vol_media_tubes.split(',')]
+    media_rows_ordered = [tube for row in tuberack50.rows() for tube in row]
     media = [
         WellH(well, current_volume=vol, height=well.depth*(vol/50000)*0.9)
         for well, vol in zip(
-            tuberack50.rows()[0][:2],
-            [vol_media1*1000, vol_media2*1000])]
+            media_rows_ordered[:len(vol_media_list)],
+            [vol_media_tube*1000 for vol_media_tube in vol_media_list])]
 
     # parse data
     f = StringIO(csv_factors)
@@ -127,7 +130,10 @@ def run(ctx):
         pip_volume = pip.tip_racks[0].wells()[0].max_volume
         vol_pre_airgap = vol_pre_airgap_300 if pip == \
             p300 else vol_pre_airgap_1000
-        max_vol = pip_volume - vol_pre_airgap
+        if pip == p1000:
+            max_vol = pip_volume - vol_pre_airgap
+        else:
+            max_vol = pip_volume
         sets = []
         running = []
         current_vol = 0
@@ -135,12 +141,12 @@ def run(ctx):
             well = [key for key in d.keys()][0]
             vol = [val for val in d.values()][0]
             if vol > 0:
-                if current_vol + vol > max_vol:
+                if current_vol + vol + vol_pre_airgap > max_vol:
                     sets.append(running)
                     running = []
                     current_vol = 0
                 running.append({well: vol})
-                current_vol += vol
+                current_vol += vol + vol_pre_airgap_300
         sets.append(running)
         return sets
 
@@ -188,15 +194,19 @@ def run(ctx):
             if not p300.has_tip:
                 p300.pick_up_tip()
             # pre-air_gap to fully void tip on blow_out
-            if vol_pre_airgap_300:
+            for d in factor_set:
                 p300.aspirate(vol_pre_airgap_300, factor.well.top())
-            total_factor_vol = sum([sum(dict.values()) for dict in factor_set])
-            p300.aspirate(total_factor_vol,
-                          factor.height_dec(total_factor_vol))
+                asp_vol = sum(d.values())
+                p300.aspirate(asp_vol, factor.height_dec(asp_vol))
+            # total_factor_vol = sum([sum(dict.values()) for dict in
+            # factor_set])
+            # p300.aspirate(total_factor_vol,
+            #               factor.height_dec(total_factor_vol))
             slow_withdraw(factor.well, p300)
             for i, dict in enumerate(factor_set):
                 for well, vol in dict.items():
-                    p300.dispense(vol, well.bottom(well.depth/2))
+                    p300.dispense(
+                            vol+vol_pre_airgap_300, well.bottom(well.depth/2))
                 if i == len(factor_set) - 1:
                     p300.blow_out(well.top(-2))
         if p300.has_tip:
@@ -205,6 +215,6 @@ def run(ctx):
     # mix
     for well in plate.wells()[:len(data)]:
         p1000.pick_up_tip()
-        p1000.mix(5, vol_mix, well.bottom(2))
+        p1000.mix(reps_mix, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
         p1000.drop_tip()

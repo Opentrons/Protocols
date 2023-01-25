@@ -19,16 +19,14 @@ def run(ctx):
     [count_samples, full_volume, include_standards_only,
      labware_tuberack, clearance_meoh_water, clearance_dil_dispense,
      touch_radius, touch_v_offset, track_start, clearance_tfa, clearance_mecn,
-     mix_reps, vol_dead, div_tfa] = get_values(  # noqa: F821
+     mix_reps, vol_dead, tfa_540] = get_values(  # noqa: F821
       'count_samples', 'full_volume', 'include_standards_only',
       'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
       'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
-      'clearance_mecn', 'mix_reps', 'vol_dead', 'div_tfa')
+      'clearance_mecn', 'mix_reps', 'vol_dead', 'tfa_540')
 
     ctx.delay(seconds=10)
     ctx.set_rail_lights(True)
-
-    div_tfa = int(div_tfa)
 
     if not 12 <= count_samples <= 27:
         raise Exception('Invalid number of samples (must be 12-27).')
@@ -372,6 +370,8 @@ def run(ctx):
         pip.drop_tip()
     default_flow_rates(pip)
 
+    div_tfa = 1 if full_volume else 2
+
     ctx.comment("""
     add {} ul Golden Plasma to each of 12 sample tubes
 
@@ -520,15 +520,19 @@ def run(ctx):
 
     pause_attention("Vortex tubes 5 min and return.")
 
+    full_volume_tfa = True if tfa_540 else full_volume
+
+    tfa_number = 540 if full_volume or tfa_540 else 270
+
     ctx.comment("""
     add {} ul TFA in acetonitrile to each tube
     vortex 10 min
     spin 15 min
     use same liquid handling method as for MeOH:Water
-    """.format(str(540 / div)))
+    """.format(str(tfa_number)))
     meoh_flow_rates(p300s)
     for sample in samples:
-        if full_volume:
+        if full_volume_tfa:
             for rep in range(2):
                 pick_up_or_refill(p300s)
                 if tfa_source.current_volume < vol_dead:
@@ -538,9 +542,9 @@ def run(ctx):
                         ctx.comment("TFA supply is exhausted")
                         ctx.pause("""Please replenish TFA in reservoir well A3
                                      and resume""")
-                p300s.aspirate_h(270 / div, tfa_source)
+                p300s.aspirate_h(270, tfa_source)
                 p300s.air_gap(15)
-                p300s.dispense((270 / div)+15, sample.bottom(3))
+                p300s.dispense((270)+15, sample.bottom(3))
                 p300s.move_to(sample.top(-12))
                 for rep in range(3):
                     if rep > 0:
@@ -549,6 +553,7 @@ def run(ctx):
                     p300s.blow_out(sample.top(-12))
                 p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
                 p300s.drop_tip()
+            ctx.comment('\n\n\n')
         else:
             for rep in range(1):
                 pick_up_or_refill(p300s)
@@ -570,6 +575,7 @@ def run(ctx):
                     p300s.blow_out(sample.top(-12))
                 p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
                 p300s.drop_tip()
+            ctx.comment('\n\n\n')
 
     default_flow_rates(p300s)
 

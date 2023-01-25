@@ -11,9 +11,10 @@ def run(ctx):
 
     # get parameter values from json
     [num_cols, labware_processing_plate, labware_reservoir_12well,
-     labware_reservoir_1well] = get_values(  # noqa: F821
+     labware_reservoir_1well,
+        m300_mount, m20_mount] = get_values(  # noqa: F821
       "num_cols", "labware_processing_plate", "labware_reservoir_12well",
-      "labware_reservoir_1well")
+      "labware_reservoir_1well", "m300_mount", "m20_mount")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=5)
@@ -24,12 +25,12 @@ def run(ctx):
     tips300 = [ctx.load_labware(
      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [11]]
     p300m = ctx.load_instrument(
-        "p300_multi_gen2", 'right', tip_racks=tips300)
+        "p300_multi_gen2", m300_mount, tip_racks=tips300)
 
     tips20 = [ctx.load_labware(
      "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [10]]
     p20m = ctx.load_instrument(
-        "p20_multi_gen2", 'left', tip_racks=tips20)
+        "p20_multi_gen2", m20_mount, tip_racks=tips20)
 
     # yield list chunks of size n
     def create_chunks(list_name, n):
@@ -53,6 +54,7 @@ def run(ctx):
             axis = 'A'
         else:
             axis = 'Z'
+
         ctx.max_speeds[axis] = 10
         if to_center is False:
             pipette.move_to(well_location.top())
