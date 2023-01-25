@@ -133,7 +133,7 @@ def run(ctx):
     num_trans = math.ceil(vol_mq/(m300.tip_racks[0].wells()[0].max_volume))    
     vol_per_trans = round(vol_mq/num_trans, 2)
     m300.pick_up_tip()
-    for d in samples_stacked_m:
+    for d in samples_collection_m:
         for _ in range(num_trans):
             if mq_vol_count + vol_per_trans*m300.channels > mq_vol_max:
                 mq_index += 1
