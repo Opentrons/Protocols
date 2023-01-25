@@ -667,13 +667,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-<<<<<<< HEAD
 m20_mount,70
 m300_mount,92
-=======
-m20_mount,69
-m300_mount,91
->>>>>>> f6bd158ab (fix trailing whitespace)
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1479,6 +1474,7 @@ use_filter_tips_left,2
 use_filter_tips_right,2
 use_middle_2,2
 use_nacl,1
+use_single_source,1
 use_temp,1
 use_tuberack_a,1
 use_tuberack_b,1
