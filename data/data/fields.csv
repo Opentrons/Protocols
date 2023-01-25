@@ -1092,6 +1092,7 @@ reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
 replenish_tips_manually,1
+reps_mix,1
 res,2
 res12_type,1
 res1_type,1
@@ -1514,8 +1515,7 @@ vol_h2o,2
 vol_h_lysate,1
 vol_ic,1
 vol_lys_buffer,1
-vol_media1,1
-vol_media2,1
+vol_media_tubes,1
 vol_meoh,1
 vol_mix,1
 vol_mm,2
