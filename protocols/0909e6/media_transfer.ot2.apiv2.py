@@ -4,7 +4,7 @@ import math
 from opentrons.protocol_api.labware import Well
 
 metadata = {
-    'protocolName': 'Cell Culture',
+    'protocolName': 'DOE',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.12'
