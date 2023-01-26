@@ -35,7 +35,7 @@ def run(ctx):
     tempdeck = ctx.load_module('temperature module gen2', '7')
     tempdeck.set_temperature(4)
     sample_plate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'sample plate')
+        'eppendorftwin.tec96_96_aluminumblock_200ul', 'sample plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', '8')]
     tipracks200 = [
@@ -103,7 +103,8 @@ def run(ctx):
                           mix_vol=10, new_tip=True, drop_tip=True):
         if num_cols > 1:
             vol_per_row = volume*num_cols*1.1  # overage
-            pip = m300 if vol_per_row > 20 else m20
+            pip = m300
+            vol_per_row = vol_per_row if vol_per_row > 20 else vol_per_row*1.2
             pick_up(pip, 1)
             wells_per_asp = math.floor(
                 pip.tip_racks[0].wells()[0].max_volume//vol_per_row)
@@ -128,7 +129,7 @@ def run(ctx):
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
-                pip.transfer(volume, distribution_column[0].bottom(-2),
+                pip.transfer(volume, distribution_column[0].bottom(0.5),
                              s.bottom(1), new_tip='never')
                 if mix_reps > 0:
                     pip.mix(mix_reps, mix_vol, s.bottom(1))
@@ -140,13 +141,13 @@ def run(ctx):
             if pip.has_tip and drop_tip:
                 pip.drop_tip()
         else:
-            pip = m300 if volume > 20 else m20
+            pip = m300
             if not new_tip:
                 pick_up(pip, 1)
             for i, s in enumerate(final_destinations_s):
                 if not pip.has_tip:
                     pick_up(pip, 1)
-                pip.transfer(volume, source, s.bottom(-2), new_tip='never')
+                pip.transfer(volume, source, s.bottom(0.5), new_tip='never')
                 pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
