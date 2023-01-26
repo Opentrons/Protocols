@@ -103,7 +103,8 @@ def run(ctx):
                           mix_vol=10, new_tip=True, drop_tip=True):
         if num_cols > 1:
             vol_per_row = volume*num_cols*1.1  # overage
-            pip = m300 if vol_per_row > 20 else m20
+            pip = m300
+            vol_per_row = vol_per_row if vol_per_row > 20 else vol_per_row*1.2
             pick_up(pip, 1)
             wells_per_asp = math.floor(
                 pip.tip_racks[0].wells()[0].max_volume//vol_per_row)
@@ -140,7 +141,7 @@ def run(ctx):
             if pip.has_tip and drop_tip:
                 pip.drop_tip()
         else:
-            pip = m300 if volume > 20 else m20
+            pip = m300
             if not new_tip:
                 pick_up(pip, 1)
             for i, s in enumerate(final_destinations_s):
