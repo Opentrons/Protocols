@@ -11,6 +11,8 @@ metadata = {
 TEST_MODE_TEMP = False
 TEST_MODE_DROP = False
 TEST_MODE_MIX = False
+TEST_MODE_BEADS = False
+TEST_MODE_BIND_INCUBATE = False
 
 
 def run(ctx):
@@ -25,6 +27,7 @@ def run(ctx):
     vol_mix = 30
     z_offset = 3.0
     radial_offset_fraction = 0.3  # fraction of radius
+    time_incubation_minutes = 5
 
     # modules
     tempdeck = ctx.load_module('temperature module gen2', '4')
@@ -38,6 +41,8 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
+    pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5',
+                                 'clean PCR plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '10', 'waste')
     tips20 = [
@@ -56,13 +61,17 @@ def run(ctx):
     # reagents and variables
     num_cols = math.ceil(num_samples/8)
     mag_samples = mag_plate.rows()[0][:num_cols]
-    mm = reagent_plate.rows()[0][3:6]
+    pcr_samples = pcr_plate.rows()[0][:num_cols]
+    spb = reagent_plate.rows()[0][2:5]
+    spb2 = reagent_plate.rows()[0][5]
+    water = reservoir.rows()[0][0]
     liquid_trash = [
         waste_res.wells()[0].top()
         for _ in range(math.ceil(num_cols/6))]
 
-    vol_water = 30 - vol_dna
-    vol_mm = 40.0
+    vol_water = 40.0
+    vol_spb = 45.0
+    vol_spb2 = 15.0
     ref_well = mag_plate.wells()[0]
     if ref_well.width:
         radius = ref_well.width/2
@@ -93,7 +102,8 @@ resuming.\n\n\n\n")
 
     parked_tips = []
 
-    def remove_supernatant(vol, pip=None, z_asp=0.2, park=True):
+    def remove_supernatant(vol, pip=None, z_asp=0.2, park=True,
+                           destinations=liquid_trash):
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
@@ -135,60 +145,46 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
         slow_withdraw(m300, location)
 
-    remove_supernatant(100, pip=m300, park=False)
+    if not magdeck.status == 'engaged':
+        magdeck.engage()
+    ctx.delay(minutes=5)
+    remove_supernatant(45, pip=m300, park=False, destinations=pcr_samples)
     magdeck.disengage()
 
-    # transfer mm
-    for i, d in enumerate(mag_samples):
-        mm_source = mm[i//4]
+    # transfer water
+    for d in enumerate(pcr_samples):
         pick_up(m300)
-        m300.aspirate(vol_mm, mm_source.bottom(0.5))
-        slow_withdraw(m300, mm_source)
-        m300.dispense(vol_mm, d.bottom(2))
-        resuspend(d)
-        m300.drop_tip()
-
-    ctx.pause('Seal the sample plate and centrifuge at 280 × g for 3 seconds. \
-Replace on disengaged magnetic module when complete.')
-
-
-    pip = m20 if vol_dna <= 20 else m300
-    for s, d in zip(dna_plate.rows()[0][:num_cols],
-                    pcr_plate.rows()[0][:num_cols]):
-        if not pip.has_tip:
-            pick_up(pip)
-        pip.aspirate(vol_dna, s.bottom(0.5))
-        slow_withdraw(pip, s)
-        pip.dispense(vol_dna, d.bottom(0.5))
-        ctx.delay(seconds=2)
-        pip.blow_out(d.bottom(2))
-        ctx.delay(seconds=2)
-        slow_withdraw(pip, d)
-        if TEST_MODE_DROP:
-            pip.return_tip()
-        else:
-            pip.drop_tip()
-
-    for pip in [m20, m300]:
-        if pip.has_tip:
-            if not TEST_MODE_DROP:
-                pip.drop_tip()
-            else:
-                pip.return_tip()
-
-    # transfer tagmentation mastermix
-    for i, d in enumerate(pcr_plate.rows()[0][:num_cols]):
-        mm_source = mm[i//6]
-        pick_up(m300)
-        m300.aspirate(vol_mm, mm_source.bottom(0.5))
-        slow_withdraw(m300, mm_source)
-        m300.dispense(vol_mm, d.bottom(0.5))
-        ctx.delay(seconds=2)
-        m300.mix(reps_mix, 30, d.bottom(2))
-        m300.blow_out(d.bottom(2))
-        ctx.delay(seconds=2)
+        m300.aspirate(vol_water, water)
+        slow_withdraw(m300, water)
+        m300.dispense(vol_water, d.bottom(2))
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
             m300.return_tip()
         else:
             m300.drop_tip()
+
+    # transfer SPB
+    for i, d in enumerate(pcr_samples):
+        spb_source = spb[i//4]
+        pick_up(m300)
+        m300.aspirate(vol_spb, spb_source.bottom(0.5))
+        slow_withdraw(m300, spb)
+        m300.dispense(vol_spb, d.bottom(2))
+        m300.mix(reps_mix, vol_mix, d.bottom(2))
+        slow_withdraw(m300, d)
+        if TEST_MODE_DROP:
+            m300.return_tip()
+        else:
+            m300.drop_tip()
+
+    ctx.pause('Place PCR plate (slot 5) on magnetic module. Place new PCR \
+plate in slot 5. Resume when finished for incubation.')
+
+    if not TEST_MODE_BIND_INCUBATE:
+        ctx.delay(minutes=time_incubation_minutes)
+
+    magdeck.engage()
+    if not TEST_MODE_BEADS:
+        ctx.delay(minutes=5)
+
+    # transfer SPB
