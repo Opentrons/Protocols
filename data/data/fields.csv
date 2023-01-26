@@ -1092,6 +1092,7 @@ reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
 replenish_tips_manually,1
+reps_mix,1
 res,2
 res12_type,1
 res1_type,1
@@ -1276,7 +1277,9 @@ starting_diluent_vol,1
 starting_plasma_vol,1
 starting_position,1
 starting_tip,1
-starting_tip_col,2
+starting_tip_col,1
+starting_tip_col_20,1
+starting_tip_col_300,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
@@ -1472,6 +1475,7 @@ use_filter_tips_left,2
 use_filter_tips_right,2
 use_middle_2,2
 use_nacl,1
+use_single_source,1
 use_temp,1
 use_tuberack_a,1
 use_tuberack_b,1
@@ -1511,8 +1515,7 @@ vol_h2o,2
 vol_h_lysate,1
 vol_ic,1
 vol_lys_buffer,1
-vol_media1,1
-vol_media2,1
+vol_media_tubes,1
 vol_meoh,1
 vol_mix,1
 vol_mm,2

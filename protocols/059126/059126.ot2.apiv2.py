@@ -14,12 +14,14 @@ def run(ctx: protocol_api.ProtocolContext):
     """PROTOCOL."""
     [
      num_384_cols,
-     starting_tip_col,
+     starting_tip_col_20,
+     starting_tip_col_300,
      m20_mount,
      file_input
     ] = get_values(  # noqa: F821
         "num_384_cols",
-        "starting_tip_col",
+        "starting_tip_col_20",
+        "starting_tip_col_300",
         "m20_mount",
         "file_input")
 
@@ -49,12 +51,14 @@ def run(ctx: protocol_api.ProtocolContext):
         [val.strip() for val in line.split(',')]
         for line in file_input.splitlines()[1:]]
 
+    m20.starting_tip = tiprack_20[0].columns()[starting_tip_col_20-1][0]
+
     tips_single_300 = [
         tip
         for rack in tiprack_300
         for col in rack.columns()[::-1]
         for tip in col[::-1]]
-    starting_tip_300 = tiprack_300[0].columns()[starting_tip_col-1][-1]
+    starting_tip_300 = tiprack_300[0].columns()[starting_tip_col_300-1][-1]
     tips_single_300 = tips_single_300[tips_single_300.index(starting_tip_300):]
 
     counter_300 = 0
