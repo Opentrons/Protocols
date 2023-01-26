@@ -35,7 +35,7 @@ def run(ctx):
     tempdeck = ctx.load_module('temperature module gen2', '7')
     tempdeck.set_temperature(4)
     sample_plate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'sample plate')
+        'eppendorftwin.tec96_96_aluminumblock_200ul', 'sample plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', '8')]
     tipracks200 = [
