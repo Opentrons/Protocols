@@ -409,7 +409,7 @@ empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
-engage_height,20
+engage_height,19
 engage_offset,4
 engage_time,17
 enz_asp_rate,1
@@ -952,7 +952,6 @@ p50mnt,3
 p5_mix_vol,1
 p_csv,1
 pan_dil,1
-parameters_csv,1
 park,2
 park_tips,27
 patient_sample_count,1
@@ -1170,7 +1169,6 @@ sample_num,1
 sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
-sample_positions_csv,1
 sample_quant_csv,2
 sample_rows,1
 sample_size,1
@@ -1317,7 +1315,6 @@ supernat_2_vol,1
 supernat_3_vol,1
 t_csv,1
 t_per_block,1
-target_temp_passive_cooling,1
 tc_num_reps,1
 tc_temp,1
 te_volume,2

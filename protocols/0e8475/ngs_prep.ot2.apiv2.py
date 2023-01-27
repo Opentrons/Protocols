@@ -15,12 +15,12 @@ def run(ctx):
     [num_samples, vol_sample, ratio_beads] = get_values(  # noqa: F821
         'num_samples', 'vol_sample', 'ratio_beads')
 
-    # load modules
+    # modules
     magdeck = ctx.load_module('magnetic module gen2', '1')
     tempdeck = ctx.load_module('temperature module gen2', '3')
     tc = ctx.load_module('thermocycler')
 
-    # load labware
+    # labware
     magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
                                     'cleanup plate')
     sampleplate = ctx.load_labware(
@@ -38,7 +38,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['6', '9']]
 
-    # load pipettes
+    # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', 'left',
                                tip_racks=tipracks200)
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tipracks20)
