@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* NGS Library Prep\n\t* Illumina GUIDE-seq\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e8475/deck.png)\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e8475/deck2.png)\n\n\n",
         "description": "This protocol performs a semi-automated protocol for the Illumina GUIDE-seq NGS Library Prep for up to 16 samples. The user is prompted to move the plate to and from a thermal cycler at various points throughout the protocol.\n\n\n",
         "internal": "0e8475",
         "labware": "* [Bio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
