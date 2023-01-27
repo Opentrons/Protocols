@@ -1,0 +1,115 @@
+{
+    "content": "from opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': '384-Well PCR Prep',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [num_samples, vol_sample, num_mixes, vol_mix,\n     num_replicates] = get_values(  # noqa: F821\n     'num_samples', 'vol_sample', 'num_mixes', 'vol_mix', 'num_replicates')\n\n    ctx.max_speeds['X'] = 200\n    ctx.max_speeds['Y'] = 200\n\n    # labware\n    distribution_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1', \n                                          'mix distribution plate')\n    plate384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '2')\n    plate96 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')\n    mix_tuberack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')\n    tipracks_20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['5', '6', '7', '8', '9']]\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', 'left', tip_racks=tipracks_20)\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tipracks_20)\n\n    # reagents and variables\n    num_cols_samples = math.ceil(num_samples/8)\n    samples = plate96.rows()[0][:num_cols_samples]\n    mix_tubes = mix_tuberack.wells()[:num_mixes]\n\n    mix_columns = distribution_plate.columns()[:num_mixes]\n    num_cols_per_mix = num_cols_samples*math.ceil(num_replicates/2)\n    mix_dest_sets = [\n        [well\n         for col in plate384.columns()[i*num_cols_per_mix:\n                                       (i+1)*num_cols_per_mix]\n         for well in col[:2]]\n        for i in range(num_mixes)]\n\n    ref_well = plate384.wells()[0]\n    try:\n        radius = ref_well.diameter/2\n    except TypeError:\n        radius = ref_well.width/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well):\n        ctx.max_speeds['A'] = 25\n        ctx.max_speeds['Z'] = 25\n        pip.move_to(well.top())\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n\n    # plate mixes from tubes\n    vol_per_distribution_well = vol_mix*num_cols_samples*8*num_replicates*1.05\n    num_asp = math.ceil(\n        vol_per_distribution_well/p20.tip_racks[0].wells()[0].max_volume)\n    vol_per_asp = round(vol_per_distribution_well/num_asp, 2)\n    for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):\n        p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])\n        for well in col:\n            for _ in range(num_asp):\n                p20.aspirate(vol_per_asp, tube.bottom(2))\n                slow_withdraw(p20, tube)\n                p20.dispense(vol_per_distribution_well, well.bottom(1))\n                slow_withdraw(p20, well)\n        p20.return_tip()  # save tip corresponding to each mix for next step\n    p20.reset_tipracks()\n\n    # distribute mixes\n    for column, dest_set in zip(mix_columns, mix_dest_sets):\n        m20.pick_up_tip()\n        for d in dest_set:\n            m20.aspirate(vol_mix, column[0].bottom(0.5))\n            slow_withdraw(m20, column[0])\n            m20.dispense(vol_mix, d.bottom(0.2))\n            wick(m20, d)\n        m20.drop_tip()\n\n    # transfer sample\n    for mix_dest_set in mix_dest_sets:\n        for i, sample in enumerate(samples):\n            sample_set = mix_dest_set[i*num_replicates:(i+1)*num_replicates]\n            for d in sample_set:\n                print(sample, d)\n                m20.pick_up_tip()\n                m20.aspirate(vol_sample, sample.bottom(0.5))\n                slow_withdraw(m20, sample)\n                m20.dispense(vol_sample, d.bottom(1))\n                # mix\n                slow_withdraw(m20, d)\n                m20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 26,
+            "label": "number of samples, standards, and controls",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "default": 3.0,
+            "label": "volume of sample (in ul)",
+            "name": "vol_sample",
+            "type": "float"
+        },
+        {
+            "default": 6,
+            "label": "number of mastermixes",
+            "name": "num_mixes",
+            "type": "int"
+        },
+        {
+            "default": 7.0,
+            "label": "volume of mastermix (in ul)",
+            "name": "vol_mix",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "number of replicates",
+            "name": "num_replicates",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "mix distribution plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Corning 384 Well Plate 112 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_384_wellplate_112ul_flat"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Nick <ndiehl@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "384-Well PCR Prep"
+    },
+    "modules": []
+}
