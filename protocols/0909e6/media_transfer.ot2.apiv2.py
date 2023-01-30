@@ -130,10 +130,7 @@ def run(ctx):
         pip_volume = pip.tip_racks[0].wells()[0].max_volume
         vol_pre_airgap = vol_pre_airgap_300 if pip == \
             p300 else vol_pre_airgap_1000
-        if pip == p1000:
-            max_vol = pip_volume - vol_pre_airgap
-        else:
-            max_vol = pip_volume
+        max_vol = pip_volume
         sets = []
         running = []
         current_vol = 0
@@ -162,20 +159,19 @@ def run(ctx):
 
     media_sets = custom_distribute(media_info, pip=p1000)
     for media_set in media_sets:
-        total_media_vol = sum([sum(d.values()) for d in media_set])
-        check_media(total_media_vol)
         if p1000.current_volume:
             p1000.dispense(p1000.current_volume, current_media.well.top())
         # pre-air_gap to fully void tip on blow_out
-        if vol_pre_airgap_1000:
+        for d in media_set:
+            asp_vol = sum(d.values())
+            check_media(asp_vol)
             p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
-        p1000.aspirate(total_media_vol,
-                       current_media.height_dec(total_media_vol))
+            p1000.aspirate(asp_vol, current_media.height_dec(asp_vol))
         slow_withdraw(current_media.well, p1000)
         for i, d in enumerate(media_set):
             well = [key for key in d.keys()][0]
             vol = [val for val in d.values()][0]
-            p1000.dispense(vol, well.bottom(well.depth/2))
+            p1000.dispense(vol+vol_pre_airgap_1000, well.bottom(well.depth/2))
             if i == len(media_set) - 1:
                 p1000.blow_out(well.bottom(well.depth/2))
             slow_withdraw(well, p1000)
