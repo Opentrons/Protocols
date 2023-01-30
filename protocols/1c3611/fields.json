@@ -3,7 +3,7 @@
         "type": "int",
         "label": "number of samples, standards, and controls",
         "name": "num_samples",
-        "default": 26
+        "default": 16
     },
     {
         "type": "float",
@@ -28,6 +28,11 @@
         "label": "number of replicates",
         "name": "num_replicates",
         "default": 2
+    },
+    {
+        "type": "str",
+        "label": "run ID",
+        "name": "run_id",
+        "default": ""
     }
 ]
-  

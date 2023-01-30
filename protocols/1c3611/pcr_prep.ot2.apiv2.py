@@ -1,5 +1,7 @@
 from opentrons.types import Point
 import math
+import csv
+from datetime import date
 
 metadata = {
     'protocolName': '384-Well PCR Prep',
@@ -12,8 +14,12 @@ metadata = {
 def run(ctx):
 
     [num_samples, vol_sample, num_mixes, vol_mix,
-     num_replicates] = get_values(  # noqa: F821
-     'num_samples', 'vol_sample', 'num_mixes', 'vol_mix', 'num_replicates')
+     num_replicates, run_id] = get_values(  # noqa: F821
+     'num_samples', 'vol_sample', 'num_mixes', 'vol_mix', 'num_replicates',
+     'run_id')
+
+    if not run_id:
+        ctx.pause('\n\n\n\nNo run ID entered. Proceed?\n\n\n\n')
 
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
@@ -21,10 +27,13 @@ def run(ctx):
     # labware
     distribution_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
                                           'mix distribution plate')
-    plate384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '2')
-    plate96 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')
+    plate384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '2',
+                                'PCR plate')
+    plate96 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3',
+                               'sample plate')
     mix_tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
+        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4',
+        'mastermix tuberack')
     tipracks_20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['5', '6', '7', '8', '9']]
@@ -44,7 +53,6 @@ def run(ctx):
         well
         for col in plate384.columns()
         for well in col[:2]]
-
     mix_columns = distribution_plate.columns()[:num_mixes]
     num_dests_per_mix = num_cols_samples*num_replicates
     mix_dest_sets = [
@@ -137,3 +145,30 @@ def run(ctx):
             # mix
             slow_withdraw(m20, d)
             m20.drop_tip()
+
+    today = date.today()
+    datestr = today.strftime('%Y%m%d')
+    if not ctx.is_simulating():
+        path = '/var/lib/jupyter/notebooks'
+        out_csv_path = f'{path}/{datestr}_{run_id}.csv'
+    else:
+        out_csv_path = f'protocols/1c3611/supplements/{datestr}_{run_id}.csv'
+
+    headers = ['384 well', 'sample source well', 'mastermix tube']
+
+    with open(out_csv_path, 'w') as out_file:
+        writer = csv.writer(out_file)
+        writer.writerow(headers)
+        for well384 in plate384.wells():
+            info = map[well384]
+            final_well = well384.display_name.split(' ')[0]
+            if info['sample']:
+                sample96 = info['sample'].display_name.split(' ')[0]
+            else:
+                sample96 = None
+            if info['mix']:
+                mix = info['mix'].display_name.split(' ')[0]
+            else:
+                mix = None
+            data_line = [final_well, sample96, mix]
+            writer.writerow(data_line)

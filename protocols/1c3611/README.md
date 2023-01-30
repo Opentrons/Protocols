@@ -6,12 +6,21 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* PCR
+	* PCR Prep
 
 
 ## Description
-This protocol does stuff!
+This protocol performs a custom 384-well PCR preparation. The user has the option to enter the following parameters:
+* number of samples
+* volume of sample
+* number of mastermixes
+* volume of mastermix
+* number of replicates per sample + mastermix combination
+
+Mastermixes should be pre-mixed and loaded into individual tubes as shown below. For efficiency, the mastermixes will first be plated from their source tubes into distribution columns using a single channel pipette, before being loaded into the 384-well plate with an 8-channel pipette.
+
+For sample traceability, an output .csv file will be written to the robot's Jupyter notebook server for each protocol run. The user has the option to input a `run ID` to distinguish each run. To find these output files, please refer to [this support article](https://support.opentrons.com/s/article/Uploading-files-through-Jupyter-Notebook).
 
 
 ### Labware
@@ -28,14 +37,6 @@ This protocol does stuff!
 
 ### Deck Setup
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1c3611/deck.png)
-
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1c3611/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
