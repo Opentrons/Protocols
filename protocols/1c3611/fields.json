@@ -1,0 +1,38 @@
+[
+    {
+        "type": "int",
+        "label": "number of samples, standards, and controls",
+        "name": "num_samples",
+        "default": 16
+    },
+    {
+        "type": "float",
+        "label": "volume of sample (in ul)",
+        "name": "vol_sample",
+        "default": 3.0
+    },
+    {
+        "type": "int",
+        "label": "number of mastermixes",
+        "name": "num_mixes",
+        "default": 6
+    },
+    {
+        "type": "float",
+        "label": "volume of mastermix (in ul)",
+        "name": "vol_mix",
+        "default": 7.0
+    },
+    {
+        "type": "int",
+        "label": "number of replicates",
+        "name": "num_replicates",
+        "default": 2
+    },
+    {
+        "type": "str",
+        "label": "run ID",
+        "name": "run_id",
+        "default": ""
+    }
+]
