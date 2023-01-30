@@ -40,14 +40,25 @@ def run(ctx):
     samples = plate96.rows()[0][:num_cols_samples]
     mix_tubes = mix_tuberack.wells()[:num_mixes]
 
+    all_dests_flattened = [
+        well
+        for col in plate384.columns()
+        for well in col[:2]]
+
     mix_columns = distribution_plate.columns()[:num_mixes]
-    num_cols_per_mix = num_cols_samples*math.ceil(num_replicates/2)
+    num_dests_per_mix = num_cols_samples*num_replicates
     mix_dest_sets = [
-        [well
-         for col in plate384.columns()[i*num_cols_per_mix:
-                                       (i+1)*num_cols_per_mix]
-         for well in col[:2]]
+        all_dests_flattened[i*num_dests_per_mix:(i+1)*num_dests_per_mix]
         for i in range(num_mixes)]
+
+    sample_dest_sets = []
+    for i in range(num_cols_samples):
+        d_set = []
+        for m_set in mix_dest_sets:
+            little_set = m_set[i*num_replicates:(i+1)*num_replicates]
+            for well in little_set:
+                d_set.append(well)
+        sample_dest_sets.append(d_set)
 
     ref_well = plate384.wells()[0]
     try:
@@ -66,12 +77,25 @@ def run(ctx):
         del ctx.max_speeds['Z']
 
     map = {
-        'sample': {},
-        'mix': {}
+        well: {
+            'sample': None,
+            'mix': None
+        }
+        for well in plate384.wells()
     }
 
-    def map_384_to_source(source, dest, source_is_col=True):
+    def map_384_to_source(source, dest, source_is_col=True,
+                          source_type='sample'):
+        col = plate384.columns()[plate384.wells().index(dest)//16]
+        dests_384 = col[col.index(dest)::2]
+        if source_is_col:
+            source_col = plate96.columns()[plate96.rows()[0].index(source)]
+        else:
+            source_col = [source]*8
 
+        map_key = source_type
+        for source, dest in zip(source_col, dests_384):
+            map[dest][map_key] = source
 
     # plate mixes from tubes
     overage_factor = 1.1
@@ -92,9 +116,10 @@ def run(ctx):
     p20.reset_tipracks()
 
     # distribute mixes
-    for column, dest_set in zip(mix_columns, mix_dest_sets):
+    for tube, column, dest_set in zip(mix_tubes, mix_columns, mix_dest_sets):
         m20.pick_up_tip()
         for d in dest_set:
+            map_384_to_source(tube, d, source_is_col=False, source_type='mix')
             m20.aspirate(vol_mix, column[0].bottom(0.5))
             slow_withdraw(m20, column[0])
             m20.dispense(vol_mix, d.bottom(0.2))
@@ -102,14 +127,13 @@ def run(ctx):
         m20.drop_tip()
 
     # transfer sample
-    for mix_dest_set in mix_dest_sets:
-        for i, sample in enumerate(samples):
-            sample_set = mix_dest_set[i*num_replicates:(i+1)*num_replicates]
-            for d in sample_set:
-                m20.pick_up_tip()
-                m20.aspirate(vol_sample, sample.bottom(0.5))
-                slow_withdraw(m20, sample)
-                m20.dispense(vol_sample, d.bottom(1))
-                # mix
-                slow_withdraw(m20, d)
-                m20.drop_tip()
+    for sample, s_set in zip(samples, sample_dest_sets):
+        for s in s_set:
+            map_384_to_source(sample, s)
+            m20.pick_up_tip()
+            m20.aspirate(vol_sample, sample.bottom(0.5))
+            slow_withdraw(m20, sample)
+            m20.dispense(vol_sample, d.bottom(1))
+            # mix
+            slow_withdraw(m20, d)
+            m20.drop_tip()
