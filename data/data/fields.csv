@@ -764,8 +764,8 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,2
-mount_m300,8
-mount_p20,8
+mount_m300,9
+mount_p20,9
 mount_p300,6
 mount_side,1
 move_side,2
@@ -827,6 +827,7 @@ num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
 num_mastermix,2
+num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
@@ -834,6 +835,7 @@ num_plates,28
 num_pool_sources,1
 num_pools,1
 num_primers,2
+num_replicates,1
 num_reps,1
 num_row,1
 num_rows_a,1
@@ -845,7 +847,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,154
+num_samples,156
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1133,6 +1135,7 @@ rr2,1
 rr3,1
 rsadd,1
 rsb_vol,1
+run_id,1
 run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
@@ -1517,7 +1520,7 @@ vol_ic,1
 vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
-vol_mix,1
+vol_mix,2
 vol_mm,2
 vol_mobile_phase,1
 vol_mq,1
@@ -1527,7 +1530,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,5
+vol_sample,6
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1
