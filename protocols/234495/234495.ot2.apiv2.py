@@ -581,6 +581,8 @@ def run(ctx):
 
     pause_attention("Vortex tubes 10 min, spin 15 min, and return.")
 
+    sup_number = 500 if full_volume or tfa_540 else 250
+
     ctx.comment("""
     transfer {} ul sup from each tube to Amicon filter
     spin 2.5 hours
@@ -588,7 +590,7 @@ def run(ctx):
     return
     resuspend in 4:1 acetonitrile:water
     use same liquid handling method as for MeOH:Water
-    """.format(str(500 / div)))
+    """.format(str(sup_number)))
     if not include_standards_only:
         for pooled_filter in amicon_filters_pooled:
             amicon_filters.append(pooled_filter)
@@ -599,11 +601,11 @@ def run(ctx):
     for index, sample in enumerate(samples):
         pick_up_or_refill(p300s)
         meoh_flow_rates(p300s)
-        if full_volume:
+        if full_volume or tfa_540:
             for rep in range(2):
-                p300s.aspirate(250 / div, sample.bottom(round(16/(rep + 1)-8)))
+                p300s.aspirate(250, sample.bottom(round(16/(rep + 1)-8)))
                 p300s.air_gap(15)
-                p300s.dispense((250 / div)+15, amicon_filters[index].top())
+                p300s.dispense((250)+15, amicon_filters[index].top())
                 for rep in range(3):
                     if rep > 0:
                         p300s.aspirate(
@@ -611,6 +613,7 @@ def run(ctx):
                     ctx.delay(seconds=1)
                     p300s.blow_out(amicon_filters[index].top())
                 p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+
             p300s.drop_tip()
         else:
             for rep in range(1):
@@ -626,6 +629,7 @@ def run(ctx):
                     p300s.blow_out(amicon_filters[index].top())
                 p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
             p300s.drop_tip()
+        ctx.comment('\n\n')
     default_flow_rates(p300s)
 
     pause_attention("Spin filters 2.5 hours, dry 1.5 hours, return.")
