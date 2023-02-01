@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of Sets (1-12)",
+    "label": "Number of Sets (1-8)",
     "name": "num_sets",
-    "default": 12
+    "default": 8
   },
   {
     "type": "int",
