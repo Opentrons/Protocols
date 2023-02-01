@@ -1,32 +1,32 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "Sample Prep": [
+            "Plate Filling"
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "1 of 6 mastermixes is filled into all 108 columns in all 9 plates from two wells of a reservoir. Pipette will automatically be assigned depending on the mastermix selected, and multi-dispensing is installed when possible to the pipette maximum volume. Mastermix is taken back and forth between the two mastermix wells (aspirate A1, aspirate A2, aspirate A1,..., etc.), so fill mastermix source columns in the reservoir evenly. Mastermix details are included in the dropdown menu.",
     "internal": "quintara_onsite_part3",
-    "labware": "\nQuintara Vertical Plate 192 Wells\nQuintara 12 Reservoir 15000 \u00b5L #15000\nDouble Pcr 96 Well Plate 300 \u00b5L\nAppliedbiosystem 384 Well Plate 40 \u00b5L\nQuintara 96 Well Plate 300 \u00b5L #1234\nQuintara Vertical Plate 192 Wells\nDeepwell 96 Well Plate 2000 \u00b5L #1234\nOpentrons 96 Tip Rack 20 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\n",
+    "labware": "\nQuintara Vertical Plate 192 Wells\nQuintara 12 Reservoir 15000 \u00b5L\nDouble Pcr 96 Well Plate 300 \u00b5L\nAppliedbiosystem 384 Well Plate 40 \u00b5L\nQuintara 96 Well Plate 300 \u00b5L\nQuintara Vertical Plate 192 Wells\nDeepwell 96 Well Plate 2000 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part3/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt3/deck.png)\n\n\n",
+        "description": "1 of 6 mastermixes is filled into all 108 columns in all 9 plates from two wells of a reservoir. Pipette will automatically be assigned depending on the mastermix selected, and multi-dispensing is installed when possible to the pipette maximum volume. Mastermix is taken back and forth between the two mastermix wells (aspirate A1, aspirate A2, aspirate A1,..., etc.), so fill mastermix source columns in the reservoir evenly. Mastermix details are included in the dropdown menu.\n\n\n\n",
         "internal": "quintara_onsite_part3\n",
-        "labware": "* Quintara Vertical Plate 192 Wells\n* Quintara 12 Reservoir 15000 \u00b5L #15000\n* Double Pcr 96 Well Plate 300 \u00b5L\n* Appliedbiosystem 384 Well Plate 40 \u00b5L\n* Quintara 96 Well Plate 300 \u00b5L #1234\n* Quintara Vertical Plate 192 Wells\n* Deepwell 96 Well Plate 2000 \u00b5L #1234\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n\n\n",
+        "labware": "* Quintara Vertical Plate 192 Wells\n* Quintara 12 Reservoir 15000 \u00b5L\n* Double Pcr 96 Well Plate 300 \u00b5L\n* Appliedbiosystem 384 Well Plate 40 \u00b5L\n* Quintara 96 Well Plate 300 \u00b5L\n* Quintara Vertical Plate 192 Wells\n* Deepwell 96 Well Plate 2000 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part3/reagents.png)\n\n\n",
+        "protocol-steps": "1. Aspirate mastermix volume according to mastermix selected.\n2. Dispense into all wells, multi-dispensing if possible.\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt3/liquids.png)\n\n\n",
         "title": "Mastermix Filling 9 Plates"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
+    "protocol-steps": "\nAspirate mastermix volume according to mastermix selected.\nDispense into all wells, multi-dispensing if possible.\n",
     "reagent-setup": "",
     "title": "Mastermix Filling 9 Plates"
 }
