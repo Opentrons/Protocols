@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "quintara_onsite_part1.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/quintara_onsite_part1",
+    "slug": "quintara_onsite_part1",
+    "status": "ok"
+}

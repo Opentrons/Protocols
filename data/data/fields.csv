@@ -302,7 +302,7 @@ dest_plate3,1
 dest_plate_lname,1
 dest_plate_type,1
 dest_slot,1
-dest_start_col,1
+dest_start_col,3
 dest_temp_mod_lname,1
 dest_type,5
 dest_well_plate_tmod,1
@@ -854,6 +854,7 @@ num_samples_3,1
 num_samples_4,1
 num_samples_per_plate,1
 num_samps,6
+num_sets,2
 num_slides,2
 num_tests,1
 num_tipracks,1
@@ -906,7 +907,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,114
+p20_mount,118
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -923,7 +924,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,134
+p300_mount,136
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1079,6 +1080,7 @@ rate_disp_r,1
 ratio_beads,2
 rdnase_vol,1
 reaction_plate,3
+reag,1
 reag1_vol,1
 reag2_vol,1
 reag_vol,1
@@ -1280,7 +1282,7 @@ starting_diluent_vol,1
 starting_plasma_vol,1
 starting_position,1
 starting_tip,1
-starting_tip_col,1
+starting_tip_col,3
 starting_tip_col_20,1
 starting_tip_col_300,1
 starting_tip_position,1
