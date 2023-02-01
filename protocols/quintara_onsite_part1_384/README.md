@@ -6,22 +6,22 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol preps a 96 plate from a 384 source plate.
 
 
 ### Labware
 * Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL #15000
+* Quintara 12 Reservoir 15000 µL
 * Double Pcr 96 Well Plate 300 µL
 * Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL #1234
+* Quintara 96 Well Plate 300 µL
 * Quintara Vertical Plate 192 Wells
-* Deepwell 96 Well Plate 2000 µL #1234
+* Deepwell 96 Well Plate 2000 µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
@@ -30,7 +30,7 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part1_384/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt1_384/deck.png)
 
 
 ### Reagent Setup
@@ -38,7 +38,10 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. 20, 2, 2, and 20ul are transferred from A1, A3, A5, A7 of the 384 plate to column 1 of the 96 plate.
+2. Same volumes are transferred from A9, A11, A13, and A15 to column 2 of the 96 plate.
+3. Steps 1 and 2 are repeated until the end of the plate is reached for that row to subsequent destination columns.
+4. Steps 1, 2, and 3 are repeated for start wells A2, B1, and B2. 
 
 
 ### Process

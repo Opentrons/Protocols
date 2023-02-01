@@ -6,22 +6,21 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
-
+Water is filled into all 108 columns in all 9 plates from a reservoir. Multi-dispensing is installed to pipette's maximum volume.
 
 ### Labware
 * Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL #15000
+* Quintara 12 Reservoir 15000 µL
 * Double Pcr 96 Well Plate 300 µL
 * Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL #1234
+* Quintara 96 Well Plate 300 µL
 * Quintara Vertical Plate 192 Wells
-* Deepwell 96 Well Plate 2000 µL #1234
+* Deepwell 96 Well Plate 2000 µL
 * Opentrons 96 Filter Tip Rack 200 µL
 
 
@@ -30,7 +29,7 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part4/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt4/deck.png)
 
 
 ### Reagent Setup
@@ -38,7 +37,8 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. Aspirate maximum amount of water in pipette tip.
+2. Dispense 36ul into all wells, multi-dispensing.
 
 
 ### Process

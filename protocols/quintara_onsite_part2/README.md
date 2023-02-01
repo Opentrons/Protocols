@@ -6,22 +6,22 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+Two 96 wells are consolidated in one 96 PCR plate. Number of sets is equal to a group of 4 columns, taking 20ul from the 1st and fourth column of that set, and 2ul from columns 2 and 3 from that set. Then, 4 tips are picked up from tip rack on slot 6, and the exact same process is repeated for the remaining four wells under the 8 filled wells in both the source and destination plates.
 
 
 ### Labware
 * Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL #15000
+* Quintara 12 Reservoir 15000 µL
 * Double Pcr 96 Well Plate 300 µL
 * Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL #1234
+* Quintara 96 Well Plate 300 µL
 * Quintara Vertical Plate 192 Wells
-* Deepwell 96 Well Plate 2000 µL #1234
+* Deepwell 96 Well Plate 2000 µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
@@ -34,11 +34,13 @@ This protocol does stuff!
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part2/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt2/deck.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. 20, 2, 2, and 20ul are taken from 4 columns in a set and dispensed into the starting destination well (change tips).
+2. Step 1 is repeated for the desired number of sets (one set per destination column).
+3. 4 tips are picked up and steps 1 & 2 are repeated for the remaining four wells under the 8 already filled wells in that set.
 
 
 ### Process

@@ -6,22 +6,23 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+1 of 6 mastermixes is filled into all 108 columns in all 9 plates from two wells of a reservoir. Pipette will automatically be assigned depending on the mastermix selected, and multi-dispensing is installed when possible to the pipette maximum volume. Mastermix is taken back and forth between the two mastermix wells (aspirate A1, aspirate A2, aspirate A1,..., etc.), so fill mastermix source columns in the reservoir evenly. Mastermix details are included in the dropdown menu.
+
 
 
 ### Labware
 * Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL #15000
+* Quintara 12 Reservoir 15000 µL
 * Double Pcr 96 Well Plate 300 µL
 * Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL #1234
+* Quintara 96 Well Plate 300 µL
 * Quintara Vertical Plate 192 Wells
-* Deepwell 96 Well Plate 2000 µL #1234
+* Deepwell 96 Well Plate 2000 µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
 
@@ -31,15 +32,16 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part3/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt3/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part3/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt3/liquids.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Aspirate mastermix volume according to mastermix selected.
+2. Dispense into all wells, multi-dispensing if possible.
 
 
 ### Process
