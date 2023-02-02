@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': '',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    # [num_samp, p300_mount, p1000_mount] = get_values(  # noqa: F821\n    #     \"num_samp\", \"p300_mount\", \"p1000_mount\")\n\n    p20_mount = \"right\"\n    num_plates = 4\n\n    # labware\n    source_plate = ctx.load_labware('barcode_96_wellplate_200ul', 9,\n                                    label='Source Plate')\n    dest_plates = [ctx.load_labware('combo_96_wellplate_300ul',\n                                    slot, label='Dest Plate')\n                   for slot in [\n                                1, 2, 3, 4, 5, 6, 7\n                                ][:num_plates]]\n\n    water_res = ctx.load_labware('nest_12_reservoir_15ml', 8)\n    tips = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n            for slot in [10]]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips)\n\n    # mapping\n    dest_cols = [plate.rows()[0][i]\n                 for i in range(12) for plate in dest_plates]\n\n    water = water_res.wells()[0]\n\n    # protocol\n    ctx.comment('\\n--------------ADDING BARCODE TO PLATES--------------\\n\\n')\n    d_col_ctr = 0\n    for s in source_plate.rows()[0]:\n        m20.pick_up_tip()\n        m20.aspirate(8.5, water)\n        m20.dispense(8.5, s)\n        m20.mix(3, 14, s)\n        for _ in range(num_plates):\n            m20.aspirate(2, s, rate=0.5)\n            m20.dispense(2, dest_cols[d_col_ctr], rate=0.5)\n            # m20.blow_out() ????????????????????\n            d_col_ctr += 1\n            print(d_col_ctr)\n        m20.drop_tip()\n        ctx.comment('\\n\\n')\n",
+    "content": "metadata = {\n    'protocolName': 'Nanopore Aliquoting',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_plates, p20_mount] = get_values(  # noqa: F821\n        \"num_plates\", \"p20_mount\")\n\n    # labware\n    source_plate = ctx.load_labware('barcode_96_wellplate_200ul', 9,\n                                    label='Source Plate')\n    dest_plates = [ctx.load_labware('combo_96_wellplate_300ul',\n                                    slot, label='Dest Plate')\n                   for slot in [\n                                1, 2, 3, 4, 5, 6, 7\n                                ][:num_plates]]\n\n    water_res = ctx.load_labware('nest_12_reservoir_15ml', 8)\n    tips = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n            for slot in [10]]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips)\n\n    # mapping\n    dest_cols = [plate.rows()[0][i]\n                 for i in range(12) for plate in dest_plates]\n\n    water = water_res.wells()[0]\n\n    # protocol\n    ctx.comment('\\n--------------ADDING BARCODE TO PLATES--------------\\n\\n')\n    d_col_ctr = 0\n    for s in source_plate.rows()[0]:\n        m20.pick_up_tip()\n        m20.aspirate(8.5, water)\n        m20.dispense(8.5, s)\n        m20.mix(3, 14, s)\n        for _ in range(num_plates):\n            m20.aspirate(2, s, rate=0.5)\n            m20.dispense(2, dest_cols[d_col_ctr], rate=0.5)\n            # m20.blow_out() ????????????????????\n            d_col_ctr += 1\n        m20.drop_tip()\n        ctx.comment('\\n\\n')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -14588,7 +14588,29 @@
             }
         }
     ],
-    "fields": [],
+    "fields": [
+        {
+            "default": 7,
+            "label": "Number of Plates (1-7)",
+            "name": "num_plates",
+            "type": "int"
+        },
+        {
+            "label": "P20 Multi-Channel Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
     "instruments": [
         {
             "mount": "right",
@@ -14621,6 +14643,24 @@
             "type": "combo_96_wellplate_300ul"
         },
         {
+            "name": "Dest Plate on 5",
+            "share": false,
+            "slot": "5",
+            "type": "combo_96_wellplate_300ul"
+        },
+        {
+            "name": "Dest Plate on 6",
+            "share": false,
+            "slot": "6",
+            "type": "combo_96_wellplate_300ul"
+        },
+        {
+            "name": "Dest Plate on 7",
+            "share": false,
+            "slot": "7",
+            "type": "combo_96_wellplate_300ul"
+        },
+        {
             "name": "NEST 12 Well Reservoir 15 mL on 8",
             "share": false,
             "slot": "8",
@@ -14648,7 +14688,7 @@
     "metadata": {
         "apiLevel": "2.11",
         "author": "Rami Farawi <rami.farawi@opentrons.com>",
-        "protocolName": "",
+        "protocolName": "Nanopore Aliquoting",
         "source": "Custom Protocol Request"
     },
     "modules": []

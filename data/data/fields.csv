@@ -831,7 +831,7 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,28
+num_plates,29
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -907,7 +907,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,118
+p20_mount,119
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
