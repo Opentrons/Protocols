@@ -49,6 +49,5 @@ def run(ctx):
             m20.dispense(2, dest_cols[d_col_ctr], rate=0.5)
             # m20.blow_out() ????????????????????
             d_col_ctr += 1
-            print(d_col_ctr)
         m20.drop_tip()
         ctx.comment('\n\n')
