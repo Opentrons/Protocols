@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': '',
+    'protocolName': 'Nanopore Aliquoting',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -8,11 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    # [num_samp, p300_mount, p1000_mount] = get_values(  # noqa: F821
-    #     "num_samp", "p300_mount", "p1000_mount")
-
-    p20_mount = "right"
-    num_plates = 4
+    [num_plates, p20_mount] = get_values(  # noqa: F821
+        "num_plates", "p20_mount")
 
     # labware
     source_plate = ctx.load_labware('barcode_96_wellplate_200ul', 9,

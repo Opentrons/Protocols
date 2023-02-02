@@ -1,27 +1,21 @@
+# Nanopore Aliquoting
+
 ### Author
 [Opentrons](https://opentrons.com/)
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS Library Prep
+	* Nanopore
 
 
 ## Description
-This protocol does stuff!
+This protocol preps 1-7 destination plates from one source barcode plate. Destination plates should loaded onto the deck in order of lowest to highest, depending on the number of plates selected (up to 7). For detailed protocol steps, see below.
 
 
 ### Labware
-* Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL #15000
-* Quintara Combo Pcr 96 Well Plate 300 µL on Nest Pcr
-* Barcode 96 Well Plate 200 µL #1234
-* Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL on Aluminum Block #1234
-* Quintara Vertical Plate 192 Wells
-* Combo 96 Well Plate Black Label on Nest Plate 300µL #1234
-* Quintara Deepwell 96 Well Plate 2000 µL #1234
-* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* Barcode 96 Well Plate 200 µL
+* Combo 96 Well Plate Black Label on Nest Plate 300µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
@@ -30,15 +24,17 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_nanopore/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/quintara_nanopore/deck.png)
 
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_nanopore/reagents.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Pick up tips.
+2. Aspirate 8.5ul of water and dispense into A1 of source barcode plate.
+3. Mix 3 times at 14ul.
+4. 2ul single aspiration single dispense from A1 of source plate to A1 of destination plate(s), up to the number of plates specified.
+5. Drop tip.
+6. Repeat 1-5 for all columns in source plate (column to column transfer).
 
 
 ### Process
