@@ -1,27 +1,21 @@
-# Four 96 Deepwell to PCR Plate
-
+# Nanopore Aliquoting
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 
 ## Categories
-* Sample Prep
-	* Plate Filling
+* NGS Library Prep
+	* Nanopore
 
 
 ## Description
-Four 96 wells are consolidated in one 96 PCR plate. Number of sets is equal to a group of 4 columns, taking 20ul from the 1st and fourth column of that set, and 2ul from columns 2 and 3 from that set.
+This protocol preps 1-7 destination plates from one source barcode plate. Destination plates should loaded onto the deck in order of lowest to highest, depending on the number of plates selected (up to 7). For detailed protocol steps, see below.
 
 
 ### Labware
-* Quintara Vertical Plate 192 Wells
-* Quintara 12 Reservoir 15000 µL
-* Double Pcr 96 Well Plate 300 µL
-* Appliedbiosystem 384 Well Plate 40 µL
-* Quintara 96 Well Plate 300 µL
-* Quintara Vertical Plate 192 Wells
-* Deepwell 96 Well Plate 2000 µL
+* Barcode 96 Well Plate 200 µL
+* Combo 96 Well Plate Black Label on Nest Plate 300µL
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
@@ -30,16 +24,17 @@ Four 96 wells are consolidated in one 96 PCR plate. Number of sets is equal to a
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/pt1/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara-onsite/quintara_nanopore/deck.png)
 
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/quintara_onsite_part1/reagents.png)
 
 
 ### Protocol Steps
-1. 20, 2, 2, and 20ul are taken from 4 columns in a set and dispensed into the starting destination well (change tips for each set).
-2. Step 1 is repeated for the desired number of sets (one set per destination column).
+1. Pick up tips.
+2. Aspirate 8.5ul of water and dispense into A1 of source barcode plate.
+3. Mix 3 times at 14ul.
+4. 2ul single aspiration single dispense from A1 of source plate to A1 of destination plate(s), up to the number of plates specified.
+5. Drop tip.
+6. Repeat 1-5 for all columns in source plate (column to column transfer).
 
 
 ### Process
@@ -57,4 +52,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-quintara_onsite_part1
+quintara_onsite_nanopore
