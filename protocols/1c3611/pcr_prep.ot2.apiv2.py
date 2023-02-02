@@ -148,27 +148,24 @@ def run(ctx):
 
     today = date.today()
     datestr = today.strftime('%Y%m%d')
+    path = '/var/lib/jupyter/notebooks'
+    out_csv_path = f'{path}/{datestr}_{run_id}.csv'
+
     if not ctx.is_simulating():
-        path = '/var/lib/jupyter/notebooks'
-        out_csv_path = f'{path}/{datestr}_{run_id}.csv'
-    else:
-        out_csv_path = f'protocols/1c3611/supplements/{datestr}_{run_id}.csv'
-
-    headers = ['384 well', 'sample source well', 'mastermix tube']
-
-    with open(out_csv_path, 'w') as out_file:
-        writer = csv.writer(out_file)
-        writer.writerow(headers)
-        for well384 in plate384.wells():
-            info = map[well384]
-            final_well = well384.display_name.split(' ')[0]
-            if info['sample']:
-                sample96 = info['sample'].display_name.split(' ')[0]
-            else:
-                sample96 = None
-            if info['mix']:
-                mix = info['mix'].display_name.split(' ')[0]
-            else:
-                mix = None
-            data_line = [final_well, sample96, mix]
-            writer.writerow(data_line)
+        headers = ['384 well', 'sample source well', 'mastermix tube']
+        with open(out_csv_path, 'w') as out_file:
+            writer = csv.writer(out_file)
+            writer.writerow(headers)
+            for well384 in plate384.wells():
+                info = map[well384]
+                final_well = well384.display_name.split(' ')[0]
+                if info['sample']:
+                    sample96 = info['sample'].display_name.split(' ')[0]
+                else:
+                    sample96 = None
+                if info['mix']:
+                    mix = info['mix'].display_name.split(' ')[0]
+                else:
+                    mix = None
+                data_line = [final_well, sample96, mix]
+                writer.writerow(data_line)
