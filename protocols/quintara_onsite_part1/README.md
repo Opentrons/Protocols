@@ -38,7 +38,7 @@ Four 96 wells are consolidated in one 96 PCR plate. Number of sets is equal to a
 
 
 ### Protocol Steps
-1. 20, 2, 2, and 20ul are taken from 4 columns in a set and dispensed into the starting destination well (change tips).
+1. 20, 2, 2, and 20ul are taken from 4 columns in a set and dispensed into the starting destination well (change tips for each set).
 2. Step 1 is repeated for the desired number of sets (one set per destination column).
 
 
