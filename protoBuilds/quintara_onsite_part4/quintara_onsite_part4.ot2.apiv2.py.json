@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Water Filling 9 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [starting_tip_col, p300_mount] = get_values(  # noqa: F821\n        \"starting_tip_col\", \"p300_mount\")\n\n    # labware\n    source_plate = ctx.load_labware('quintara_12_reservoir_15000ul', 11)\n    dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)\n                   for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n            for slot in [10]]\n\n    starting_tip = tips[0].rows()[0][starting_tip_col-1]\n\n    ctx.pause(f\"\"\"\n    Ensure that there is a {tips[0]}.\n    Select \"Resume\" on the Opentrons app.\n        \"\"\")\n\n    # pipettes\n    pip = ctx.load_instrument('p300_multi_gen2',\n                              p300_mount,\n                              tip_racks=tips)\n\n    all_dest_columns = [\n                        col\n                        for plate in dest_plates\n                        for col in plate.rows()[0]\n                        ]\n\n    # source mapping\n    source = source_plate.wells()[0]\n\n    all_chunks = [all_dest_columns[i:i+5]\n                  for i in range(0, len(all_dest_columns), 5)]\n\n    disp_vol = 20\n\n    pip.pick_up_tip(starting_tip)\n\n    for chunk in all_chunks:\n        pip.aspirate(36*len(chunk)+disp_vol, source)\n        for well in chunk:\n            pip.dispense(36, well.bottom(z=1))\n        pip.dispense(pip.current_volume, source)\n        ctx.comment('\\n')\n",
+    "content": "metadata = {\n    'protocolName': 'Water Filling 9 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [starting_tip_col,\n        source_labware, p300_mount] = get_values(  # noqa: F821\n        \"starting_tip_col\", \"source_labware\", \"p300_mount\")\n\n    # labware\n    source_plate = ctx.load_labware(source_labware, 11)\n    dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)\n                   for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n            for slot in [10]]\n\n    starting_tip = tips[0].rows()[0][starting_tip_col-1]\n\n    ctx.pause(f\"\"\"\n    Ensure that there is a {tips[0]}.\n    Select \"Resume\" on the Opentrons app.\n        \"\"\")\n\n    # pipettes\n    pip = ctx.load_instrument('p300_multi_gen2',\n                              p300_mount,\n                              tip_racks=tips)\n\n    all_dest_columns = [\n                        col\n                        for plate in dest_plates\n                        for col in plate.rows()[0]\n                        ]\n\n    # source mapping\n    source = source_plate.wells()[0]\n\n    all_chunks = [all_dest_columns[i:i+5]\n                  for i in range(0, len(all_dest_columns), 5)]\n\n    disp_vol = 20\n\n    pip.pick_up_tip(starting_tip)\n\n    for chunk in all_chunks:\n        pip.aspirate(36*len(chunk)+disp_vol, source)\n        for well in chunk:\n            pip.dispense(36, well.bottom(z=1))\n        pip.dispense(pip.current_volume, source)\n        ctx.comment('\\n')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -12340,6 +12340,21 @@
             "label": "Starting Tip Column (1-12)",
             "name": "starting_tip_col",
             "type": "int"
+        },
+        {
+            "label": "Mastermix Type",
+            "name": "source_labware",
+            "options": [
+                {
+                    "label": "Quintara Reservoir",
+                    "value": "quintara_12_reservoir_15000ul"
+                },
+                {
+                    "label": "Nest 12 Well Reservoir",
+                    "value": "nest_12_reservoir_15ml"
+                }
+            ],
+            "type": "dropDown"
         },
         {
             "label": "P300 Multi-Channel Mount",
