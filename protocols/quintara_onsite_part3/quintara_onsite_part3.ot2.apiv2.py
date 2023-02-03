@@ -8,8 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    [starting_tip_col, reag, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "starting_tip_col", "reag", "p20_mount", "p300_mount")
+    [starting_tip_col, reag, source_labware,
+        p20_mount, p300_mount] = get_values(  # noqa: F821
+        "starting_tip_col", "reag", "source_labware",
+            "p20_mount", "p300_mount")
 
     # start of protocol
     reag_dict = {
@@ -45,7 +47,7 @@ def run(ctx):
     reag_num_disp = reag_dict[reag + "_num_disp"]
 
     # labware
-    source_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 11)
+    source_plate = ctx.load_labware(source_labware, 11)
     dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)
                    for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]
     tips = [ctx.load_labware(
