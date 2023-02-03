@@ -924,7 +924,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,136
+p300_mount,137
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1245,6 +1245,7 @@ source_csv_slot7,1
 source_csv_slot8,1
 source_csv_slot9,1
 source_format,1
+source_labware,2
 source_lw,1
 source_plate,2
 source_plate_type,1

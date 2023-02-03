@@ -7,6 +7,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Mastermix Type",
+    "name": "source_labware",
+    "options": [
+      {"label": "Quintara Reservoir", "value": "quintara_12_reservoir_15000ul"},
+      {"label": "Nest 12 Well Reservoir", "value": "nest_12_reservoir_15ml"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "p300_mount",
     "options": [

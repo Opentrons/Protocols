@@ -20,6 +20,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Mastermix Type",
+    "name": "source_labware",
+    "options": [
+      {"label": "Deepwell Plate", "value": "nest_96_wellplate_2ml_deep"},
+      {"label": "12 Well Reservoir", "value": "nest_12_reservoir_15ml"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P20 Multi-Channel Mount",
     "name": "p20_mount",
     "options": [

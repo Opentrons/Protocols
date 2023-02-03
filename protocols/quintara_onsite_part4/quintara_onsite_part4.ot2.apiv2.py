@@ -8,11 +8,12 @@ metadata = {
 
 def run(ctx):
 
-    [starting_tip_col, p300_mount] = get_values(  # noqa: F821
-        "starting_tip_col", "p300_mount")
+    [starting_tip_col,
+        source_labware, p300_mount] = get_values(  # noqa: F821
+        "starting_tip_col", "source_labware", "p300_mount")
 
     # labware
-    source_plate = ctx.load_labware('quintara_12_reservoir_15000ul', 11)
+    source_plate = ctx.load_labware(source_labware, 11)
     dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)
                    for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
