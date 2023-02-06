@@ -52,9 +52,9 @@ def run(ctx):
 
     # pipettes
     p20 = ctx.load_instrument(
-        'p20_single_gen2', 'left', tip_racks=tipracks_20)
+        'p20_single_gen2', 'right', tip_racks=tipracks_20)
     m20 = ctx.load_instrument(
-        'p20_multi_gen2', 'right', tip_racks=tipracks_20)
+        'p20_multi_gen2', 'left', tip_racks=tipracks_20)
 
     # reagents and variables
     samples = plate96.rows()[0][:num_cols_samples]
