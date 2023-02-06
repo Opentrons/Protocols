@@ -30,6 +30,24 @@
         "default": 2
     },
     {
+        "type": "dropDown",
+        "label": "plate mastermix from tubes?",
+        "name": "do_plate_mm",
+        "options": [
+           { "label": "yes, mixes are in tuberack", "value": true },
+           { "label": "no, mixes are already plated in slot 1", "value": false }
+         ]
+    },    
+    {
+        "type": "dropDown",
+        "label": "cool samples?",
+        "name": "do_cool_samples",
+        "options": [
+           { "label": "yes, cool to 4C", "value": true },
+           { "label": "no, keep tempdeck deactivated", "value": false }
+         ]
+    },    
+    {
         "type": "str",
         "label": "run ID",
         "name": "run_id",

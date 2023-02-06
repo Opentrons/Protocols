@@ -14,9 +14,10 @@ metadata = {
 def run(ctx):
 
     [num_samples, vol_sample, num_mixes, vol_mix,
-     num_replicates, run_id] = get_values(  # noqa: F821
+     num_replicates, do_plate_mm, do_cool_samples,
+     run_id] = get_values(  # noqa: F821
      'num_samples', 'vol_sample', 'num_mixes', 'vol_mix', 'num_replicates',
-     'run_id')
+     'do_plate_mm', 'do_cool_samples', 'run_id')
 
     if not run_id:
         ctx.pause('\n\n\n\nNo run ID entered. Proceed?\n\n\n\n')
@@ -24,35 +25,45 @@ def run(ctx):
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
+    # modules
+    tempdeck = ctx.load_module('tempdeck', '3')
+    if do_cool_samples:
+        tempdeck.set_temperature(4)
+
     # labware
-    distribution_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
-                                          'mix distribution plate')
-    plate384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '2',
-                                'PCR plate')
-    plate96 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3',
-                               'sample plate')
+    plate_384_def = 'biorad_384_wellplate_50ul_' if ctx.is_simulating() \
+        else 'biorad_384_wellplate_50ul'
+    distribution_plate = ctx.load_labware(
+            'usascientific_96_wellplate_200ul', '1',
+            'mix distribution plate')
+    plate384 = ctx.load_labware(plate_384_def, '2', 'PCR plate')
+    plate96 = tempdeck.load_labware('usascientific_96_aluminumblock_200ul',
+                                    'sample plate')
     mix_tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4',
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '4',
         'mastermix tuberack')
+
+    num_cols_samples = math.ceil(num_samples/8)
+    num_racks = math.ceil(
+        (num_mixes + (num_cols_samples*num_replicates*num_mixes))/12)
     tipracks_20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['5', '6', '7', '8', '9']]
+        for slot in ['5', '7', '8', '9', '10'][:num_racks]]
 
     # pipettes
     p20 = ctx.load_instrument(
-        'p20_single_gen2', 'left', tip_racks=tipracks_20)
+        'p20_single_gen2', 'right', tip_racks=tipracks_20)
     m20 = ctx.load_instrument(
-        'p20_multi_gen2', 'right', tip_racks=tipracks_20)
+        'p20_multi_gen2', 'left', tip_racks=tipracks_20)
 
     # reagents and variables
-    num_cols_samples = math.ceil(num_samples/8)
     samples = plate96.rows()[0][:num_cols_samples]
     mix_tubes = mix_tuberack.wells()[:num_mixes]
 
     all_dests_flattened = [
         well
-        for col in plate384.columns()
-        for well in col[:2]]
+        for row in plate384.rows()[:2]
+        for well in row]
     mix_columns = distribution_plate.columns()[:num_mixes]
     num_dests_per_mix = num_cols_samples*num_replicates
     mix_dest_sets = [
@@ -106,8 +117,8 @@ def run(ctx):
             map[dest][map_key] = source
 
     # plate mixes from tubes
-    overage_factor = 1.1
-    vol_per_distribution_well = vol_mix*num_cols_samples*8*(
+    overage_factor = 1.05
+    vol_per_distribution_well = vol_mix*num_cols_samples*(
         num_replicates*overage_factor)
     num_asp = math.ceil(
         vol_per_distribution_well/p20.tip_racks[0].wells()[0].max_volume)
@@ -116,9 +127,9 @@ def run(ctx):
         p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
         for well in col:
             for _ in range(num_asp):
-                p20.aspirate(vol_per_asp, tube.bottom(2))
+                p20.aspirate(vol_per_asp, tube.bottom(0.5))
                 slow_withdraw(p20, tube)
-                p20.dispense(vol_per_distribution_well, well.bottom(1))
+                p20.dispense(vol_per_asp, well.bottom(0.5))
                 slow_withdraw(p20, well)
         p20.return_tip()  # save tip corresponding to each mix for next step
     p20.reset_tipracks()
@@ -128,47 +139,46 @@ def run(ctx):
         m20.pick_up_tip()
         for d in dest_set:
             map_384_to_source(tube, d, source_is_col=False, source_type='mix')
-            m20.aspirate(vol_mix, column[0].bottom(0.5))
+            m20.aspirate(vol_mix, column[0].bottom(0.8))
             slow_withdraw(m20, column[0])
-            m20.dispense(vol_mix, d.bottom(0.2))
+            m20.dispense(vol_mix, d.bottom(0.8))
             wick(m20, d)
         m20.drop_tip()
 
     # transfer sample
-    for sample, s_set in zip(samples, sample_dest_sets):
-        for s in s_set:
-            map_384_to_source(sample, s)
+    for sample, sample_dest_set in zip(samples, sample_dest_sets):
+        for d in sample_dest_set:
+            map_384_to_source(sample, d)
             m20.pick_up_tip()
-            m20.aspirate(vol_sample, sample.bottom(0.5))
+            m20.aspirate(vol_sample, sample.bottom(0.8))
             slow_withdraw(m20, sample)
-            m20.dispense(vol_sample, d.bottom(1))
+            m20.dispense(vol_sample, d.bottom(0.8))
             # mix
             slow_withdraw(m20, d)
             m20.drop_tip()
 
     today = date.today()
     datestr = today.strftime('%Y%m%d')
+    path = '/var/lib/jupyter/notebooks'
+    out_csv_path = f'{path}/{datestr}_{run_id}.csv'
+
     if not ctx.is_simulating():
-        path = '/var/lib/jupyter/notebooks'
-        out_csv_path = f'{path}/{datestr}_{run_id}.csv'
-    else:
-        out_csv_path = f'protocols/1c3611/supplements/{datestr}_{run_id}.csv'
+        headers = ['384 well', 'sample source well', 'mastermix tube']
+        with open(out_csv_path, 'w') as out_file:
+            writer = csv.writer(out_file)
+            writer.writerow(headers)
+            for well384 in plate384.wells():
+                info = map[well384]
+                final_well = well384.display_name.split(' ')[0]
+                if info['sample']:
+                    sample96 = info['sample'].display_name.split(' ')[0]
+                else:
+                    sample96 = None
+                if info['mix']:
+                    mix = info['mix'].display_name.split(' ')[0]
+                else:
+                    mix = None
+                data_line = [final_well, sample96, mix]
+                writer.writerow(data_line)
 
-    headers = ['384 well', 'sample source well', 'mastermix tube']
-
-    with open(out_csv_path, 'w') as out_file:
-        writer = csv.writer(out_file)
-        writer.writerow(headers)
-        for well384 in plate384.wells():
-            info = map[well384]
-            final_well = well384.display_name.split(' ')[0]
-            if info['sample']:
-                sample96 = info['sample'].display_name.split(' ')[0]
-            else:
-                sample96 = None
-            if info['mix']:
-                mix = info['mix'].display_name.split(' ')[0]
-            else:
-                mix = None
-            data_line = [final_well, sample96, mix]
-            writer.writerow(data_line)
+    tempdeck.deactivate()
