@@ -1,6 +1,5 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import Well
-from opentrons.protocol_api.contexts import InstrumentContext
 import re
 from collections import Counter
 from typing import Union, Sequence
@@ -39,7 +38,7 @@ def get_tube_liquid_level(
 
 
 def aspirate_liq_level(
-        pip: InstrumentContext,
+        pip,
         initial_tube_volume: float,
         aspiration_volume: float,
         tube: Well,
@@ -54,7 +53,7 @@ def aspirate_liq_level(
 
 
 def dispense_liq_level(
-        pip: InstrumentContext,
+        pip,
         initial_tube_volume: float,
         dispensing_volume: float,
         tube: Well) -> float:
@@ -237,7 +236,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # Remove any empty lines in the CSV.
     for i, row in enumerate(csv_rows):
         if row == '':
-            del(csv_rows[i])
+            del csv_rows[i]
         else:
             csv_list.append(row.split(','))
 
