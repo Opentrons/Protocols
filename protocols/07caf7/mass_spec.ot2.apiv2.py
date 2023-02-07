@@ -70,11 +70,23 @@ def run(ctx):
     samples_stacked_s = stacked_plate.wells()[
         stacked_starting_index:stacked_starting_index+num_samples]
     samples_stacked_m = []
+    samples_collection_m = []
+    samples_final_m = []
     for well in samples_stacked_s:
-        col_reference = stacked_plate.columns()[
-            stacked_plate.wells().index(well)//8][0]
-        if col_reference not in samples_stacked_m:
-            samples_stacked_m.append(col_reference)
+        col_reference_index = stacked_plate.wells().index(well)//8
+        if stacked_plate.columns()[
+                col_reference_index][0] not in samples_stacked_m:
+            samples_stacked_m.append(
+                stacked_plate.columns()[col_reference_index][0])
+        if collection_plate.columns()[
+                col_reference_index][0] not in samples_collection_m:
+            samples_collection_m.append(
+                collection_plate.columns()[col_reference_index][0])
+        if final_plate.columns()[
+                col_reference_index][0] not in samples_final_m:
+            samples_final_m.append(
+                final_plate.columns()[col_reference_index][0])
+
     samples_collection_m = collection_plate.rows()[0][:num_cols]
     samples_final_m = final_plate.rows()[0][:num_cols]
     meoh = [
