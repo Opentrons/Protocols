@@ -97,13 +97,16 @@ def run(ctx):
         for col in col_mq.split(',')]
 
     # transfer sample
-    num_trans = math.ceil(vol_sample/p300.tip_racks[0].wells()[0].max_volume)
+    num_trans = math.ceil(
+        vol_sample/(p300.tip_racks[0].wells()[0].max_volume-vol_air_gap))
     vol_per_trans = round(vol_sample/num_trans, 2)
     for s, d in zip(samples_source, samples_stacked_s):
         p300.pick_up_tip()
         for _ in range(num_trans):
             p300.aspirate(vol_per_trans, s.bottom(height_sample))
             slow_withdraw(s, p300)
+            p300.aspirate(vol_air_gap, s.top())  # air gap
+            p300.dispense(vol_air_gap, d.top())  # dispense air gap
             p300.dispense(vol_per_trans, d.bottom(2))
             slow_withdraw(d, p300)
         p300.drop_tip()
@@ -170,6 +173,8 @@ def run(ctx):
         m300.pick_up_tip(tip)
         m300.aspirate(vol_sample_redissolved, s)
         slow_withdraw(s, m300)
+        m300.aspirate(vol_air_gap, s.top())  # air gap
+        m300.dispense(vol_air_gap, d.top())  # dispense air gap
         m300.dispense(vol_sample, d)
         slow_withdraw(d, m300)
         m300.drop_tip()
