@@ -2,6 +2,10 @@ import json
 import sys
 from pathlib import Path
 import opentrons
+from opentrons.hardware_control import (
+    API as HardwareAPI,
+    ThreadManager,
+    )
 from opentrons.protocols.execution.execute import run_protocol
 from opentrons.protocols.parse import parse as parse_protocol
 from opentrons.protocols.context.simulator.protocol_context \
@@ -106,10 +110,14 @@ def parse(protocol_path):
     assert protocol.api_level >= (2, 0)
 
     # Use a simulating protocol context
-    context_impl = ProtocolContextSimulation()
+    sh_arg = ThreadManager(HardwareAPI.build_hardware_simulator).sync
+
+    context_impl = ProtocolContextSimulation(
+     sync_hardware=sh_arg, api_version=protocol.api_level)
 
     context = opentrons.protocol_api.contexts.ProtocolContext(
         implementation=context_impl)
+
     # NOTE:(IL, 2020-05-13)L there’s no deck calibration, and the
     # identity deck calibration is about 25 mm too high (as of v1.17.1).
     # Because of this, tall labware can cross the threshold and cause a
