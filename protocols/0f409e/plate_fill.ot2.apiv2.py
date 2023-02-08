@@ -17,10 +17,10 @@ def run(ctx):
         'tipwell_start')
 
     # labware
-    plate24 = ctx.load_labware('corning_24_wellplate_3.4ml_flat', '1', 
+    plate24 = ctx.load_labware('corning_24_wellplate_3.4ml_flat', '1',
                                'source plate')
     plates96 = [
-        ctx.load_labware('corning_96_wellplate_360ul_flat', slot, 
+        ctx.load_labware('corning_96_wellplate_360ul_flat', slot,
                          f'destination plate {i+1}')
         for i, slot in enumerate(['2', '3'])]
     reservoir = ctx.load_labware('agilent_1_reservoir_290ml', '4')
