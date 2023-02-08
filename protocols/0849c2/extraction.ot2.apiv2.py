@@ -139,6 +139,7 @@ resuming.\n\n\n\n")
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
+            m300.blow_out(bead_loc)
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 4
 
@@ -175,13 +176,8 @@ resuming.\n\n\n\n")
                 m300.dispense(vol_per_transfer, well.top())
             if do_resuspend:
                 resuspend(well)
-            else:
-                if mixreps > 0:
-                    m300.flow_rate.aspirate *= 4
-                    m300.flow_rate.dispense *= 4
-                    m300.mix(mixreps, vol_mix, well.bottom(2))
-                    m300.flow_rate.aspirate /= 4
-                    m300.flow_rate.dispense /= 4
+            ctx.delay(seconds=2)
+            slow_withdraw(well, m300)
             m300.air_gap(20)
             if park:
                 parking_spots.append(m300._last_tip_picked_up_from)
