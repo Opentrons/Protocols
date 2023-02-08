@@ -19,7 +19,7 @@ This protocol performs a custom nucleic acid purification on up to 96 samples us
 
 
 ### Labware
-* [Bio-Rad 96 Well Plate 200 µL #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+* [Bio-Rad 96 Well Plate 350 µL #HSS9601](https://www.bio-rad.com/en-us/sku/HSS9601-hard-shell-96-well-pcr-plates-high-profile-semi-skirted-clear-clear?ID=HSS9601)
 * [Opentrons 96 Filter Tip Rack 200 µL](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
 
@@ -29,7 +29,7 @@ This protocol performs a custom nucleic acid purification on up to 96 samples us
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0849c2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0849c2/deck2.png)
 
 
 ### Reagent Setup

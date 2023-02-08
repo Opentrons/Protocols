@@ -44,9 +44,8 @@ def run(ctx):
     magdeck = ctx.load_module('magnetic module gen2', '1')
     magdeck.disengage()
 
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
-                                    'deepwell plate')
-    elutionplate = ctx.load_labware('biorad_96_wellplate_200ul_pcr',
+    magplate = magdeck.load_labware('biorad_96_wellplate_350ul')
+    elutionplate = ctx.load_labware('biorad_96_aluminumblock_350ul',
                                     '2', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0]
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '4',
@@ -159,7 +158,7 @@ resuming.\n\n\n\n")
         if do_resuspend:
             magdeck.disengage()
         else:
-            magdeck.engage()
+            magdeck.engage(engage_height)
 
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
