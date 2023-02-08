@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs a custom plate filling protocol from a 24-well source plate into one quadrant of a 96-well plate.",
+    "internal": "0f409e",
+    "labware": "\nCorning 24 Well Plate 3.4 mL Flat #3337\nCorning 96 Well Plate 360 \u00b5L Flat #3650\nAgilent 1 Well Reservoir 290 mL #201252-100\nOpentrons 96 Filter Tip Rack 1000 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f409e/deck.png)\n\n\n",
+        "description": "This protocol performs a custom plate filling protocol from a 24-well source plate into one quadrant of a 96-well plate.\n\n\n",
+        "internal": "0f409e\n",
+        "labware": "* [Corning 24 Well Plate 3.4 mL Flat #3337](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Costar%C2%AE-Multiple-Well-Cell-Culture-Plates/p/3738)\n* [Corning 96 Well Plate 360 \u00b5L Flat #3650](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)\n* [Agilent 1 Well Reservoir 290 mL #201252-100](https://www.agilent.com/store/en_US/Prod-201252-100/201252-100)\n* Opentrons 96 Filter Tip Rack 1000 \u00b5L\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f409e/reagents.png)\n\n\n",
+        "title": "Drug Release Time Point Testing"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P1000 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "reagent-setup": "",
+    "title": "Drug Release Time Point Testing"
+}
