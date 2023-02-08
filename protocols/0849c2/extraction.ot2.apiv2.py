@@ -65,7 +65,7 @@ def run(ctx):
     """
     water = res1.rows()[0][:1]
     ampure_beads = res1.rows()[0][1:2]
-    etoh_sets = [res1.rows()[0][i*2:(i+1)*2] for i in range(1, 4)]
+    etoh_sets = [res1.rows()[0][i*2:(i+1)*2] for i in range(1, 3)]
 
     num_cols = math.ceil(num_samples/8)
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -117,6 +117,7 @@ resuming.\n\n\n\n")
                 m300.aspirate(vol_per_transfer, m.bottom(z_asp))
                 slow_withdraw(m)
                 m300.dispense(vol_per_transfer, dest.bottom(z_disp))
+                m300.blow_out(dest.bottom(z_disp))
                 ctx.delay(seconds=2)
                 slow_withdraw(dest)
                 m300.air_gap(5)
@@ -157,6 +158,8 @@ resuming.\n\n\n\n")
         last_source = None
         if do_resuspend:
             magdeck.disengage()
+        else:
+            magdeck.engage()
 
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
@@ -201,7 +204,7 @@ settling.\n\n\n\n')
                    do_discard_supernatant=False, park=False)
     lyse_bind_wash(vol=vol_ampure_beads, reagent=ampure_beads,
                    time_incubation=time_incubation_minutes,
-                   do_discard_supernatant=True, premix=True,
+                   do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
     for etoh in etoh_sets:
         lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=1.0,
