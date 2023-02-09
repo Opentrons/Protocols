@@ -41,9 +41,8 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
-    pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5',
-                                 'clean PCR plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')
+    index_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 
+                                   '5', 'index plate')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '10', 'waste')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -61,17 +60,16 @@ def run(ctx):
     # reagents and variables
     num_cols = math.ceil(num_samples/8)
     mag_samples = mag_plate.rows()[0][:num_cols]
-    pcr_samples = pcr_plate.rows()[0][:num_cols]
-    spb = reagent_plate.rows()[0][2:5]
-    spb2 = reagent_plate.rows()[0][5]
-    water = reservoir.rows()[0][0]
+    indexes = index_plate.rows()[0][:num_cols]
+    mm_pcr = reagent_plate.rows()[0][3:6]
     liquid_trash = [
         waste_res.wells()[0].top()
         for _ in range(math.ceil(num_cols/6))]
 
-    vol_water = 40.0
-    vol_spb = 45.0
-    vol_spb2 = 15.0
+    vol_supernatant = 100.0
+    vol_mm_pcr = 40.0
+    vol_index = 10.0
+
     ref_well = mag_plate.wells()[0]
     if ref_well.width:
         radius = ref_well.width/2
@@ -145,32 +143,22 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
         slow_withdraw(m300, location)
 
-    if not magdeck.status == 'engaged':
-        magdeck.engage()
-    ctx.delay(minutes=5)
-    remove_supernatant(45, pip=m300, park=False, destinations=pcr_samples)
+    # remove supernatant
+    remove_supernatant(vol_supernatant, pip=m300, park=False)
     magdeck.disengage()
 
-    # transfer water
-    for d in enumerate(pcr_samples):
+    # transfer PCR mastermix
+    for i, d in enumerate(mag_samples):
+        mm_source = mm_pcr[i//4]
         pick_up(m300)
-        m300.aspirate(vol_water, water)
-        slow_withdraw(m300, water)
-        m300.dispense(vol_water, d.bottom(2))
-        slow_withdraw(m300, d)
-        if TEST_MODE_DROP:
-            m300.return_tip()
-        else:
-            m300.drop_tip()
-
-    # transfer SPB
-    for i, d in enumerate(pcr_samples):
-        spb_source = spb[i//4]
-        pick_up(m300)
-        m300.aspirate(vol_spb, spb_source.bottom(0.5))
-        slow_withdraw(m300, spb)
-        m300.dispense(vol_spb, d.bottom(2))
-        m300.mix(reps_mix, vol_mix, d.bottom(2))
+        m300.aspirate(vol_mm_pcr, mm_source.bottom(0.5))
+        slow_withdraw(m300, mm_source)
+        side = 1 if mag_plate.rows()[0].index(d) % 2 == 0 else -1
+        loc_dispense = d.bottom().move(
+            Point(x=side*radial_offset_fraction, z=z_offset))
+        m300.dispense(vol_mm_pcr, loc_dispense)
+        resuspend(d)
+        ctx.delay(seconds=2)
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
             m300.return_tip()
@@ -183,8 +171,40 @@ plate in slot 5. Resume when finished for incubation.')
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=time_incubation_minutes)
 
-    magdeck.engage()
-    if not TEST_MODE_BEADS:
-        ctx.delay(minutes=5)
+    # transfer PCR mastermix
+    for i, d in enumerate(mag_samples):
+        mm_source = mm_pcr[i//4]
+        pick_up(m300)
+        m300.aspirate(vol_mm_pcr, mm_source.bottom(0.5))
+        slow_withdraw(m300, mm_source)
+        side = 1 if mag_plate.rows()[0].index(d) % 2 == 0 else -1
+        loc_dispense = d.bottom().move(
+            Point(x=side*radial_offset_fraction, z=z_offset))
+        m300.dispense(vol_mm_pcr, loc_dispense)
+        resuspend(d)
+        ctx.delay(seconds=2)
+        slow_withdraw(m300, d)
+        if TEST_MODE_DROP:
+            m300.return_tip()
+        else:
+            m300.drop_tip()
 
-    # transfer SPB
+    ctx.pause('Seal the sample plate and centrifuge at 280 × g for 3 seconds')
+
+    # transfer indexes
+    for ind, d in zip(indexes, mag_samples):
+        pick_up(m20)
+        m20.aspirate(vol_index, ind.bottom(0.5))
+        slow_withdraw(m20, ind)
+        m20.dispense(vol_index, d.bottom(2))
+        m20.mix(reps_mix, 20, d.bottom(2))
+        ctx.delay(seconds=2)
+        slow_withdraw(m20, d)
+        if TEST_MODE_DROP:
+            m20.return_tip()
+        else:
+            m20.drop_tip()
+
+    ctx.comment('Seal the plate with Microseal B, and then centrifuge at \
+280 × g for 30 seconds. 11 Place on the thermal cycler and run the BLT PCR \
+program.')

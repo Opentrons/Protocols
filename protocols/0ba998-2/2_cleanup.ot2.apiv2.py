@@ -128,15 +128,16 @@ resuming.\n\n\n\n")
 
     def resuspend(location, reps=reps_mix, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
-                  z_mix=z_offset, dispense_height_rel=5.0):
+                  z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
         m300.move_to(location.center())
         for r_ind in range(reps):
             bead_loc = location.bottom().move(
                 Point(x=side_x*radius*radial_offset_fraction,
                       z=z_mix))
-            m300.aspirate(vol, bead_loc)
-            m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
+            m300.aspirate(vol, bead_loc, rate=rate)
+            m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)),
+                          rate=rate)
         slow_withdraw(m300, location)
 
     def wash(vol, reagent, time_incubation=0,
@@ -165,20 +166,21 @@ resuming.\n\n\n\n")
                 m300.flow_rate.aspirate /= 4
                 m300.flow_rate.dispense /= 4
             last_source = source
-            for _ in range(num_transfers):
+            for n in range(num_transfers):
                 m300.aspirate(vol_per_transfer, source)
                 slow_withdraw(m300, source)
-                m300.dispense(vol_per_transfer, well.top())
+                if n < num_transfers - 1:
+                    loc_dispense = well.top
+                else:
+                    side = 1 if mag_plate.rows()[0].index(d) % 2 == 0 else -1
+                    loc_dispense = well.bottom().move(
+                        Point(x=side*radial_offset_fraction, z=z_offset))
+                m300.dispense(vol_per_transfer, loc_dispense, rate=0.2)
             if do_resuspend:
                 magdeck.disengage()
-                resuspend(well)
-            else:
-                if reps_mix > 0:
-                    m300.flow_rate.aspirate *= 4
-                    m300.flow_rate.dispense *= 4
-                    m300.mix(reps_mix, vol_mix, well.bottom(2))
-                    m300.flow_rate.aspirate /= 4
-                    m300.flow_rate.dispense /= 4
+                resuspend(well, rate=0.5)
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, well)
             m300.air_gap(20)
             if park or TEST_MODE_DROP:
                 m300.return_tip()
@@ -233,3 +235,4 @@ MagDeck for {time_settling_minutes} minutes.')
          vol_supernatant=vol_wash, park=False)
 
     magdeck.engage()
+    ctx.delay(minutes=3, msg='Incubating on MagDeck for 3 minutes.')
