@@ -44,9 +44,8 @@ def run(ctx):
     magdeck = ctx.load_module('magnetic module gen2', '1')
     magdeck.disengage()
 
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
-                                    'deepwell plate')
-    elutionplate = ctx.load_labware('biorad_96_wellplate_200ul_pcr',
+    magplate = magdeck.load_labware('biorad_96_wellplate_350ul')
+    elutionplate = ctx.load_labware('biorad_96_aluminumblock_350ul',
                                     '2', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0]
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '4',
@@ -65,7 +64,7 @@ def run(ctx):
     """
     water = res1.rows()[0][:1]
     ampure_beads = res1.rows()[0][1:2]
-    etoh_sets = [res1.rows()[0][i*2:(i+1)*2] for i in range(1, 4)]
+    etoh_sets = [res1.rows()[0][i*2:(i+1)*2] for i in range(1, 3)]
 
     num_cols = math.ceil(num_samples/8)
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -117,6 +116,7 @@ resuming.\n\n\n\n")
                 m300.aspirate(vol_per_transfer, m.bottom(z_asp))
                 slow_withdraw(m)
                 m300.dispense(vol_per_transfer, dest.bottom(z_disp))
+                m300.blow_out(dest.bottom(z_disp))
                 ctx.delay(seconds=2)
                 slow_withdraw(dest)
                 m300.air_gap(5)
@@ -139,6 +139,7 @@ resuming.\n\n\n\n")
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
+            m300.blow_out(bead_loc)
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 4
 
@@ -156,6 +157,8 @@ resuming.\n\n\n\n")
         last_source = None
         if do_resuspend:
             magdeck.disengage()
+        else:
+            magdeck.engage(engage_height)
 
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
@@ -175,13 +178,8 @@ resuming.\n\n\n\n")
                 m300.dispense(vol_per_transfer, well.top())
             if do_resuspend:
                 resuspend(well)
-            else:
-                if mixreps > 0:
-                    m300.flow_rate.aspirate *= 4
-                    m300.flow_rate.dispense *= 4
-                    m300.mix(mixreps, vol_mix, well.bottom(2))
-                    m300.flow_rate.aspirate /= 4
-                    m300.flow_rate.dispense /= 4
+            ctx.delay(seconds=2)
+            slow_withdraw(well, m300)
             m300.air_gap(20)
             if park:
                 parking_spots.append(m300._last_tip_picked_up_from)
@@ -205,7 +203,7 @@ settling.\n\n\n\n')
                    do_discard_supernatant=False, park=False)
     lyse_bind_wash(vol=vol_ampure_beads, reagent=ampure_beads,
                    time_incubation=time_incubation_minutes,
-                   do_discard_supernatant=True, premix=True,
+                   do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
     for etoh in etoh_sets:
         lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=1.0,
