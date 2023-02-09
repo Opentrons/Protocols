@@ -845,7 +845,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,156
+num_samples,158
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1500,7 +1500,7 @@ vol_dil_to_d,1
 vol_dil_to_e,1
 vol_dispense,1
 vol_dispensed,1
-vol_dna,2
+vol_dna,3
 vol_dna_buff,1
 vol_elution,1
 vol_elution_buffer,1
