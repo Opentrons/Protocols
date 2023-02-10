@@ -33,15 +33,11 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-2/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/reagents.png)
 
 
 ### Process

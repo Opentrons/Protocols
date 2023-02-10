@@ -4,7 +4,7 @@ import math
 import time
 
 metadata = {
-    'protocolName': '5. Illumina DNA Prep - Post Tagmentation Clean Up',
+    'protocolName': '4. Illumina DNA Prep - Clean Up Libraries',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -23,15 +23,15 @@ def run(ctx):
     reps_mix = 1 if TEST_MODE_BEADS else 10
     vol_mix = 70
     z_offset = 3.0
-    radial_offset_fraction = 0.3  # fraction of radius
+    radial_offset_fraction = 0.3
 
     # tuning parameters
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
     # modules
-    tempdeck = ctx.load_module('temperature module gen2', '4')
-    magdeck = ctx.load_module('magnetic module gen2', '7')
+    tempdeck = ctx.load_module('temperature module gen2', '7')
+    magdeck = ctx.load_module('magnetic module gen2', '4')
     if not TEST_MODE_TEMP:
         tempdeck.set_temperature(4)
     magdeck.disengage()
@@ -42,15 +42,15 @@ def run(ctx):
     reagent_plate = tempdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
     pcr_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '5', 'clean PCR plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')
-    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '10', 'waste')
+        'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'clean PCR plate')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
+    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '5', 'waste')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['3', '6']]
     tips200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['9', '11']]
+        for slot in ['8', '9', '10', '11']]
 
     # load P300M pipette
     m20 = ctx.load_instrument(
@@ -217,6 +217,7 @@ clean PCR plate in slot 5.')
     # pre-add SPB to new plate
     pick_up(m20)
     for d in pcr_samples:
+        m20.mix(reps_mix, 10, spb2.bottom(2))
         m20.aspirate(vol_spb2, spb2)
         slow_withdraw(m20, spb2)
         m20.dispense(vol_spb2, d.bottom(0.5))

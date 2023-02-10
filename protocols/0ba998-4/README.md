@@ -1,4 +1,4 @@
-# 5. Illumina DNA Prep - Post Tagmentation Clean Up
+# 4. Illumina DNA Prep - Clean Up Libraries
 
 
 ### Author
@@ -33,15 +33,11 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-4/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-2/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998-4/reagents.png)
 
 
 ### Process
@@ -59,4 +55,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-0ba998-2
+0ba998-4

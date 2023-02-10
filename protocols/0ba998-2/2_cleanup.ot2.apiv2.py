@@ -30,8 +30,8 @@ def run(ctx):
     ctx.max_speeds['Y'] = 200
 
     # modules
-    tempdeck = ctx.load_module('temperature module gen2', '4')
-    magdeck = ctx.load_module('magnetic module gen2', '7')
+    tempdeck = ctx.load_module('temperature module gen2', '7')
+    magdeck = ctx.load_module('magnetic module gen2', '4')
     if not TEST_MODE_TEMP:
         tempdeck.set_temperature(4)
     magdeck.disengage()
@@ -41,14 +41,14 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reservoir')
-    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '10', 'waste')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
+    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '5', 'waste')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['3', '6']]
     tips200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['9', '11']]
+        for slot in ['8', '9', '10', '11']]
 
     # load P300M pipette
     m20 = ctx.load_instrument(
