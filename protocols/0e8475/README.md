@@ -33,7 +33,7 @@ This protocol performs a semi-automated protocol for the Illumina GUIDE-seq NGS 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e8475/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e8475/deck2.png)
 
 
 ### Reagent Setup

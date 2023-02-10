@@ -70,11 +70,23 @@ def run(ctx):
     samples_stacked_s = stacked_plate.wells()[
         stacked_starting_index:stacked_starting_index+num_samples]
     samples_stacked_m = []
+    samples_collection_m = []
+    samples_final_m = []
     for well in samples_stacked_s:
-        col_reference = stacked_plate.columns()[
-            stacked_plate.wells().index(well)//8][0]
-        if col_reference not in samples_stacked_m:
-            samples_stacked_m.append(col_reference)
+        col_reference_index = stacked_plate.wells().index(well)//8
+        if stacked_plate.columns()[
+                col_reference_index][0] not in samples_stacked_m:
+            samples_stacked_m.append(
+                stacked_plate.columns()[col_reference_index][0])
+        if collection_plate.columns()[
+                col_reference_index][0] not in samples_collection_m:
+            samples_collection_m.append(
+                collection_plate.columns()[col_reference_index][0])
+        if final_plate.columns()[
+                col_reference_index][0] not in samples_final_m:
+            samples_final_m.append(
+                final_plate.columns()[col_reference_index][0])
+
     samples_collection_m = collection_plate.rows()[0][:num_cols]
     samples_final_m = final_plate.rows()[0][:num_cols]
     meoh = [
@@ -85,13 +97,16 @@ def run(ctx):
         for col in col_mq.split(',')]
 
     # transfer sample
-    num_trans = math.ceil(vol_sample/p300.tip_racks[0].wells()[0].max_volume)
+    num_trans = math.ceil(
+        vol_sample/(p300.tip_racks[0].wells()[0].max_volume-vol_air_gap))
     vol_per_trans = round(vol_sample/num_trans, 2)
     for s, d in zip(samples_source, samples_stacked_s):
         p300.pick_up_tip()
         for _ in range(num_trans):
             p300.aspirate(vol_per_trans, s.bottom(height_sample))
             slow_withdraw(s, p300)
+            p300.aspirate(vol_air_gap, s.top())  # air gap
+            p300.dispense(vol_air_gap, d.top())  # dispense air gap
             p300.dispense(vol_per_trans, d.bottom(2))
             slow_withdraw(d, p300)
         p300.drop_tip()
@@ -158,6 +173,8 @@ def run(ctx):
         m300.pick_up_tip(tip)
         m300.aspirate(vol_sample_redissolved, s)
         slow_withdraw(s, m300)
+        m300.aspirate(vol_air_gap, s.top())  # air gap
+        m300.dispense(vol_air_gap, d.top())  # dispense air gap
         m300.dispense(vol_sample, d)
         slow_withdraw(d, m300)
         m300.drop_tip()

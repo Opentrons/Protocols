@@ -302,7 +302,7 @@ dest_plate3,1
 dest_plate_lname,1
 dest_plate_type,1
 dest_slot,1
-dest_start_col,1
+dest_start_col,3
 dest_temp_mod_lname,1
 dest_type,5
 dest_well_plate_tmod,1
@@ -764,8 +764,8 @@ module_type,1
 mother_plate_type,1
 mount,2
 mount_m20,2
-mount_m300,8
-mount_p20,8
+mount_m300,9
+mount_p20,9
 mount_p300,6
 mount_side,1
 move_side,2
@@ -827,13 +827,15 @@ num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
 num_mastermix,2
+num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,28
+num_plates,29
 num_pool_sources,1
 num_pools,1
 num_primers,2
+num_replicates,1
 num_reps,1
 num_row,1
 num_rows_a,1
@@ -852,6 +854,7 @@ num_samples_3,1
 num_samples_4,1
 num_samples_per_plate,1
 num_samps,6
+num_sets,2
 num_slides,2
 num_tests,1
 num_tipracks,1
@@ -904,7 +907,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,114
+p20_mount,119
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -921,7 +924,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,134
+p300_mount,137
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1076,6 +1079,7 @@ rate_disp_r,1
 ratio_beads,2
 rdnase_vol,1
 reaction_plate,3
+reag,1
 reag1_vol,1
 reag2_vol,1
 reag_vol,1
@@ -1132,6 +1136,7 @@ rr2,1
 rr3,1
 rsadd,1
 rsb_vol,1
+run_id,1
 run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
@@ -1238,6 +1243,7 @@ source_csv_slot7,1
 source_csv_slot8,1
 source_csv_slot9,1
 source_format,1
+source_labware,2
 source_lw,1
 source_plate,2
 source_plate_type,1
@@ -1275,7 +1281,7 @@ starting_diluent_vol,1
 starting_plasma_vol,1
 starting_position,1
 starting_tip,1
-starting_tip_col,1
+starting_tip_col,3
 starting_tip_col_20,1
 starting_tip_col_300,1
 starting_tip_position,1
@@ -1514,7 +1520,7 @@ vol_ic,1
 vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
-vol_mix,1
+vol_mix,2
 vol_mm,2
 vol_mobile_phase,1
 vol_mq,1
@@ -1524,7 +1530,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,5
+vol_sample,6
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1

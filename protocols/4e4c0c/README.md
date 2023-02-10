@@ -22,8 +22,8 @@ Links:
 ### Labware
 * Opentrons Filter Tips for the p300 and p20 (https://shop.opentrons.com)
 * [Nest 195 mL Reservoir](https://labware.opentrons.com/nest_1_reservoir_195ml?category=reservoir)
-* [Nest 12-Well Reservoir]()
-* [Nest 96-Deep Well Plate 2 mL]()
+* [Nest 12-Well Reservoir](https://shop.opentrons.com/verified-labware/)
+* [Nest 96-Deep Well Plate 2 mL](https://shop.opentrons.com/verified-labware/)
 
 
 
@@ -39,12 +39,12 @@ Links:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4e4c0c/screenshot-deck.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4e4c0c/Screen+Shot+2023-02-06+at+3.55.47+PM.png)
 </br>
 </br>
 **Slots 1-5**: Processing Plates (Sample Plate, Wash 1 Plate, Wash 2 plate, Wash 3 Plate, Elution Plate) (Nest 2 96-Deep Well 2 mL) </br>
 **Slot 7**: 12-Well Reagent Reservoir (Nest 12-Well Reservoir) </br>
-![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4e4c0c/screenshot-reservoir.png)
+![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4e4c0c/Screen+Shot+2023-02-06+at+3.56.24+PM.png)
 </br>
 </br>
 **Slot 8**: 80 Percent EtOH Reservoir (Nest 195 mL Reservoir) </br>
