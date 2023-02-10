@@ -3,7 +3,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': '5. Illumina DNA Prep - Post Tagmentation Clean Up',
+    'protocolName': '2. Illumina DNA Prep - Post Tagmentation Clean Up',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
