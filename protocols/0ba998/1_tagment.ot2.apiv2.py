@@ -89,6 +89,7 @@ resuming.\n\n\n\n")
     # transfer water and sample
     if vol_water > 0:
         pip = m20 if vol_water <= 20 else m300
+        pick_up(pip)
         for d in pcr_plate.rows()[0][:num_cols]:
             pip.aspirate(vol_water, water)
             slow_withdraw(pip, water)
@@ -136,3 +137,6 @@ resuming.\n\n\n\n")
             m300.return_tip()
         else:
             m300.drop_tip()
+
+    ctx.comment('Seal the plate with Microseal B, place on the \
+preprogrammed thermal cycler, and run the TAG program.')
