@@ -26,7 +26,7 @@ def run(ctx):
     ctx.max_speeds['Y'] = 200
 
     # modules
-    tempdeck = ctx.load_module('tempdeck', '3')
+    tempdeck = ctx.load_module('tempdeck', '6')
     if do_cool_samples:
         tempdeck.set_temperature(4)
 
