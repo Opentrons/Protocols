@@ -31,15 +31,13 @@ setup:
 venvs/ot2:
 	mkdir -p venvs
 	virtualenv venvs/ot2
-	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
 	pip install pipenv==2021.5.29 && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) setup && \
 	python setup.py install && \
-	popd && \
-	deactivate
+	popd
 
 .PHONY: parse-errors
 parse-errors:
@@ -52,19 +50,15 @@ parse-ot2: $(OT2_OUTPUT_FILES)
 # Note: OVERRIDE_SETTINGS_DIR must be set to use opentrons v3
 $(BUILD_DIR)/%.ot2.apiv2.py.json: protocols/%.ot2.apiv2.py
 	mkdir -p $(dir $@)
-	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
 	python protolib/parse/parseOT2v2.py $< $@ && \
 	python protolib/parse/parseREADME.py $< $@ && \
 	python scripts/pd-generate.py $< && \
-	python scripts/fields_mine.py $< && \
-	deactivate
+	python scripts/fields_mine.py $<
 
 .PHONY: parse-README
 parse-README:
-	source venvs/ot2/bin/activate && \
-	python protolib/traverse_README.py && \
-	deactivate
+	python protolib/traverse_README.py
 
 .PHONY: clean
 clean:
