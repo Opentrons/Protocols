@@ -5,7 +5,7 @@
             "Serial Dilution"
         ]
     },
-    "description": "This protocol allows for a customizable serial dilution workflow based on 4 text files containing worklist information. This protocol uses a P300 GEN2 single-channel pipette. The 4 steps, each corresponding to its own input text file, are as follows:\n diluent addition to serial dilution plate\n sample addition to serial dilution plate\n serial dilution across plate\n cherrypicking to load final plate",
+    "description": "This protocol allows for a customizable serial dilution workflow based on 4 text files containing worklist information. This protocol uses a P300 GEN2 single-channel pipette. The 4 steps, each corresponding to its own input text file, are as follows:\n* diluent addition to serial dilution plate\n* sample addition to serial dilution plate\n* serial dilution across plate\n* cherrypicking to load final plate",
     "internal": "211a24",
     "labware": "\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt\nNEST 1 Well Reservoir 195 mL\nOpentrons 96 Tip Rack 300 \u00b5L\n",
     "markdown": {
