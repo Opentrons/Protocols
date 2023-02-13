@@ -40,7 +40,7 @@ def run(ctx):
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'reagent plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '5', 'waste')
     tips20 = [
