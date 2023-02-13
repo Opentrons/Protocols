@@ -122,7 +122,7 @@ def run(ctx):
 
     def resuspend(location, reps=mixreps, vol=vol_mix,
                   samples=mag_samples_m, x_mix_fraction=radial_offset_fraction,
-                  z_mix=z_offset, dispense_height_rel=8):
+                  z_mix=z_offset, dispense_height_rel=8, delay_seconds=0):
         m300.flow_rate.aspirate *= 4
         m300.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -135,13 +135,15 @@ def run(ctx):
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
+        ctx.delay(seconds=delay_seconds)
         m300.flow_rate.aspirate /= 4
         m300.flow_rate.dispense /= 4
 
     def lyse_bind_wash(vol, reagent, time_incubation=0,
                        time_settling=0, premix=False,
                        do_discard_supernatant=True, do_resuspend=False,
-                       vol_supernatant=0, supernatant_locations=None):
+                       vol_supernatant=0, supernatant_locations=None,
+                       resuspension_delay_seconds=0):
         """
         `bind` will perform magnetic bead binding on each sample in the
         deepwell plate. Each channel of binding beads will be mixed before
@@ -176,9 +178,13 @@ def run(ctx):
                 m300.flow_rate.dispense /= 4
             last_source = source
             for _ in range(num_transfers):
+                m300.dispense(m300.current_volume, source.top(-1))
                 m300.aspirate(vol_per_transfer, source)
                 slow_withdraw(source)
-                m300.dispense(vol_per_transfer, well.top())
+                m300.dispense(vol_per_transfer, well.top(-1))
+                m300.blow_out(well.top(-1))
+                m300.aspirate(10, well.top(-1))  # avoid droplet
+
             if do_resuspend:
                 resuspend(well)
             else:
@@ -209,7 +215,7 @@ MagDeck for {time_settling} minutes.')
                    time_incubation=time_incubation_deep_blue_minutes,
                    do_discard_supernatant=False)
     lyse_bind_wash(vol=450, reagent=neutralization_buffer,
-                   do_discard_supernatant=False)
+                   do_discard_supernatant=False, resuspension_delay_seconds=5)
     lyse_bind_wash(vol=50, reagent=magclearing_beads, premix=True,
                    do_discard_supernatant=False)
     magdeck.engage(engage_height)
