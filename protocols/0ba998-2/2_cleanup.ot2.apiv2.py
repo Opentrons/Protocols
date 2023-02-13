@@ -152,6 +152,8 @@ resuming.\n\n\n\n")
 
         last_source = None
 
+        if do_resuspend:
+            magdeck.disengage()
         for i, well in enumerate(mag_samples):
             source = reagent[i//columns_per_channel]
             pick_up(m300)
@@ -177,7 +179,6 @@ resuming.\n\n\n\n")
                         Point(x=side*radial_offset_fraction, z=z_offset))
                 m300.dispense(vol_per_transfer, loc_dispense, rate=0.2)
             if do_resuspend:
-                magdeck.disengage()
                 resuspend(well, rate=0.5)
             ctx.delay(seconds=2)
             slow_withdraw(m300, well)

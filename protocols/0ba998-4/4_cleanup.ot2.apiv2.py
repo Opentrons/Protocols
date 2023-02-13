@@ -225,7 +225,7 @@ clean PCR plate in slot 1.')
         slow_withdraw(m20, d)
 
     end = time.time()
-    delay_time_minutes = round((end - start) / 60, 2)
+    delay_time_minutes = 5 - round((end - start) / 60, 2)
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=delay_time_minutes, msg=f'Incubating off magnet for \
 {delay_time_minutes} minutes.')
