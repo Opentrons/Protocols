@@ -147,27 +147,6 @@ resuming.\n\n\n\n")
     remove_supernatant(vol_supernatant, pip=m300, park=False)
     magdeck.disengage()
 
-    # transfer PCR mastermix
-    for i, d in enumerate(mag_samples):
-        mm_source = mm_pcr[i//4]
-        pick_up(m300)
-        m300.aspirate(vol_mm_pcr, mm_source.bottom(0.5))
-        slow_withdraw(m300, mm_source)
-        side = 1 if mag_plate.rows()[0].index(d) % 2 == 0 else -1
-        loc_dispense = d.bottom().move(
-            Point(x=side*radial_offset_fraction, z=z_offset))
-        m300.dispense(vol_mm_pcr, loc_dispense)
-        resuspend(d)
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, d)
-        if TEST_MODE_DROP:
-            m300.return_tip()
-        else:
-            m300.drop_tip()
-
-    ctx.pause('Place PCR plate (slot 5) on magnetic module. Place new PCR \
-plate in slot 5. Resume when finished for incubation.')
-
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=time_incubation_minutes)
 
