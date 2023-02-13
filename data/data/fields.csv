@@ -362,9 +362,11 @@ dna_vol,1
 dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
+do_cool_samples,1
 do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
+do_plate_mm,1
 do_sds_step,1
 do_vortex_pause,1
 donor_384_type,1
@@ -438,7 +440,7 @@ file_input,4
 fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
-filter_tip,5
+filter_tip,6
 filter_tips,1
 final_air_gap,1
 final_asp_speed,1
@@ -765,6 +767,7 @@ mother_plate_type,1
 mount,2
 mount_m20,2
 mount_m300,9
+mount_p1000,1
 mount_p20,9
 mount_p300,6
 mount_side,1
@@ -818,6 +821,7 @@ nuc_free_water_vol_well,1
 num,3
 num_384_cols,1
 num_antibodies,1
+num_cell_lines,1
 num_col,8
 num_cols,3
 num_columns,1
@@ -831,10 +835,11 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,29
+num_plates,30
 num_pool_sources,1
 num_pools,1
 num_primers,2
+num_rep_plates,1
 num_replicates,1
 num_reps,1
 num_row,1
@@ -847,7 +852,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,158
+num_samples,160
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -907,7 +912,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,119
+p20_mount,120
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -924,7 +929,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,137
+p300_mount,138
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1029,7 +1034,7 @@ plate_map_4_csv,1
 plate_name,1
 plate_scan,4
 plate_scan2,4
-plate_type,10
+plate_type,11
 plates,1
 pool_columns,1
 pool_location,1
@@ -1068,6 +1073,7 @@ quad1_exclude_cols,1
 quad2_exclude_cols,1
 quad3_exclude_cols,1
 quad4_exclude_cols,1
+quadrant,1
 quench_volume,1
 rack_count,1
 radial_offset,9
@@ -1100,7 +1106,7 @@ res,2
 res12_type,1
 res1_type,1
 res_dead_vol,1
-res_type,18
+res_type,19
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
@@ -1374,10 +1380,11 @@ tip_rack,5
 tip_rack_10,1
 tip_rack_300,1
 tip_reusage_strategy,1
-tip_reuse,10
+tip_reuse,11
 tip_start,5
 tip_start_1000,2
 tip_start_20,2
+tip_start_col,1
 tip_start_column,4
 tip_start_samples,1
 tip_strategy,3
@@ -1390,11 +1397,13 @@ tip_withdrawal_speed,1
 tiprack_lname_20_ul,1
 tiprack_lname_300ul,1
 tiprack_slot,1
+tiprack_start,1
 tipreuse,5
 tips,2
 tipstrategy_dilution,1
 tiptrash,2
 tiptype,3
+tipwell_start,1
 tmod_1_lname,1
 tmod_2_lname,1
 total_mixing_volume,2
@@ -1540,6 +1549,7 @@ vol_start_rnase,1
 vol_start_tween,1
 vol_tests,1
 vol_trans,1
+vol_transfer,1
 vol_tube1,1
 vol_tube2,1
 vol_tube3,1
@@ -1553,7 +1563,7 @@ volume_of_beads,2
 volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
-volumes_csv,6
+volumes_csv,7
 wash1_vol,29
 wash2_vol,28
 wash3_vol,16
