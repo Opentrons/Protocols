@@ -40,7 +40,7 @@ def run(ctx):
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'reagent plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '5', 'waste')
     tips20 = [
@@ -152,6 +152,8 @@ resuming.\n\n\n\n")
 
         last_source = None
 
+        if do_resuspend:
+            magdeck.disengage()
         for i, well in enumerate(mag_samples):
             source = reagent[i//columns_per_channel]
             pick_up(m300)
@@ -177,7 +179,6 @@ resuming.\n\n\n\n")
                         Point(x=side*radial_offset_fraction, z=z_offset))
                 m300.dispense(vol_per_transfer, loc_dispense, rate=0.2)
             if do_resuspend:
-                magdeck.disengage()
                 resuspend(well, rate=0.5)
             ctx.delay(seconds=2)
             slow_withdraw(m300, well)

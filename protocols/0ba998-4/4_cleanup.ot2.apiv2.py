@@ -40,7 +40,7 @@ def run(ctx):
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'reagent plate')
     pcr_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'clean PCR plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
@@ -225,7 +225,7 @@ clean PCR plate in slot 1.')
         slow_withdraw(m20, d)
 
     end = time.time()
-    delay_time_minutes = round((end - start) / 60, 2)
+    delay_time_minutes = 5 - round((end - start) / 60, 2)
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=delay_time_minutes, msg=f'Incubating off magnet for \
 {delay_time_minutes} minutes.')

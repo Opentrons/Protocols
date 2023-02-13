@@ -27,7 +27,6 @@ def run(ctx):
     vol_mix = 30
     z_offset = 3.0
     radial_offset_fraction = 0.3  # fraction of radius
-    time_incubation_minutes = 5
 
     # modules
     tempdeck = ctx.load_module('temperature module gen2', '7')
@@ -40,7 +39,7 @@ def run(ctx):
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     reagent_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', 'reagent plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'reagent plate')
     index_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
                                    '1', 'index plate')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '5', 'waste')
@@ -146,9 +145,6 @@ resuming.\n\n\n\n")
     # remove supernatant
     remove_supernatant(vol_supernatant, pip=m300, park=False)
     magdeck.disengage()
-
-    if not TEST_MODE_BIND_INCUBATE:
-        ctx.delay(minutes=time_incubation_minutes)
 
     # transfer PCR mastermix
     for i, d in enumerate(mag_samples):
