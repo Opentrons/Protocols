@@ -43,7 +43,7 @@ def run(ctx):
             for well in inner_set:
                 flat_set.append(well)
         rep_destination_sets_flat.append(flat_set)
-    
+
     def slow_withdraw(pip, well):
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
