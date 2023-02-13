@@ -163,12 +163,10 @@ def run(ctx):
         num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)
         vol_per_transfer = round(vol/num_transfers, 2)
 
-        last_source = None
-
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
             pick_up()
-            if premix and last_source != source:
+            if premix:
                 m300.flow_rate.aspirate *= 4
                 m300.flow_rate.dispense *= 4
                 for _ in range(5):
@@ -176,7 +174,6 @@ def run(ctx):
                     m300.dispense(200, source.bottom(5))
                 m300.flow_rate.aspirate /= 4
                 m300.flow_rate.dispense /= 4
-            last_source = source
             for _ in range(num_transfers):
                 m300.dispense(m300.current_volume, source.top(-1))
                 m300.aspirate(vol_per_transfer, source)
