@@ -209,8 +209,8 @@ resuming.\n\n\n\n")
         else:
             m300.drop_tip()
 
-    ctx.pause('Move the PCR plate on slot 5 to the magnetic module. Place a \
-clean PCR plate in slot 5.')
+    ctx.pause('Move the PCR plate on slot 1 to the magnetic module. Place a \
+clean PCR plate in slot 1.')
 
     start = time.time()
 
@@ -258,8 +258,8 @@ clean PCR plate in slot 5.')
 
     magdeck.disengage()
 
-    ctx.pause('Move PCR plate from slot 5 to magnetic module. Place a clean \
-plate in slot 5.')
+    ctx.pause('Move PCR plate from slot 1 to magnetic module. Place a clean \
+plate in slot 1.')
 
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
