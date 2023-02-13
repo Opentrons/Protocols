@@ -821,7 +821,7 @@ nuc_free_water_vol_well,1
 num,3
 num_384_cols,1
 num_antibodies,1
-num_cell_lines,1
+num_cell_lines,2
 num_col,8
 num_cols,3
 num_columns,1
@@ -839,7 +839,7 @@ num_plates,30
 num_pool_sources,1
 num_pools,1
 num_primers,2
-num_rep_plates,1
+num_rep_plates,2
 num_replicates,1
 num_reps,1
 num_row,1
@@ -1384,7 +1384,7 @@ tip_reuse,11
 tip_start,5
 tip_start_1000,2
 tip_start_20,2
-tip_start_col,1
+tip_start_col,2
 tip_start_column,4
 tip_start_samples,1
 tip_strategy,3
