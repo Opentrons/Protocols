@@ -22,11 +22,11 @@ def run(ctx):
 
     if TEST_MODE_BEADS:
         mixreps = 1
-    time_settling_bind_minutes = 5.0
+    # time_settling_bind_minutes = 5.0
     time_settling_wash_minutes = 2.0
     vol_mix = 200
     z_offset = 3.0
-    radial_offset_fraction = 0.4  # fraction of radius
+    radial_offset_fraction = 0.6  # fraction of radius
     vol_cleared_lysate = 750.0
     vol_elution = 40
     engage_height = 7.6
@@ -94,7 +94,7 @@ def run(ctx):
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
 
-    def remove_supernatant(vol, destinations, z_asp=z_offset, z_disp=1.0):
+    def remove_supernatant(vol, destinations, z_asp=z_offset, z_disp=None):
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
@@ -103,12 +103,16 @@ def run(ctx):
         :param park (boolean): Whether to pick up sample-corresponding tips
                                in the 'parking rack' or to pick up new tips.
         """
+
         dest_list = [destinations]*num_cols \
             if type(destinations) != list else destinations
 
+        if not z_disp:
+            z_disp = dest_list[0].depth
+
         num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)
         vol_per_transfer = round(vol/num_transfers, 2)
-        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.aspirate /= 10
         for m, dest in zip(mag_samples_m, dest_list):
             pick_up()
             for _ in range(num_transfers):
@@ -118,11 +122,11 @@ def run(ctx):
                 m300.blow_out(dest.bottom(z_disp))
                 slow_withdraw(dest, m300)
             m300.drop_tip()
-        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.aspirate *= 10
 
     def resuspend(location, reps=mixreps, vol=vol_mix,
                   samples=mag_samples_m, x_mix_fraction=radial_offset_fraction,
-                  z_mix=z_offset, dispense_height_rel=8):
+                  z_mix=z_offset, dispense_height_rel=8, delay_seconds=0):
         m300.flow_rate.aspirate *= 4
         m300.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -135,13 +139,16 @@ def run(ctx):
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
+        ctx.delay(seconds=delay_seconds)
         m300.flow_rate.aspirate /= 4
         m300.flow_rate.dispense /= 4
 
     def lyse_bind_wash(vol, reagent, time_incubation=0,
                        time_settling=0, premix=False,
                        do_discard_supernatant=True, do_resuspend=False,
-                       vol_supernatant=0, supernatant_locations=None):
+                       vol_supernatant=0, supernatant_locations=None,
+                       resuspension_delay_seconds=0,
+                       z_disp_supernatant=None):
         """
         `bind` will perform magnetic bead binding on each sample in the
         deepwell plate. Each channel of binding beads will be mixed before
@@ -161,12 +168,10 @@ def run(ctx):
         num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)
         vol_per_transfer = round(vol/num_transfers, 2)
 
-        last_source = None
-
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
             pick_up()
-            if premix and last_source != source:
+            if premix:
                 m300.flow_rate.aspirate *= 4
                 m300.flow_rate.dispense *= 4
                 for _ in range(5):
@@ -174,11 +179,14 @@ def run(ctx):
                     m300.dispense(200, source.bottom(5))
                 m300.flow_rate.aspirate /= 4
                 m300.flow_rate.dispense /= 4
-            last_source = source
             for _ in range(num_transfers):
+                m300.dispense(m300.current_volume, source.top(-1))
                 m300.aspirate(vol_per_transfer, source)
                 slow_withdraw(source)
-                m300.dispense(vol_per_transfer, well.top())
+                m300.dispense(vol_per_transfer, well.top(-1))
+                m300.blow_out(well.top(-1))
+                m300.aspirate(10, well.top(-1))  # avoid droplet
+
             if do_resuspend:
                 resuspend(well)
             else:
@@ -209,14 +217,12 @@ MagDeck for {time_settling} minutes.')
                    time_incubation=time_incubation_deep_blue_minutes,
                    do_discard_supernatant=False)
     lyse_bind_wash(vol=450, reagent=neutralization_buffer,
-                   do_discard_supernatant=False)
+                   do_discard_supernatant=False, resuspension_delay_seconds=5)
     lyse_bind_wash(vol=50, reagent=magclearing_beads, premix=True,
-                   do_discard_supernatant=False)
+                   do_discard_supernatant=False, resuspension_delay_seconds=5)
     magdeck.engage(engage_height)
-    ctx.delay(minutes=time_settling_bind_minutes, msg=f'Incubating on \
-MagDeck for {time_settling_bind_minutes} minutes.')
+    ctx.delay(minutes=10, msg='Incubating on MagDeck for 10 minutes.')
     remove_supernatant(vol_cleared_lysate, collection_samples,
-                       z_asp=mag_samples_m[0].depth/2,
                        z_disp=2.0)
 
     ctx.pause('Discard plate on magnetic module. Move collection plate \
@@ -242,4 +248,5 @@ magnetic module when complete.')
     lyse_bind_wash(vol_elution, elution_buffer,
                    time_incubation=time_incubation_elution_minutes,
                    do_resuspend=True, supernatant_locations=elution_samples_m,
-                   time_settling=5.0, vol_supernatant=vol_elution-5.0)
+                   time_settling=5.0, vol_supernatant=vol_elution-5.0,
+                   z_disp_supernatant=2.0)

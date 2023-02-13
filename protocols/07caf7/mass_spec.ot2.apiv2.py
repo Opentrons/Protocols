@@ -87,8 +87,6 @@ def run(ctx):
             samples_final_m.append(
                 final_plate.columns()[col_reference_index][0])
 
-    samples_collection_m = collection_plate.rows()[0][:num_cols]
-    samples_final_m = final_plate.rows()[0][:num_cols]
     meoh = [
         reservoir.rows()[0][int(col)-1]
         for col in col_meoh.split(',')]

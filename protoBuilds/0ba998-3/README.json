@@ -1,0 +1,35 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Illumina DNA Prep"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs part 3/4 of the Illumina DNA Prep protocol: Amplify Tagmented DNA. The user is prompted to move plates and perform manual centrifugation, sealing, and thermocycling steps when necessary.\nLinks:\n\nTagment Genomic DNA\nPost Tagmentation Cleanup\nAmplify Tagmented DNA\nClean Up Libraries\n",
+    "internal": "0ba998",
+    "labware": "\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* NGS Library Prep\n\t* Illumina DNA Prep\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/deck.png)\n\n\n",
+        "description": "This protocol performs part 3/4 of the [Illumina DNA Prep](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf) protocol: Amplify Tagmented DNA. The user is prompted to move plates and perform manual centrifugation, sealing, and thermocycling steps when necessary.\n\nLinks:\n\n1. [Tagment Genomic DNA](./0ba998)\n2. [Post Tagmentation Cleanup](./0ba998-2)\n3. [Amplify Tagmented DNA](./0ba998-3)\n4. [Clean Up Libraries](./0ba998-4)\n\n\n",
+        "internal": "0ba998\n",
+        "labware": "* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/reagents.png)\n\nYou can view a reagent calculator [**HERE**](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/Elanco+-+Illumina+DNA+Prep+Setup+-+Sheet1.pdf).\n\n\n",
+        "title": "3. Illumina COVIDSeq - Amplify Tagmented DNA"
+    },
+    "modules": [
+        "Opentrons Magnetic Module (GEN2)",
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "reagent-setup": "\nYou can view a reagent calculator HERE.",
+    "title": "\nIllumina COVIDSeq - Amplify Tagmented DNA\n"
+}
