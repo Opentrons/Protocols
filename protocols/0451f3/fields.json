@@ -18,7 +18,7 @@
     "type": "int",
     "label": "mixing repetitions for resuspension",
     "name": "mixreps",
-    "default": 15
+    "default": 20
   },
   {
     "type": "float",
