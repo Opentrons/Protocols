@@ -3,7 +3,7 @@
     "type": "int",
     "label": "number of samples",
     "name": "num_samples",
-    "default": 96
+    "default": 12
   },
   {
     "type": "str",
