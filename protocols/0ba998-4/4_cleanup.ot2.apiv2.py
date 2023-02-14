@@ -177,7 +177,7 @@ resuming.\n\n\n\n")
     magdeck.disengage()
 
     # add water
-    for d in mag_samples:
+    for d in pcr_samples:
         pick_up(m300)
         m300.aspirate(vol_water, water)
         slow_withdraw(m300, water)
@@ -192,7 +192,7 @@ resuming.\n\n\n\n")
 
     # add SPB
     last_spb = None
-    for i, d in enumerate(mag_samples):
+    for i, d in enumerate(pcr_samples):
         pick_up(m300)
         spb_source = spb[i//4]
         if not spb_source == last_spb and not TEST_MODE_BEADS:
