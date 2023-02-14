@@ -46,6 +46,11 @@ def run(ctx):
 
             m20.pick_up_tip()
             m20.aspirate(vol, well)
-            m20.dispense(vol, dest_plate.rows()[0][dest_start_col+i])
+            if vol == 20:
+                m20.dispense(vol, dest_plate.rows()[0][dest_start_col+i])
+            else:
+                m20.dispense(vol,
+                             dest_plate.rows()[0][
+                                            dest_start_col+i].bottom(z=0.4))
             m20.return_tip()
         ctx.comment('\n\n')
