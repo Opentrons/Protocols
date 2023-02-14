@@ -174,7 +174,8 @@ resuming.\n\n\n\n")
                 if n < num_transfers - 1:
                     loc_dispense = well.top
                 else:
-                    side = 1 if mag_plate.rows()[0].index(d) % 2 == 0 else -1
+                    side = 1 if mag_plate.rows()[
+                        0].index(well) % 2 == 0 else -1
                     loc_dispense = well.bottom().move(
                         Point(x=side*radial_offset_fraction, z=z_offset))
                 m300.dispense(vol_per_transfer, loc_dispense, rate=0.2)

@@ -66,6 +66,7 @@ def run(ctx):
     spb2 = reagent_plate.rows()[0][9]
     rsb = reagent_plate.rows()[0][10:12]
     water = reservoir.rows()[0][0]
+    etoh = reservoir.rows()[0][3:7]
     liquid_trash = [
         waste_res.wells()[0].top()
         for _ in range(math.ceil(num_cols/6))]
@@ -153,6 +154,68 @@ resuming.\n\n\n\n")
     magdeck.engage()
     if not TEST_MODE_BEADS:
         ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
+
+    def wash(vol, reagent, time_incubation=0,
+             time_settling=0, premix=False,
+             do_discard_supernatant=True, do_resuspend=False,
+             vol_supernatant=0, park=True):
+        nonlocal parked_tips
+
+        columns_per_channel = 12//len(reagent)
+        num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)
+        vol_per_transfer = round(vol/num_transfers, 2)
+
+        last_source = None
+
+        if do_resuspend:
+            magdeck.disengage()
+        for i, well in enumerate(mag_samples):
+            source = reagent[i//columns_per_channel]
+            pick_up(m300)
+            if park:
+                parked_tips.append(m300._last_tip_picked_up_from)
+            if premix and last_source != source:
+                m300.flow_rate.aspirate *= 4
+                m300.flow_rate.dispense *= 4
+                for _ in range(5):
+                    m300.aspirate(200, source.bottom(0.5))
+                    m300.dispense(200, source.bottom(5))
+                m300.flow_rate.aspirate /= 4
+                m300.flow_rate.dispense /= 4
+            last_source = source
+            for n in range(num_transfers):
+                m300.aspirate(vol_per_transfer, source)
+                slow_withdraw(m300, source)
+                if n < num_transfers - 1:
+                    loc_dispense = well.top
+                else:
+                    side = 1 if mag_plate.rows()[
+                        0].index(well) % 2 == 0 else -1
+                    loc_dispense = well.bottom().move(
+                        Point(x=side*radial_offset_fraction, z=z_offset))
+                m300.dispense(vol_per_transfer, loc_dispense, rate=0.2)
+            if do_resuspend:
+                resuspend(well, rate=0.5)
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, well)
+            m300.air_gap(20)
+            if park or TEST_MODE_DROP:
+                m300.return_tip()
+            else:
+                m300.drop_tip()
+
+        if not TEST_MODE_BIND_INCUBATE:
+            ctx.delay(minutes=time_incubation,
+                      msg=f'Incubating off MagDeck for \
+{time_incubation} minutes.')
+        if do_discard_supernatant:
+            magdeck.engage()
+            if not TEST_MODE_BEADS:
+                ctx.delay(minutes=time_settling, msg=f'Incubating on \
+MagDeck for {time_settling} minutes.')
+
+            remove_supernatant(vol_supernatant)
+            magdeck.disengage()
 
     # transfer supernatant to clean plate
     for s, d in zip(mag_samples, pcr_samples):
@@ -270,6 +333,13 @@ plate in slot 1.')
 5 minutes.')
 
     remove_supernatant(vol_supernatant2 + vol_spb2, pip=m300)
+
+    cols_per_wash = math.ceil(num_cols/6)
+    for wash_ind in range(2):
+        wash(200,
+             etoh[wash_ind*cols_per_wash:(wash_ind+1)*cols_per_wash],
+             time_incubation=0.5, vol_supernatant=200, park=False)
+
     remove_supernatant(10, pip=m20)
 
     if not TEST_MODE_BIND_INCUBATE:
