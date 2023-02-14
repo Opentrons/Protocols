@@ -40,11 +40,11 @@ Links:
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/deck2.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/reagents2.png)
 
 You can view a reagent calculator [**HERE**](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ba998/Elanco+-+Illumina+DNA+Prep+Setup+-+Sheet1.pdf).
 
