@@ -1515,7 +1515,7 @@ vol_dil_to_d,1
 vol_dil_to_e,1
 vol_dispense,1
 vol_dispensed,1
-vol_dna,3
+vol_dna,2
 vol_dna_buff,1
 vol_elution,1
 vol_elution_buffer,1
