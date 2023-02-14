@@ -157,6 +157,7 @@ resuming.\n\n\n\n")
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_mm_pcr, loc_dispense)
         resuspend(d)
+        m300.blow_out(d.bottom(0.5))
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
