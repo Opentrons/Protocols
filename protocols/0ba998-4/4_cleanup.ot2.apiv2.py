@@ -112,7 +112,7 @@ resuming.\n\n\n\n")
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
-        pip.flow_rate.aspirate /= 5
+        pip.flow_rate.aspirate /= 10
         for i, s in enumerate(mag_samples):
             if not pip.has_tip:
                 if park:
@@ -135,7 +135,7 @@ resuming.\n\n\n\n")
             else:
                 pip.drop_tip()
         parked_tips = []
-        pip.flow_rate.aspirate *= 5
+        pip.flow_rate.aspirate *= 10
 
     def resuspend(location, reps=reps_mix, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
