@@ -17,8 +17,8 @@ TEST_MODE_BIND_INCUBATE = False
 
 def run(ctx):
 
-    num_samples, vol_dna = get_values(  # noqa: F821
-        "num_samples", "vol_dna")
+    [num_samples] = get_values(  # noqa: F821
+        "num_samples")
 
     # tuning parameters
     ctx.max_speeds['X'] = 200

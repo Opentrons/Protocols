@@ -286,6 +286,7 @@ clean PCR plate in slot 1.')
         m20.dispense(vol_spb2, d.bottom(0.5))
         wick(m20, d)
         slow_withdraw(m20, d)
+    m20.drop_tip()
 
     end = time.time()
     delay_time_minutes = 5 - round((end - start) / 60, 2)
