@@ -65,7 +65,10 @@ def run(ctx):
     spb2 = reagent_plate.rows()[0][9]
     rsb = reagent_plate.rows()[0][10:12]
     water = reservoir.rows()[0][0]
-    etoh = reservoir.rows()[0][3:7]
+
+    num_wash_cols = math.ceil(num_cols*2/6)
+    num_cols_per_wash = math.ceil(num_wash_cols/2)
+    etoh = reservoir.rows()[0][3:3+num_wash_cols]
     liquid_trash = [
         waste_res.wells()[0].top()
         for _ in range(math.ceil(num_cols/6))]
@@ -340,12 +343,17 @@ plate in slot 1.')
 5 minutes.')
 
     remove_supernatant(vol_supernatant2 + vol_spb2, pip=m300)
-
-    cols_per_wash = math.ceil(num_cols/6)
     for wash_ind in range(2):
-        wash(200,
-             etoh[wash_ind*cols_per_wash:(wash_ind+1)*cols_per_wash],
-             time_incubation=0.5, vol_supernatant=200, park=False)
+        if len(etoh) == 1:
+            etoh_set = etoh
+        else:
+            if wash_ind == 0:
+                etoh_set = etoh[
+                    wash_ind*num_cols_per_wash:(wash_ind+1)*num_cols_per_wash]
+            else:
+                etoh_set = etoh[wash_ind*num_cols_per_wash:]
+        wash(200, etoh_set, time_incubation=0.5, vol_supernatant=200,
+             park=False)
 
     remove_supernatant(10, pip=m20)
 
