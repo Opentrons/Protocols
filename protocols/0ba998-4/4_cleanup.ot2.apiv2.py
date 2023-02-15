@@ -225,6 +225,7 @@ MagDeck for {time_settling} minutes.')
         ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer supernatant to clean plate
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -243,6 +244,7 @@ MagDeck for {time_settling} minutes.')
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
@@ -305,6 +307,7 @@ clean PCR plate in slot 1.')
 5 minutes.')
 
     # transfer supernatant to plate with SPB
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -324,6 +327,7 @@ clean PCR plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
@@ -388,6 +392,7 @@ plate in slot 1.')
         ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer final elution to new PCR plate
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -406,5 +411,5 @@ plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-
+    m300.flow_rate.aspirate *= 20
     magdeck.disengage()
