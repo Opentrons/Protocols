@@ -216,7 +216,6 @@ resuming.\n\n\n\n")
 MagDeck for {time_settling} minutes.')
 
             remove_supernatant(vol_supernatant)
-            magdeck.disengage()
 
     magdeck.engage()
     if not TEST_MODE_BEADS:
