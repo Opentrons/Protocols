@@ -275,8 +275,6 @@ MagDeck for {time_settling} minutes.')
     ctx.pause('Move the PCR plate on slot 1 to the magnetic module. Place a \
 clean PCR plate in slot 1.')
 
-    start = time.time()
-
     # pre-add SPB to new plate
     pick_up(m20)
     for d in pcr_samples:
@@ -289,8 +287,7 @@ clean PCR plate in slot 1.')
         slow_withdraw(m20, d)
     m20.drop_tip()
 
-    end = time.time()
-    delay_time_minutes = 5 - round((end - start) / 60, 2)
+    delay_time_minutes = 5
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=delay_time_minutes, msg=f'Incubating off magnet for \
 {delay_time_minutes} minutes.')
