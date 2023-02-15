@@ -122,9 +122,15 @@ resuming.\n\n\n\n")
                 pip.return_tip()
 
     # transfer tagmentation mastermix
+    m300.flow_rate.aspirate /= 2
+    m300.flow_rate.dispense /= 2
+    last_source = None
     for i, d in enumerate(pcr_plate.rows()[0][:num_cols]):
         mm_source = mm[i//6]
         pick_up(m300)
+        if not mm_source == last_source:
+            m300.mix(10, vol_mm, mm_source)
+            last_source = mm_source
         m300.aspirate(vol_mm, mm_source.bottom(0.5))
         slow_withdraw(m300, mm_source)
         m300.dispense(vol_mm, d.bottom(0.5))
@@ -137,6 +143,8 @@ resuming.\n\n\n\n")
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 2
+    m300.flow_rate.dispense *= 2
 
     ctx.comment('Seal the plate with Microseal B, place on the \
 preprogrammed thermal cycler, and run the TAG program.')
