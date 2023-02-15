@@ -202,21 +202,23 @@ MagDeck for {time_settling} minutes.')
             remove_supernatant(vol_supernatant)
             magdeck.disengage()
 
-    m20.flow_rate.aspirate /= 2
-    m20.flow_rate.dispense /= 2
     for d in mag_samples:
         pick_up(m20)
+        m20.flow_rate.aspirate /= 2
+        m20.flow_rate.dispense /= 2
         m20.aspirate(vol_tsb, tsb.bottom(0.5))
         slow_withdraw(m20, tsb)
         m20.dispense(m20.current_volume, d.bottom(2))
-        m20.mix(reps_mix, 20, d.bottom(2))
+        m20.flow_rate.aspirate *= 4  # double default
+        m20.flow_rate.dispense *= 4  # double default
+        m20.mix(reps_mix*2, 20, d.bottom(2))
+        m20.flow_rate.aspirate /= 2  # back to default
+        m20.flow_rate.dispense /= 2  # back to default
         slow_withdraw(m20, d)
         if TEST_MODE_DROP:
             m20.return_tip()
         else:
             m20.drop_tip()
-    m20.flow_rate.aspirate *= 2
-    m20.flow_rate.dispense *= 2
 
     ctx.pause('Seal the plate with Microseal B, place on the preprogrammed \
 thermal cycler, and run the PTC program. Replace on magnetic module when \
