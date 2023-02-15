@@ -282,10 +282,6 @@ MagDeck for {time_settling} minutes.')
     ctx.pause('Move the PCR plate on slot 1 to the magnetic module. Place a \
 clean PCR plate in slot 1.')
 
-    m300.home()
-    if not TEST_MODE_BIND_INCUBATE:
-        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
-
     # pre-add SPB to new plate
     pick_up(m20)
     for d in pcr_samples:
@@ -352,7 +348,7 @@ plate in slot 1.')
                     wash_ind*num_cols_per_wash:(wash_ind+1)*num_cols_per_wash]
             else:
                 etoh_set = etoh[wash_ind*num_cols_per_wash:]
-        wash(200, etoh_set, time_incubation=0.5, vol_supernatant=200,
+        wash(150, etoh_set, time_incubation=0.5, vol_supernatant=200,
              park=False)
 
     remove_supernatant(10, pip=m20)
@@ -385,11 +381,11 @@ plate in slot 1.')
             m300.drop_tip()
 
     if not TEST_MODE_BIND_INCUBATE:
-        ctx.delay(minutes=2, msg='Incubating off magnet for 2 minutes.')
+        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
 
     magdeck.engage()
     if not TEST_MODE_BEADS:
-        ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
+        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer final elution to new PCR plate
     for s, d in zip(mag_samples, pcr_samples):
