@@ -1,7 +1,6 @@
 from opentrons import protocol_api
 from opentrons.types import Point
 import math
-import time
 
 metadata = {
     'protocolName': '4. Illumina DNA Prep - Clean Up Libraries',
@@ -112,7 +111,9 @@ resuming.\n\n\n\n")
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
-        pip.flow_rate.aspirate /= 10
+        if not magdeck.status == 'engaged':
+            magdeck.engage()
+        pip.flow_rate.aspirate /= 20
         for i, s in enumerate(mag_samples):
             if not pip.has_tip:
                 if park:
@@ -135,13 +136,15 @@ resuming.\n\n\n\n")
             else:
                 pip.drop_tip()
         parked_tips = []
-        pip.flow_rate.aspirate *= 10
+        pip.flow_rate.aspirate *= 20
 
-    def resuspend(location, reps=reps_mix, vol=vol_mix,
+    def resuspend(location, reps=reps_mix*2, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
         m300.move_to(location.center())
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         for r_ind in range(reps):
             bead_loc = location.bottom().move(
                 Point(x=side_x*radius*radial_offset_fraction,
@@ -150,15 +153,13 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)),
                           rate=rate)
         slow_withdraw(m300, location)
-
-    magdeck.engage()
-    if not TEST_MODE_BEADS:
-        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
+        m300.flow_rate.aspirate /= 2
+        m300.flow_rate.dispense /= 2
 
     def wash(vol, reagent, time_incubation=0,
              time_settling=0, premix=False,
              do_discard_supernatant=True, do_resuspend=False,
-             vol_supernatant=0, park=True):
+             vol_supernatant=0, park=False):
         nonlocal parked_tips
 
         columns_per_channel = 12//len(reagent)
@@ -217,6 +218,10 @@ MagDeck for {time_settling} minutes.')
             remove_supernatant(vol_supernatant)
             magdeck.disengage()
 
+    magdeck.engage()
+    if not TEST_MODE_BEADS:
+        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
+
     # transfer supernatant to clean plate
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
@@ -274,6 +279,10 @@ MagDeck for {time_settling} minutes.')
 
     ctx.pause('Move the PCR plate on slot 1 to the magnetic module. Place a \
 clean PCR plate in slot 1.')
+
+    m300.home()
+    if not TEST_MODE_BIND_INCUBATE:
+        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
 
     # pre-add SPB to new plate
     pick_up(m20)
