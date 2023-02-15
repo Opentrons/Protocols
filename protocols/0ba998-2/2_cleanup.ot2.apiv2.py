@@ -97,7 +97,7 @@ resuming.\n\n\n\n")
 
     parked_tips = []
 
-    def remove_supernatant(vol, pip=None, z_asp=0.2, park=True):
+    def remove_supernatant(vol, pip=None, z_asp=0.2, park=False):
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
@@ -126,11 +126,13 @@ resuming.\n\n\n\n")
         parked_tips = []
         pip.flow_rate.aspirate *= 20
 
-    def resuspend(location, reps=reps_mix, vol=vol_mix,
+    def resuspend(location, reps=reps_mix*2, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
         m300.move_to(location.center())
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         for r_ind in range(reps):
             bead_loc = location.bottom().move(
                 Point(x=side_x*radius*radial_offset_fraction,
@@ -139,11 +141,13 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)),
                           rate=rate)
         slow_withdraw(m300, location)
+        m300.flow_rate.aspirate /= 2
+        m300.flow_rate.dispense /= 2
 
     def wash(vol, reagent, time_incubation=0,
              time_settling=0, premix=False,
              do_discard_supernatant=True, do_resuspend=False,
-             vol_supernatant=0, park=True):
+             vol_supernatant=0, park=False):
         nonlocal parked_tips
 
         columns_per_channel = 12//len(reagent)
