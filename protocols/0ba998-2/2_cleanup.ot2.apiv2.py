@@ -126,7 +126,7 @@ resuming.\n\n\n\n")
         parked_tips = []
         pip.flow_rate.aspirate *= 20
 
-    def resuspend(location, reps=reps_mix*2, vol=vol_mix,
+    def resuspend(location, reps=reps_mix, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
