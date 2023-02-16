@@ -94,7 +94,7 @@ resuming.\n\n\n\n")
             pip.aspirate(vol_water, water)
             slow_withdraw(pip, water)
             pip.dispense(vol_water, d.bottom(0.5))
-            pip.blow_out(d.bottom(2))
+            # pip.blow_out(d.bottom(2))
             slow_withdraw(pip, d)
 
     pip = m20 if vol_dna <= 20 else m300
@@ -106,7 +106,7 @@ resuming.\n\n\n\n")
         slow_withdraw(pip, s)
         pip.dispense(vol_dna, d.bottom(0.5))
         ctx.delay(seconds=2)
-        pip.blow_out(d.bottom(2))
+        # pip.blow_out(d.bottom(2))
         ctx.delay(seconds=2)
         slow_withdraw(pip, d)
         if TEST_MODE_DROP:
