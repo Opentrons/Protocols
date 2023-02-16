@@ -213,11 +213,11 @@ MagDeck for {time_settling} minutes.')
         m20.aspirate(vol_tsb, tsb.bottom(0.5))
         slow_withdraw(m20, tsb)
         m20.dispense(m20.current_volume, d.bottom(2))
-        m20.flow_rate.aspirate *= 4  # double default
-        m20.flow_rate.dispense *= 4  # double default
+        m20.flow_rate.aspirate *= 8  # double default
+        m20.flow_rate.dispense *= 8  # double default
         m20.mix(reps_mix*2, 20, d.bottom(2))
-        m20.flow_rate.aspirate /= 2  # back to default
-        m20.flow_rate.dispense /= 2  # back to default
+        m20.flow_rate.aspirate /= 4  # back to default
+        m20.flow_rate.dispense /= 4  # back to default
         slow_withdraw(m20, d)
         if TEST_MODE_DROP:
             m20.return_tip()
