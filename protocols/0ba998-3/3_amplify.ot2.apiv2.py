@@ -142,6 +142,9 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
         slow_withdraw(m300, location)
 
+    magdeck.engage()
+    ctx.delay(minutes=3, msg='Incubating on MagDeck for 3 minutes.')
+
     # remove supernatant
     remove_supernatant(vol_supernatant, pip=m300, park=False)
     magdeck.disengage()

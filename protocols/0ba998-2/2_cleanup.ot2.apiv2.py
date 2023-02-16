@@ -245,6 +245,3 @@ MagDeck for {time_settling_minutes} minutes.')
     wash(vol_wash, twb, time_incubation=0, time_settling=time_settling_minutes,
          premix=False, do_discard_supernatant=False, do_resuspend=True,
          vol_supernatant=vol_wash, park=False)
-
-    magdeck.engage()
-    ctx.delay(minutes=3, msg='Incubating on MagDeck for 3 minutes.')
