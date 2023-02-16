@@ -372,11 +372,11 @@ plate in slot 1.')
         loc_dispense = d.bottom().move(
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_rsb, loc_dispense)
-        m300.flow_rate.aspirate /= 2
-        m300.flow_rate.dispense /= 2
-        resuspend(d, vol=0.8*vol_rsb)
-        m300.flow_rate.aspirate *= 2
-        m300.flow_rate.dispense *= 2
+        m300.flow_rate.aspirate *= 1.5
+        m300.flow_rate.dispense *= 1.5
+        m300.mix(0.8*vol_rsb, reps_mix, d.bottom(0.5))
+        m300.flow_rate.aspirate /= 1.5
+        m300.flow_rate.dispense /= 1.5
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
