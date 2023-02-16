@@ -392,7 +392,7 @@ plate in slot 1.')
         ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer final elution to new PCR plate
-    m300.flow_rate.aspirate /= 20
+    m300.flow_rate.aspirate /= 40
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -411,5 +411,5 @@ plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-    m300.flow_rate.aspirate *= 20
+    m300.flow_rate.aspirate *= 40
     magdeck.disengage()
