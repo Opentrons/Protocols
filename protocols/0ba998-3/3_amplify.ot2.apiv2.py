@@ -159,7 +159,11 @@ resuming.\n\n\n\n")
         loc_dispense = d.bottom().move(
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_mm_pcr, loc_dispense)
-        resuspend(d)
+        m300.flow_rate.aspirate *= 1.5
+        m300.flow_rate.dispense *= 1.5
+        m300.mix(vol_mix, reps_mix, d.bottom(0.5))
+        m300.flow_rate.aspirate /= 1.5
+        m300.flow_rate.dispense /= 1.5
         m300.blow_out(d.bottom(0.5))
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
