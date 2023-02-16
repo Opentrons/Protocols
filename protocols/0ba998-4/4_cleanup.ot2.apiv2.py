@@ -307,19 +307,20 @@ clean PCR plate in slot 1.')
 5 minutes.')
 
     # transfer supernatant to plate with SPB
-    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
+        m300.flow_rate.aspirate /= 20
         m300.aspirate(vol_supernatant2, s.bottom().move(
             Point(x=side, z=0.5)))
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 200
         ctx.max_speeds['Z'] = 200
         m300.dispense(vol_supernatant2, d.bottom(2))
+        m300.flow_rate.aspirate *= 20
         m300.mix(reps_mix, vol_supernatant2*0.8, d.bottom(2))
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
@@ -327,7 +328,6 @@ clean PCR plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
