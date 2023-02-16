@@ -110,7 +110,7 @@ resuming.\n\n\n\n")
 
     parked_tips = []
 
-    def remove_supernatant(vol, pip=None, z_asp=0.2, park=False):
+    def remove_supernatant(vol, pip=None, z_asp=0.5, park=False):
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
@@ -233,7 +233,7 @@ MagDeck for {time_settling} minutes.')
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
         m300.aspirate(vol_supernatant, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
@@ -315,7 +315,7 @@ clean PCR plate in slot 1.')
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
         m300.aspirate(vol_supernatant2, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 200
         ctx.max_speeds['Z'] = 200
@@ -400,7 +400,7 @@ plate in slot 1.')
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
         m300.aspirate(vol_elution, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 200
         ctx.max_speeds['Z'] = 200
