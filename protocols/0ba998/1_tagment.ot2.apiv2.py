@@ -94,7 +94,7 @@ resuming.\n\n\n\n")
             pip.aspirate(vol_water, water)
             slow_withdraw(pip, water)
             pip.dispense(vol_water, d.bottom(0.5))
-            pip.blow_out(d.bottom(2))
+            # pip.blow_out(d.bottom(2))
             slow_withdraw(pip, d)
 
     pip = m20 if vol_dna <= 20 else m300
@@ -106,7 +106,7 @@ resuming.\n\n\n\n")
         slow_withdraw(pip, s)
         pip.dispense(vol_dna, d.bottom(0.5))
         ctx.delay(seconds=2)
-        pip.blow_out(d.bottom(2))
+        # pip.blow_out(d.bottom(2))
         ctx.delay(seconds=2)
         slow_withdraw(pip, d)
         if TEST_MODE_DROP:
@@ -122,9 +122,15 @@ resuming.\n\n\n\n")
                 pip.return_tip()
 
     # transfer tagmentation mastermix
+    m300.flow_rate.aspirate /= 2
+    m300.flow_rate.dispense /= 2
+    last_source = None
     for i, d in enumerate(pcr_plate.rows()[0][:num_cols]):
         mm_source = mm[i//6]
         pick_up(m300)
+        if not mm_source == last_source:
+            m300.mix(10, vol_mm, mm_source)
+            last_source = mm_source
         m300.aspirate(vol_mm, mm_source.bottom(0.5))
         slow_withdraw(m300, mm_source)
         m300.dispense(vol_mm, d.bottom(0.5))
@@ -137,6 +143,8 @@ resuming.\n\n\n\n")
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 2
+    m300.flow_rate.dispense *= 2
 
     ctx.comment('Seal the plate with Microseal B, place on the \
 preprogrammed thermal cycler, and run the TAG program.')

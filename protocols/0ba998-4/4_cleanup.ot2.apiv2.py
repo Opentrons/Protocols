@@ -1,7 +1,6 @@
 from opentrons import protocol_api
 from opentrons.types import Point
 import math
-import time
 
 metadata = {
     'protocolName': '4. Illumina DNA Prep - Clean Up Libraries',
@@ -66,7 +65,10 @@ def run(ctx):
     spb2 = reagent_plate.rows()[0][9]
     rsb = reagent_plate.rows()[0][10:12]
     water = reservoir.rows()[0][0]
-    etoh = reservoir.rows()[0][3:7]
+
+    num_wash_cols = math.ceil(num_cols*2/6)
+    num_cols_per_wash = math.ceil(num_wash_cols/2)
+    etoh = reservoir.rows()[0][3:3+num_wash_cols]
     liquid_trash = [
         waste_res.wells()[0].top()
         for _ in range(math.ceil(num_cols/6))]
@@ -112,7 +114,9 @@ resuming.\n\n\n\n")
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
-        pip.flow_rate.aspirate /= 10
+        if not magdeck.status == 'engaged':
+            magdeck.engage()
+        pip.flow_rate.aspirate /= 20
         for i, s in enumerate(mag_samples):
             if not pip.has_tip:
                 if park:
@@ -135,13 +139,15 @@ resuming.\n\n\n\n")
             else:
                 pip.drop_tip()
         parked_tips = []
-        pip.flow_rate.aspirate *= 10
+        pip.flow_rate.aspirate *= 20
 
-    def resuspend(location, reps=reps_mix, vol=vol_mix,
+    def resuspend(location, reps=reps_mix*2, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
         m300.move_to(location.center())
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         for r_ind in range(reps):
             bead_loc = location.bottom().move(
                 Point(x=side_x*radius*radial_offset_fraction,
@@ -150,15 +156,13 @@ resuming.\n\n\n\n")
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)),
                           rate=rate)
         slow_withdraw(m300, location)
-
-    magdeck.engage()
-    if not TEST_MODE_BEADS:
-        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
+        m300.flow_rate.aspirate /= 2
+        m300.flow_rate.dispense /= 2
 
     def wash(vol, reagent, time_incubation=0,
              time_settling=0, premix=False,
              do_discard_supernatant=True, do_resuspend=False,
-             vol_supernatant=0, park=True):
+             vol_supernatant=0, park=False):
         nonlocal parked_tips
 
         columns_per_channel = 12//len(reagent)
@@ -215,9 +219,13 @@ resuming.\n\n\n\n")
 MagDeck for {time_settling} minutes.')
 
             remove_supernatant(vol_supernatant)
-            magdeck.disengage()
+
+    magdeck.engage()
+    if not TEST_MODE_BEADS:
+        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer supernatant to clean plate
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -236,6 +244,7 @@ MagDeck for {time_settling} minutes.')
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
@@ -275,8 +284,6 @@ MagDeck for {time_settling} minutes.')
     ctx.pause('Move the PCR plate on slot 1 to the magnetic module. Place a \
 clean PCR plate in slot 1.')
 
-    start = time.time()
-
     # pre-add SPB to new plate
     pick_up(m20)
     for d in pcr_samples:
@@ -289,8 +296,7 @@ clean PCR plate in slot 1.')
         slow_withdraw(m20, d)
     m20.drop_tip()
 
-    end = time.time()
-    delay_time_minutes = 5 - round((end - start) / 60, 2)
+    delay_time_minutes = 5
     if not TEST_MODE_BIND_INCUBATE:
         ctx.delay(minutes=delay_time_minutes, msg=f'Incubating off magnet for \
 {delay_time_minutes} minutes.')
@@ -301,6 +307,7 @@ clean PCR plate in slot 1.')
 5 minutes.')
 
     # transfer supernatant to plate with SPB
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -320,6 +327,7 @@ clean PCR plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
+    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
@@ -335,12 +343,17 @@ plate in slot 1.')
 5 minutes.')
 
     remove_supernatant(vol_supernatant2 + vol_spb2, pip=m300)
-
-    cols_per_wash = math.ceil(num_cols/6)
     for wash_ind in range(2):
-        wash(200,
-             etoh[wash_ind*cols_per_wash:(wash_ind+1)*cols_per_wash],
-             time_incubation=0.5, vol_supernatant=200, park=False)
+        if len(etoh) == 1:
+            etoh_set = etoh
+        else:
+            if wash_ind == 0:
+                etoh_set = etoh[
+                    wash_ind*num_cols_per_wash:(wash_ind+1)*num_cols_per_wash]
+            else:
+                etoh_set = etoh[wash_ind*num_cols_per_wash:]
+        wash(150, etoh_set, time_incubation=0.5, vol_supernatant=200,
+             park=False)
 
     remove_supernatant(10, pip=m20)
 
@@ -359,7 +372,11 @@ plate in slot 1.')
         loc_dispense = d.bottom().move(
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_rsb, loc_dispense)
-        resuspend(d)
+        m300.flow_rate.aspirate /= 2
+        m300.flow_rate.dispense /= 2
+        resuspend(d, vol=0.8*vol_rsb)
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
@@ -368,13 +385,14 @@ plate in slot 1.')
             m300.drop_tip()
 
     if not TEST_MODE_BIND_INCUBATE:
-        ctx.delay(minutes=2, msg='Incubating off magnet for 2 minutes.')
+        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
 
     magdeck.engage()
     if not TEST_MODE_BEADS:
-        ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
+        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer final elution to new PCR plate
+    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -393,5 +411,5 @@ plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-
+    m300.flow_rate.aspirate *= 20
     magdeck.disengage()
