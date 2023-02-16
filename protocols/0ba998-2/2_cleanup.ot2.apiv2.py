@@ -126,7 +126,7 @@ resuming.\n\n\n\n")
         parked_tips = []
         pip.flow_rate.aspirate *= 20
 
-    def resuspend(location, reps=reps_mix*2, vol=vol_mix,
+    def resuspend(location, reps=reps_mix, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=5.0, rate=1.0):
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -213,11 +213,11 @@ MagDeck for {time_settling} minutes.')
         m20.aspirate(vol_tsb, tsb.bottom(0.5))
         slow_withdraw(m20, tsb)
         m20.dispense(m20.current_volume, d.bottom(2))
-        m20.flow_rate.aspirate *= 4  # double default
-        m20.flow_rate.dispense *= 4  # double default
+        m20.flow_rate.aspirate *= 8  # double default
+        m20.flow_rate.dispense *= 8  # double default
         m20.mix(reps_mix*2, 20, d.bottom(2))
-        m20.flow_rate.aspirate /= 2  # back to default
-        m20.flow_rate.dispense /= 2  # back to default
+        m20.flow_rate.aspirate /= 4  # back to default
+        m20.flow_rate.dispense /= 4  # back to default
         slow_withdraw(m20, d)
         if TEST_MODE_DROP:
             m20.return_tip()
@@ -245,6 +245,3 @@ MagDeck for {time_settling_minutes} minutes.')
     wash(vol_wash, twb, time_incubation=0, time_settling=time_settling_minutes,
          premix=False, do_discard_supernatant=False, do_resuspend=True,
          vol_supernatant=vol_wash, park=False)
-
-    magdeck.engage()
-    ctx.delay(minutes=3, msg='Incubating on MagDeck for 3 minutes.')

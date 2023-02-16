@@ -110,7 +110,7 @@ resuming.\n\n\n\n")
 
     parked_tips = []
 
-    def remove_supernatant(vol, pip=None, z_asp=0.2, park=False):
+    def remove_supernatant(vol, pip=None, z_asp=0.5, park=False):
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
@@ -233,7 +233,7 @@ MagDeck for {time_settling} minutes.')
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
         m300.aspirate(vol_supernatant, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
@@ -307,19 +307,20 @@ clean PCR plate in slot 1.')
 5 minutes.')
 
     # transfer supernatant to plate with SPB
-    m300.flow_rate.aspirate /= 20
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
+        m300.flow_rate.aspirate /= 20
         m300.aspirate(vol_supernatant2, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 200
         ctx.max_speeds['Z'] = 200
         m300.dispense(vol_supernatant2, d.bottom(2))
+        m300.flow_rate.aspirate *= 20
         m300.mix(reps_mix, vol_supernatant2*0.8, d.bottom(2))
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
@@ -327,7 +328,6 @@ clean PCR plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-    m300.flow_rate.aspirate *= 20
 
     magdeck.disengage()
 
@@ -372,11 +372,11 @@ plate in slot 1.')
         loc_dispense = d.bottom().move(
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_rsb, loc_dispense)
-        m300.flow_rate.aspirate /= 2
-        m300.flow_rate.dispense /= 2
-        resuspend(d, vol=0.8*vol_rsb)
-        m300.flow_rate.aspirate *= 2
-        m300.flow_rate.dispense *= 2
+        m300.flow_rate.aspirate *= 1.5
+        m300.flow_rate.dispense *= 1.5
+        m300.mix(0.8*vol_rsb, reps_mix, d.bottom(0.5))
+        m300.flow_rate.aspirate /= 1.5
+        m300.flow_rate.dispense /= 1.5
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
         if TEST_MODE_DROP:
@@ -392,7 +392,7 @@ plate in slot 1.')
         ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
 
     # transfer final elution to new PCR plate
-    m300.flow_rate.aspirate /= 20
+    m300.flow_rate.aspirate /= 40
     for s, d in zip(mag_samples, pcr_samples):
         pick_up(m300)
         m300.move_to(s.top())
@@ -400,7 +400,7 @@ plate in slot 1.')
         ctx.max_speeds['Z'] = 25
         side = -1 if mag_samples.index(s) % 2 == 0 else 1
         m300.aspirate(vol_elution, s.bottom().move(
-            Point(x=side, z=0.2)))
+            Point(x=side, z=0.5)))
         m300.move_to(s.top())
         ctx.max_speeds['A'] = 200
         ctx.max_speeds['Z'] = 200
@@ -411,5 +411,5 @@ plate in slot 1.')
             m300.return_tip()
         else:
             m300.drop_tip()
-    m300.flow_rate.aspirate *= 20
+    m300.flow_rate.aspirate *= 40
     magdeck.disengage()

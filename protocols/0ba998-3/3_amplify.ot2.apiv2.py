@@ -104,7 +104,7 @@ resuming.\n\n\n\n")
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
-        pip.flow_rate.aspirate /= 5
+        pip.flow_rate.aspirate /= 20
         for i, s in enumerate(mag_samples):
             if not pip.has_tip:
                 if park:
@@ -127,7 +127,7 @@ resuming.\n\n\n\n")
             else:
                 pip.drop_tip()
         parked_tips = []
-        pip.flow_rate.aspirate *= 5
+        pip.flow_rate.aspirate *= 20
 
     def resuspend(location, reps=reps_mix, vol=vol_mix,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
@@ -141,6 +141,9 @@ resuming.\n\n\n\n")
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
         slow_withdraw(m300, location)
+
+    magdeck.engage()
+    ctx.delay(minutes=3, msg='Incubating on MagDeck for 3 minutes.')
 
     # remove supernatant
     remove_supernatant(vol_supernatant, pip=m300, park=False)
@@ -156,7 +159,11 @@ resuming.\n\n\n\n")
         loc_dispense = d.bottom().move(
             Point(x=side*radial_offset_fraction, z=z_offset))
         m300.dispense(vol_mm_pcr, loc_dispense)
-        resuspend(d)
+        m300.flow_rate.aspirate *= 1.5
+        m300.flow_rate.dispense *= 1.5
+        m300.mix(vol_mix, reps_mix, d.bottom(0.5))
+        m300.flow_rate.aspirate /= 1.5
+        m300.flow_rate.dispense /= 1.5
         m300.blow_out(d.bottom(0.5))
         ctx.delay(seconds=2)
         slow_withdraw(m300, d)
