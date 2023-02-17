@@ -220,6 +220,9 @@ MagDeck for {time_settling} minutes.')
                    do_discard_supernatant=False, resuspension_delay_seconds=5)
     lyse_bind_wash(vol=50, reagent=magclearing_beads, premix=True,
                    do_discard_supernatant=False, resuspension_delay_seconds=5)
+
+    ctx.pause('Centrifuge the extraction plate. Replace on magnetic module \
+when finished.')
     magdeck.engage(engage_height)
     ctx.delay(minutes=10, msg='Incubating on MagDeck for 10 minutes.')
     remove_supernatant(vol_cleared_lysate, collection_samples,
