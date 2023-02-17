@@ -31,6 +31,7 @@ def run(ctx):
         tempdeck.set_temperature(4)
 
     # labware
+
     plate_384_def = 'biorad_384_wellplate_50ul' if ctx.is_simulating() \
         else 'biorad_384_wellplate_50ul'
     distribution_plate = ctx.load_labware(

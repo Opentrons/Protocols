@@ -36,7 +36,7 @@ For sample traceability, an output .csv file will be written to the robot's Jupy
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1c3611/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1c3611/deck2.png)
 
 
 ### Process
