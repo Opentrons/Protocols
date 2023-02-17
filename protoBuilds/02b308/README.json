@@ -1,19 +1,19 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "PCR": [
+            "qPCR Prep"
         ]
     },
     "deck-setup": "For transfer scheme, please view this document.",
-    "description": "This protocol does stuff!",
+    "description": "This protocol performs a custom PCR prep for up to 6 384-well qPCR plates.",
     "internal": "02b308",
     "labware": "\nApplied Biosystems 384 Well Plate 40 \u00b5L #4309849\nEppendorf 96 Deepwell 1000uL #951032603\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
+        "categories": "* PCR\n\t* qPCR Prep\n\n\n",
         "deck-setup": "\nFor transfer scheme, please view [this document](https://s3.amazonaws.com/pf-user-files-01/u-4256/uploads/2023-01-25/1p03tt5/Scheme.pdf).\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "description": "This protocol performs a custom PCR prep for up to 6 384-well qPCR plates.\n\n\n",
         "internal": "02b308\n",
         "labware": "* Applied Biosystems 384 Well Plate 40 \u00b5L #4309849\n* Eppendorf 96 Deepwell 1000uL #951032603\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",

@@ -6,8 +6,8 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* PCR
+	* qPCR Prep
 
 
 ## Description
