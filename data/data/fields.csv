@@ -765,7 +765,7 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,2
+mount_m20,3
 mount_m300,9
 mount_p1000,1
 mount_p20,9
@@ -835,10 +835,10 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,30
+num_plates,31
 num_pool_sources,1
 num_pools,1
-num_primers,2
+num_primers,3
 num_rep_plates,2
 num_replicates,1
 num_reps,1
