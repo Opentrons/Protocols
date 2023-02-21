@@ -236,7 +236,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # Remove any empty lines in the CSV.
     for i, row in enumerate(csv_rows):
         if row == '':
-            del csv_rows[i]
+            del(csv_rows[i])
         else:
             csv_list.append(row.split(','))
 
@@ -788,8 +788,6 @@ def run(ctx: protocol_api.ProtocolContext):
                    f"{entry[2]}, executing this step would cause the total "
                    f"volume to be {entry[3]} uL, while the well's 80 % of max "
                    f"volume is {0.8*entry[4]} uL\n")
-        raise Exception(
-            "Overflowing wells detected, inspect your CSV file.\n" + msg)
 
     # load pipette(s)
     left_tipracks_dict_vals = labware_dict["left_mount"].values()
