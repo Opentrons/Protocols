@@ -24,7 +24,7 @@ def run(ctx):
         mixreps = 1
     # time_settling_bind_minutes = 5.0
     time_settling_wash_minutes = 2.0
-    vol_mix = 200
+    vol_mix = 180
     z_offset = 3.0
     radial_offset_fraction = 0.6  # fraction of radius
     vol_cleared_lysate = 750.0
