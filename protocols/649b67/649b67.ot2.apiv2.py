@@ -236,7 +236,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # Remove any empty lines in the CSV.
     for i, row in enumerate(csv_rows):
         if row == '':
-            del(csv_rows[i])
+            del csv_rows[i]
         else:
             csv_list.append(row.split(','))
 
