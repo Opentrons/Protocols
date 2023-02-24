@@ -129,7 +129,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 bindbuf_source_well_indices,1
-binding_buffer_vol,25
+binding_buffer_vol,26
 blank_on,2
 blot_dwell_time,1
 blow_out,1
@@ -256,7 +256,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,11
+csv_samp,13
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -277,7 +277,7 @@ debug_mode,1
 deep_name,1
 deep_plate,2
 deepwell_plate_type,1
-deepwell_type,11
+deepwell_type,12
 default_disposal_vol,4
 default_transfer_vol,9
 delay,4
@@ -357,6 +357,7 @@ dna,1
 dna_asp_rate,1
 dna_aspirate_clearance,1
 dna_csv,1
+dna_plate_type,2
 dna_supernat_vol,1
 dna_vol,1
 dna_volume,5
@@ -405,7 +406,7 @@ elution_slot_scan,2
 elution_time,1
 elution_transfer_vol,2
 elution_type,1
-elution_vol,40
+elution_vol,41
 em,1
 empty_vial_well,3
 end_col,1
@@ -451,7 +452,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,31
+flash,32
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -498,6 +499,7 @@ i5col,1
 i7_volume,1
 i7_well,1
 i7row,1
+if_48,1
 inc_time,1
 include_bind,1
 include_buffer_a1,1
@@ -669,7 +671,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,70
+m20_mount,72
 m300_mount,92
 m300_type,2
 m_mount,1
@@ -718,7 +720,7 @@ mix_disp_rate,2
 mix_etoh,1
 mix_rate,2
 mix_repetitions,2
-mix_reps,26
+mix_reps,27
 mix_reps1,1
 mix_reps2,1
 mix_reps_bind,8
@@ -852,7 +854,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,160
+num_samples,161
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -912,7 +914,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,120
+p20_mount,122
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -929,7 +931,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,138
+p300_mount,139
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -961,7 +963,7 @@ p5_mix_vol,1
 p_csv,1
 pan_dil,1
 park,2
-park_tips,27
+park_tips,28
 patient_sample_count,1
 patient_sample_vol,1
 pause_for_washing,1
@@ -1106,7 +1108,7 @@ res,2
 res12_type,1
 res1_type,1
 res_dead_vol,1
-res_type,19
+res_type,20
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
@@ -1216,7 +1218,7 @@ settling_3,1
 settling_drying,1
 settling_elution1,1
 settling_elution2,1
-settling_time,22
+settling_time,23
 settling_wash,1
 shake_well,1
 side_x_radius,1
@@ -1293,7 +1295,7 @@ starting_tip_col_300,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,31
+starting_vol,32
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1390,7 +1392,7 @@ tip_start_samples,1
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,48
+tip_track,49
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
@@ -1564,9 +1566,9 @@ volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,7
-wash1_vol,29
-wash2_vol,28
-wash3_vol,16
+wash1_vol,30
+wash2_vol,29
+wash3_vol,17
 wash4_vol,2
 wash_buf_vol,1
 wash_scheme,1
