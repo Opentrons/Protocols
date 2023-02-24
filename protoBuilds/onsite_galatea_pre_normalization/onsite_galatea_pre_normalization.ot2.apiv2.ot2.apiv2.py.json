@@ -1,0 +1,108 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Pre Normalization Prep',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, dna_plate_type,\n        p20_mount, m20_mount] = get_values(  # noqa: F821\n            \"csv_samp\", \"dna_plate_type\", \"p20_mount\", \"m20_mount\")\n\n    # labware\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1)\n    dna_plate = ctx.load_labware(dna_plate_type, 2)\n\n    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 3)\n\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n            for slot in [10, 11]]\n\n    # pipettes\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)\n\n    # mapping\n    water = reservoir.wells()[0]\n\n    csv_rows = [[val.strip() for val in line.split(',')]\n                for line in csv_samp.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    # protocol\n    ctx.comment('\\n------------ADDING WATER TO FINAL PLATE-------------\\n\\n')\n    p20.pick_up_tip()\n    for line in csv_rows:\n        dest_well_name = line[0]\n        dest_well = final_plate.wells_by_name()[dest_well_name]\n\n        qubit = float(line[2])\n        transfer_vol = 50-1250/qubit\n\n        if qubit <= 25:\n            continue\n\n        p20.transfer(transfer_vol, water, dest_well, new_tip='never',\n                     blow_out=True,\n                     blowout_location=\"destination well\")\n\n    p20.drop_tip()\n\n    ctx.comment('\\n------------ADDING DNA TO FINAL PLATE-------------\\n\\n')\n\n    for line in csv_rows:\n        p20.pick_up_tip()\n        source_well_name = line[0]\n        source_well = dna_plate.wells_by_name()[source_well_name]\n\n        dest_well_name = line[0]\n        dest_well = final_plate.wells_by_name()[dest_well_name]\n\n        qubit = float(line[2])\n        transfer_vol = 1250/qubit\n\n        if qubit <= 25:\n            p20.transfer(50, source_well, dest_well, new_tip='never',\n                         blow_out=True,\n                         blowout_location=\"destination well\")\n\n        else:\n            p20.transfer(transfer_vol, source_well, dest_well, new_tip='never',\n                         blow_out=True,\n                         blowout_location=\"destination well\")\n\n        p20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "Plate,Sample,Qubit,DNA,H2O,InputDNA\nA1,test1,25,6.8,43.2,2",
+            "label": ".CSV File",
+            "name": "csv_samp",
+            "type": "textFile"
+        },
+        {
+            "label": "DNA Plate Type on Slot 2",
+            "name": "dna_plate_type",
+            "options": [
+                {
+                    "label": "PCR PLATE",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "FLAT BOTTOM PLATE",
+                    "value": "corning_96_wellplate_360ul_flat"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single Channel Pipette Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi Channel Pipette Mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Pre Normalization Prep",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
