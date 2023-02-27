@@ -30,7 +30,7 @@ def run(ctx):
 
     # variables
     vol_dose = 100.0
-    vol_air_gap = 20.0
+    vol_air_gap = 0
     cell_lines = [
         source_res.rows()[0][i*2] for i in range(num_cell_lines)]
     rep_destination_sets = [
@@ -65,7 +65,8 @@ def run(ctx):
         for d_set in dest_sets_per_asp:
             m300.mix(3, 300, source.bottom(1))  # premix
             for _ in range(len(d_set)):
-                m300.aspirate(vol_air_gap, source.top())
+                if vol_air_gap:
+                    m300.aspirate(vol_air_gap, source.top())
                 m300.aspirate(vol_dose, source.bottom(1))
             for i, d in enumerate(d_set):
                 m300.dispense(vol_dose+vol_air_gap, d.bottom(1))
