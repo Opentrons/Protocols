@@ -25,9 +25,9 @@ def run(ctx):
         if TEST_MODE_BIND_INCUBATE else [5.0, 3.0]
     time_airdry_minutes = 3.0
     vol_mix = 25
-    z_offset = 3.0
+    z_offset = 2.0
     radial_offset_fraction = 0.4  # fraction of radius
-    engage_height = 7.6
+    # engage_height = 7.6
 
     # volumes
     vol_sample = 12.5
@@ -44,7 +44,7 @@ def run(ctx):
     magdeck = ctx.load_module('magnetic module gen2', '1')
     magdeck.disengage()
 
-    magplate = magdeck.load_labware('biorad_96_wellplate_350ul')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     elutionplate = ctx.load_labware('biorad_96_aluminumblock_350ul',
                                     '2', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0]
@@ -95,7 +95,7 @@ resuming.\n\n\n\n")
 
     parking_spots = []
 
-    def remove_supernatant(vol, destinations, z_asp=z_offset, z_disp=1.0,
+    def remove_supernatant(vol, destinations, z_asp=0.3, z_disp=1.0,
                            park=False):
         nonlocal parking_spots
 
@@ -104,7 +104,7 @@ resuming.\n\n\n\n")
 
         num_transfers = math.ceil(vol/m300.tip_racks[0].wells()[0].max_volume)
         vol_per_transfer = round(vol/num_transfers, 2)
-        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.aspirate /= 10
         for i, (m, dest) in enumerate(zip(mag_samples_m, dest_list)):
             if park:
                 pick_up(m300, parking_spots[i])
@@ -121,12 +121,12 @@ resuming.\n\n\n\n")
                 slow_withdraw(dest)
                 m300.air_gap(5)
             m300.drop_tip()
-        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.aspirate *= 10
         parking_spots = []
 
     def resuspend(location, reps=mixreps, vol=vol_mix,
                   samples=mag_samples_m, x_mix_fraction=radial_offset_fraction,
-                  z_mix=z_offset, dispense_height_rel=8):
+                  z_mix=z_offset, dispense_height_rel=3):
         m300.flow_rate.aspirate *= 3
         m300.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -144,7 +144,7 @@ resuming.\n\n\n\n")
         m300.flow_rate.dispense /= 4
 
     def lyse_bind_wash(vol, reagent, time_incubation=0,
-                       time_settling=time_settling_minutes, premix=False,
+                       time_settling=0, premix=False,
                        do_discard_supernatant=True, do_resuspend=True,
                        vol_supernatant=0, supernatant_locations=waste,
                        park=False, z_disp=2.0):
@@ -158,7 +158,7 @@ resuming.\n\n\n\n")
         if do_resuspend:
             magdeck.disengage()
         else:
-            magdeck.engage(engage_height)
+            magdeck.engage()
 
         for i, well in enumerate(mag_samples_m):
             source = reagent[i//columns_per_channel]
@@ -192,12 +192,13 @@ resuming.\n\n\n\n")
                       msg='\n\n\n\nIncubating\n\n\n\n')
 
         if do_discard_supernatant:
-            magdeck.engage(engage_height)
+            magdeck.engage()
             ctx.delay(minutes=time_settling, msg='\n\n\n\nBeads \
 settling.\n\n\n\n')
             remove_supernatant(vol_supernatant,
                                destinations=supernatant_locations,
                                park=park, z_disp=z_disp)
+        magdeck.disengage()
 
     lyse_bind_wash(vol=vol_water, reagent=water, do_resuspend=False,
                    do_discard_supernatant=False, park=False)
@@ -205,14 +206,14 @@ settling.\n\n\n\n')
                    time_incubation=time_incubation_minutes,
                    do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
-    for etoh in etoh_sets:
+    for resus_bool, etoh in zip([True, False], etoh_sets):
         lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=1.0,
-                       do_discard_supernatant=True, do_resuspend=False,
+                       do_discard_supernatant=True, do_resuspend=resus_bool,
                        vol_supernatant=vol_etoh)
 
     ctx.delay(minutes=time_airdry_minutes, msg='\n\n\n\nAirdrying\n\n\n\n')
     lyse_bind_wash(vol=vol_elution, reagent=water,
                    time_incubation=time_incubation_minutes,
-                   do_discard_supernatant=True,
+                   do_discard_supernatant=True, do_resuspend=True,
                    vol_supernatant=vol_elution_final,
-                   supernatant_locations=elution_samples_m, z_disp=waste.depth)
+                   supernatant_locations=elution_samples_m, z_disp=2.0)
