@@ -144,7 +144,7 @@ resuming.\n\n\n\n")
         m300.flow_rate.dispense /= 4
 
     def lyse_bind_wash(vol, reagent, time_incubation=0,
-                       time_settling=0, premix=False,
+                       time_settling=time_settling_minutes, premix=False,
                        do_discard_supernatant=True, do_resuspend=True,
                        vol_supernatant=0, supernatant_locations=waste,
                        park=False, z_disp=2.0):
