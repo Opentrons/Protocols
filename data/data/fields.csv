@@ -844,6 +844,7 @@ num_primers,3
 num_rep_plates,2
 num_replicates,1
 num_reps,1
+num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1

@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Mastermix Filling 9 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [starting_tip_col, reag, source_labware,\n        p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"starting_tip_col\", \"reag\", \"source_labware\",\n            \"p20_mount\", \"p300_mount\")\n\n    # start of protocol\n    reag_dict = {\n\n        \"synth1_columns\": [0, 2],\n        \"synth1_vol\": 14,\n        \"synth1_num_disp\": 1,\n\n        \"screen10_columns\": [2, 4],\n        \"screen10_vol\": 10,\n        \"screen10_num_disp\": 1,\n\n        \"seq5_columns\": [4, 6],\n        \"seq5_vol\": 8,\n        \"seq5_num_disp\": 2,\n\n        \"lba_columns\": [6, 8],\n        \"lba_vol\": 30,\n        \"lba_num_disp\": 6,\n\n        \"lbk_columns\": [8, 10],\n        \"lbk_vol\": 30,\n        \"lbk_num_disp\": 6,\n\n        \"pcr_columns\": [10, 12],\n        \"pcr_vol\": 20,\n        \"pcr_num_disp\": 9\n\n    }\n\n    reag_cols = reag_dict[reag + \"_columns\"]\n    reag_vol = reag_dict[reag + \"_vol\"]\n    reag_num_disp = reag_dict[reag + \"_num_disp\"]\n\n    # labware\n    source_plate = ctx.load_labware(source_labware, 11)\n    dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)\n                   for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]\n    tips = [ctx.load_labware(\n            'opentrons_96_tiprack_20ul' if reag_vol < 20 else\n            'opentrons_96_filtertiprack_200ul', slot)\n            for slot in [10]]\n\n    starting_tip = tips[0].rows()[0][starting_tip_col-1]\n\n    ctx.pause(f\"\"\"\n    Ensure that there is a {tips[0]}.\n    Select \"Resume\" on the Opentrons app.\n        \"\"\")\n\n    # pipettes\n    pip = ctx.load_instrument('p20_multi_gen2' if reag_vol < 20 else\n                              'p300_multi_gen2',\n                              \"right\" if reag_vol < 20 else \"left\",\n                              tip_racks=tips)\n\n    all_dest_columns = [\n                        col\n                        for plate in dest_plates\n                        for col in plate.rows()[0]\n                        ]\n\n    # source mapping\n    reag_start_col = reag_cols[0]\n    reag_end_col = reag_cols[1]\n\n    source_cols = source_plate.rows()[0][\n                                         reag_start_col:reag_end_col\n                                         ]*len(all_dest_columns)\n\n    src_col_ctr = 0\n    disp_vol = 1 if reag_vol < 20 else 20\n\n    if reag_num_disp > 1:\n        all_chunks = [all_dest_columns[i:i+reag_num_disp]\n                      for i in range(0, len(all_dest_columns), reag_num_disp)]\n\n        pip.pick_up_tip(starting_tip)\n\n        for chunk in all_chunks:\n            source = source_cols[src_col_ctr]\n            pip.aspirate(reag_vol*len(chunk)+disp_vol, source)\n            src_col_ctr += 1\n            for well in chunk:\n                pip.dispense(reag_vol, well.bottom(z=1))\n            pip.dispense(disp_vol, source)\n            ctx.comment('\\n')\n    else:\n        pip.pick_up_tip(starting_tip)\n        for source, dest in zip(source_cols, all_dest_columns):\n            pip.aspirate(reag_vol, source)\n            pip.dispense(reag_vol, dest.bottom(z=1))\n            ctx.comment('\\n')\n",
+    "content": "metadata = {\n    'protocolName': 'Mastermix Filling 9 Plates',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [starting_tip_col, reag, source_labware, num_rounds,\n        p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"starting_tip_col\", \"reag\", \"source_labware\", \"num_rounds\",\n            \"p20_mount\", \"p300_mount\")\n\n    # start of protocol\n    reag_dict = {\n\n        \"synth1_columns\": [0, 2],\n        \"synth1_vol\": 14,\n        \"synth1_num_disp\": 1,\n\n        \"screen10_columns\": [2, 4],\n        \"screen10_vol\": 10,\n        \"screen10_num_disp\": 1,\n\n        \"seq5_columns\": [4, 6],\n        \"seq5_vol\": 8,\n        \"seq5_num_disp\": 2,\n\n        \"lba_columns\": [6, 8],\n        \"lba_vol\": 30,\n        \"lba_num_disp\": 6,\n\n        \"lbk_columns\": [8, 10],\n        \"lbk_vol\": 30,\n        \"lbk_num_disp\": 6,\n\n        \"pcr_columns\": [10, 12],\n        \"pcr_vol\": 20,\n        \"pcr_num_disp\": 9\n\n    }\n\n    reag_cols = reag_dict[reag + \"_columns\"]\n    reag_vol = reag_dict[reag + \"_vol\"]\n    reag_num_disp = reag_dict[reag + \"_num_disp\"]\n\n    # labware\n    source_plate = ctx.load_labware(source_labware, 11)\n    dest_plates = [ctx.load_labware('doublepcr_96_wellplate_300ul', slot)\n                   for slot in [7, 8, 9, 4, 5, 6, 1, 2, 3]]\n    tips = [ctx.load_labware(\n            'opentrons_96_tiprack_20ul' if reag_vol < 20 else\n            'opentrons_96_filtertiprack_200ul', slot)\n            for slot in [10]]\n\n    starting_tip = tips[0].rows()[0][starting_tip_col-1]\n\n    ctx.pause(f\"\"\"\n    Ensure that there is a {tips[0]}.\n    Select \"Resume\" on the Opentrons app.\n        \"\"\")\n\n    # pipettes\n    pip = ctx.load_instrument('p20_multi_gen2' if reag_vol < 20 else\n                              'p300_multi_gen2',\n                              \"right\" if reag_vol < 20 else \"left\",\n                              tip_racks=tips)\n\n    all_dest_columns = [\n                        col\n                        for plate in dest_plates\n                        for col in plate.rows()[0]\n                        ]\n\n    # source mapping\n    reag_start_col = reag_cols[0]\n    reag_end_col = reag_cols[1]\n\n    source_cols = source_plate.rows()[0][\n                                         reag_start_col:reag_end_col\n                                         ]*len(all_dest_columns)\n\n    src_col_ctr = 0\n    disp_vol = 1 if reag_vol < 20 else 20\n\n    for _ in range(num_rounds):\n        if reag_num_disp > 1:\n            all_chunks = [all_dest_columns[i:i+reag_num_disp]\n                          for i in range(0, len(all_dest_columns),\n                                         reag_num_disp)]\n\n            if not pip.has_tip:\n                pip.pick_up_tip(starting_tip)\n\n            for chunk in all_chunks:\n                source = source_cols[src_col_ctr]\n                pip.aspirate(reag_vol*len(chunk)+disp_vol, source)\n                src_col_ctr += 1\n                for well in chunk:\n                    pip.dispense(reag_vol, well.bottom(z=1))\n                pip.dispense(disp_vol, source)\n                ctx.comment('\\n')\n        else:\n            if not pip.has_tip:\n                pip.pick_up_tip(starting_tip)\n            for source, dest in zip(source_cols, all_dest_columns):\n                pip.aspirate(reag_vol, source)\n                pip.dispense(reag_vol, dest.bottom(z=1))\n                ctx.comment('\\n')\n        ctx.pause(\"Select Resume for another round\")\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -36,7 +36,7 @@
                     },
                     "metadata": {
                         "displayCategory": "wellPlate",
-                        "displayName": "Quintara",
+                        "displayName": "Quintara 192 Vertical Plate - PCR on Aluminum Block",
                         "wellBottomShape": "v"
                     },
                     "wells": [
@@ -2550,7 +2550,7 @@
             ],
             "metadata": {
                 "displayCategory": "wellPlate",
-                "displayName": "Double Pcr 96 Well Plate 300 \u00b5L",
+                "displayName": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr",
                 "displayVolumeUnits": "\u00b5L",
                 "tags": []
             },
@@ -7994,7 +7994,7 @@
             ],
             "metadata": {
                 "displayCategory": "wellPlate",
-                "displayName": "Quintara 96 Well Plate 300 \u00b5L",
+                "displayName": "Quintara 96 Well Plate 300 \u00b5L on Aluminum Block",
                 "displayVolumeUnits": "\u00b5L",
                 "tags": []
             },
@@ -9032,7 +9032,7 @@
                     },
                     "metadata": {
                         "displayCategory": "wellPlate",
-                        "displayName": "Quintara",
+                        "displayName": "Quintara 192 Vertical Plate - Deepwell Plates",
                         "wellBottomShape": "v"
                     },
                     "wells": [
@@ -9483,7 +9483,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A2": {
                     "depth": 26.3,
@@ -9492,7 +9492,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A3": {
                     "depth": 26.3,
@@ -9501,7 +9501,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A4": {
                     "depth": 26.3,
@@ -9510,7 +9510,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A5": {
                     "depth": 26.3,
@@ -9519,7 +9519,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A6": {
                     "depth": 26.3,
@@ -9528,7 +9528,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A7": {
                     "depth": 26.3,
@@ -9537,7 +9537,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "A8": {
                     "depth": 26.3,
@@ -9546,7 +9546,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 247.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B1": {
                     "depth": 26.3,
@@ -9555,7 +9555,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B2": {
                     "depth": 26.3,
@@ -9564,7 +9564,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B3": {
                     "depth": 26.3,
@@ -9573,7 +9573,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B4": {
                     "depth": 26.3,
@@ -9582,7 +9582,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B5": {
                     "depth": 26.3,
@@ -9591,7 +9591,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B6": {
                     "depth": 26.3,
@@ -9600,7 +9600,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B7": {
                     "depth": 26.3,
@@ -9609,7 +9609,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "B8": {
                     "depth": 26.3,
@@ -9618,7 +9618,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 238.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C1": {
                     "depth": 26.3,
@@ -9627,7 +9627,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C2": {
                     "depth": 26.3,
@@ -9636,7 +9636,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C3": {
                     "depth": 26.3,
@@ -9645,7 +9645,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C4": {
                     "depth": 26.3,
@@ -9654,7 +9654,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C5": {
                     "depth": 26.3,
@@ -9663,7 +9663,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C6": {
                     "depth": 26.3,
@@ -9672,7 +9672,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C7": {
                     "depth": 26.3,
@@ -9681,7 +9681,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "C8": {
                     "depth": 26.3,
@@ -9690,7 +9690,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 229.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D1": {
                     "depth": 26.3,
@@ -9699,7 +9699,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D2": {
                     "depth": 26.3,
@@ -9708,7 +9708,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D3": {
                     "depth": 26.3,
@@ -9717,7 +9717,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D4": {
                     "depth": 26.3,
@@ -9726,7 +9726,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D5": {
                     "depth": 26.3,
@@ -9735,7 +9735,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D6": {
                     "depth": 26.3,
@@ -9744,7 +9744,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D7": {
                     "depth": 26.3,
@@ -9753,7 +9753,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "D8": {
                     "depth": 26.3,
@@ -9762,7 +9762,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 220.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E1": {
                     "depth": 26.3,
@@ -9771,7 +9771,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E2": {
                     "depth": 26.3,
@@ -9780,7 +9780,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E3": {
                     "depth": 26.3,
@@ -9789,7 +9789,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E4": {
                     "depth": 26.3,
@@ -9798,7 +9798,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E5": {
                     "depth": 26.3,
@@ -9807,7 +9807,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E6": {
                     "depth": 26.3,
@@ -9816,7 +9816,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E7": {
                     "depth": 26.3,
@@ -9825,7 +9825,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "E8": {
                     "depth": 26.3,
@@ -9834,7 +9834,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 211.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F1": {
                     "depth": 26.3,
@@ -9843,7 +9843,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F2": {
                     "depth": 26.3,
@@ -9852,7 +9852,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F3": {
                     "depth": 26.3,
@@ -9861,7 +9861,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F4": {
                     "depth": 26.3,
@@ -9870,7 +9870,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F5": {
                     "depth": 26.3,
@@ -9879,7 +9879,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F6": {
                     "depth": 26.3,
@@ -9888,7 +9888,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F7": {
                     "depth": 26.3,
@@ -9897,7 +9897,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "F8": {
                     "depth": 26.3,
@@ -9906,7 +9906,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 202.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G1": {
                     "depth": 26.3,
@@ -9915,7 +9915,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G2": {
                     "depth": 26.3,
@@ -9924,7 +9924,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G3": {
                     "depth": 26.3,
@@ -9933,7 +9933,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G4": {
                     "depth": 26.3,
@@ -9942,7 +9942,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G5": {
                     "depth": 26.3,
@@ -9951,7 +9951,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G6": {
                     "depth": 26.3,
@@ -9960,7 +9960,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G7": {
                     "depth": 26.3,
@@ -9969,7 +9969,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "G8": {
                     "depth": 26.3,
@@ -9978,7 +9978,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 193.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H1": {
                     "depth": 26.3,
@@ -9987,7 +9987,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H2": {
                     "depth": 26.3,
@@ -9996,7 +9996,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H3": {
                     "depth": 26.3,
@@ -10005,7 +10005,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H4": {
                     "depth": 26.3,
@@ -10014,7 +10014,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H5": {
                     "depth": 26.3,
@@ -10023,7 +10023,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H6": {
                     "depth": 26.3,
@@ -10032,7 +10032,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H7": {
                     "depth": 26.3,
@@ -10041,7 +10041,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "H8": {
                     "depth": 26.3,
@@ -10050,7 +10050,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 184.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I1": {
                     "depth": 26.3,
@@ -10059,7 +10059,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I2": {
                     "depth": 26.3,
@@ -10068,7 +10068,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I3": {
                     "depth": 26.3,
@@ -10077,7 +10077,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I4": {
                     "depth": 26.3,
@@ -10086,7 +10086,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I5": {
                     "depth": 26.3,
@@ -10095,7 +10095,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I6": {
                     "depth": 26.3,
@@ -10104,7 +10104,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I7": {
                     "depth": 26.3,
@@ -10113,7 +10113,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "I8": {
                     "depth": 26.3,
@@ -10122,7 +10122,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 175.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J1": {
                     "depth": 26.3,
@@ -10131,7 +10131,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J2": {
                     "depth": 26.3,
@@ -10140,7 +10140,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J3": {
                     "depth": 26.3,
@@ -10149,7 +10149,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J4": {
                     "depth": 26.3,
@@ -10158,7 +10158,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J5": {
                     "depth": 26.3,
@@ -10167,7 +10167,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J6": {
                     "depth": 26.3,
@@ -10176,7 +10176,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J7": {
                     "depth": 26.3,
@@ -10185,7 +10185,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "J8": {
                     "depth": 26.3,
@@ -10194,7 +10194,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 166.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K1": {
                     "depth": 26.3,
@@ -10203,7 +10203,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K2": {
                     "depth": 26.3,
@@ -10212,7 +10212,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K3": {
                     "depth": 26.3,
@@ -10221,7 +10221,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K4": {
                     "depth": 26.3,
@@ -10230,7 +10230,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K5": {
                     "depth": 26.3,
@@ -10239,7 +10239,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K6": {
                     "depth": 26.3,
@@ -10248,7 +10248,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K7": {
                     "depth": 26.3,
@@ -10257,7 +10257,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "K8": {
                     "depth": 26.3,
@@ -10266,7 +10266,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 157.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L1": {
                     "depth": 26.3,
@@ -10275,7 +10275,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L2": {
                     "depth": 26.3,
@@ -10284,7 +10284,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L3": {
                     "depth": 26.3,
@@ -10293,7 +10293,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L4": {
                     "depth": 26.3,
@@ -10302,7 +10302,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L5": {
                     "depth": 26.3,
@@ -10311,7 +10311,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L6": {
                     "depth": 26.3,
@@ -10320,7 +10320,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L7": {
                     "depth": 26.3,
@@ -10329,7 +10329,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "L8": {
                     "depth": 26.3,
@@ -10338,7 +10338,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 148.81,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M1": {
                     "depth": 26.3,
@@ -10347,7 +10347,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M2": {
                     "depth": 26.3,
@@ -10356,7 +10356,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M3": {
                     "depth": 26.3,
@@ -10365,7 +10365,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M4": {
                     "depth": 26.3,
@@ -10374,7 +10374,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M5": {
                     "depth": 26.3,
@@ -10383,7 +10383,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M6": {
                     "depth": 26.3,
@@ -10392,7 +10392,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M7": {
                     "depth": 26.3,
@@ -10401,7 +10401,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "M8": {
                     "depth": 26.3,
@@ -10410,7 +10410,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 116.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N1": {
                     "depth": 26.3,
@@ -10419,7 +10419,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N2": {
                     "depth": 26.3,
@@ -10428,7 +10428,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N3": {
                     "depth": 26.3,
@@ -10437,7 +10437,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N4": {
                     "depth": 26.3,
@@ -10446,7 +10446,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N5": {
                     "depth": 26.3,
@@ -10455,7 +10455,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N6": {
                     "depth": 26.3,
@@ -10464,7 +10464,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N7": {
                     "depth": 26.3,
@@ -10473,7 +10473,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "N8": {
                     "depth": 26.3,
@@ -10482,7 +10482,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 107.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O1": {
                     "depth": 26.3,
@@ -10491,7 +10491,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O2": {
                     "depth": 26.3,
@@ -10500,7 +10500,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O3": {
                     "depth": 26.3,
@@ -10509,7 +10509,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O4": {
                     "depth": 26.3,
@@ -10518,7 +10518,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O5": {
                     "depth": 26.3,
@@ -10527,7 +10527,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O6": {
                     "depth": 26.3,
@@ -10536,7 +10536,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O7": {
                     "depth": 26.3,
@@ -10545,7 +10545,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "O8": {
                     "depth": 26.3,
@@ -10554,7 +10554,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 98.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P1": {
                     "depth": 26.3,
@@ -10563,7 +10563,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P2": {
                     "depth": 26.3,
@@ -10572,7 +10572,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P3": {
                     "depth": 26.3,
@@ -10581,7 +10581,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P4": {
                     "depth": 26.3,
@@ -10590,7 +10590,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P5": {
                     "depth": 26.3,
@@ -10599,7 +10599,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P6": {
                     "depth": 26.3,
@@ -10608,7 +10608,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P7": {
                     "depth": 26.3,
@@ -10617,7 +10617,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "P8": {
                     "depth": 26.3,
@@ -10626,7 +10626,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 89.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q1": {
                     "depth": 26.3,
@@ -10635,7 +10635,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q2": {
                     "depth": 26.3,
@@ -10644,7 +10644,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q3": {
                     "depth": 26.3,
@@ -10653,7 +10653,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q4": {
                     "depth": 26.3,
@@ -10662,7 +10662,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q5": {
                     "depth": 26.3,
@@ -10671,7 +10671,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q6": {
                     "depth": 26.3,
@@ -10680,7 +10680,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q7": {
                     "depth": 26.3,
@@ -10689,7 +10689,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "Q8": {
                     "depth": 26.3,
@@ -10698,7 +10698,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 80.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R1": {
                     "depth": 26.3,
@@ -10707,7 +10707,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R2": {
                     "depth": 26.3,
@@ -10716,7 +10716,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R3": {
                     "depth": 26.3,
@@ -10725,7 +10725,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R4": {
                     "depth": 26.3,
@@ -10734,7 +10734,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R5": {
                     "depth": 26.3,
@@ -10743,7 +10743,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R6": {
                     "depth": 26.3,
@@ -10752,7 +10752,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R7": {
                     "depth": 26.3,
@@ -10761,7 +10761,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "R8": {
                     "depth": 26.3,
@@ -10770,7 +10770,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 71.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S1": {
                     "depth": 26.3,
@@ -10779,7 +10779,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S2": {
                     "depth": 26.3,
@@ -10788,7 +10788,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S3": {
                     "depth": 26.3,
@@ -10797,7 +10797,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S4": {
                     "depth": 26.3,
@@ -10806,7 +10806,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S5": {
                     "depth": 26.3,
@@ -10815,7 +10815,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S6": {
                     "depth": 26.3,
@@ -10824,7 +10824,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S7": {
                     "depth": 26.3,
@@ -10833,7 +10833,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "S8": {
                     "depth": 26.3,
@@ -10842,7 +10842,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 62.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T1": {
                     "depth": 26.3,
@@ -10851,7 +10851,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T2": {
                     "depth": 26.3,
@@ -10860,7 +10860,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T3": {
                     "depth": 26.3,
@@ -10869,7 +10869,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T4": {
                     "depth": 26.3,
@@ -10878,7 +10878,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T5": {
                     "depth": 26.3,
@@ -10887,7 +10887,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T6": {
                     "depth": 26.3,
@@ -10896,7 +10896,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T7": {
                     "depth": 26.3,
@@ -10905,7 +10905,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "T8": {
                     "depth": 26.3,
@@ -10914,7 +10914,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 53.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U1": {
                     "depth": 26.3,
@@ -10923,7 +10923,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U2": {
                     "depth": 26.3,
@@ -10932,7 +10932,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U3": {
                     "depth": 26.3,
@@ -10941,7 +10941,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U4": {
                     "depth": 26.3,
@@ -10950,7 +10950,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U5": {
                     "depth": 26.3,
@@ -10959,7 +10959,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U6": {
                     "depth": 26.3,
@@ -10968,7 +10968,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U7": {
                     "depth": 26.3,
@@ -10977,7 +10977,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "U8": {
                     "depth": 26.3,
@@ -10986,7 +10986,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 44.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V1": {
                     "depth": 26.3,
@@ -10995,7 +10995,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V2": {
                     "depth": 26.3,
@@ -11004,7 +11004,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V3": {
                     "depth": 26.3,
@@ -11013,7 +11013,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V4": {
                     "depth": 26.3,
@@ -11022,7 +11022,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V5": {
                     "depth": 26.3,
@@ -11031,7 +11031,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V6": {
                     "depth": 26.3,
@@ -11040,7 +11040,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V7": {
                     "depth": 26.3,
@@ -11049,7 +11049,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "V8": {
                     "depth": 26.3,
@@ -11058,7 +11058,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 35.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W1": {
                     "depth": 26.3,
@@ -11067,7 +11067,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W2": {
                     "depth": 26.3,
@@ -11076,7 +11076,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W3": {
                     "depth": 26.3,
@@ -11085,7 +11085,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W4": {
                     "depth": 26.3,
@@ -11094,7 +11094,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W5": {
                     "depth": 26.3,
@@ -11103,7 +11103,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W6": {
                     "depth": 26.3,
@@ -11112,7 +11112,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W7": {
                     "depth": 26.3,
@@ -11121,7 +11121,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "W8": {
                     "depth": 26.3,
@@ -11130,7 +11130,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 26.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X1": {
                     "depth": 26.3,
@@ -11139,7 +11139,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 34.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X2": {
                     "depth": 26.3,
@@ -11148,7 +11148,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 43.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X3": {
                     "depth": 26.3,
@@ -11157,7 +11157,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 52.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X4": {
                     "depth": 26.3,
@@ -11166,7 +11166,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 61.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X5": {
                     "depth": 26.3,
@@ -11175,7 +11175,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 70.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X6": {
                     "depth": 26.3,
@@ -11184,7 +11184,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 79.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X7": {
                     "depth": 26.3,
@@ -11193,7 +11193,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 88.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 },
                 "X8": {
                     "depth": 26.3,
@@ -11202,7 +11202,7 @@
                     "totalLiquidVolume": 2000,
                     "x": 97.08,
                     "y": 17.75,
-                    "z": 11.36
+                    "z": 10.75
                 }
             }
         },
@@ -11330,7 +11330,7 @@
             ],
             "metadata": {
                 "displayCategory": "wellPlate",
-                "displayName": "Deepwell 96 Well Plate 2000 \u00b5L",
+                "displayName": "Quintara Deepwell 96 Well Plate 2000 \u00b5L",
                 "displayVolumeUnits": "\u00b5L",
                 "tags": []
             },
@@ -12342,6 +12342,12 @@
             "type": "int"
         },
         {
+            "default": 1,
+            "label": "Number of Rounds",
+            "name": "num_rounds",
+            "type": "int"
+        },
+        {
             "label": "Mastermix Type",
             "name": "reag",
             "options": [
@@ -12426,55 +12432,55 @@
     ],
     "labware": [
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 1",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 1",
             "share": false,
             "slot": "1",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 2",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 2",
             "share": false,
             "slot": "2",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 3",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 3",
             "share": false,
             "slot": "3",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 4",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 4",
             "share": false,
             "slot": "4",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 5",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 5",
             "share": false,
             "slot": "5",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 6",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 6",
             "share": false,
             "slot": "6",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 7",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 7",
             "share": false,
             "slot": "7",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 8",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 8",
             "share": false,
             "slot": "8",
             "type": "doublepcr_96_wellplate_300ul"
         },
         {
-            "name": "Double Pcr 96 Well Plate 300 \u00b5L on 9",
+            "name": "Quintara Combo Pcr 96 Well Plate 300 \u00b5L on Nest Pcr on 9",
             "share": false,
             "slot": "9",
             "type": "doublepcr_96_wellplate_300ul"

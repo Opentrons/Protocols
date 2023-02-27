@@ -6,6 +6,12 @@
     "default": 1
   },
   {
+    "type": "int",
+    "label": "Number of Rounds",
+    "name": "num_rounds",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "Mastermix Type",
     "name": "reag",

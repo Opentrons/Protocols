@@ -8,9 +8,9 @@ metadata = {
 
 def run(ctx):
 
-    [starting_tip_col, reag, source_labware,
+    [starting_tip_col, reag, source_labware, num_rounds,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "starting_tip_col", "reag", "source_labware",
+        "starting_tip_col", "reag", "source_labware", "num_rounds",
             "p20_mount", "p300_mount")
 
     # start of protocol
@@ -85,23 +85,28 @@ def run(ctx):
     src_col_ctr = 0
     disp_vol = 1 if reag_vol < 20 else 20
 
-    if reag_num_disp > 1:
-        all_chunks = [all_dest_columns[i:i+reag_num_disp]
-                      for i in range(0, len(all_dest_columns), reag_num_disp)]
+    for _ in range(num_rounds):
+        if reag_num_disp > 1:
+            all_chunks = [all_dest_columns[i:i+reag_num_disp]
+                          for i in range(0, len(all_dest_columns),
+                                         reag_num_disp)]
 
-        pip.pick_up_tip(starting_tip)
+            if not pip.has_tip:
+                pip.pick_up_tip(starting_tip)
 
-        for chunk in all_chunks:
-            source = source_cols[src_col_ctr]
-            pip.aspirate(reag_vol*len(chunk)+disp_vol, source)
-            src_col_ctr += 1
-            for well in chunk:
-                pip.dispense(reag_vol, well.bottom(z=1))
-            pip.dispense(disp_vol, source)
-            ctx.comment('\n')
-    else:
-        pip.pick_up_tip(starting_tip)
-        for source, dest in zip(source_cols, all_dest_columns):
-            pip.aspirate(reag_vol, source)
-            pip.dispense(reag_vol, dest.bottom(z=1))
-            ctx.comment('\n')
+            for chunk in all_chunks:
+                source = source_cols[src_col_ctr]
+                pip.aspirate(reag_vol*len(chunk)+disp_vol, source)
+                src_col_ctr += 1
+                for well in chunk:
+                    pip.dispense(reag_vol, well.bottom(z=1))
+                pip.dispense(disp_vol, source)
+                ctx.comment('\n')
+        else:
+            if not pip.has_tip:
+                pip.pick_up_tip(starting_tip)
+            for source, dest in zip(source_cols, all_dest_columns):
+                pip.aspirate(reag_vol, source)
+                pip.dispense(reag_vol, dest.bottom(z=1))
+                ctx.comment('\n')
+        ctx.pause("Select Resume for another round")
