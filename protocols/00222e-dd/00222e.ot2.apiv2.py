@@ -69,7 +69,7 @@ def run(ctx):
                     m300.aspirate(vol_air_gap, source.top())
                 m300.aspirate(vol_dose, source.bottom(1))
             for i, d in enumerate(d_set):
-                m300.dispense(vol_dose+vol_air_gap, d.bottom(3.8))
+                m300.dispense(vol_dose+vol_air_gap, d.bottom(7.6))
                 if i == len(d_set) - 1:
-                    m300.blow_out(d.bottom(3.8))
+                    m300.blow_out(d.bottom(7.6))
         m300.drop_tip()
