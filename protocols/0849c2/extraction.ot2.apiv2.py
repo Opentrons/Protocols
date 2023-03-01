@@ -139,7 +139,7 @@ resuming.\n\n\n\n")
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
-            m300.blow_out(bead_loc)
+            m300.blow_out(location.top(-5))
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 4
 
