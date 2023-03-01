@@ -32,7 +32,7 @@ def run(ctx):
 
     # labware
 
-    plate_384_def = 'biorad_384_wellplate_50ul' if ctx.is_simulating() \
+    plate_384_def = 'biorad_384_wellplate_50ul_' if ctx.is_simulating() \
         else 'biorad_384_wellplate_50ul'
     distribution_plate = ctx.load_labware(
             'usascientific_96_wellplate_200ul', '1',
@@ -89,9 +89,11 @@ def run(ctx):
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
 
-    def slow_withdraw(pip, well):
+    def slow_withdraw(pip, well, delay_seconds=2.0):
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
+        if delay_seconds:
+            ctx.delay(seconds=delay_seconds)
         pip.move_to(well.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
@@ -136,13 +138,16 @@ def run(ctx):
     p20.reset_tipracks()
 
     # distribute mixes
+    vol_pre_air_gap = 5.0
     for tube, column, dest_set in zip(mix_tubes, mix_columns, mix_dest_sets):
         m20.pick_up_tip()
         for d in dest_set:
             map_384_to_source(tube, d, source_is_col=False, source_type='mix')
+            m20.aspirate(vol_pre_air_gap, column[0].top())  # pre-airgap
             m20.aspirate(vol_mix, column[0].bottom(0.8))
             slow_withdraw(m20, column[0])
-            m20.dispense(vol_mix, d.bottom(0.8))
+            m20.dispense(m20.current_volume, d.bottom(0.8))
+            ctx.delay(seconds=2)
             wick(m20, d)
         m20.drop_tip()
 
