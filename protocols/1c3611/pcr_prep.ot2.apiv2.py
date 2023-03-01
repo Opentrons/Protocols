@@ -32,7 +32,7 @@ def run(ctx):
 
     # labware
 
-    plate_384_def = 'biorad_384_wellplate_50ul' if ctx.is_simulating() \
+    plate_384_def = 'biorad_384_wellplate_50ul_' if ctx.is_simulating() \
         else 'biorad_384_wellplate_50ul'
     distribution_plate = ctx.load_labware(
             'usascientific_96_wellplate_200ul', '1',
@@ -49,7 +49,7 @@ def run(ctx):
         (num_mixes + (num_cols_samples*num_replicates*num_mixes))/12)
     tipracks_20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['5', '7', '8', '9', '10'][:num_racks]]
+        for slot in ['7', '8', '9', '10', '5'][:num_racks]]
 
     # pipettes
     p20 = ctx.load_instrument(
@@ -85,6 +85,30 @@ def run(ctx):
         radius = ref_well.diameter/2
     except TypeError:
         radius = ref_well.width/2
+
+    default_current = 0.6
+    offset_pickup_columns = m20.tip_racks[-1].columns()[::-1]
+    offset_column_counter = 0
+
+    def pick_up_offset(num_tips, pip=m20):
+        nonlocal offset_column_counter
+
+        current_modifier = num_tips/8
+        current = default_current*current_modifier
+        ctx._hw_manager.hardware._attached_instruments[
+            pip._implementation.get_mount()
+            ].update_config_item('pick_up_current', current)
+
+        col = offset_pickup_columns[offset_column_counter]
+        offset_column_counter += 1
+        pick_up_well = col[8-num_tips]
+
+        m20.pick_up_tip(pick_up_well)
+
+        # reset current to default
+        ctx._hw_manager.hardware._attached_instruments[
+            pip._implementation.get_mount()
+            ].update_config_item('pick_up_current', default_current)
 
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
@@ -162,9 +186,13 @@ def run(ctx):
     p20.reset_tipracks()
 
     # distribute mixes
+    num_tips_mix_distribution = 8 if num_samples >= 8 else num_samples
     vol_pre_air_gap = 5.0
     for tube, column, dest_set in zip(mix_tubes, mix_columns, mix_dest_sets):
-        m20.pick_up_tip()
+        if num_tips_mix_distribution == 8:
+            m20.pick_up_tip()
+        else:
+            pick_up_offset(num_tips_mix_distribution)
         for d in dest_set:
             map_384_to_source(tube, d, source_is_col=False, source_type='mix')
             m20.aspirate(vol_pre_air_gap, column[0].top())  # pre-airgap
