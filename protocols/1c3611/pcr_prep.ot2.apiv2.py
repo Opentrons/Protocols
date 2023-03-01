@@ -32,7 +32,7 @@ def run(ctx):
 
     # labware
 
-    plate_384_def = 'biorad_384_wellplate_50ul' if ctx.is_simulating() \
+    plate_384_def = 'biorad_384_wellplate_50ul_' if ctx.is_simulating() \
         else 'biorad_384_wellplate_50ul'
     distribution_plate = ctx.load_labware(
             'usascientific_96_wellplate_200ul', '1',
@@ -153,7 +153,7 @@ def run(ctx):
             vol_per_distribution_well/p20.tip_racks[0].wells()[0].max_volume)
         vol_per_asp = round(vol_per_distribution_well/num_asp, 2)
         for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):
-            p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
+            p20.pick_up_tip(offset_pickup_columns[i][-1])
             for well in col:
                 for _ in range(num_asp):
                     p20.aspirate(vol_per_asp, tube.bottom(0.5))
@@ -163,7 +163,7 @@ def run(ctx):
             p20.return_tip()  # save tip corresponding to each mix
     else:
         for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):
-            p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
+            p20.pick_up_tip(offset_pickup_columns[i][-1])
             for j, well in enumerate(col):
                 if j < num_samples_remainder:
                     col_multiplier = num_cols_samples
@@ -189,10 +189,7 @@ def run(ctx):
     num_tips_mix_distribution = 8 if num_samples >= 8 else num_samples
     vol_pre_air_gap = 5.0
     for tube, column, dest_set in zip(mix_tubes, mix_columns, mix_dest_sets):
-        if num_tips_mix_distribution == 8:
-            m20.pick_up_tip()
-        else:
-            pick_up_offset(num_tips_mix_distribution)
+        pick_up_offset(num_tips_mix_distribution)
         for d in dest_set:
             map_384_to_source(tube, d, source_is_col=False, source_type='mix')
             m20.aspirate(vol_pre_air_gap, column[0].top())  # pre-airgap
