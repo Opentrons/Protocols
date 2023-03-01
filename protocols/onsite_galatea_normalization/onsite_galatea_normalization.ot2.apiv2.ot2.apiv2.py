@@ -133,13 +133,13 @@ def run(ctx):
         dest_well = final_plate.wells_by_name()[dest_well_name]
         transfer_vol = round(float(line[4]))
 
-        if transfer_vol < 0:
+        if transfer_vol <= 0:
             continue
 
         transfer_vol = 5 if transfer_vol >= 5 else transfer_vol
 
         p20.aspirate(transfer_vol, water)
-        p20.dispense(transfer_vol, dest_well)
+        p20.dispense(transfer_vol, dest_well.bottom(z=1.5))
         p20.blow_out()
 
     p20.drop_tip()
@@ -157,7 +157,8 @@ def run(ctx):
         transfer_vol = 1 if transfer_vol < 0.5 else transfer_vol
 
         p20.aspirate(6 if transfer_vol > 6 else transfer_vol, source_well)
-        p20.dispense(6 if transfer_vol > 6 else transfer_vol, dest_well)
+        p20.dispense(6 if transfer_vol > 6 else transfer_vol,
+                     dest_well.bottom(z=1.5))
         p20.blow_out()
         p20.drop_tip()
 
