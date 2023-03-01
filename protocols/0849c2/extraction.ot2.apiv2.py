@@ -139,12 +139,13 @@ resuming.\n\n\n\n")
                       z=z_mix))
             m300.aspirate(vol, bead_loc)
             m300.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))
-            m300.blow_out(bead_loc)
+            m300.blow_out(location.top(-5))
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 4
 
     def lyse_bind_wash(vol, reagent, time_incubation=0,
                        time_settling=time_settling_minutes, premix=False,
+                       do_blowout=False,
                        do_discard_supernatant=True, do_resuspend=True,
                        vol_supernatant=0, supernatant_locations=waste,
                        park=False, z_disp=2.0):
@@ -175,7 +176,9 @@ resuming.\n\n\n\n")
             for _ in range(num_transfers):
                 m300.aspirate(vol_per_transfer, source)
                 slow_withdraw(source)
-                m300.dispense(vol_per_transfer, well.top())
+                m300.dispense(vol_per_transfer, well.top(-1))
+                if do_blowout:
+                    m300.blow_out(well.top(-1))
             if do_resuspend:
                 resuspend(well)
             ctx.delay(seconds=2)
@@ -201,14 +204,14 @@ settling.\n\n\n\n')
         magdeck.disengage()
 
     lyse_bind_wash(vol=vol_water, reagent=water, do_resuspend=False,
-                   do_discard_supernatant=False, park=False)
+                   do_discard_supernatant=False, park=False, do_blowout=True)
     lyse_bind_wash(vol=vol_ampure_beads, reagent=ampure_beads,
-                   time_incubation=time_incubation_minutes,
+                   time_incubation=5, time_settling=5,
                    do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
-    for resus_bool, etoh in zip([True, False], etoh_sets):
+    for etoh in etoh_sets:
         lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=1.0,
-                       do_discard_supernatant=True, do_resuspend=resus_bool,
+                       do_discard_supernatant=True, do_resuspend=False,
                        vol_supernatant=vol_etoh)
 
     ctx.delay(minutes=time_airdry_minutes, msg='\n\n\n\nAirdrying\n\n\n\n')
