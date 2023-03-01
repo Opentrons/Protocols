@@ -3,7 +3,7 @@
         "type": "int",
         "label": "number of samples, standards, and controls",
         "name": "num_samples",
-        "default": 16
+        "default": 4
     },
     {
         "type": "float",
@@ -15,7 +15,7 @@
         "type": "int",
         "label": "number of mastermixes",
         "name": "num_mixes",
-        "default": 6
+        "default": 2
     },
     {
         "type": "float",

@@ -89,9 +89,11 @@ def run(ctx):
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
 
-    def slow_withdraw(pip, well):
+    def slow_withdraw(pip, well, delay_seconds=2.0):
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
+        if delay_seconds:
+            ctx.delay(seconds=delay_seconds)
         pip.move_to(well.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
@@ -119,30 +121,57 @@ def run(ctx):
 
     # plate mixes from tubes
     overage_factor = 1.05
-    vol_per_distribution_well = vol_mix*num_cols_samples*(
-        num_replicates*overage_factor)
-    num_asp = math.ceil(
-        vol_per_distribution_well/p20.tip_racks[0].wells()[0].max_volume)
-    vol_per_asp = round(vol_per_distribution_well/num_asp, 2)
-    for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):
-        p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
-        for well in col:
-            for _ in range(num_asp):
-                p20.aspirate(vol_per_asp, tube.bottom(0.5))
-                slow_withdraw(p20, tube)
-                p20.dispense(vol_per_asp, well.bottom(0.5))
-                slow_withdraw(p20, well)
-        p20.return_tip()  # save tip corresponding to each mix for next step
+    num_samples_remainder = num_samples % 8
+    if num_samples_remainder == 0:
+        vol_per_distribution_well = vol_mix*num_cols_samples*(
+            num_replicates*overage_factor)
+        num_asp = math.ceil(
+            vol_per_distribution_well/p20.tip_racks[0].wells()[0].max_volume)
+        vol_per_asp = round(vol_per_distribution_well/num_asp, 2)
+        for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):
+            p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
+            for well in col:
+                for _ in range(num_asp):
+                    p20.aspirate(vol_per_asp, tube.bottom(0.5))
+                    slow_withdraw(p20, tube)
+                    p20.dispense(vol_per_asp, well.bottom(0.5))
+                    slow_withdraw(p20, well)
+            p20.return_tip()  # save tip corresponding to each mix
+    else:
+        for i, (tube, col) in enumerate(zip(mix_tubes, mix_columns)):
+            p20.pick_up_tip(p20.tip_racks[0].rows()[0][i])
+            for j, well in enumerate(col):
+                if j < num_samples_remainder:
+                    col_multiplier = num_cols_samples
+                else:
+                    col_multiplier = num_cols_samples - 1
+                vol_per_distribution_well = vol_mix*col_multiplier*(
+                    num_replicates*overage_factor)
+                if vol_per_distribution_well > 0:
+                    num_asp = math.ceil(
+                        vol_per_distribution_well/p20.tip_racks[
+                            0].wells()[0].max_volume)
+                    vol_per_asp = round(vol_per_distribution_well/num_asp, 2)
+                    for _ in range(num_asp):
+                        p20.aspirate(vol_per_asp, tube.bottom(0.5))
+                        slow_withdraw(p20, tube)
+                        p20.dispense(vol_per_asp, well.bottom(0.5))
+                        slow_withdraw(p20, well)
+            p20.return_tip()  # save tip corresponding to each mix
+
     p20.reset_tipracks()
 
     # distribute mixes
+    vol_pre_air_gap = 5.0
     for tube, column, dest_set in zip(mix_tubes, mix_columns, mix_dest_sets):
         m20.pick_up_tip()
         for d in dest_set:
             map_384_to_source(tube, d, source_is_col=False, source_type='mix')
+            m20.aspirate(vol_pre_air_gap, column[0].top())  # pre-airgap
             m20.aspirate(vol_mix, column[0].bottom(0.8))
             slow_withdraw(m20, column[0])
-            m20.dispense(vol_mix, d.bottom(0.8))
+            m20.dispense(m20.current_volume, d.bottom(0.8))
+            ctx.delay(seconds=2)
             wick(m20, d)
         m20.drop_tip()
 
