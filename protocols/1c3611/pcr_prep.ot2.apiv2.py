@@ -49,7 +49,7 @@ def run(ctx):
         (num_mixes + (num_cols_samples*num_replicates*num_mixes))/12)
     tipracks_20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['7', '8', '9', '10', '5'][:num_racks]]
+        for slot in ['7', '8', '9', '10'][:(num_racks-1)] + ['5']]
 
     # pipettes
     p20 = ctx.load_instrument(
