@@ -206,7 +206,7 @@ settling.\n\n\n\n')
     lyse_bind_wash(vol=vol_water, reagent=water, do_resuspend=False,
                    do_discard_supernatant=False, park=False, do_blowout=True)
     lyse_bind_wash(vol=vol_ampure_beads, reagent=ampure_beads,
-                   time_incubation=time_incubation_minutes,
+                   time_incubation=5, time_settling=5,
                    do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
     for etoh in etoh_sets:
