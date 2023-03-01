@@ -175,7 +175,8 @@ resuming.\n\n\n\n")
             for _ in range(num_transfers):
                 m300.aspirate(vol_per_transfer, source)
                 slow_withdraw(source)
-                m300.dispense(vol_per_transfer, well.top())
+                m300.dispense(vol_per_transfer, well.top(-1))
+                m300.blow_out(well.top(-1))
             if do_resuspend:
                 resuspend(well)
             ctx.delay(seconds=2)
