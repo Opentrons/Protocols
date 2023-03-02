@@ -183,7 +183,7 @@ resuming.\n\n\n\n")
                 resuspend(well)
             ctx.delay(seconds=2)
             slow_withdraw(well, m300)
-            m300.air_gap(20)
+            m300.air_gap(20, height=0)
             if park:
                 parking_spots.append(m300._last_tip_picked_up_from)
                 m300.return_tip()
