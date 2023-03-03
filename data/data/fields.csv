@@ -666,6 +666,7 @@ lw_deepwell_plate,2
 lw_dmso,1
 lw_hplc,1
 lw_tiprack300,1
+lw_tuberack,1
 lwaste,1
 lysis,1
 lysis_vol,1
@@ -767,8 +768,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,3
-mount_m300,9
+mount_m20,4
+mount_m300,10
 mount_p1000,1
 mount_p20,9
 mount_p300,6
@@ -855,7 +856,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,161
+num_samples,162
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1542,7 +1543,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
-vol_sample,6
+vol_sample,7
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1
