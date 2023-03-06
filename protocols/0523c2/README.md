@@ -1,4 +1,4 @@
-# Seeding
+# PCR Prep
 
 
 ### Author
@@ -6,29 +6,38 @@
 
 
 ## Categories
-* Sterile Workflows
-	* Seeding
+* PCR
+	* PCR Prep
 
 
 ## Description
-This protocol performs a seeding assay in triplicate for up to 3 cell lines and 3 replicate plates.
+This protocol performs a custom PCR preparation for up to 32 samples, including mastermix creation and sample barcoding.
+
+
+### Modules
+* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
 
 
 ### Labware
-* Thermofisher 96 Well Plate 300 µL #167008
+* Eppendorf Twin.tec 96 Well Plate 150 µL
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* Opentrons 96 Filter Tip Rack 20 µL
+* [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 
 
 ### Pipettes
 * [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00222e-seed/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0523c2/deck.png)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00222e-seed/reagents.png)
+![block](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0523c2/reagents1.png)  
+
+![plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0523c2/reagents2.png)
 
 
 ### Process
@@ -46,4 +55,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-00222e-seed
+0523c2
