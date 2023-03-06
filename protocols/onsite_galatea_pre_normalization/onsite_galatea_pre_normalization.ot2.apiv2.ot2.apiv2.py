@@ -5,6 +5,11 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":"Plate,Sample,Qubit,DNA,H2O,InputDNA\\nA1,test1,25,6.8,43.2,2","dna_plate_type":"corning_96_wellplate_360ul_flat","p20_mount":"left","m20_mount":"right"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
@@ -64,12 +69,13 @@ def run(ctx):
         transfer_vol = 1250/qubit
 
         if qubit <= 25:
-            p20.transfer(50, source_well, dest_well, new_tip='never',
+            p20.transfer(50, source_well.bottom(z=1 if dna_plate_type == "nest_96_wellplate_100ul_pcr_full_skirt" else -1), dest_well, new_tip='never',  # noqa:E501
                          blow_out=True,
                          blowout_location="destination well")
 
         else:
-            p20.transfer(transfer_vol, source_well, dest_well, new_tip='never',
+            p20.transfer(transfer_vol,
+                         source_well.bottom(z=1 if dna_plate_type == "nest_96_wellplate_100ul_pcr_full_skirt" else -1), dest_well, new_tip='never',  # noqa:E501
                          blow_out=True,
                          blowout_location="destination well")
 
