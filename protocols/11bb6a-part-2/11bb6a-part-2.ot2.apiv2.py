@@ -249,7 +249,7 @@ def run(ctx):
                 p300m.move_to(column[0].top())
                 p300m.aspirate(20, column[0], rate=0.05)
                 p300m.aspirate(20, column[0].bottom(z=0.5), rate=0.05)
-                p300m.aspirte(10, column[0].bottom(z=0.1), rate=0.05)
+                p300m.aspirate(10, column[0].bottom(z=0.1), rate=0.05)
 
             p300m.drop_tip()
 
