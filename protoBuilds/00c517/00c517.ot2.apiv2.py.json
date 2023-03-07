@@ -4657,5 +4657,12 @@
         "protocolName": "VIB UGENT - Part 1",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "HeaterShakerContext at Heater-Shaker Module GEN1 on 1 lw Heater Shaker Plate on Heater-Shaker Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "heatershaker"
+        }
+    ]
 }
