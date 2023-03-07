@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol is part 1 of a series for the VIB UGENT protocol. [This protocol performs steps 1-19 of this detailed protocol description.](https://s3.amazonaws.com/pf-user-files-01/u-4256/uploads/2023-01-31/ok13urr/VIB-UGENT_Customized_protocol_S-trap_steps.xlsx)
 
 
 ### Labware
@@ -32,15 +32,21 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517/Screen+Shot+2023-03-07+at+11.40.28+AM.png)
 
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517/reagents.png)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Add SDS and sample to pixul plate.
+2. Pause.
+3. Adding bsa to standard tubes.
+4. Adding sds to standard tubes.
+5. Pause.
+6. Adding standards to plate.
+7. Adding sds to plate.
+8. Adding sample to plate.
+9. Transfer standards to uv plate.
+10. Transfer BCA to plate.
 
 
 ### Process

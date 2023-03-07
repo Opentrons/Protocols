@@ -13,9 +13,9 @@
   },
   {
     "type": "int",
-    "label": "Initial Volume of BSA in 50mL Tube (in mL)",
+    "label": "Initial Volume of BSA in 15mL Tube (in mL)",
     "name": "init_vol_bsa",
-    "default": 40
+    "default": 12
   },
   {
     "type": "int",
