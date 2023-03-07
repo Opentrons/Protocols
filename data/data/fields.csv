@@ -536,6 +536,8 @@ indexing_plate_loadname,1
 init_temp,2
 init_time,2
 init_vol,3
+init_vol_bca,1
+init_vol_bsa,1
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
@@ -849,7 +851,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,62
+num_samp,63
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -916,7 +918,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,122
+p20_mount,123
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -933,7 +935,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,139
+p300_mount,140
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1204,6 +1206,7 @@ sape_vol,1
 scan_9000_plate_barcode,1
 scan_qpcr_plate_barcode,1
 sds_buffer_vol,1
+sds_vol,1
 sec_ex,1
 sec_plate,1
 second_media_y,1

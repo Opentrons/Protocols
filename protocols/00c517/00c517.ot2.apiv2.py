@@ -19,8 +19,8 @@ def run(ctx):
         raise Exception("Enter a sample number between 1-24")
 
     # modules
-    hs_mod = ctx.load_module('heaterShakerModuleV1', 10)
-    hs_mod.close_labware_latch()
+    # hs_mod = ctx.load_module('heaterShakerModuleV1', 10)
+    # hs_mod.close_labware_latch()
 
     # labware
     reservoir = ctx.load_labware('agilent_1_reservoir_290ml', 11)
