@@ -247,10 +247,9 @@ def run(ctx):
             # to improve completeness of removal
             if repeat:
                 p300m.move_to(column[0].top())
-                for clearance in [0.7, 0.4, 0.2, 0]:
-                    loc = column[0].bottom(clearance).move(types.Point(
-                       x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
-                    p300m.aspirate(25, loc)
+                p300m.aspirate(20, column[0], rate=0.05)
+                p300m.aspirate(20, column[0].bottom(z=0.5), rate=0.05)
+                p300m.aspirte(10, column[0].bottom(z=0.1), rate=0.05)
 
             p300m.drop_tip()
 
@@ -268,7 +267,7 @@ def run(ctx):
 
         # location targeting bead pellet for resuspension
         loc = column[0].bottom(1).move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=0))
+          x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=column[0].depth/1.5))  # noqa:E501
 
         p20m.dispense(16, loc, rate=3)
 
@@ -280,6 +279,7 @@ def run(ctx):
 
             # wait, depart slowly, tip touch and blowout after final mix
             if rep == 9:
+                p20m.mix(5, 12, column[0])
                 ctx.delay(seconds=1)
                 slow_tip_withdrawal(p20m, column[0])
                 p20m.move_to(
