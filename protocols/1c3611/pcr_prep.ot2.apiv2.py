@@ -32,7 +32,7 @@ def run(ctx):
 
     # labware
 
-    plate_384_def = 'biorad_384_wellplate_50ul' if ctx.is_simulating() \
+    plate_384_def = 'biorad_384_wellplate_50ul_' if ctx.is_simulating() \
         else 'biorad_384_wellplate_50ul'
     distribution_plate = ctx.load_labware(
             'usascientific_96_wellplate_200ul', '1',
@@ -158,7 +158,7 @@ def run(ctx):
                 for _ in range(num_asp):
                     p20.aspirate(vol_per_asp, tube.bottom(0.5))
                     slow_withdraw(p20, tube)
-                    p20.dispense(vol_per_asp, well.bottom(0.5))
+                    p20.dispense(vol_per_asp, well.bottom(1))
                     slow_withdraw(p20, well)
             p20.return_tip()  # save tip corresponding to each mix
     else:
@@ -179,7 +179,7 @@ def run(ctx):
                     for _ in range(num_asp):
                         p20.aspirate(vol_per_asp, tube.bottom(0.5))
                         slow_withdraw(p20, tube)
-                        p20.dispense(vol_per_asp, well.bottom(0.5))
+                        p20.dispense(vol_per_asp, well.bottom(1))
                         slow_withdraw(p20, well)
             p20.return_tip()  # save tip corresponding to each mix
 
