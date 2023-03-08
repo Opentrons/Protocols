@@ -1,3 +1,4 @@
+import math
 from opentrons.types import Point
 
 metadata = {
@@ -27,18 +28,47 @@ def run(ctx):
                                     'azides')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['4', '5', '7', '8']]
+        for slot in ['10', '7']]
+    tipracks300 = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        for slot in ['11', '8']]
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '6', 'reservoir')
-    oligo_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 'oligos')
+    oligo_plate = ctx.load_labware('roarprinted_48_wellplate_1500ul', 'oligos')
 
     # pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', mount_m20,
                               tip_racks=tipracks20)
-    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,
-                              tip_racks=tipracks20)
+    m300 = ctx.load_instrument('p300_single_gen2', mount_p20,
+                               tip_racks=tipracks300)
 
     # reagents
+    num_cols = math.ceil(num_samples/6)
     oligos = oligo_plate.rows()[0][:3]
+    [teaa, h2o, dmso, sodium_abscorbate, cu_ligand] = reservoir.rows()[:5]
+
+    default_current = 0.6
+    offset_pickup_columns = m20.tip_racks[-1].columns()[::-1]
+    offset_column_counter = 0
+
+    def pick_up_offset(num_tips, pip=m20):
+        nonlocal offset_column_counter
+
+        current_modifier = num_tips/8
+        current = default_current*current_modifier
+        ctx._hw_manager.hardware._attached_instruments[
+            pip._implementation.get_mount()
+            ].update_config_item('pick_up_current', current)
+
+        col = offset_pickup_columns[offset_column_counter]
+        offset_column_counter += 1
+        pick_up_well = col[8-num_tips]
+
+        m20.pick_up_tip(pick_up_well)
+
+        # reset current to default
+        ctx._hw_manager.hardware._attached_instruments[
+            pip._implementation.get_mount()
+            ].update_config_item('pick_up_current', default_current)
 
     def wick(well, pip, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
@@ -50,4 +80,4 @@ def run(ctx):
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
 
-    
+    # transfer reagents to oligo plate 
