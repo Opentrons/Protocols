@@ -64,12 +64,13 @@ def run(ctx):
         transfer_vol = 1250/qubit
 
         if qubit <= 25:
-            p20.transfer(50, source_well, dest_well, new_tip='never',
+            p20.transfer(50, source_well.bottom(z=1 if dna_plate_type == "nest_96_wellplate_100ul_pcr_full_skirt" else -1), dest_well, new_tip='never',  # noqa:E501
                          blow_out=True,
                          blowout_location="destination well")
 
         else:
-            p20.transfer(transfer_vol, source_well, dest_well, new_tip='never',
+            p20.transfer(transfer_vol,
+                         source_well.bottom(z=1 if dna_plate_type == "nest_96_wellplate_100ul_pcr_full_skirt" else -1), dest_well, new_tip='never',  # noqa:E501
                          blow_out=True,
                          blowout_location="destination well")
 
