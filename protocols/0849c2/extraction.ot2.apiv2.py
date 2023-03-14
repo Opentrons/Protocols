@@ -148,7 +148,7 @@ resuming.\n\n\n\n")
                        do_blowout=False,
                        do_discard_supernatant=True, do_resuspend=True,
                        vol_supernatant=0, supernatant_locations=waste,
-                       park=False, z_disp=2.0):
+                       park=False, z_disp=2.0, disengage_after=True):
         nonlocal parking_spots
 
         columns_per_channel = 12//len(reagent)
@@ -195,13 +195,16 @@ resuming.\n\n\n\n")
                       msg='\n\n\n\nIncubating\n\n\n\n')
 
         if do_discard_supernatant:
-            magdeck.engage()
-            ctx.delay(minutes=time_settling, msg='\n\n\n\nBeads \
+            if not magdeck.status == 'engaged':
+                magdeck.engage()
+            if time_settling > 0:
+                ctx.delay(minutes=time_settling, msg='\n\n\n\nBeads \
 settling.\n\n\n\n')
             remove_supernatant(vol_supernatant,
                                destinations=supernatant_locations,
                                park=park, z_disp=z_disp)
-        magdeck.disengage()
+        if disengage_after:
+            magdeck.disengage()
 
     lyse_bind_wash(vol=vol_water, reagent=water, do_resuspend=False,
                    do_discard_supernatant=False, park=False, do_blowout=True)
@@ -209,10 +212,13 @@ settling.\n\n\n\n')
                    time_incubation=5, time_settling=5,
                    do_discard_supernatant=True, premix=True, do_resuspend=True,
                    vol_supernatant=vol_sample+vol_water+vol_ampure_beads)
+    if not magdeck.status == 'engaged':
+        magdeck.engage()
     for etoh in etoh_sets:
-        lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=1.0,
+        lyse_bind_wash(vol=vol_etoh, reagent=etoh, time_incubation=0.5,
+                       time_settling=0,
                        do_discard_supernatant=True, do_resuspend=False,
-                       vol_supernatant=vol_etoh)
+                       vol_supernatant=vol_etoh, disengage_after=False)
 
     ctx.delay(minutes=time_airdry_minutes, msg='\n\n\n\nAirdrying\n\n\n\n')
     lyse_bind_wash(vol=vol_elution, reagent=water,
