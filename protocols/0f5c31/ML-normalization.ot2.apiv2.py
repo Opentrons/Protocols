@@ -23,6 +23,8 @@ def run(ctx):
     # modules
     tc = ctx.load_module('thermocycler')
     tempdeck = ctx.load_module('temperature module gen2', '1')
+    tempdeck2 = ctx.load_module('temperature module gen2', '9')
+    res_h_lysate = tempdeck2.load_labware('nest_12_reservoir_15ml')
 
     # labware
     tc_plate = tc.load_labware(
@@ -36,11 +38,10 @@ def run(ctx):
             'lysate reservoir')
     tiprack200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['2', '3', '6']]
-
+        for slot in ['2', '3']]
     tiprack20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['9']]
+        for slot in ['6']]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', mount_m300,
@@ -49,7 +50,7 @@ def run(ctx):
 
     # reagents and variables
     h_lysate = res_lysate.rows()[0][7:10]
-    l_lysate = res_lysate.rows()[0][:6]
+    l_lysate = res_h_lysate.rows()[0][:1]
 
     vol_l_lysate = 70
     reps_mix = 5
@@ -59,6 +60,7 @@ def run(ctx):
 
     # module setup
     tempdeck.set_temperature(temp_lysate)
+    tempdeck2.set_temperature(temp_lysate)
     tc.open_lid()
     temp_block_start = 37.0
     temp_lid_start = temp_block_start + 2.0
@@ -159,7 +161,7 @@ def run(ctx):
             h_lysate_column = h_lysate[i//columns_per_h_lysate]
             l_lysate_column = l_lysate[i//columns_per_l_lysate]
 
-            custom_distribute(m20, vol_h_lysate, [h_lysate_column],
+            custom_distribute(m300, vol_h_lysate, [h_lysate_column],
                               filter_plate.rows()[0])
 
             ctx.pause('\n\n\n\nRemove filter plate (slot 5) and spin the \
