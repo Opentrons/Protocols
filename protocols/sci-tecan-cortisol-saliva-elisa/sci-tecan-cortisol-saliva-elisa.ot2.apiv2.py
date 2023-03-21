@@ -27,7 +27,7 @@ def run(ctx):
     working_plate = hs_mod.load_labware('tecan_elisa_96well_hs')
 
     sample_plate = ctx.load_labware(
-        'thermoscientific_96_wellplate_v_450', 1, 'samples') 
+        'thermoscientific_96_wellplate_v_450', 1, 'samples')
     reagent_plate = ctx.load_labware(
         'nest_96_wellplate_2ml_deep', 4, 'reagents')
     wash_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 5, 'wash')
