@@ -1,3 +1,5 @@
+# flake8: noqa
+
 def get_values(*names):
     import json
     _all_values = json.loads("""{"p300_mount":"left","tip_type":"opentrons_96_tiprack_300ul","plate_type":"biorad_96_wellplate_200ul_pcr"}""")
