@@ -1,7 +1,7 @@
 # Protein Crystallization Screen Builder
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons](https://opentrons.com/), Ricardo Padua, Brandeis University
 
 ## Categories
 * Sample Prep
