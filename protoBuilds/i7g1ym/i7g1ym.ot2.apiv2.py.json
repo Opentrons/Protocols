@@ -1,0 +1,44 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Utility: Rearrange pipette tips for 24-well spacing',\n    'author': 'Tim Fallon <tfallon@ucsd.edu>',\n    'description': 'Rearranges pipette tips from their standard spacing in a \\\nfull box, to two empty tip box putting the pipette tips in every \\\nother row. This allows the P300/P20-multipipette to be used for \\\npipetting from 24 well plates.',\n    'apiLevel': '2.13'\n}\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n\n    tiprack_map = {\n        'p10_single': {\n            'standard': 'opentrons_96_tiprack_10ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p50_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p300_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p20_single_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_single_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single_gen2': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p300_multi_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_tiprack_300ul'\n        }\n    }\n\n    pipette_type = 'p300_multi_gen2'\n    pipette_mount = 'right'\n    tip_type = 'filter'\n\n    full_tiprack_slots = [10]\n    empty_tiprack_slots = [4, 5]\n    target_rows = [\"A\", \"C\", \"E\", \"G\"]\n    target_cols = list(range(1, 13))\n    full_tipracks = [\n        protocol.load_labware(tiprack_map[pipette_type][tip_type], s)\n        for s in full_tiprack_slots] \n    empty_tipracks = [\n        protocol.load_labware(tiprack_map[pipette_type][tip_type], s)\n        for s in empty_tiprack_slots]\n\n    pipette = protocol.load_instrument(\n         pipette_type, pipette_mount, full_tipracks)\n\n    col_index = -1\n    row_index = 0\n    empty_tiprack_index = 0\n    for tr in full_tipracks:\n\n        reversed_wells = list(tr.wells())\n        reversed_wells.reverse()  # updates in place\n        for w in reversed_wells:\n            col_index += 1\n            if row_index == len(target_rows)-1 and col_index == len(\n                    target_cols):\n                empty_tiprack_index += 1\n                row_index = 0\n                col_index = 0\n            if col_index == len(target_cols):\n                row_index += 1\n                col_index = 0\n\n            target_well = str(target_rows[row_index])+str(\n                target_cols[col_index])  # I.e. like 'A1' or 'B1'\n            source_location = w\n            pipette.pick_up_tip(source_location)\n            destination_location = empty_tipracks[empty_tiprack_index].wells(\n                target_well)[0]\n            pipette.drop_tip(destination_location)",
+    "custom_labware_defs": [],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Tim Fallon <tfallon@ucsd.edu>",
+        "description": "Rearranges pipette tips from their standard spacing in a full box, to two empty tip box putting the pipette tips in every other row. This allows the P300/P20-multipipette to be used for pipetting from 24 well plates.",
+        "protocolName": "Utility: Rearrange pipette tips for 24-well spacing"
+    },
+    "modules": []
+}

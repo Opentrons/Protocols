@@ -1,0 +1,61 @@
+{
+    "content": "from opentrons import protocol_api\n\n# metadata\n\nmetadata = {\n    'protocolName': 'Cell Viability and Cytotoxicity Assay',\n    'author': 'Opentrons',\n    'description': 'To measure viability and cytotoxicity of K562 cells \\ntreated with Bortezomib using the OT-2',\n    'apiLevel': '2.13'\n}\n\nNUM_SAMPLES = 10\n# protocol run function\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n\n    def custom_mix(no_of_mix, p300, vol, well, top_height=25):\n        for i in range(no_of_mix):\n            p300.aspirate(vol, well.bottom())\n            p300.dispense(vol, well.bottom(top_height))\n\n    # lab ware\n\n    tiprack = protocol.load_labware('opentrons_96_filtertiprack_20ul', 10)\n    tiprack1 = protocol.load_labware('opentrons_96_tiprack_300ul', 4)\n    falcontubes = protocol.load_labware(\n        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 11)\n    hs_module = protocol.load_module('heaterShakerModuleV1', 1)\n    hs_module.close_labware_latch()\n    plate = hs_module.load_labware('corning_96_wellplate_360ul_flat')\n\n    # pipettes\n    p300 = protocol.load_instrument(\n        'p300_single_gen2', mount='left', tip_racks=[tiprack1])\n    p20 = protocol.load_instrument(\n        'p20_single_gen2', mount='right', tip_racks=[tiprack])\n\n    # commands\n    # Day 4 ( After 72 hours ) measurement of viability and cytotoxicity of \\n    # K562 cells\n    # Reagent for Cytotoxicity Assay added\n    cyto_reagent = 13.4\n    wells_a = plate.columns()[0]\n    wells_b = plate.columns()[1]\n    wells_c = plate.columns()[2]\n    wells_d = plate.columns()[3][0:6]\n    wells_e = plate.columns()[4][0:3]\n    dest1 = [*wells_a, *wells_b, *wells_c, *wells_d, *wells_e]\n    p20.pick_up_tip()\n    for well in dest1:\n        p20.flow_rate.aspirate = 92\n        p20.flow_rate.dispense = 70\n        p20.flow_rate.blow_out = 70\n        p20.aspirate(cyto_reagent, falcontubes['B2'])\n        protocol.delay(0.5)\n        p20.move_to(falcontubes['B2'].bottom(35), speed=5)\n        p20.dispense(cyto_reagent, well)\n        protocol.delay(0.5)\n        p20.blow_out(well)\n        protocol.delay(0.6)\n    p20.drop_tip()\n\n    hs_module.close_labware_latch()\n    hs_module.set_and_wait_for_shake_speed(500)\n    protocol.delay(minutes=2)\n    hs_module.deactivate_shaker()\n\n    protocol.delay(minutes=35)\n\n    # Reagent for Viability Assay added\n\n    volume_reagent = 80\n    wells_a = plate.columns()[0]\n    wells_b = plate.columns()[1]\n    wells_c = plate.columns()[2]\n    wells_d = plate.columns()[3][0:6]\n    wells_e = plate.columns()[4][0:3]\n    dest = [*wells_a, *wells_b, *wells_c, *wells_d, *wells_e]\n    p300.pick_up_tip()\n    for well in dest:\n        p300.flow_rate.aspirate = 92\n        p300.flow_rate.dispense = 70\n        p300.flow_rate.blow_out = 70\n        p300.aspirate(volume_reagent, falcontubes['B1'])\n        protocol.delay(0.5)\n        p300.move_to(falcontubes['B1'].bottom(35), speed=5)\n        p300.dispense(volume_reagent, well)\n        protocol.delay(0.5)\n        p300.blow_out(well)\n        protocol.delay(0.6)\n    p300.drop_tip()\n\n    hs_module.close_labware_latch()\n    hs_module.set_and_wait_for_shake_speed(500)\n    protocol.delay(minutes=2)\n    hs_module.deactivate_shaker()\n",
+    "custom_labware_defs": [],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 1",
+            "share": false,
+            "slot": "1",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Opentrons",
+        "description": "To measure viability and cytotoxicity of K562 cells treated with Bortezomib using the OT-2",
+        "protocolName": "Cell Viability and Cytotoxicity Assay"
+    },
+    "modules": [        
+        {
+            "name": "HeaterShakerContext at Heater-Shaker Module GEN1 on 1 lw Heater Shaker Plate on Heater-Shaker Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "heatershaker"
+    }
+    ]
+}

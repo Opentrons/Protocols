@@ -5,8 +5,8 @@
             "Olink Target 48"
         ]
     },
-    "deck-setup": "\nNote: all volumes for 48 samples (including controls)\n blue on sample plate (slot 7): starting samples\n green on tuberack (slot 8): 400.0\u00b5l incubation mix\n",
-    "description": "Links:\n Part 1: Incubation\n Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 1/3: Incubation for the Olink Target 48 protocol for protein biomarker discovery.\n",
+    "deck-setup": "\nNote: all volumes for 48 samples (including controls)\n* blue on sample plate (slot 7): starting samples\n* green on tuberack (slot 8): 400.0\u00b5l incubation mix\n",
+    "description": "Links:\n* Part 1: Incubation\n* Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 1/3: Incubation for the Olink Target 48 protocol for protein biomarker discovery.\n",
     "internal": "2aee74",
     "labware": "\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nOpentrons 4-in-1 Tube Rack Set with NEST 1.5 mL Screwcap Tubes or equivalent\nOpentrons Filter Tips\n",
     "markdown": {

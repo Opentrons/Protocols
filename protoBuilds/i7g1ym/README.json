@@ -1,0 +1,32 @@
+{
+    "author": "Tim Fallon",
+    "categories": {
+        "General Liquid Handling": [
+            "General Liquid Handling"
+        ]
+    },
+    "deck-setup": "deck",
+    "description": "Rearranges pipette tips from their standard spacing in a full box, to two empty tip box putting the pipette tips in every other row. This allows the P300/P20-multipipette to be used for pipetting from 24 well plates.",
+    "internal": "i7g1ym",
+    "labware": "\nOpentrons 96 Tip Rack 300 \u00b5L\n",
+    "markdown": {
+        "author": "Tim Fallon\n\n\n",
+        "categories": "* General Liquid Handling\n\t* General Liquid Handling\n\n\n",
+        "deck-setup": "[deck](https://drive.google.com/open?id=1549-GH5Qyzv7JzDqJG7ZLGkNzckp_PLq)\n\n\n",
+        "description": "Rearranges pipette tips from their standard spacing in a full box, to two empty tip box putting the pipette tips in every other row. This allows the P300/P20-multipipette to be used for pipetting from 24 well plates.\n\n\n",
+        "internal": "i7g1ym\n",
+        "labware": "* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Place full P300 tip rack in slot 10\n2. Place two empty P300 tip racks in slot 4 and 5\n3. Run protocol\n\n\n",
+        "reagent-setup": "[reagents](![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/i7g1ym/reagents.png))\n\n\n",
+        "title": "Utility: Rearrange pipette tips for 24-well spacing"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nPlace full P300 tip rack in slot 10\nPlace two empty P300 tip racks in slot 4 and 5\nRun protocol\n",
+    "reagent-setup": "reagents",
+    "title": "Utility: Rearrange pipette tips for 24-well spacing"
+}

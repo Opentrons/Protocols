@@ -1,0 +1,505 @@
+{
+    "content": "def get_values(*names):\n    import json\n    _all_values = json.loads(\"\"\"{\"num_samples\":5,\n                                 \"repeats_per_sample\":3,\n                                 \"cryo_rack\":\"cryo_35_tuberack_1800ul\",\n                                 \"sample_plate\": \"nest_96_wellplate_2ml_deep\",\n                                 \"glycerol_plate\": \"opentrons_6_tuberack_falcon_50ml_conical\",\n                                 \"pipette_type\":\"p1000_single_gen2\",\n                                 \"pipette_mount\":\"right\",\n                                 \"tip_type\":\"opentrons_96_tiprack_1000ul\"\n                                 }\"\"\")\n    return [_all_values[n] for n in names]\n\n\nfrom opentrons import protocol_api\nimport math\n\nmetadata = {\n    'apiLevel': '2.8',\n    'protocolName': 'Glycerol Stock',\n    'author': 'Tim Dobbs <tim@bioartbot.org>',\n    'source': 'BioArtBot Project at LPI Paris',\n    'description': \"\"\"Adaptable protocol for making glycerol stocks\"\"\"\n    }\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n\n    [num_of_samples, repeats_per_sample,\n     cryo_rack, sample_plate, glycerol_plate,\n     pipette_type, pipette_mount, tip_type] = get_values(\n        'num_samples', 'repeats_per_sample',\n        'cryo_rack', 'sample_plate', 'glycerol_plate', \n        'pipette_type', 'pipette_mount', 'tip_type')\n\n\n    # a function that gets us the next available slot on the deck\n    def slot_generator(available_slots):\n        for slot in available_slots:\n            yield slot\n    available_slots = range(11,0,-1)\n    get_slot = slot_generator(available_slots)\n\n    # a function that gets us the next available well on a plate\n    # if the plate is full, the functions provisions another plate\n    def well_generator(labware_type):\n        while True:\n            try:\n                plate = protocol.load_labware(labware_type, next(get_slot))\n            except StopIteration:\n                    raise IndexError(\"\"\"There aren't enough slots on the deck to run\n                                        all of the samples you're attempting to run.\n                                        Try doing it on two separate runs.\"\"\"\n                                    ) #Would prefer to raise StopIteration, but OT seems to be weird about handling it\n            for well in plate.wells():\n                yield well\n    get_cryo_well = well_generator(cryo_rack)\n    get_sample_well = well_generator(sample_plate)\n\n\n    # load a tiprack and glycerol reservoir\n    tipracks = list()\n    for rack in range(math.ceil(num_of_samples / 95)):\n        tipracks.append(protocol.load_labware(tip_type, next(get_slot)))\n        \n    protocol.comment('**CHECK BEFORE RUNNING**')\n    protocol.comment('Ensure you have enough glycerol (500ul for each cryo tube)')\n    glycerol_reservoir = protocol.load_labware(glycerol_plate, next(get_slot))\n\n    # set the pipette we will be using\n    pipette = protocol.load_instrument(\n            pipette_type,\n            mount=pipette_mount,\n            tip_racks=tipracks\n    )\n\n    protocol.comment('Ensure you have matched the expected culture platemap:')\n    source_list = list()\n    for sample in range(num_of_samples):\n        source_well = next(get_sample_well)\n        source_list.append(source_well)\n        protocol.comment(f'SAMPLE {sample + 1} -> {source_well}')\n\n    well_mapping = {}\n    for source in source_list:\n        destination_list = []\n        for repeat in range(repeats_per_sample):\n            destination_list.append(next(get_cryo_well))\n        well_mapping[source] = destination_list\n\n    #load glycerol into all of the necessary tubes\n    flat_well_list = [well for sublist in well_mapping.values() for well in sublist]\n    pipette.distribute(source=glycerol_reservoir.wells(\"A1\"),dest=flat_well_list,volume=500, disposal_volume=0)\n\n    #load cultures into each appropriate tubes\n    for source in well_mapping:\n        pipette.distribute(source=source,dest=well_mapping[source],volume=500, disposal_volume=0)",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Cryo",
+                "brandId": [
+                    "BioArtBot"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127,
+                "yDimension": 85,
+                "zDimension": 49
+            },
+            "groups": [
+                {
+                    "brand": {
+                        "brand": "Nunc",
+                        "brandId": [
+                            "Thermo Scientific\u2122 377267"
+                        ]
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "E2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "E3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "E4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "E5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6",
+                        "E6",
+                        "A7",
+                        "B7",
+                        "C7",
+                        "D7",
+                        "E7"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Cryo 35 Tube Rack with Nunc 1.8 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3",
+                    "E3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4",
+                    "E4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "E6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "E7"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "cryo_35_tuberack_1800ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 19,
+                    "y": 73,
+                    "z": 1
+                },
+                "A2": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 34.15,
+                    "y": 73,
+                    "z": 1
+                },
+                "A3": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 49.3,
+                    "y": 73,
+                    "z": 1
+                },
+                "A4": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 64.45,
+                    "y": 73,
+                    "z": 1
+                },
+                "A5": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 79.6,
+                    "y": 73,
+                    "z": 1
+                },
+                "A6": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 94.75,
+                    "y": 73,
+                    "z": 1
+                },
+                "A7": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 109.9,
+                    "y": 73,
+                    "z": 1
+                },
+                "B1": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 19,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B2": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 34.15,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B3": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 49.3,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B4": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 64.45,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B5": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 79.6,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B6": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 94.75,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "B7": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 109.9,
+                    "y": 57.55,
+                    "z": 1
+                },
+                "C1": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 19,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C2": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 34.15,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C3": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 49.3,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C4": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 64.45,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C5": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 79.6,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C6": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 94.75,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "C7": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 109.9,
+                    "y": 42.1,
+                    "z": 1
+                },
+                "D1": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 19,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D2": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 34.15,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D3": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 49.3,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D4": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 64.45,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D5": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 79.6,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D6": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 94.75,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "D7": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 109.9,
+                    "y": 26.65,
+                    "z": 1
+                },
+                "E1": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 19,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E2": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 34.15,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E3": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 49.3,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E4": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 64.45,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E5": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 79.6,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E6": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 94.75,
+                    "y": 11.2,
+                    "z": 1
+                },
+                "E7": {
+                    "depth": 48,
+                    "diameter": 12.65,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1800,
+                    "x": 109.9,
+                    "y": 11.2,
+                    "z": 1
+                }
+            }
+        }
+    ],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Cryo 35 Tube Rack with Nunc 1.8 mL on 8",
+            "share": false,
+            "slot": "8",
+            "type": "cryo_35_tuberack_1800ul"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "author": "Tim Dobbs <tim@bioartbot.org>",
+        "description": "Adaptable protocol for making glycerol stocks",
+        "protocolName": "Glycerol Stock",
+        "source": "BioArtBot Project at LPI Paris"
+    },
+    "modules": []
+}

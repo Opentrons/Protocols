@@ -75,5 +75,24 @@
         "protocolName": "Rapid Barcoding Kit (SQK-RBK004)",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

@@ -43,7 +43,7 @@ def create_protocol():
     df = df.rename(columns={
         "Timestamp": "timestamp",
         "Protocol Title": "title",
-        "Python protocol file": "protocol",
+        "Protocol file": "protocol",
         "Author name": "author",
         "Email Address": "email",
         "Protocol Category": "category",

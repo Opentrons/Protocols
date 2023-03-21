@@ -5,8 +5,8 @@
             "Olink Target 96"
         ]
     },
-    "deck-setup": "\nNote: all volumes for 96 samples (including controls)\n purple on primer plate (slot 1): samples\n blue on sample plate (slot 5): samples from extension\n* green on tuberack (slot 9): 790.9\u00b5l detection mix\n",
-    "description": "Links:\n Part 1: Incubation\n Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 3/3: Detection for the Olink Target 96 protocol for protein biomarker discovery. Primers are transferred to the left 96 wells of the Fluidigm detection plate, and samples are transferred to the right 96 wells. The transfer mapping for these plates is shown in the following images:\n\n\n",
+    "deck-setup": "\nNote: all volumes for 96 samples (including controls)\n* purple on primer plate (slot 1): samples\n* blue on sample plate (slot 5): samples from extension\n* green on tuberack (slot 9): 790.9\u00b5l detection mix\n",
+    "description": "Links:\n* Part 1: Incubation\n* Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 3/3: Detection for the Olink Target 96 protocol for protein biomarker discovery. Primers are transferred to the left 96 wells of the Fluidigm detection plate, and samples are transferred to the right 96 wells. The transfer mapping for these plates is shown in the following images:\n\n\n",
     "internal": "2aee74",
     "labware": "\nFluidigm 96.96 Dynamic Array\u2122 IFC for Gene Expression\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nOpentrons 4-in-1 Tube Rack Set with NEST 1.5 mL Screwcap Tubes or equivalent\nOpentrons Filter Tips\n",
     "markdown": {

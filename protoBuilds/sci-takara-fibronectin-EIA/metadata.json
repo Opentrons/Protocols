@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "XXXXXX.ot2.apiv2.py"
+            "sci-takara-fibronectin-EIA.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/XXXXXX",
-    "slug": "XXXXXX",
+    "path": "protocols/sci-takara-fibronectin-EIA",
+    "slug": "sci-takara-fibronectin-EIA",
     "status": "ok"
 }
