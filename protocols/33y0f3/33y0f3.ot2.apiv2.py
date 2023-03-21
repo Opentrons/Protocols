@@ -1,3 +1,5 @@
+# flake8: noqa
+
 metadata = {
     'protocolName': 'Bacterial Plating and Dilution',
     'author': 'Lachlan <lajamu@biosustain.dtu.dk',
