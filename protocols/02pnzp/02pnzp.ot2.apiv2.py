@@ -1,3 +1,4 @@
+# flake8: noqa
 
 metadata = {
     'author': 'Michael Fichtner <michael.fichtner@mdc-berlin.de>',
