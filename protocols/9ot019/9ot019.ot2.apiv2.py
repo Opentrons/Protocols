@@ -1,19 +1,22 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":5,
-                                 "repeats_per_sample":3,
-                                 "cryo_rack":"cryo_35_tuberack_1800ul",
-                                 "sample_plate": "nest_96_wellplate_2ml_deep",
-                                 "glycerol_plate": "opentrons_6_tuberack_falcon_50ml_conical",
-                                 "pipette_type":"p1000_single_gen2",
-                                 "pipette_mount":"right",
-                                 "tip_type":"opentrons_96_tiprack_1000ul"
-                                 }""")
-    return [_all_values[n] for n in names]
-
-
+# flake8: noqa
 from opentrons import protocol_api
 import math
+
+
+def get_values(*names):
+    import json
+    _all_values = json.loads(
+        """{"num_samples":5,
+            "repeats_per_sample":3,
+            "cryo_rack":"cryo_35_tuberack_1800ul",
+            "sample_plate": "nest_96_wellplate_2ml_deep",
+            "glycerol_plate": "opentrons_6_tuberack_falcon_50ml_conical",
+            "pipette_type":"p1000_single_gen2",
+            "pipette_mount":"right",
+            "tip_type":"opentrons_96_tiprack_1000ul"
+            }""")
+    return [_all_values[n] for n in names]
+
 
 metadata = {
     'apiLevel': '2.8',
@@ -33,12 +36,11 @@ def run(protocol: protocol_api.ProtocolContext):
         'cryo_rack', 'sample_plate', 'glycerol_plate', 
         'pipette_type', 'pipette_mount', 'tip_type')
 
-
     # a function that gets us the next available slot on the deck
     def slot_generator(available_slots):
         for slot in available_slots:
             yield slot
-    available_slots = range(11,0,-1)
+    available_slots = range(11, 0, -1)
     get_slot = slot_generator(available_slots)
 
     # a function that gets us the next available well on a plate
