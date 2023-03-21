@@ -1,0 +1,44 @@
+{
+    "content": "def get_values(*names):\n    import json\n    _all_values = json.loads(\"\"\"{\"p300_mount\":\"left\",\"tip_type\":\"opentrons_96_tiprack_300ul\",\"plate_type\":\"biorad_96_wellplate_200ul_pcr\"}\"\"\")\n    return [_all_values[n] for n in names]\n\n\nmetadata = {\n    'protocolName': 'PCR master mix distribution',\n    'author': 'Iva <iva.h.pitelkova@uit.no>',\n    'description': 'This protocols distributes 32 microL of PCR master mix in each well of 96-well plate.',\n    'apiLevel': '2.9'\n   \n}\n\n\ndef run(protocol):\n\n    [p300_mount, tip_type, plate_type] = get_values(  # noqa: F821\n        \"p300_mount\", \"tip_type\", \"plate_type\")\n\n    # Load Labware\n    tiprack = protocol.load_labware(tip_type, 7)\n    plate = protocol.load_labware(plate_type, 9)\n    reservoir = protocol.load_labware(\n            'opentrons_6_tuberack_falcon_50ml_conical', 8)\n   \n\n    # Load Pipette\n    p300 = protocol.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tiprack])\n\n    # Solutions\n    MasterMix = reservoir['A1']\n   \n\n    # Wells to dispense MasterMix\n    master_mix = [well for well in plate.wells()]\n   \n    # Distribute MasterMix solution to wells\n    p300.distribute(32, MasterMix, master_mix, disposal_vol=0, blow_out=True)\n  ",
+    "custom_labware_defs": [],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 9",
+            "share": false,
+            "slot": "9",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Iva <iva.h.pitelkova@uit.no>",
+        "description": "This protocols distributes 32 microL of PCR master mix in each well of 96-well plate.",
+        "protocolName": "PCR master mix distribution"
+    },
+    "modules": []
+}
