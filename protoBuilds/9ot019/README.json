@@ -1,0 +1,32 @@
+{
+    "author": "Tim Dobbs",
+    "categories": {
+        "General Liquid Handling": [
+            "General Liquid Handling"
+        ]
+    },
+    "deck-setup": "deck",
+    "description": "This is a flexible protocol for making glycerol stocks of E. coli cultures for long-term storage in a -80C freezer. The protocol expects that you've grown the strains in liquid culture to an acceptable optical density, and prepared a sterile solution of 50% glycerol, 50% deionized water.\nThe protocol loads 500ul of liquid culture and 500ul of glycerol into a cryo tube, which you should then cap, label, and store in your -80C freezer. By default, 3 replicates of each strain are made. The number of samples and the number of replicates can be changed and the protocol will automatically calculate the number of cryo tubes you need. The protocol will throw an error there are too many samples to fit on the deck.\nIn our experience, this protocol starts to become worth using if you have more than ~20 total samples. Less than that and it's faster to hand-pipette.\nWatchouts:\n- Make sure the de-cap all of your cryo tubes and the 50ml conical glycerol tube before running. If your liquid cultures are in tubes, de-cap those too.\n- The protocol comments will display the final platemap of the cryo tubes. Make sure to label your tubes before taking them out or closing the window.",
+    "internal": "9ot019",
+    "labware": "\nCryo 35 Tube Rack with Nunc 1.8 mL #BioArtBot\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 6 Tube Rack with Falcon 50 mL Conical\nOpentrons 96 Tip Rack 1000 \u00b5L\n",
+    "markdown": {
+        "author": "Tim Dobbs\n\n\n",
+        "categories": "* General Liquid Handling\n\t* General Liquid Handling\n\n\n",
+        "deck-setup": "[deck](https://drive.google.com/open?id=1KDbr6pEu0CT6NpcVpTAkZRpqyCJ2hkdY)\n\n\n",
+        "description": "This is a flexible protocol for making glycerol stocks of E. coli cultures for long-term storage in a -80C freezer. The protocol expects that you've grown the strains in liquid culture to an acceptable optical density, and prepared a sterile solution of 50% glycerol, 50% deionized water.\n\nThe protocol loads 500ul of liquid culture and 500ul of glycerol into a cryo tube, which you should then cap, label, and store in your -80C freezer. By default, 3 replicates of each strain are made. The number of samples and the number of replicates can be changed and the protocol will automatically calculate the number of cryo tubes you need. The protocol will throw an error there are too many samples to fit on the deck.\n\nIn our experience, this protocol starts to become worth using if you have more than ~20 total samples. Less than that and it's faster to hand-pipette.\n\nWatchouts:\n- Make sure the de-cap all of your cryo tubes and the 50ml conical glycerol tube before running. If your liquid cultures are in tubes, de-cap those too.\n- The protocol comments will display the final platemap of the cryo tubes. Make sure to label your tubes before taking them out or closing the window.\n\n\n",
+        "internal": "9ot019\n",
+        "labware": "* Cryo 35 Tube Rack with Nunc 1.8 mL #BioArtBot\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 1000 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Load glycerol into all cryo tubes\n2. Load each strain into the appropriate number of cryo tubes, as determined by the number of replicates requested. The tip is changed between strains. \n\n\n",
+        "reagent-setup": "[reagents](https://drive.google.com/open?id=1jAmqDEEdMpelM5_yBAuGAZbuoY282pav)\n\n\n",
+        "title": "Glycerol Stock"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P1000 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nLoad glycerol into all cryo tubes\nLoad each strain into the appropriate number of cryo tubes, as determined by the number of replicates requested. The tip is changed between strains. \n",
+    "reagent-setup": "reagents",
+    "title": "Glycerol Stock"
+}
