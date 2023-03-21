@@ -58,7 +58,7 @@ def run(protocol: protocol_api.ProtocolContext):
     target_cols = list(range(1, 13))
     full_tipracks = [
         protocol.load_labware(tiprack_map[pipette_type][tip_type], s)
-        for s in full_tiprack_slots] 
+        for s in full_tiprack_slots]
     empty_tipracks = [
         protocol.load_labware(tiprack_map[pipette_type][tip_type], s)
         for s in empty_tiprack_slots]
