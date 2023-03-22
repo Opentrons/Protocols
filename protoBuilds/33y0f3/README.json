@@ -1,0 +1,32 @@
+{
+    "author": "Lachlan Munro",
+    "categories": {
+        "Microbiology": [
+            "Microbiology"
+        ]
+    },
+    "deck-setup": "deck",
+    "description": "This is a protocol to dilute and spot bacteria for isolation and quantification. Bacterial samples are passed through 10, 10x serial dilutions with each dilution spotted onto agar. This can process up to 40 samples at a time (5 plates x 8 wells (1 column) per plate). \nPlates should be preloaded with the bacterial samples in column 1 and 90 \u00b5L of dilution buffer or media in columns 2-12. Agar plates should be prepared by filling Nunc Omnitrays with 30 mL of melted agar. These should be dried on as flat a surface as possible to ensure consistent heights across the plate.\nCalibration on the agar plate should be performed so that the tips are just barely touching the agar as the \"top of the well\". ",
+    "internal": "33y0f3",
+    "labware": "\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\nCorning 96 Well Plate 360 \u00b5L Flat #3650\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "Lachlan Munro\n\n\n",
+        "categories": "* Microbiology\n\t* Microbiology\n\n\n",
+        "deck-setup": "[deck](![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/33y0f3/deck.png))\n\n\n",
+        "description": "This is a protocol to dilute and spot bacteria for isolation and quantification. Bacterial samples are passed through 10, 10x serial dilutions with each dilution spotted onto agar. This can process up to 40 samples at a time (5 plates x 8 wells (1 column) per plate). \n\nPlates should be preloaded with the bacterial samples in column 1 and 90 \u00b5L of dilution buffer or media in columns 2-12. Agar plates should be prepared by filling Nunc Omnitrays with 30 mL of melted agar. These should be dried on as flat a surface as possible to ensure consistent heights across the plate.\n\nCalibration on the agar plate should be performed so that the tips are just barely touching the agar as the \"top of the well\". \n\n\n",
+        "internal": "33y0f3\n",
+        "labware": "* [Bio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* [Corning 96 Well Plate 360 \u00b5L Flat #3650](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "For each plate that is present the protocol \n1. Takes 5 \u00b5L of bacterial sample and spots it onto the agar plate. \n2. transfers 10 \u00b5L of sample to the next column and mixes \n3. Returns to step 1, taking from the newly diluted column\n4. Continues until 10 serial dilutions have been performed.\n5. Takes clean tips and repeats for the next plate.\n\n\n",
+        "reagent-setup": "[reagents](![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/33y0f3/reagents.png))\n\n\n",
+        "title": "Bacterial Plating and Dilution"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "For each plate that is present the protocol \n1. Takes 5 \u00b5L of bacterial sample and spots it onto the agar plate. \n2. transfers 10 \u00b5L of sample to the next column and mixes \n3. Returns to step 1, taking from the newly diluted column\n4. Continues until 10 serial dilutions have been performed.\n5. Takes clean tips and repeats for the next plate.",
+    "reagent-setup": "reagents",
+    "title": "Bacterial Plating and Dilution"
+}

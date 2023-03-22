@@ -1,0 +1,44 @@
+[
+  {
+    "type": "int",
+    "label": "Number of Samples (1-24)",
+    "name": "num_samp",
+    "default": 16
+  },
+  {
+    "type": "int",
+    "label": "SDS Volume",
+    "name": "sds_vol",
+    "default": 60
+  },
+  {
+    "type": "int",
+    "label": "Initial Volume of BSA in 15mL Tube (in mL)",
+    "name": "init_vol_bsa",
+    "default": 12
+  },
+  {
+    "type": "int",
+    "label": "Initial Volume of BSA in 50mL Tube (in mL)",
+    "name": "init_vol_bca",
+    "default": 40
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single-Channel Mount",
+    "name": "p20_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Single-Channel Mount",
+    "name": "p300_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  }
+]

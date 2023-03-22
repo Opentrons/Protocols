@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "sci-bead-based-elisa-for-sars-cov-2-surrogate-virus-neutralization-test.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/sci-bead-based-elisa-for-sars-cov-2-surrogate-virus-neutralization-test",
+    "slug": "sci-bead-based-elisa-for-sars-cov-2-surrogate-virus-neutralization-test",
+    "status": "ok"
+}

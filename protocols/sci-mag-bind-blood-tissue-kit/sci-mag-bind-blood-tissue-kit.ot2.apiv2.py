@@ -220,7 +220,7 @@ resuming.')
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             for _ in range(num_trans):
-                _waste_track(vol_per_trans)
+                _waste_track(vol_per_trans*8)
                 if m300.current_volume > 0:
                     # void air gap if necessary
                     m300.dispense(m300.current_volume, m.top())

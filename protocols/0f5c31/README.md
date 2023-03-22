@@ -33,7 +33,7 @@ This protocol performs a custom Thermal Proteome Profiling (TPP) protocol using 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/deckv2.png)
 
 
 ### Reagent Setup

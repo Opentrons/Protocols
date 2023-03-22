@@ -1,0 +1,91 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Bacterial Plating and Dilution',\n    'author': 'Lachlan <lajamu@biosustain.dtu.dk',\n    'apiLevel': '2.2'\n}\n\ndef run(protocol):\n\n\t#Load Tips1\n    tips20= [protocol.load_labware('opentrons_96_tiprack_20ul', '9')]\n\n\n    p20Multi = protocol.load_instrument(\"p20_multi_gen2\", \"left\", tip_racks=tips20)\n  \n\n\n    plate_type = \"corning_96_wellplate_360ul_flat\"\n    locs = [4, 5, 6, 10, 11]\n\n    dilutionPlates = [protocol.load_labware(plate_type, slot, label=\"Dilution Plates\")\n    \t\t\t\tfor slot in locs]\n\n    agar_plate_type = \"biorad_96_wellplate_200ul_pcr\" #can be any 96 that isn't the same as dil plate\n    agar_locs = [1, 2, 3, 7, 8]\n    agar_plates = [protocol.load_labware(agar_plate_type, slot, label=\"Agar\")\n    \t\t\t\tfor slot in agar_locs]\n\n        \n    def spot(dest, spot_vol):\n        \"\"\"Takes a diluted transformed culture and spots the defined volume onto agar \n        in a Nunc omnitray\"\"\"\n\n        SAFE_HEIGHT = 15  \n        spotting_dispense_rate=0.025 \n        p20Multi.move_to(dest.top(SAFE_HEIGHT))\n        protocol.max_speeds[\"Z\"] = 50\n        p20Multi.move_to(dest.top(2))\n        p20Multi.dispense(volume=spot_vol, rate=spotting_dispense_rate)\n        p20Multi.move_to(dest.top(0))\n        del protocol.max_speeds[\"Z\"]\n    \n    def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):\n        p20Multi.aspirate(spot_vol, sourceCol)\n        spot(agar_dest, spot_vol)\n        p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip=\"never\")\n        \n    \n    def spot_dilute_plate(plate, agar, spot_vol):\n        p20Multi.pick_up_tip()\n        for col in range(1, 10):\n            w = \"A\"+str(col)\n            x = \"A\" + str(col+1)\n            spot_then_dilute(plate[w], agar[w], \n                             plate[x], spot_vol)\n            #Spot final dilution THIS S THE PROBLEM, DOUBLE UP WITH LINE 52-55\n            p20Multi.aspirate(spot_vol, plate[x])\n            spot(agar[x], spot_vol)\n        p20Multi.drop_tip()\n        \n    for pl, ag in zip(dilutionPlates, agar_plates):\n        spot_dilute_plate(pl, ag, 5)\n        \n    protocol.comment(\"Run Complete!\")\n        \n        \n\n\n    \n\n",
+    "custom_labware_defs": [],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Agar on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Agar on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Agar on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Dilution Plates on 4",
+            "share": false,
+            "slot": "4",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Dilution Plates on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Dilution Plates on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Agar on 7",
+            "share": false,
+            "slot": "7",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Agar on 8",
+            "share": false,
+            "slot": "8",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Dilution Plates on 10",
+            "share": false,
+            "slot": "10",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Dilution Plates on 11",
+            "share": false,
+            "slot": "11",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.2",
+        "author": "Lachlan <lajamu@biosustain.dtu.dk",
+        "protocolName": "Bacterial Plating and Dilution"
+    },
+    "modules": []
+}

@@ -80,7 +80,7 @@ def run(ctx):
 
     source_cols = source_plate.rows()[0][
                                          reag_start_col:reag_end_col
-                                         ]*len(all_dest_columns)
+                                         ]*1000
 
     src_col_ctr = 0
     disp_vol = 1 if reag_vol < 20 else 20

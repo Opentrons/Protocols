@@ -1,0 +1,32 @@
+{
+    "author": "Iva Pitelkova",
+    "categories": {
+        "DNA/RNA": [
+            "DNA/RNA"
+        ]
+    },
+    "deck-setup": "deck",
+    "description": "This is a basic protocol that can be used for distributing master mix for PCR.",
+    "internal": "21u968",
+    "labware": "\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 6 Tube Rack with Falcon 50 mL Conical\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\n",
+    "markdown": {
+        "author": "Iva Pitelkova\n\n\n",
+        "categories": "* DNA/RNA\n\t* DNA/RNA\n\n\n",
+        "deck-setup": "[deck](https://drive.google.com/open?id=1rM_4kiPlj5B-P6rYrz1pR8ZCOglsa5IK)\n\n\n",
+        "description": "This is a basic protocol that can be used for distributing master mix for PCR.\n\n\n",
+        "internal": "21u968\n",
+        "labware": "* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Bio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "Distribute 32 microL of PCR master mix from the falcon tube in tuberack on slot 8 to all wells of 96 PCR plate on slot 9.\n\n\n",
+        "reagent-setup": "[reagents](https://drive.google.com/open?id=1P6jzY-CdBYkrcL9CBdUPWiT2ZmswKPNg)\n\n\n",
+        "title": "PCR master mix distribution"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "Distribute 32 microL of PCR master mix from the falcon tube in tuberack on slot 8 to all wells of 96 PCR plate on slot 9.",
+    "reagent-setup": "reagents",
+    "title": "PCR master mix distribution"
+}
