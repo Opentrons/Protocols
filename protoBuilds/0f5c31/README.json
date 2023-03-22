@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Proteins & Proteiomics\n\t* TPP\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/deck.png)\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5c31/deckv2.png)\n\n\n",
         "description": "This protocol performs a custom Thermal Proteome Profiling (TPP) protocol using the Opentrons Thermocycler and Temperature Modules. The user is prompted as necessary to replace plates, reagents, and tips as needed throughout the protocol.\n\n\n",
         "internal": "0f5c31\n",
         "labware": "* Pall 96 Well Plate 350 \u00b5L #8036\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* [Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",

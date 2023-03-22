@@ -9,7 +9,7 @@
     "type": "float",
     "label": "volume of H lysate (ul)",
     "name": "vol_h_lysate",
-    "default": 2.58
+    "default": 100.0
   },
   {
     "type": "float",

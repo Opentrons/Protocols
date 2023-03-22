@@ -1,0 +1,87 @@
+{
+    "content": "from opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'bead-based ELISA',\n    'author': 'Boren Lin',\n    'source': '',\n    'apiLevel': '2.13'\n}\n\n########################\n\nCOL_SAMPLES = 12\n\nASP_HEIGHT = 0.2\nLENGTH_FROM_CENTER = 2\nMAG_HEIGHT = 4.2\n\nSAMPLE_VOL = 100\nBEAD_VOL = 20\nAB_HRP_VOL = 100\nSUBSTRATE_VOL = 100\nSTOP_VOL = 50\nFINAL_VOL = 100\n\nWASH_VOL = 250\nWASH_TIMES = 3\n\nSHAKING_SPEEND = 1000\nINCUBATION_TIME = 60\n\n#########################\n\n\ndef run(ctx):\n\n    # load labware\n\n    hs_mod = ctx.load_module('heaterShakerModuleV1', 1)\n    mag_mod = ctx.load_module('magnetic module gen2', 9)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')\n    reagent_plate = ctx.load_labware(\n        'nest_96_wellplate_2ml_deep', 11, 'reagents')\n    wash1_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 5, 'wash')\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 6, 'waste')\n    final_plate = ctx.load_labware(\n        'corning_96_wellplate_360ul_flat', 7, 'final')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 10)\n    tiprack_final = ctx.load_labware(\n        'opentrons_96_tiprack_300ul', 4, 'tips for final transfer')\n    tiprack_reuse = ctx.load_labware(\n        'opentrons_96_tiprack_300ul', 3, 'tips for reuse')\n    pip = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=[tiprack])\n\n    # liquids\n\n    beads = reagent_plate.rows()[0][0]\n    ab_HRP = reagent_plate.rows()[0][1]\n    substrate = reagent_plate.rows()[0][2]\n    stop = reagent_plate.rows()[0][3]\n    wash1 = wash1_plate.rows()[0][:COL_SAMPLES]\n    waste = waste_res.wells()[0]\n    working_cols = mag_plate.rows()[0][:COL_SAMPLES]\n    final_cols = final_plate.rows()[0][:COL_SAMPLES]\n\n    def transfer_reagent(vol, source):\n\n        hs_mod.close_labware_latch()\n\n        pip.pick_up_tip()\n        for i in range(COL_SAMPLES):\n            position = working_cols[i]\n            if i == 0:\n                pip.mix(10, vol, source.bottom(z=2), rate=3)\n            pip.mix(2, vol, source.bottom(z=1))\n            pip.aspirate(vol, source.bottom(z=0.5))\n            pip.air_gap(10)\n            pip.dispense(vol+10, position.top(z=-5), rate=3)\n            pip.blow_out()\n            pip.touch_tip()\n        pip.drop_tip()\n\n    def incubation(speed, time):\n\n        hs_mod.close_labware_latch()\n\n        hs_mod.set_and_wait_for_shake_speed(speed)\n        ctx.delay(minutes=time)\n        hs_mod.deactivate_shaker()\n\n    def washing(discard_vol, wash_vol, wash_rev, times):\n\n        hs_mod.close_labware_latch()\n\n        # discard supernatant\n        mag_mod.engage(height_from_base=MAG_HEIGHT)\n        ctx.delay(minutes=2)\n\n        x = 0\n        for i in range(COL_SAMPLES):\n            pip.pick_up_tip(tiprack_reuse.well(x))\n            side = -1 if i % 2 == 0 else 1\n            aspirate_loc = working_cols[i].bottom(z=ASP_HEIGHT).move(\n                            Point(x=LENGTH_FROM_CENTER*side))\n            pip.aspirate(discard_vol*1.1, aspirate_loc, rate=0.5)\n            pip.dispense(discard_vol*1.1, waste.top(z=-5))\n            pip.blow_out()\n            pip.return_tip()\n            x = x + 8\n\n        mag_mod.disengage()\n\n        # add, mix and remove wash buffer\n        for j in range(times):\n            pip.pick_up_tip()\n            for k in range(COL_SAMPLES):\n                position = working_cols[k]\n                pip.aspirate(wash_vol, wash_rev[k])\n                pip.dispense(wash_vol, position.top(z=-2))\n                pip.touch_tip()\n            pip.drop_tip()\n\n            y = 0\n            for m in range(COL_SAMPLES):\n                position = working_cols[m]\n                pip.pick_up_tip(tiprack_reuse.well(y))\n                pip.mix(10, wash_vol*0.75, position.bottom(z=1), rate=3)\n                pip.return_tip()\n                y = y + 8\n\n            mag_mod.engage(height_from_base=MAG_HEIGHT)\n            ctx.delay(minutes=2)\n\n            z = 0\n            for n in range(COL_SAMPLES):\n                pip.pick_up_tip(tiprack_reuse.well(z))\n                side = -1 if n % 2 == 0 else 1\n                aspirate_loc = working_cols[n].bottom(z=ASP_HEIGHT).move(\n                                Point(x=LENGTH_FROM_CENTER*side))\n                pip.aspirate(wash_vol*1.1, aspirate_loc, rate=0.5)\n                pip.dispense(wash_vol*1.1, waste.top(z=-5))\n                pip.blow_out()\n                pip.return_tip()\n                z = z + 8\n\n            mag_mod.disengage()\n\n    # protocol\n\n    ctx.comment('\n\n\n~~~~~~~~Target Capture~~~~~~~~\n')\n    ctx.pause('Load the Plate onto the Magnet')\n    transfer_reagent(BEAD_VOL, beads)\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Shaker')\n    incubation(SHAKING_SPEEND, INCUBATION_TIME)\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Magnet')\n    washing(SAMPLE_VOL+BEAD_VOL, WASH_VOL, wash1, WASH_TIMES)\n\n    ctx.comment('\n\n\n~~~~~~~~Detection Ab Binding~~~~~~~~\n')\n    transfer_reagent(AB_HRP_VOL, ab_HRP)\n\n    p = 0\n    for pp in range(COL_SAMPLES):\n        position = working_cols[pp]\n        pip.pick_up_tip(tiprack_reuse.well(p))\n        pip.mix(5, AB_HRP_VOL*0.75, position.bottom(z=1), rate=3)\n        pip.return_tip()\n        p = p + 8\n\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Shaker')\n    incubation(SHAKING_SPEEND, INCUBATION_TIME)\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Magnet')\n    washing(AB_HRP_VOL, WASH_VOL, wash1, WASH_TIMES)\n\n    ctx.comment('\n\n\n~~~~~~~~Signal Development~~~~~~~~\n')\n    transfer_reagent(SUBSTRATE_VOL, substrate)\n\n    q = 0\n    for qq in range(COL_SAMPLES):\n        position = working_cols[qq]\n        pip.pick_up_tip(tiprack_reuse.well(q))\n        pip.mix(5, SUBSTRATE_VOL*0.75, position.bottom(z=1), rate=3)\n        pip.return_tip()\n        q = q + 8\n\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Shaker')\n    incubation(SHAKING_SPEEND, 5)\n    hs_mod.open_labware_latch()\n    ctx.pause('Move the Plate to the Magnet')\n    transfer_reagent(STOP_VOL, stop)\n\n    mag_mod.engage(height_from_base=MAG_HEIGHT)\n    ctx.delay(minutes=2)\n\n    a = 0\n    for aa in range(COL_SAMPLES):\n        pip.pick_up_tip(tiprack_final.well(a))\n        side = -1 if aa % 2 == 0 else 1\n        aspirate_loc = working_cols[aa].bottom(z=2).move(\n                        Point(x=LENGTH_FROM_CENTER*side))\n        position = final_cols[aa]\n        pip.aspirate(FINAL_VOL, aspirate_loc, rate=2)\n        pip.dispense(FINAL_VOL, position.top(z=-2), rate=2)\n        pip.drop_tip()\n        a = a + 8\n\n    mag_mod.disengage()\n\n    ctx.pause('Ready for OD measurement')\n",
+    "custom_labware_defs": [],
+    "fields": [],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "tips for reuse on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "tips for final transfer on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "wash on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "waste on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "final on 7",
+            "share": false,
+            "slot": "7",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "reagents on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin",
+        "protocolName": "bead-based ELISA",
+        "source": ""
+    },
+    "modules": [
+        {
+            "name": "HeaterShakerContext at Heater-Shaker Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "heatershaker"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 9 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "magdeck"
+        }
+    ]
+}
