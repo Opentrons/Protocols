@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Screeining"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs reaction library screening on up to 60 samples in the center of a 96-well plate on the Opentrons Heater-Shaker Module.",
+    "internal": "041adf",
+    "labware": "\nROAR_printed_ 48 Well Plate 1500 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Screeining\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/041adf/deck.png)\n\n\n",
+        "description": "This protocol performs reaction library screening on up to 60 samples in the center of a 96-well plate on the Opentrons Heater-Shaker Module.\n\n\n",
+        "internal": "041adf\n",
+        "labware": "* ROAR_printed_ 48 Well Plate 1500 \u00b5L\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n\n",
+        "modules": "* [Opentrons Heater-Shaker Module](https://shop.opentrons.com/heater-shaker-module/) with [deep-well adapter](https://shop.opentrons.com/deep-well-adapter/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/041adf/reagents.png)\n\n\n",
+        "title": "Reaction Library Screening"
+    },
+    "modules": [
+        "Opentrons Heater-Shaker Module with deep-well adapter"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "reagent-setup": "",
+    "title": "Reaction Library Screening"
+}
