@@ -7,7 +7,7 @@
 
 ## Categories
 * Sample Prep
-	* Screeining
+    * Screening
 
 
 ## Description
