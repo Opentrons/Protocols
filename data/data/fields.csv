@@ -770,8 +770,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,4
-mount_m300,10
+mount_m20,5
+mount_m300,11
 mount_p1000,1
 mount_p20,9
 mount_p300,6
@@ -858,7 +858,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,162
+num_samples,163
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1

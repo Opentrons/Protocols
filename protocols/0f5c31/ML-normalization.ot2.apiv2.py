@@ -116,7 +116,7 @@ def run(ctx):
             for i in range(len(source))
         ]
 
-        vol_available_asp = pip.max_volume
+        vol_available_asp = pip.tip_racks[0].wells()[0].max_volume
         if pick_up_tip and not pip.has_tip:
             pick_up(pip)
         for i, outer_set in enumerate(dest_sets_by_source):
