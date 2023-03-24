@@ -1,11 +1,6 @@
 import math
 from opentrons import types
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"sample_count":96,"labware_plates":"vwr_96well_pcr_plate_200ul","x":50,"y":1.2,"engage_height":5,"engage_time":5,"dry_time":1,"offset_x":1,"offset_x_resuspension":1}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': '''NEBNext Quarter Volume Library Prep Step 2:
     Sample Cleanup for Covaris Samples''',
@@ -216,8 +211,8 @@ def run(ctx):
             p300m.dispense(140, column[0].top())
             ctx.delay(seconds=0.5)
 
-            # post-dispense air gap to avoid drips
-            p300m.air_gap(20)
+            # # post-dispense air gap to avoid drips
+            # p300m.air_gap(20)
 
         p300m.drop_tip()
 
@@ -248,6 +243,7 @@ def run(ctx):
 
             # to improve completeness of removal
             if repeat:
+
                 p300m.move_to(column[0].top())
                 p300m.aspirate(20, column[0], rate=0.05)
                 p300m.aspirate(20, column[0].bottom(z=0.5), rate=0.1)
