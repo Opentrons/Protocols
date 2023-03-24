@@ -1,6 +1,11 @@
 import math
 from opentrons import types
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"sample_count":96,"labware_plates":"vwr_96well_pcr_plate_200ul","x":50,"y":1.2,"engage_height":5,"engage_time":5,"dry_time":1,"offset_x":1,"offset_x_resuspension":1}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': '''NEBNext Quarter Volume Library Prep Step 2:
     Sample Cleanup for Covaris Samples''',
@@ -186,7 +191,6 @@ def run(ctx):
 
         # delayed blow out
         ctx.delay(seconds=1)
-        p300m.blow_out()
 
         p300m.drop_tip()
 
@@ -211,7 +215,6 @@ def run(ctx):
             # etoh top dispense with delayed blow out
             p300m.dispense(140, column[0].top())
             ctx.delay(seconds=0.5)
-            p300m.blow_out()
 
             # post-dispense air gap to avoid drips
             p300m.air_gap(20)
@@ -239,7 +242,6 @@ def run(ctx):
             # top dispense to waste with delayed blowout
             p300m.dispense(180, waste.top())
             ctx.delay(seconds=0.5)
-            p300m.blow_out()
 
             # post-dispense air gap to avoid drips
             p300m.air_gap(20)
@@ -248,8 +250,10 @@ def run(ctx):
             if repeat:
                 p300m.move_to(column[0].top())
                 p300m.aspirate(20, column[0], rate=0.05)
-                p300m.aspirate(20, column[0].bottom(z=0.5), rate=0.05)
-                p300m.aspirate(10, column[0].bottom(z=0.1), rate=0.05)
+                p300m.aspirate(20, column[0].bottom(z=0.5), rate=0.1)
+                p300m.aspirate(20, column[0].bottom(z=0.1), rate=0.1)
+                p300m.aspirate(20, column[0].bottom(z=0), rate=0.1)
+                p300m.aspirate(20, column[0].bottom(z=-0.4), rate=0.1)
 
             p300m.drop_tip()
 
@@ -272,14 +276,14 @@ def run(ctx):
         p20m.dispense(16, loc, rate=3)
 
         # mix with dispenses targeting bead pellet
-        for rep in range(10):
+        for rep in range(15):
             p20m.aspirate(12, column[0].bottom(1))
-            rt = 3 if rep < 9 else 0.5
+            rt = 2 if rep < 9 else 0.5
             p20m.dispense(12, loc, rate=rt)
 
             # wait, depart slowly, tip touch and blowout after final mix
-            if rep == 9:
-                p20m.mix(5, 12, column[0])
+            if rep == 14:
+                p20m.mix(10, 12, column[0], rate=1.5)
                 ctx.delay(seconds=1)
                 slow_tip_withdrawal(p20m, column[0])
                 p20m.move_to(
