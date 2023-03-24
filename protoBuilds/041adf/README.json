@@ -11,7 +11,7 @@
     "labware": "\nROAR_printed_ 48 Well Plate 1500 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Sample Prep\n\t* Screeining\n\n\n",
+        "categories": "* Sample Prep\n    * Screening\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/041adf/deck.png)\n\n\n",
         "description": "This protocol performs reaction library screening on up to 60 samples in the center of a 96-well plate on the Opentrons Heater-Shaker Module.\n\n\n",
         "internal": "041adf\n",
