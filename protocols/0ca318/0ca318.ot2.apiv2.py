@@ -204,7 +204,7 @@ def run(ctx):
             for well in last_col_mag:
                 pick_up(p300)
                 p300.aspirate(200, well, rate=0.15)
-                p300.dispense(200, trash)
+                p300.dispense(200, trash[10])
                 p300.aspirate(20, well.bottom(z=0.4), rate=0.05)
                 p300.dispense(20, trash[3])
                 p300.drop_tip()
