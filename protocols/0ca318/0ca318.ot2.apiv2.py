@@ -195,7 +195,7 @@ def run(ctx):
         for col, trash_well in zip(mag_plate.rows()[0][:num_full_cols], trash):
             pick_up(m300)
             m300.aspirate(200, col, rate=0.15)
-            m300.dispense(200, trash)
+            m300.dispense(200, trash_well)
             m300.aspirate(20, col.bottom(z=0.4), rate=0.05)
             m300.dispense(20, trash_well)
             m300.drop_tip()
