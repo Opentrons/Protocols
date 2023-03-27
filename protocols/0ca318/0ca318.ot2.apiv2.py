@@ -64,7 +64,7 @@ def run(ctx):
     tris = reag_plate.rows()[0][1]
     num_ethanol_wells = math.ceil(num_samp/24)
     ethanol = reservoir.wells()[:num_ethanol_wells]*24
-    trash = reservoir.wells()[-1]
+    trash = reservoir.wells()[8:]*24
 
     # transfer sample
     ctx.comment('\n\n------------Transferring Mastermix-------------\n')
@@ -158,7 +158,7 @@ def run(ctx):
         pick_up(m300)
         m300.aspirate(50, col, rate=0.15)
         m300.aspirate(10, col.bottom(z=0.5), rate=0.05)
-        m300.dispense(50, trash)
+        m300.dispense(50, trash[0])
         m300.drop_tip()
 
     if leftover:
@@ -166,7 +166,7 @@ def run(ctx):
             pick_up(p300)
             p300.aspirate(50, well, rate=0.15)
             p300.aspirate(10, well.bottom(z=0.5), rate=0.05)
-            p300.dispense(60, trash)
+            p300.dispense(60, trash[1])
             p300.drop_tip()
 
     ctx.comment('\n\n-------------TWO WASHES-------------\n')
@@ -192,12 +192,12 @@ def run(ctx):
         ctx.delay(seconds=60)
 
         ctx.comment('\n\n-------------REMOVE SUPER-------------\n')
-        for col in mag_plate.rows()[0][:num_full_cols]:
+        for col, trash_well in zip(mag_plate.rows()[0][:num_full_cols], trash):
             pick_up(m300)
             m300.aspirate(200, col, rate=0.15)
             m300.dispense(200, trash)
             m300.aspirate(20, col.bottom(z=0.4), rate=0.05)
-            m300.dispense(20, trash)
+            m300.dispense(20, trash_well)
             m300.drop_tip()
 
         if leftover:
@@ -206,7 +206,7 @@ def run(ctx):
                 p300.aspirate(200, well, rate=0.15)
                 p300.dispense(200, trash)
                 p300.aspirate(20, well.bottom(z=0.4), rate=0.05)
-                p300.dispense(20, trash)
+                p300.dispense(20, trash[3])
                 p300.drop_tip()
 
     ctx.delay(minutes=10)
