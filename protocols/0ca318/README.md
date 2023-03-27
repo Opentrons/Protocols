@@ -69,7 +69,7 @@ d Use a P20 multichannel pipette with fine pipette tips to remove excess ethanol
 13. Gently pipette mix up and down 10 times, changing tips after each. Make sure that beads are fully resuspended.
 14. Incubate at room temperature for 2 minutes.
 15. Place the plate on the magnetic stand for 2 minutes or until the supernatant has cleared.
-16. Using a multichannel pipette, carefully transfer 50 µl of the supernatant from the Amplicon PCR plate to a new 96‐well PCR plate. Change tips between samples to avoid cross‐contamination.
+16. Using a multichannel pipette, carefully transfer 50 µl of the supernatant from Amplicon PCR plate to a new 96‐well PCR plate. Change tips between samples to avoid cross‐contamination.
 
 
 ### Process
