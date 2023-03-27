@@ -217,7 +217,7 @@ def run(ctx):
         pick_up(m300)
         m300.aspirate(52.5, tris)
         m300.dispense(52.5, d)
-        p300.mix(10, 52.5, d)
+        m300.mix(10, 52.5, d)
         m300.blow_out()
         m300.drop_tip()
         ctx.comment('\n')
