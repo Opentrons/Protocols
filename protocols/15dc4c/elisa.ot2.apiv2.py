@@ -11,27 +11,33 @@ metadata = {
 
 DO_MIX = True
 DO_INCUBATIONS = True
+DROP = True
 Z_OFFSET_RESERVOIR = 1.0
-VOL_SAMPLE = 200.0
+VOL_SAMPLE = 100.0
 ELUTION_TYPE = 'SMCxPRO'  # Errena / SMCxPRO
 
 
 def run(ctx):
 
+    ctx.max_speeds['X'] = 200
+    ctx.max_speeds['Y'] = 200
+    ctx.max_speeds['Z'] = 200
+    ctx.max_speeds['A'] = 200
+
     # [num_samples, mount_m300, m20] = get_values(  # noqa: F821
     #     'num_samples', 'mount_m300', 'mount_m20')
     num_samples, mount_m300, mount_m20 = 60, 'left', 'right'
 
-    elution_plate = ctx.load_labware('nunc_384_wellplate_100ul', '1',
+    elution_plate = ctx.load_labware('aurora_384_wellplate_100ul', '1',
                                      'elution plate')
-    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2',
+    sample_plate = ctx.load_labware('axygen_96_wellplate_500ul', '2',
                                     'sample preparation plate')
-    standard_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',
+    standard_plate = ctx.load_labware('axygen_96_wellplate_2000ul', '4',
                                       'standards plate')
-    assay_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
+    assay_plate = ctx.load_labware('axygen_96_wellplate_500ul', '5',
                                    'assay plate')
-    assay_plate_on_magnet = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',
-                                             'sphere mag plate')
+    assay_plate_on_magnet = ctx.load_labware(
+        'axygenspheremag_96_wellplate_500ul', '7', 'sphere mag plate')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8',
                                  'reagents')
     tipracks200 = [
@@ -63,7 +69,7 @@ def run(ctx):
             radius = well.width/2
         pip.move_to(well.bottom().move(Point(x=side*radius*0.8, z=3)))
 
-    def slow_withdraw(pip, well, delay_seconds=2):
+    def slow_withdraw(pip, well, delay_seconds=1):
         ctx.delay(seconds=delay_seconds)
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
@@ -123,21 +129,44 @@ def run(ctx):
             m300.dispense(vol_per_trans, d.bottom(2))
         if n == num_trans - 1 and DO_MIX:
             m300.mix(5, 100, d.bottom(2))
-        m300.drop_tip()
+        slow_withdraw(m300, d)
+        if DROP:
+            m300.drop_tip()
+        else:
+            m300.return_tip()
 
-    tips_standard_transfer = m300.tip_racks[-1].rows()[-2]
+    if DROP:
+        tips_standard_transfer = m300.tip_racks[-1].rows()[-2]
+    else:
+        tips_standard_transfer = m300.tip_racks[-1].rows()[-1]
 
     # transfer to assay plate
     for tip, s, dest_set in zip(tips_standard_transfer,
                                 standard_plate.rows()[0],
                                 standard_dest_sets):
         m300.pick_up_tip(tip)
-        for d in dest_set:
-            m300.aspirate(100, s.bottom(2))
-            slow_withdraw(m300, s)
-            m300.dispense(100, d.bottom(2))
-            slow_withdraw(m300, d)
-        m300.drop_tip()
+        num_asp = math.ceil(len(dest_set)*100/tip.max_volume)
+        distribution_sets = [
+            dest_set[i*2:(i+1)*2]
+            if i < num_asp - 1
+            else dest_set[i*2:]
+            for i in range(num_asp)
+        ]
+        for d_set in distribution_sets:
+            m300.aspirate(100*len(d_set), s.bottom(2))
+            for d in d_set:
+                m300.dispense(100, d.bottom(1))
+                slow_withdraw(m300, d)
+
+        # for d in dest_set:
+        #     m300.aspirate(100, s.bottom(2))
+        #     slow_withdraw(m300, s)
+        #     m300.dispense(100, d.bottom(1))
+        #     slow_withdraw(m300, d)
+        if DROP:
+            m300.drop_tip()
+        else:
+            m300.return_tip()
 
     """
     Dilute and transfer samples to assay plate
@@ -148,7 +177,10 @@ def run(ctx):
         m300._implementation.get_mount()
         ].update_config_item('pick_up_current', current)
 
-    tips_sample_transfer = m300.tip_racks[-1].rows()[1]
+    if DROP:
+        tips_sample_transfer = m300.tip_racks[-1].rows()[1]
+    else:
+        tips_sample_transfer = m300.tip_racks[-1].rows()[3]
 
     sample_dests = assay_plate.rows()[3][:num_cols]
     num_trans = math.ceil(VOL_SAMPLE/tips_sample_transfer[0].max_volume)
@@ -166,16 +198,20 @@ def run(ctx):
             slow_withdraw(m300, s)
             m300.dispense(100, d.bottom(2))
             slow_withdraw(m300, d)
-        m300.drop_tip()
+        if DROP:
+            m300.drop_tip()
+        else:
+            m300.return_tip()
 
     """
     Add coated beads
     """
+    ctx.pause('Add coated beads to reservoir channel 3.')
     standards_and_samples = assay_plate.rows()[0]
     pick_up(m300)
     for i, d in enumerate(standards_and_samples):
         # pre-air_gap
-        m300.aspirate(20, coated_beads.top())
+        m300.aspirate(40, coated_beads.top())
         if i == 0 and DO_MIX:
             for _ in range(5):
                 m300.aspirate(100, coated_beads.bottom(2))
@@ -183,8 +219,15 @@ def run(ctx):
                 ctx.delay(seconds=1)
         m300.aspirate(100, coated_beads.bottom(Z_OFFSET_RESERVOIR))
         slow_withdraw(m300, coated_beads)
-        m300.dispense(m300.current_volume, d.top())
-    m300.drop_tip()
+        m300.flow_rate.dispense *= 2
+        m300.dispense(m300.current_volume, d.top(-1))
+        m300.move_to(d.top().move(Point(x=d.diameter, z=-1)))
+        m300.flow_rate.dispense /= 2
+        ctx.delay(seconds=1)
+    if DROP:
+        m300.drop_tip()
+    else:
+        m300.return_tip()
 
     ctx.pause('Proceed with Target Capture incubation and Post-Capture Wash.')
 
@@ -196,9 +239,12 @@ def run(ctx):
         pick_up(m20)
         m20.aspirate(20, detection_antibody.bottom(Z_OFFSET_RESERVOIR))
         slow_withdraw(m20, detection_antibody)
-        m20.dispense(20, d.bottom(2))
+        m20.dispense(20, d.bottom(0.5))
         slow_withdraw(m20, d)
-        m20.drop_tip()
+        if DROP:
+            m20.drop_tip()
+        else:
+            m20.return_tip()
 
     ctx.pause('Proceed with Detection incubation and Post-Detection Wash \
 and Shake.')
@@ -211,22 +257,25 @@ and Shake.')
         # reverse pipetting
         m20.aspirate(15, elution_buffer_b.bottom(Z_OFFSET_RESERVOIR))
         slow_withdraw(m20, elution_buffer_b)
-        m20.dispense(10, d.bottom(1.5))
+        m20.dispense(10, d.bottom(0.5))
         slow_withdraw(m20, d)
-        m20.drop_tip()
+        if DROP:
+            m20.drop_tip()
+        else:
+            m20.return_tip()
 
     if ELUTION_TYPE == 'Erenna':
         ctx.pause('Proceed with Elution incubation')
 
         # add buffer D to elution plate
-        elution_dests = elution_plate.rows()[0]
+        elution_dests = elution_plate.rows()[0][::2]
         pick_up(m20)
         m20.aspirate(5, buffer_d)
         for d in elution_dests:
             # reverse pipetting
             m20.aspirate(10, buffer_d.bottom(Z_OFFSET_RESERVOIR))
             slow_withdraw(m20, buffer_d)
-            m20.dispense(10, d.bottom(1.5))
+            m20.dispense(10, d.bottom(0.5))
             wick(m20, d)
             slow_withdraw(m20, d)
 
@@ -238,11 +287,14 @@ and Shake.')
         for s, d in zip(standards_and_samples, elution_dests):
             if not m20.has_tip:
                 pick_up(m20)
-            m20.aspirate(10, s.bottom(0.5))
+            m20.aspirate(20, s.bottom(0.5))
             slow_withdraw(m20, s)
-            m20.dispense(10, d.bottom(1))
+            m20.dispense(20, d.bottom(0.5))
             slow_withdraw(m20, d)
-            m20.drop_tip()
+            if DROP:
+                m20.drop_tip()
+            else:
+                m20.return_tip()
 
         m20.flow_rate.aspirate *= 10
 
@@ -251,45 +303,24 @@ and Shake.')
         ctx.pause('Proceed with Elution incubation. Place clean assay plate \
 in slot 5')
 
-        # add buffer D to clean assay plate
-        elution_dests_1 = assay_plate.rows()[0]
-        pick_up(m20)
-        m20.aspirate(5, buffer_d)
-        for d in elution_dests_1:
-            # reverse pipetting
+        # add buffer D to mag plate and transfer elution to 384-plate
+        elution_dests_2 = elution_plate.rows()[0][::2]
+        for s, d in zip(standards_and_samples, elution_dests_2):
+            pick_up(m20)
             m20.aspirate(10, buffer_d.bottom(Z_OFFSET_RESERVOIR))
             slow_withdraw(m20, buffer_d)
-            m20.dispense(10, d.bottom(1.5))
-            wick(m20, d)
-            slow_withdraw(m20, d)
-
-        # void extra volume
-        m20.dispense(m20.current_volume, buffer_d)
-        slow_withdraw(m20, buffer_d)
-
-        m20.flow_rate.aspirate /= 10
-        for s, d in zip(standards_and_samples, elution_dests_1):
-            if not m20.has_tip:
-                pick_up(m20)
-            m20.aspirate(10, s.bottom(0.5))
+            m20.dispense(10, s.bottom(0.5))
+            if DO_MIX:
+                m20.mix(5, 10, s.bottom(0.5))
+            m20.flow_rate.aspirate /= 5
+            m20.aspirate(20, s.bottom(0.2))
+            m20.flow_rate.aspirate *= 5
             slow_withdraw(m20, s)
-            m20.dispense(10, d.bottom(1))
+            m20.dispense(20, d.bottom(0.5))
             slow_withdraw(m20, d)
-            m20.drop_tip()
-
-        m20.flow_rate.aspirate *= 10
-
-        ctx.pause('Place assay plate in Jitterbug and centrifuge before \
-resuming.')
-
-        elution_dests_2 = elution_plate.rows()[0]
-        for s, d in zip(standards_and_samples, elution_dests_2):
-            if not m20.has_tip:
-                pick_up(m20)
-            m20.aspirate(10, s.bottom(0.5))
-            slow_withdraw(m20, s)
-            m20.dispense(10, d.bottom(1))
-            slow_withdraw(m20, d)
-            m20.drop_tip()
+            if DROP:
+                m20.drop_tip()
+            else:
+                m20.return_tip()
 
     ctx.comment('Proceed with plate reading.')
