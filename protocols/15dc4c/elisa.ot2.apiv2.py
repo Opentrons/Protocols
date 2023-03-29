@@ -221,7 +221,7 @@ def run(ctx):
         slow_withdraw(m300, coated_beads)
         m300.flow_rate.dispense *= 2
         m300.dispense(m300.current_volume, d.top(-1))
-        m300.move_to(d.top().move(Point(x=d.diameter, z=-1)))
+        m300.move_to(d.top().move(Point(x=d.diameter/2, z=-1)))
         m300.flow_rate.dispense /= 2
         ctx.delay(seconds=1)
     if DROP:
