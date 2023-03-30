@@ -1,3 +1,4 @@
+# flake8: noqa
 import math
 from opentrons import types
 
@@ -12,8 +13,7 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [sample_count, labware_plates, x, y, engage_height, engage_time, dry_time,
-     offset_x, offset_x_resuspension] = get_values(  # noqa: F821
+    [sample_count, labware_plates, x, y, engage_height, engage_time, dry_time, offset_x, offset_x_resuspension] = get_values(  # noqa: F821
       'sample_count', 'labware_plates', 'x', 'y', 'engage_height',
       'engage_time', 'dry_time', 'offset_x', 'offset_x_resuspension')
 
