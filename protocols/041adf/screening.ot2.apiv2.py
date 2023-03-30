@@ -36,7 +36,7 @@ def run(ctx):
                                     'azides')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['7', '5']]
+        for slot in ['1', '7']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['8', '9']]
@@ -76,7 +76,7 @@ def run(ctx):
         try:
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace the tips")
+            ctx.pause('Replace the tips')
             pip.reset_tipracks()
             pip.pick_up_tip()
 
