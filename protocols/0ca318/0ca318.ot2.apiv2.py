@@ -25,7 +25,9 @@ def run(ctx):
 
     # load labware
     reag_plate = ctx.load_labware('thermo_96_wellplate_800ul', 6)
-    reag_rack = ctx.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap', 4)  # noqa: E501
+    temp_mod = ctx.load_module('temperature module gen2', 4)
+    temp_mod.set_temperature(4)
+    reag_rack = temp_mod.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap')  # noqa: E501
     final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 3)
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 2)
 
