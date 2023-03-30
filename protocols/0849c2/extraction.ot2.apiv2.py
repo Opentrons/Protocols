@@ -15,8 +15,9 @@ TEST_MODE_AIRDRY = False
 
 def run(ctx):
 
-    [num_samples, mount_m300] = get_values(  # noqa: F821
-        'num_samples', 'mount_m300')
+    [num_samples, vol_water, vol_ampure_beads,
+     mount_m300] = get_values(  # noqa: F821
+        'num_samples', 'vol_water', 'vol_ampure_beads', 'mount_m300')
 
     # tuning parameters
     mixreps = 1 if TEST_MODE_BEADS else 15
@@ -31,8 +32,6 @@ def run(ctx):
 
     # volumes
     vol_sample = 12.5
-    vol_water = 37.5
-    vol_ampure_beads = 45.0
     vol_etoh = 200.0
     vol_elution = 28.0
     vol_elution_final = 25.0

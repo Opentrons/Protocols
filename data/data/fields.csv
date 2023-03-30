@@ -1511,6 +1511,7 @@ vial_map,1
 vol,2
 vol_a_to_b,1
 vol_aliqout,1
+vol_ampure_beads,1
 vol_c_to_d,1
 vol_cd154,1
 vol_culture_medium,1
@@ -1561,7 +1562,7 @@ vol_tube1,1
 vol_tube2,1
 vol_tube3,1
 vol_wash,1
-vol_water,2
+vol_water,3
 volume,4
 volume_csv,1
 volume_eb_in_ul,2
