@@ -13,13 +13,14 @@
 ## Description
 This protocol begins with PCR, then proceeds to do a cleanup. Note: one mastermix tube in the tube rack and one well for the ethanol in the reservoir is per 24 samples. That is, for 48 samples, you should put two tubes of mastermix, and two wells of ethanol. For 48-72 samples, 3 wells of mastermix and 3 wells of ethanol, so on and so forth. The ethanol and mastermix should be distributed evenly among all wells (volume is the same in each well). The protocol will automatically pause when the tips are depleted, asking the user to resume the protocol.
 
-Since this protocol uses a custom plate on the magnetic module, please ensure that the magnetic height variable down below is set to the correct height - the user will have to adjust this number to what's best for their plate. Ideally, the top of the magnet is to come just below, but not touching the bottom of the plate when engaged.
+Since this protocol uses a custom plate on the magnetic module, please ensure that the magnetic height variable down below is set to the correct height - the user will have to adjust this number to what's best for their plate. Ideally, the top of the magnet is to come just below, but not touching the bottom of the plate when engaged. The reagent rack should be placed on the temperature module which will be at 4C to keep the mastermix cool. 
 
 The last 4 wells of the reservoir are used for trash.
 
 
 ### Modules
 * [Opentrons Thermocycler Module](https://shop.opentrons.com/thermocycler-module-1/)
+* [Opentrons Temperature Module](https://shop.opentrons.com/thermocycler-module-1/)
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
 
 
