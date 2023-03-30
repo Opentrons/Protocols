@@ -45,7 +45,7 @@ The last 4 wells of the reservoir are used for trash.
 
 
 ### Protocol Steps
-1. Centrifuge the Amplicon PCR plate at 1,000 × g at 20°C for 1 minute to collect condensation, carefully remove seal.
+1. Centrifuge the Amplicon PCR plate at 1,000 × g at 20°C for 1 minute to collect condensation, then carefully remove seal.
 2. [Optional - for use with shaker for mixing] Using a multichannel pipette set to 25 µl, transfer the entire Amplicon PCR product from the PCR plate to the MIDI plate/96-well PCR plate. Change tips between samples.
 3. Vortex the AMPure XP beads for 30 seconds to make sure that the beads are evenly dispersed. Add an appropriate volume of beads to a trough depending on the number of samples processing.
 4. Using a multichannel pipette, add 20 µl of AMPure XP beads to each well of the
