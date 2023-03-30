@@ -675,7 +675,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,73
-m300_mount,93
+m300_mount,94
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -683,7 +683,7 @@ mag_bead_mix_resuspend_vol,1
 mag_engage_height,3
 mag_engage_time,2
 mag_gen,14
-mag_height,13
+mag_height,14
 mag_height_1,1
 mag_mod,2
 mag_mod_lname,1
@@ -851,7 +851,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,63
+num_samp,64
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -935,7 +935,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,140
+p300_mount,141
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1

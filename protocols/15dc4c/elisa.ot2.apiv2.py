@@ -307,6 +307,7 @@ in slot 5')
         elution_dests_2 = elution_plate.rows()[0][::2]
         for s, d in zip(standards_and_samples, elution_dests_2):
             pick_up(m20)
+
             m20.aspirate(10, buffer_d.bottom(Z_OFFSET_RESERVOIR))
             slow_withdraw(m20, buffer_d)
             m20.dispense(10, s.bottom(0.5))
