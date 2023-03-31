@@ -49,8 +49,8 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', mount_m20, tip_racks=tiprack20)
 
     # reagents and variables
-    h_lysate = res_lysate.rows()[0][7:10]
-    l_lysate = res_h_lysate.rows()[0][:1]
+    l_lysate = res_lysate.rows()[0][7:10]
+    h_lysate = res_h_lysate.rows()[0][:1]
 
     vol_l_lysate = 70
     reps_mix = 5
@@ -164,8 +164,8 @@ def run(ctx):
             custom_distribute(m300, vol_h_lysate, [h_lysate_column],
                               filter_plate.rows()[0])
 
-            ctx.pause('\n\n\n\nRemove filter plate (slot 5) and spin the \
-H lysis into wells filter plate.\n\n\n\n')
+#             ctx.pause('\n\n\n\nRemove filter plate (slot 5) and spin the \
+# H lysis into wells filter plate.\n\n\n\n')
 
             pick_up(m300)
             m300.aspirate(vol_l_lysate, l_lysate_column)
@@ -177,18 +177,23 @@ H lysis into wells filter plate.\n\n\n\n')
             slow_withdraw(m300, heating_well)
             m300.drop_tip()
 
-            tc.close_lid()
-            for temp_block, temp_lid in zip(temps_incubation_block,
-                                            temps_incubation_lid):
-                tc.set_lid_temperature(
-                    temp_lid)
+            for temp_block, temp_lid, dest in zip(
+                    temps_incubation_block,
+                    temps_incubation_lid,
+                    filter_plate.rows()[0]):
+                tc.close_lid()
+                tc.set_lid_temperature(temp_lid)
                 tc.set_block_temperature(
                     temp_block, hold_time_minutes=hold_time_minutes)
-            tc.open_lid()
+                tc.open_lid()
 
-            custom_distribute(m20, vol_filter, [heating_well],
-                              filter_plate.rows()[0], destination_height=0.5,
-                              wick_after=True, pick_up_tip=True, drop_tip=True)
+                custom_distribute(m20,
+                                  vol_filter,
+                                  [heating_well],
+                                  [dest],
+                                  destination_height=0.5,
+                                  wick_after=True, pick_up_tip=True,
+                                  drop_tip=True)
             tc.set_block_temperature(temp_block_start)
             tc.set_lid_temperature(temp_lid_start)
 
