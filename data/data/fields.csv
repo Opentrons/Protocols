@@ -674,7 +674,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,73
+m20_mount,74
 m300_mount,94
 m300_type,2
 m_mount,1
@@ -851,7 +851,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,64
+num_samp,65
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -918,7 +918,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,123
+p20_mount,124
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1261,7 +1261,7 @@ source_lw,1
 source_plate,2
 source_plate_type,1
 source_start_col,1
-source_type,6
+source_type,7
 sp,2
 sp_type,2
 spike_in,1

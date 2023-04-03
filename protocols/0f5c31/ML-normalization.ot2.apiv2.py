@@ -49,7 +49,7 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', mount_m20, tip_racks=tiprack20)
 
     # reagents and variables
-    l_lysate = res_lysate.rows()[0][7:10]
+    l_lysate = res_lysate.rows()[0][:6]
     h_lysate = res_h_lysate.rows()[0][:1]
 
     vol_l_lysate = 70

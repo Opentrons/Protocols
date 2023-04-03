@@ -2,7 +2,7 @@ import math
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'Magnetic Bead Purification + PCR',
+    'protocolName': 'PCR Prep and PCR',
     'author': 'Rami <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -11,37 +11,40 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, mag_height, p300_mount, m300_mount] = get_values(  # noqa: F821
-        "num_samp", "mag_height", "p300_mount", "m300_mount")
+    [num_samp, source_type, p20_mount, m20_mount] = get_values(  # noqa: F821
+        "num_samp", "source_type", "p20_mount", "m20_mount")
+
+    # num_samp = 96
+    # source_type = "tuberack"
+    # p20_mount = "left"
+    # m20_mount = "right"
 
     # load modules
     tc_mod = ctx.load_module('Thermocycler Module')
     tc_mod.open_lid()
     tc_mod.set_lid_temperature(105)
     pcr_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')  # noqa: E501
-    mag_mod = ctx.load_module('magnetic module gen2', 1)
-    mag_mod.disengage()
-    mag_plate = mag_mod.load_labware('thermo_96_wellplate_800ul')
+
+    temp_mod = ctx.load_module('temperature module gen2', 3)
+    temp_mod.set_temperature(4)
 
     # load labware
-    reag_plate = ctx.load_labware('thermo_96_wellplate_800ul', 6)
-    temp_mod = ctx.load_module('temperature module gen2', 4)
-    temp_mod.set_temperature(4)
-    reag_rack = temp_mod.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap')  # noqa: E501
-    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 3)
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 2)
+    if source_type == "tuberack":
+        samples_racks = [ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_snapcap',   # noqa: E501
+                         slot) for slot in [4, 5, 1, 2]]
+        sample_tubes = [tube for rack in samples_racks
+                        for row in rack.rows() for tube in row][:num_samp]
 
-    tips_single = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                   for slot in [5]]
+    mmx_plate = temp_mod.load_labware('opentrons_96_aluminumblock_nest_wellplate_100ul')  # noqa: E501
 
-    tips_multi = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in [9]]
+    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+            for slot in [6, 9]]
 
     # load pipettes
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
-                               tip_racks=tips_single)
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
-                               tip_racks=tips_multi)
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
+                              tip_racks=tips)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
+                              tip_racks=tips)
 
     def pick_up(pip):
         try:
@@ -52,32 +55,86 @@ def run(ctx):
             pip.pick_up_tip()
 
     # mapping
-    num_full_cols = num_samp // 8
-    remainder_wells = num_samp % 8
-    last_col_pcr = pcr_plate.columns()[num_full_cols][:remainder_wells]
-    last_col_mag = mag_plate.columns()[num_full_cols][:remainder_wells]
-    last_col_final_plate = mag_plate.columns()[num_full_cols]
-    leftover = False if num_samp / 8 == 0 else True
+    num_full_cols = math.floor(num_samp/8)
 
-    num_mmx_tubes = math.ceil(num_samp/24)
-    mmx = reag_rack.rows()[0][:num_mmx_tubes]*24
+    remainder = False if num_samp % 8 == 0 else True
 
-    beads = reag_plate.rows()[0][0]
-    tris = reag_plate.rows()[0][1]
-    num_ethanol_wells = math.ceil(num_samp/24)
-    ethanol = reservoir.wells()[:num_ethanol_wells]*24
-    trash = reservoir.wells()[8:]*24
+    num_mmx_cols = math.ceil(num_samp/24)
+
+    mmx = mmx_plate.rows()[0][:num_mmx_cols]*24
+    unfilled_mmx_col = mmx_plate.rows()[0][5]
 
     # transfer sample
-    ctx.comment('\n\n------------Transferring Mastermix-------------\n')
 
-    for mmx_tube, dest in zip(mmx, pcr_plate.wells()[:num_samp]):
-        pick_up(p300)
-        p300.aspirate(22.5, mmx_tube, rate=0.75)
-        p300.dispense(22.5, dest.top(), rate=0.75)
-        p300.blow_out()
-        p300.drop_tip()
-        ctx.comment('\n')
+    if source_type == "wellplate":
+        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
+        m20.pick_up_tip()
+
+        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
+
+            m20.aspirate(10, s_col, rate=0.5)
+            m20.dispense(10, d_col.top(), rate=0.5)
+            m20.blow_out()
+            m20.aspirate(11.5, s_col, rate=0.5)
+            m20.dispense(11.5, d_col.top(), rate=0.5)
+            m20.blow_out()
+            ctx.comment('\n')
+        m20.drop_tip()
+
+        if remainder:
+            ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
+            remaining_wells = num_samp % 8
+            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]
+            p20.pick_up_tip()
+
+            for well in unfilled_col:
+                p20.aspirate(10, unfilled_mmx_col, rate=0.5)
+                p20.dispense(10, well.top(), rate=0.5)
+                p20.blow_out()
+                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
+                p20.dispense(11.5, well.top(), rate=0.5)
+                p20.blow_out()
+            p20.drop_tip()
+
+    else:
+
+        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
+        m20.pick_up_tip()
+
+        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
+
+            m20.aspirate(10, s_col, rate=0.5)
+            m20.dispense(10, d_col, rate=0.5)
+            m20.blow_out()
+            m20.aspirate(11.5, s_col, rate=0.5)
+            m20.dispense(11.5, d_col, rate=0.5)
+            m20.blow_out()
+            ctx.comment('\n')
+        m20.drop_tip()
+
+        if remainder:
+            ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
+            remaining_wells = num_samp % 8
+            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]
+            p20.pick_up_tip()
+
+            for well in unfilled_col:
+                p20.aspirate(10, unfilled_mmx_col, rate=0.5)
+                p20.dispense(10, well, rate=0.5)
+                p20.blow_out()
+                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
+                p20.dispense(11.5, well, rate=0.5)
+                p20.blow_out()
+            p20.drop_tip()
+
+    if source_type == "tuberack":
+        ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
+        for tube, dest in zip(sample_tubes, pcr_plate.wells()):
+            p20.pick_up_tip()
+            p20.aspirate(2.5, tube, rate=0.5)
+            p20.dispense(2.5, dest)
+            p20.blow_out()
+            p20.drop_tip()
 
     ctx.comment('\n\n------------Running PCR-------------\n')
 
@@ -107,150 +164,10 @@ def run(ctx):
     tc_mod.set_block_temperature(4)
     tc_mod.set_lid_temperature(25)
 
-    ctx.pause('''Centrifuge the PCR plate at 1,000 × g at 20°C for 1 minute
+    ctx.comment('''Centrifuge the PCR plate at 1,000 × g at 20°C for 1 minute
                 to collect condensation, carefully remove seal.
 
+                Place pcr plate in slot 4 of robot 2.
+
                 Also ensure that beads are vortexed and placed in column 1
-                of the reagent plate.''')
-
-    ctx.comment('\n\n--------Transferring Sample to Mag Plate----------\n')
-    for s, d in zip(pcr_plate.rows()[0][:num_full_cols], mag_plate.rows()[0]):
-        pick_up(m300)
-        m300.aspirate(25, s)
-        m300.dispense(25, d)
-        m300.drop_tip()
-
-    # leftover
-    if leftover:
-        for s, d in zip(last_col_pcr, last_col_mag):
-            pick_up(p300)
-            p300.aspirate(25, s)
-            p300.dispense(25, d)
-            p300.drop_tip()
-
-    ctx.comment('\n\n--------Transferring Beads to Mag Plate----------\n')
-    for i, d in enumerate(mag_plate.rows()[0][:num_full_cols]):
-        pick_up(m300)
-        m300.mix(15 if i == 0 else 3, 200, beads, rate=0.8)
-        m300.aspirate(20, beads, rate=0.75)
-        m300.dispense(20, d, rate=0.75)
-        m300.mix(10, 45, d)
-        m300.blow_out()
-        m300.drop_tip()
-        ctx.comment('\n')
-
-    # leftover
-    if leftover:
-        for d in last_col_mag:
-            pick_up(p300)
-            p300.mix(15 if i == 0 else 3, 200, beads, rate=0.8)
-            p300.aspirate(20, beads, rate=0.75)
-            p300.dispense(20, d, rate=0.75)
-            p300.mix(10, 45, d)
-            p300.blow_out()
-            p300.drop_tip()
-            ctx.comment('\n')
-
-    ctx.delay(minutes=5)
-
-    mag_mod.engage(height_from_base=mag_height)
-
-    ctx.comment('\n\n-------------REMOVE SUPER-------------\n')
-    for col in mag_plate.rows()[0][:num_full_cols]:
-        pick_up(m300)
-        m300.aspirate(50, col, rate=0.15)
-        m300.aspirate(10, col.bottom(z=0.5), rate=0.05)
-        m300.dispense(50, trash[0])
-        m300.drop_tip()
-
-    if leftover:
-        for well in last_col_mag:
-            pick_up(p300)
-            p300.aspirate(50, well, rate=0.15)
-            p300.aspirate(10, well.bottom(z=0.5), rate=0.05)
-            p300.dispense(60, trash[1])
-            p300.drop_tip()
-
-    ctx.comment('\n\n-------------TWO WASHES-------------\n')
-    eth_ctr = 0
-
-    for _ in range(2):
-
-        pick_up(m300)
-        for col in mag_plate.rows()[0][:num_full_cols]:
-            m300.aspirate(200, ethanol[eth_ctr])
-            m300.dispense(200, col.top())
-            eth_ctr += 1
-        m300.drop_tip()
-
-        if leftover:
-            pick_up(m300)
-            for well in last_col_mag:
-                m300.aspirate(200, ethanol[eth_ctr])
-                m300.dispense(200, col.top())
-            m300.drop_tip()
-
-        mag_mod.engage(height_from_base=mag_height)
-        ctx.delay(seconds=60)
-
-        ctx.comment('\n\n-------------REMOVE SUPER-------------\n')
-        for col, trash_well in zip(mag_plate.rows()[0][:num_full_cols], trash):
-            pick_up(m300)
-            m300.aspirate(200, col, rate=0.15)
-            m300.dispense(200, trash_well)
-            m300.aspirate(20, col.bottom(z=0.4), rate=0.05)
-            m300.dispense(20, trash_well)
-            m300.drop_tip()
-
-        if leftover:
-            for well in last_col_mag:
-                pick_up(p300)
-                p300.aspirate(200, well, rate=0.15)
-                p300.dispense(200, trash[2])
-                p300.aspirate(20, well.bottom(z=0.4), rate=0.05)
-                p300.dispense(20, trash[3])
-                p300.drop_tip()
-
-    ctx.delay(minutes=10)
-    mag_mod.disengage()
-
-    ctx.comment('\n\n--------Transferring Tris to Mag Plate----------\n')
-    for i, d in enumerate(mag_plate.rows()[0][:num_full_cols]):
-        pick_up(m300)
-        m300.aspirate(52.5, tris)
-        m300.dispense(52.5, d)
-        m300.mix(10, 52.5, d)
-        m300.blow_out()
-        m300.drop_tip()
-        ctx.comment('\n')
-
-    # leftover
-    if leftover:
-        for d in last_col_mag:
-            pick_up(p300)
-            p300.aspirate(52.5, tris)
-            p300.dispense(52.5, d)
-            p300.mix(10, 52.5, d)
-            p300.blow_out()
-            p300.drop_tip()
-            ctx.comment('\n')
-
-    ctx.delay(minutes=2)
-    mag_mod.engage(height_from_base=mag_height)
-    ctx.delay(minutes=2)
-
-    ctx.comment('\n\n--------Transferring Sample to Mag Plate----------\n')
-    for s, d in zip(mag_plate.rows()[0][:num_full_cols],
-                    final_plate.rows()[0]):
-        pick_up(m300)
-        m300.aspirate(50, s)
-        m300.dispense(50, d)
-        m300.drop_tip()
-
-    # leftover
-    if leftover:
-        for s, d in zip(last_col_mag, last_col_final_plate):
-            pick_up(p300)
-            p300.aspirate(50, s)
-            p300.dispense(50, d)
-            p300.drop_tip()
+                of the reagent plate. For part 2 of the protocol.''')
