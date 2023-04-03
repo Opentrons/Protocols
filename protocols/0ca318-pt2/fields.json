@@ -8,20 +8,16 @@
   },
 
   {
-    "type": "dropDown",
-    "label": "Where are the samples?",
-    "name": "source_type",
-    "options": [
-      {"label": "Already in the 96 well plate on thermocycler", "value": "wellplate"},
-      {"label": "In tube racks", "value": "tuberack"}
-    ]
+    "type": "int",
+    "label": "Magnetic Module Engage Height",
+    "name": "mag_height",
+    "default": 3
   },
-
 
   {
     "type": "dropDown",
-    "label": "P20 Single-Channel Mount",
-    "name": "p20_mount",
+    "label": "P300 Single-Channel Mount",
+    "name": "p300_mount",
     "options": [
       {"label": "Right", "value": "right"},
       {"label": "Left", "value": "left"}
@@ -29,8 +25,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 Multi-Channel Mount",
-    "name": "m20_mount",
+    "label": "P300 Multi-Channel Mount",
+    "name": "m300_mount",
     "options": [
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
