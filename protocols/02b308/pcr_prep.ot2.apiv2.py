@@ -34,7 +34,7 @@ def run(ctx):
 
     # locations
     primers = primers_plate.rows()[0][:num_primers]
-    dna_sources = dna_plate.rows()[0][:12]
+    dna_sources = dna_plate.rows()[0][:num_plates*2]
     vol_primer = 2.0
     vol_dna = 8.0
 
