@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "ML-normalization.ot2.apiv2.py"
+            "0ca318-pt2.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/0f5c31",
-    "slug": "0f5c31",
+    "path": "protocols/0ca318-pt2",
+    "slug": "0ca318-pt2",
     "status": "ok"
 }

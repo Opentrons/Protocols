@@ -1,5 +1,5 @@
 {
-    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'PCR Prep and PCR',\n    'author': 'Rami <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_samp, source_type, p20_mount, m20_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"source_type\", \"p20_mount\", \"m20_mount\")\n\n    # num_samp = 96\n    # source_type = \"tuberack\"\n    # p20_mount = \"left\"\n    # m20_mount = \"right\"\n\n    # load modules\n    tc_mod = ctx.load_module('Thermocycler Module')\n    tc_mod.open_lid()\n    tc_mod.set_lid_temperature(105)\n    pcr_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')  # noqa: E501\n\n    temp_mod = ctx.load_module('temperature module gen2', 3)\n    temp_mod.set_temperature(4)\n\n    # load labware\n    if source_type == \"tuberack\":\n        samples_racks = [ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_snapcap',   # noqa: E501\n                         slot) for slot in [4, 5, 1, 2]]\n        sample_tubes = [tube for rack in samples_racks\n                        for row in rack.rows() for tube in row][:num_samp]\n\n    mmx_plate = temp_mod.load_labware('opentrons_96_aluminumblock_nest_wellplate_100ul')  # noqa: E501\n\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n            for slot in [6, 9]]\n\n    # load pipettes\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=tips)\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tips)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(f\"Replace empty tip rack for {pip}\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # mapping\n    num_full_cols = math.floor(num_samp/8)\n\n    remainder = False if num_samp % 8 == 0 else True\n\n    num_mmx_cols = math.ceil(num_samp/24)\n\n    mmx = mmx_plate.rows()[0][:num_mmx_cols]*24\n    unfilled_mmx_col = mmx_plate.rows()[0][5]\n\n    # transfer sample\n\n    if source_type == \"wellplate\":\n        ctx.comment('\\n\\nTRANSFERRING MASTERMIX TO PLATE\\n')\n        m20.pick_up_tip()\n\n        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):\n\n            m20.aspirate(10, s_col, rate=0.5)\n            m20.dispense(10, d_col.top(), rate=0.5)\n            m20.blow_out()\n            m20.aspirate(11.5, s_col, rate=0.5)\n            m20.dispense(11.5, d_col.top(), rate=0.5)\n            m20.blow_out()\n            ctx.comment('\\n')\n        m20.drop_tip()\n\n        if remainder:\n            ctx.comment('\\n\\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\\n')\n            remaining_wells = num_samp % 8\n            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]\n            p20.pick_up_tip()\n\n            for well in unfilled_col:\n                p20.aspirate(10, unfilled_mmx_col, rate=0.5)\n                p20.dispense(10, well.top(), rate=0.5)\n                p20.blow_out()\n                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)\n                p20.dispense(11.5, well.top(), rate=0.5)\n                p20.blow_out()\n            p20.drop_tip()\n\n    else:\n\n        ctx.comment('\\n\\nTRANSFERRING MASTERMIX TO PLATE\\n')\n        m20.pick_up_tip()\n\n        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):\n\n            m20.aspirate(10, s_col, rate=0.5)\n            m20.dispense(10, d_col, rate=0.5)\n            m20.blow_out()\n            m20.aspirate(11.5, s_col, rate=0.5)\n            m20.dispense(11.5, d_col, rate=0.5)\n            m20.blow_out()\n            ctx.comment('\\n')\n        m20.drop_tip()\n\n        if remainder:\n            ctx.comment('\\n\\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\\n')\n            remaining_wells = num_samp % 8\n            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]\n            p20.pick_up_tip()\n\n            for well in unfilled_col:\n                p20.aspirate(10, unfilled_mmx_col, rate=0.5)\n                p20.dispense(10, well, rate=0.5)\n                p20.blow_out()\n                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)\n                p20.dispense(11.5, well, rate=0.5)\n                p20.blow_out()\n            p20.drop_tip()\n\n    if source_type == \"tuberack\":\n        ctx.comment('\\n\\nTRANSFERRING SAMPLE TO PCR PLATE\\n')\n        for tube, dest in zip(sample_tubes, pcr_plate.wells()):\n            p20.pick_up_tip()\n            p20.aspirate(2.5, tube, rate=0.5)\n            p20.dispense(2.5, dest)\n            p20.blow_out()\n            p20.drop_tip()\n\n    ctx.comment('\\n\\n------------Running PCR-------------\\n')\n\n    profile1 = [\n\n                {'temperature': 95, 'hold_time_seconds': 180},\n\n    ]\n\n    profile2 = [\n\n                {'temperature': 95, 'hold_time_seconds': 30},\n                {'temperature': 55, 'hold_time_seconds': 30},\n                {'temperature': 72, 'hold_time_seconds': 30}\n\n    ]\n\n    profile3 = [\n\n                {'temperature': 72, 'hold_time_seconds': 300}\n\n    ]\n\n    tc_mod.execute_profile(steps=profile1, repetitions=1, block_max_volume=25)\n    tc_mod.execute_profile(steps=profile2, repetitions=25, block_max_volume=25)\n    tc_mod.execute_profile(steps=profile3, repetitions=1, block_max_volume=25)\n    tc_mod.set_block_temperature(4)\n    tc_mod.set_lid_temperature(25)\n\n    ctx.comment('''Centrifuge the PCR plate at 1,000 \u00d7 g at 20\u00b0C for 1 minute\n                to collect condensation, carefully remove seal.\n\n                Place pcr plate in slot 4 of robot 2.\n\n                Also ensure that beads are vortexed and placed in column 1\n                of the reagent plate. For part 2 of the protocol.''')\n",
+    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Magnetic Bead Purification + PCR',\n    'author': 'Rami <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_samp, mag_height, p300_mount, m300_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"mag_height\", \"p300_mount\", \"m300_mount\")\n\n    # load modules\n    pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 4)  # noqa: E501\n    mag_mod = ctx.load_module('magnetic module gen2', 1)\n    mag_mod.disengage()\n    mag_plate = mag_mod.load_labware('thermo_96_wellplate_800ul')\n\n    # load labware\n    reag_plate = ctx.load_labware('thermo_96_wellplate_800ul', 5)\n    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 3)\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 2)\n\n    tips_single = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                   for slot in [6]]\n\n    tips_multi = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                  for slot in [7, 8, 9]]\n\n    # load pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tips_single)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tips_multi)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(f\"Replace empty tip rack for {pip}\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # mapping\n    num_full_cols = num_samp // 8\n    remainder_wells = num_samp % 8\n    last_col_pcr = pcr_plate.columns()[num_full_cols][:remainder_wells]\n    last_col_mag = mag_plate.columns()[num_full_cols][:remainder_wells]\n    last_col_final_plate = mag_plate.columns()[num_full_cols]\n    leftover = False if num_samp / 8 == 0 else True\n\n    beads = reag_plate.rows()[0][0]\n    tris = reag_plate.rows()[0][1]\n    num_ethanol_wells = math.ceil(num_samp/24)\n    ethanol = reservoir.wells()[:num_ethanol_wells]*24\n    trash = reservoir.wells()[8:]*24\n\n    ctx.comment('\\n\\n--------Transferring Sample to Mag Plate----------\\n')\n    for s, d in zip(pcr_plate.rows()[0][:num_full_cols], mag_plate.rows()[0]):\n        pick_up(m300)\n        m300.aspirate(25, s)\n        m300.dispense(25, d)\n        m300.drop_tip()\n\n    # leftover\n    if leftover:\n        for s, d in zip(last_col_pcr, last_col_mag):\n            pick_up(p300)\n            p300.aspirate(25, s)\n            p300.dispense(25, d)\n            p300.drop_tip()\n\n    ctx.comment('\\n\\n--------Transferring Beads to Mag Plate----------\\n')\n    for i, d in enumerate(mag_plate.rows()[0][:num_full_cols]):\n        pick_up(m300)\n        m300.mix(15 if i == 0 else 3, 200, beads, rate=0.8)\n        m300.aspirate(20, beads, rate=0.75)\n        m300.dispense(20, d, rate=0.75)\n        m300.mix(10, 45, d)\n        m300.blow_out()\n        m300.drop_tip()\n        ctx.comment('\\n')\n\n    # leftover\n    if leftover:\n        for d in last_col_mag:\n            pick_up(p300)\n            p300.mix(15 if i == 0 else 3, 200, beads, rate=0.8)\n            p300.aspirate(20, beads, rate=0.75)\n            p300.dispense(20, d, rate=0.75)\n            p300.mix(10, 45, d)\n            p300.blow_out()\n            p300.drop_tip()\n            ctx.comment('\\n')\n\n    ctx.delay(minutes=5)\n\n    mag_mod.engage(height_from_base=mag_height)\n\n    ctx.comment('\\n\\n-------------REMOVE SUPER-------------\\n')\n    for col in mag_plate.rows()[0][:num_full_cols]:\n        pick_up(m300)\n        m300.aspirate(50, col, rate=0.15)\n        m300.aspirate(10, col.bottom(z=0.5), rate=0.05)\n        m300.dispense(50, trash[0])\n        m300.drop_tip()\n\n    if leftover:\n        for well in last_col_mag:\n            pick_up(p300)\n            p300.aspirate(50, well, rate=0.15)\n            p300.aspirate(10, well.bottom(z=0.5), rate=0.05)\n            p300.dispense(60, trash[1])\n            p300.drop_tip()\n\n    ctx.comment('\\n\\n-------------TWO WASHES-------------\\n')\n    eth_ctr = 0\n\n    for _ in range(2):\n\n        pick_up(m300)\n        for col in mag_plate.rows()[0][:num_full_cols]:\n            m300.aspirate(200, ethanol[eth_ctr])\n            m300.dispense(200, col.top())\n            eth_ctr += 1\n        m300.drop_tip()\n\n        if leftover:\n            pick_up(m300)\n            for well in last_col_mag:\n                m300.aspirate(200, ethanol[eth_ctr])\n                m300.dispense(200, col.top())\n            m300.drop_tip()\n\n        mag_mod.engage(height_from_base=mag_height)\n        ctx.delay(seconds=60)\n\n        ctx.comment('\\n\\n-------------REMOVE SUPER-------------\\n')\n        for col, trash_well in zip(mag_plate.rows()[0][:num_full_cols], trash):\n            pick_up(m300)\n            m300.aspirate(200, col, rate=0.15)\n            m300.dispense(200, trash_well)\n            m300.aspirate(20, col.bottom(z=0.4), rate=0.05)\n            m300.dispense(20, trash_well)\n            m300.drop_tip()\n\n        if leftover:\n            for well in last_col_mag:\n                pick_up(p300)\n                p300.aspirate(200, well, rate=0.15)\n                p300.dispense(200, trash[2])\n                p300.aspirate(20, well.bottom(z=0.4), rate=0.05)\n                p300.dispense(20, trash[3])\n                p300.drop_tip()\n\n    ctx.delay(minutes=10)\n    mag_mod.disengage()\n\n    ctx.comment('\\n\\n--------Transferring Tris to Mag Plate----------\\n')\n    for i, d in enumerate(mag_plate.rows()[0][:num_full_cols]):\n        pick_up(m300)\n        m300.aspirate(52.5, tris)\n        m300.dispense(52.5, d)\n        m300.mix(10, 52.5, d)\n        m300.blow_out()\n        m300.drop_tip()\n        ctx.comment('\\n')\n\n    # leftover\n    if leftover:\n        for d in last_col_mag:\n            pick_up(p300)\n            p300.aspirate(52.5, tris)\n            p300.dispense(52.5, d)\n            p300.mix(10, 52.5, d)\n            p300.blow_out()\n            p300.drop_tip()\n            ctx.comment('\\n')\n\n    ctx.delay(minutes=2)\n    mag_mod.engage(height_from_base=mag_height)\n    ctx.delay(minutes=2)\n\n    ctx.comment('\\n\\n--------Transferring Sample to Mag Plate----------\\n')\n    for s, d in zip(mag_plate.rows()[0][:num_full_cols],\n                    final_plate.rows()[0]):\n        pick_up(m300)\n        m300.aspirate(50, s)\n        m300.dispense(50, d)\n        m300.drop_tip()\n\n    # leftover\n    if leftover:\n        for s, d in zip(last_col_mag, last_col_final_plate):\n            pick_up(p300)\n            p300.aspirate(50, s)\n            p300.dispense(50, d)\n            p300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1145,23 +1145,14 @@
             "type": "int"
         },
         {
-            "label": "Where are the samples?",
-            "name": "source_type",
-            "options": [
-                {
-                    "label": "Already in the 96 well plate on thermocycler",
-                    "value": "wellplate"
-                },
-                {
-                    "label": "In tube racks",
-                    "value": "tuberack"
-                }
-            ],
-            "type": "dropDown"
+            "default": 3,
+            "label": "Magnetic Module Engage Height",
+            "name": "mag_height",
+            "type": "int"
         },
         {
-            "label": "P20 Single-Channel Mount",
-            "name": "p20_mount",
+            "label": "P300 Single-Channel Mount",
+            "name": "p300_mount",
             "options": [
                 {
                     "label": "Right",
@@ -1175,8 +1166,8 @@
             "type": "dropDown"
         },
         {
-            "label": "P20 Multi-Channel Mount",
-            "name": "m20_mount",
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
             "options": [
                 {
                     "label": "Left",
@@ -1193,37 +1184,67 @@
     "instruments": [
         {
             "mount": "left",
-            "name": "p20_multi_gen2"
+            "name": "p300_multi_gen2"
         },
         {
             "mount": "right",
-            "name": "p20_single_gen2"
+            "name": "p300_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 3",
+            "name": "Abgene\u2122 96 Well 0.8mL Thermo Scientific on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "thermo_96_wellplate_800ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
-            "share": false,
-            "slot": "6",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
-            "share": false,
-            "slot": "7",
             "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 9",
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Abgene\u2122 96 Well 0.8mL Thermo Scientific on 5",
+            "share": false,
+            "slot": "5",
+            "type": "thermo_96_wellplate_800ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_filtertiprack_20ul"
+            "type": "opentrons_96_filtertiprack_200ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -1235,21 +1256,15 @@
     "metadata": {
         "apiLevel": "2.11",
         "author": "Rami <protocols@opentrons.com>",
-        "protocolName": "PCR Prep and PCR",
+        "protocolName": "Magnetic Bead Purification + PCR",
         "source": "Custom Protocol Request"
     },
     "modules": [
         {
-            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Abgene\u2122 96 Well 0.8mL Thermo Scientific on Magnetic Module GEN2 on 1",
             "share": false,
-            "slot": "7",
-            "type": "thermocycler"
-        },
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
+            "slot": "1",
+            "type": "magdeck"
         }
     ]
 }
