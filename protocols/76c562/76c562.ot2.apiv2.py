@@ -111,8 +111,8 @@ def run(ctx):
 
     tip_log = {}
     for mount in pipettes.keys():
-        pip = pipettes[mount]['instrument']
-        if pip:
+        if 'instrument' in pipettes[mount]:
+            pip = pipettes[mount]['instrument']
             if mount == 'left':
                 start_slot = left_pip_slot
                 start_tip_well = left_pip_tip
@@ -179,8 +179,8 @@ resuming.'.format(pip.max_volume))
         if diluent_scheme == 'always':
             pipette.drop_tip()
     for mount in pipettes.keys():
-        pip = pipettes[mount]['instrument']
-        if pip:
+        if 'instrument' in pipettes[mount]:
+            pip = pipettes[mount]['instrument']
             if pip.has_tip:
                 pip.drop_tip()
 
