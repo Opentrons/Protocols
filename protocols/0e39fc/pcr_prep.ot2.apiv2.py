@@ -90,7 +90,7 @@ def run(ctx):
     for i, d in enumerate(all_destinations):
         mm_source = mm[i//24]
         m20.aspirate(1, mm_source.top())
-        m20.aspirate(7, mm_source.bottom(1))
+        m20.aspirate(7, mm_source.bottom(0))
         slow_withdraw(m20, mm_source)
         m20.dispense(m20.current_volume, d.bottom(1))
         wick(m20, d)
@@ -102,7 +102,7 @@ def run(ctx):
     for d in ntc_dests:
         mm_source = mm[0]
         p20.aspirate(1, mm_source.top())
-        p20.aspirate(8, mm_source.bottom(1))
+        p20.aspirate(8, mm_source.bottom(0))
         slow_withdraw(p20, mm_source)
         p20.dispense(p20.current_volume, d.bottom(1))
         p20.mix(3, 5, d.bottom(1))
