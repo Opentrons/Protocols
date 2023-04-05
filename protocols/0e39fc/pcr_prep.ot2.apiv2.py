@@ -19,7 +19,7 @@ def run(ctx):
 
     # load labware
     sample_plates = [
-        ctx.load_labware('biorad_96_tuberack_with_corning_0.2ml', slot,
+        ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,
                          f'sample plate {i+1}')
         for i, slot in enumerate(['1', '4', '7', '10'][:num_plates])]
     pcr_plate = ctx.load_labware('biorad_384_wellplate_50ul_', '2',
