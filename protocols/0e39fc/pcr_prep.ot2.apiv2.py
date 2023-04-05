@@ -85,7 +85,7 @@ def run(ctx):
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
-    # transfer mastermix to all wells
+    # transfer mastermix to all sample wells
     pick_up(m20)
     for i, d in enumerate(all_destinations):
         mm_source = mm[i//24]
@@ -96,6 +96,19 @@ def run(ctx):
         wick(m20, d)
         slow_withdraw(m20, d)
     m20.drop_tip()
+
+    # add NTC MM
+    pick_up(p20)
+    for d in ntc_dests:
+        mm_source = mm[0]
+        p20.aspirate(1, mm_source.top())
+        p20.aspirate(8, mm_source.bottom(1))
+        slow_withdraw(p20, mm_source)
+        p20.dispense(p20.current_volume, d.bottom(1))
+        p20.mix(3, 5, d.bottom(1))
+        wick(p20, d)
+        slow_withdraw(p20, d)
+    p20.drop_tip()
 
     # add all samples
     for s, d in zip(all_samples, all_destinations):
