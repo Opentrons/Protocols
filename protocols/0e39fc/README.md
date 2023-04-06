@@ -17,7 +17,7 @@ This protocol performs PCR prep on up to 384 samples. NTC with PCR mastermix wil
 ### Labware
 * Bio-Rad 96 Tube Rack with Applied Biosystems 0.2 mL #HSP9601
 * [Bio-Rad 96 Well Plate 200 µL PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
-* [Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
+* [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 
 
 ### Deck Setup

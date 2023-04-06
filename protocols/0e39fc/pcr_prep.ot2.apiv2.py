@@ -19,7 +19,7 @@ def run(ctx):
 
     # load labware
     sample_plates = [
-        ctx.load_labware('biorad_96_tuberack_with_corning_0.2ml', slot,
+        ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,
                          f'sample plate {i+1}')
         for i, slot in enumerate(['1', '4', '7', '10'][:num_plates])]
     pcr_plate = ctx.load_labware('biorad_384_wellplate_50ul_', '2',
@@ -85,17 +85,30 @@ def run(ctx):
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
-    # transfer mastermix to all wells
+    # transfer mastermix to all sample wells
     pick_up(m20)
     for i, d in enumerate(all_destinations):
         mm_source = mm[i//24]
         m20.aspirate(1, mm_source.top())
-        m20.aspirate(7, mm_source.bottom(1))
+        m20.aspirate(7, mm_source.bottom(0))
         slow_withdraw(m20, mm_source)
         m20.dispense(m20.current_volume, d.bottom(1))
         wick(m20, d)
         slow_withdraw(m20, d)
     m20.drop_tip()
+
+    # add NTC MM
+    pick_up(p20)
+    for d in ntc_dests:
+        mm_source = mm[0]
+        p20.aspirate(1, mm_source.top())
+        p20.aspirate(8, mm_source.bottom(0))
+        slow_withdraw(p20, mm_source)
+        p20.dispense(p20.current_volume, d.bottom(1))
+        p20.mix(3, 5, d.bottom(1))
+        wick(p20, d)
+        slow_withdraw(p20, d)
+    p20.drop_tip()
 
     # add all samples
     for s, d in zip(all_samples, all_destinations):
