@@ -41,7 +41,7 @@ def run(ctx):
     # labware
     source_plates = [ctx.load_labware(
                      'corning_96_wellplate_360ul_flat'
-                     if source_format == "384"
+                     if source_format == "96"
                      else "corning_384_wellplate_112ul_flat", slot)
                      for slot in unique_list]
     source_plates = source_plates
