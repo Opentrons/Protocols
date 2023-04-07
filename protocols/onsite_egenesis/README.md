@@ -13,7 +13,7 @@
 ## Description
 For a detailed description of this protocol, please refer to the [Nanoporo Direct RNA sequencing (SQK-RNA002) SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/direct-rna-sequencing-sqk-rna002-DRS_9080_v2_revO_14Aug2019-minion+(2).pdf).
 
-Note: wash buffer should be split evenly between wells A5 and A6 on slot 5. 
+Note: wash buffer should be split evenly between wells A5 and A6 on slot 5.
 
 
 ### Modules
@@ -34,7 +34,7 @@ Note: wash buffer should be split evenly between wells A5 and A6 on slot 5.
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/dkdkdkdk.png)
 
 
 ### Reagent Setup

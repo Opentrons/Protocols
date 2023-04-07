@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "",
-    "description": "For a detailed description of this protocol, please refer to the Nanoporo Direct RNA sequencing (SQK-RNA002) SOP.\nNote: wash buffer should be split evenly between wells A5 and A6 on slot 5. ",
+    "description": "For a detailed description of this protocol, please refer to the Nanoporo Direct RNA sequencing (SQK-RNA002) SOP.\nNote: wash buffer should be split evenly between wells A5 and A6 on slot 5.",
     "internal": "onsite_egenesis",
     "labware": "\nEppendorf 96 Well Plate 200 \u00b5L\nUSA Scientific 12 Well Reservoir 22 mL #1061-8150\nOpentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/deck.png)\n\n\n",
-        "description": "For a detailed description of this protocol, please refer to the [Nanoporo Direct RNA sequencing (SQK-RNA002) SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/direct-rna-sequencing-sqk-rna002-DRS_9080_v2_revO_14Aug2019-minion+(2).pdf).\n\nNote: wash buffer should be split evenly between wells A5 and A6 on slot 5. \n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/dkdkdkdk.png)\n\n\n",
+        "description": "For a detailed description of this protocol, please refer to the [Nanoporo Direct RNA sequencing (SQK-RNA002) SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis/direct-rna-sequencing-sqk-rna002-DRS_9080_v2_revO_14Aug2019-minion+(2).pdf).\n\nNote: wash buffer should be split evenly between wells A5 and A6 on slot 5.\n\n\n",
         "internal": "onsite_egenesis\n",
         "labware": "* Eppendorf 96 Well Plate 200 \u00b5L\n* [USA Scientific 12 Well Reservoir 22 mL #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)\n* [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
         "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
