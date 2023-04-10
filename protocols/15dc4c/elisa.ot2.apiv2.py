@@ -84,7 +84,7 @@ def run(ctx):
     sample_diluent = reservoir.rows()[0][1]
     coated_beads = reservoir.rows()[0][2]
     detection_antibody = reservoir.rows()[0][3]
-    elution_buffer_b = reservoir.rows()[0][4]
+    # elution_buffer_b = reservoir.rows()[0][4]
     buffer_d = reservoir.rows()[0][5]
     samples = sample_plate.rows()[0][:num_cols]
 
@@ -235,16 +235,30 @@ def run(ctx):
     Detection
     """
     standards_and_samples = assay_plate_on_magnet.rows()[0]
-    for d in standards_and_samples:
-        pick_up(m20)
-        m20.aspirate(20, detection_antibody.bottom(Z_OFFSET_RESERVOIR))
+    vol_max = m300.tip_racks[0].wells()[0].max_volume - 20  # extra
+    num_asp_sets = math.ceil(len(standards_and_samples)*20/vol_max)
+    num_dests_per_asp = math.ceil(len(standards_and_samples)/num_asp_sets)
+    detection_antibody_sets = [
+        standards_and_samples[i*num_dests_per_asp:(i+1)*num_dests_per_asp]
+        if i < num_asp_sets - 1
+        else standards_and_samples[i*num_dests_per_asp:]
+        for i in range(num_asp_sets)
+    ]
+    pick_up(m300)
+    for d_set in detection_antibody_sets:
+        # void excess if necessary
+        if m300.current_volume > 0:
+            m300.dispense(m300.current_volume, detection_antibody.top(-1))
+        m300.aspirate(20*len(d_set) + 20,
+                      detection_antibody.bottom(Z_OFFSET_RESERVOIR))
         slow_withdraw(m20, detection_antibody)
-        m20.dispense(20, d.bottom(0.5))
-        slow_withdraw(m20, d)
-        if DROP:
-            m20.drop_tip()
-        else:
-            m20.return_tip()
+        for d in d_set:
+            m300.dispense(20, d.top(-1))
+            ctx.delay(seconds=2)
+    if DROP:
+        m300.drop_tip()
+    else:
+        m300.return_tip()
 
     ctx.pause('Proceed with Detection incubation and Post-Detection Wash \
 and Shake.')
@@ -252,17 +266,17 @@ and Shake.')
     """
     Elution
     """
-    for d in standards_and_samples:
-        pick_up(m20)
-        # reverse pipetting
-        m20.aspirate(15, elution_buffer_b.bottom(Z_OFFSET_RESERVOIR))
-        slow_withdraw(m20, elution_buffer_b)
-        m20.dispense(10, d.bottom(0.5))
-        slow_withdraw(m20, d)
-        if DROP:
-            m20.drop_tip()
-        else:
-            m20.return_tip()
+    # for d in standards_and_samples:
+    #     pick_up(m20)
+    #     # reverse pipetting
+    #     m20.aspirate(15, elution_buffer_b.bottom(Z_OFFSET_RESERVOIR))
+    #     slow_withdraw(m20, elution_buffer_b)
+    #     m20.dispense(10, d.bottom(0.5))
+    #     slow_withdraw(m20, d)
+    #     if DROP:
+    #         m20.drop_tip()
+    #     else:
+    #         m20.return_tip()
 
     if ELUTION_TYPE == 'Erenna':
         ctx.pause('Proceed with Elution incubation')
