@@ -60,7 +60,7 @@ def run(ctx):
 
     def pickup_p300(mode='single'):
         current = 0.1 if mode == 'single' else 0.5
-        ctx._hw_manager.hardware._attached_instruments[types.Mount.RIGHT].update_config_item('pick_up_current', current)
+        ctx._hw_manager.hardware._attached_instruments[types.Mount.RIGHT].update_config_item('pick_up_current', current)  # noqa:E501
         #
         '''
         ctx._hw_manager.hardware._attached_instruments[
