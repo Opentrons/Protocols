@@ -10,7 +10,7 @@
 ## Description
 This protocol automates the [NEBNext® Ultra™ II DNA Library Prep Kit for Illumina®](https://www.neb.com/products/e7645-nebnext-ultra-ii-dna-library-prep-kit-for-illumina#Product%20Information) on the OT-2.
 
-This protocol was developed internally by Opentrons for use on the OT-2 and provides several options. Users can select how many samples to prepare, whether or not to use on-deck modules (like our [Thermocycler](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)), and whether or not to perform certain steps in the process. Additionally, users can select to enable a "Test Mode" that is great for performing a dry run of the protocol.
+This protocol was developed internally by Opentrons for use on the OT-2 and provides several options. Users can select how many samples to prepare, whether or not to use on-deck modules (like our thermocycler), and whether or not to perform certain steps in the process. Additionally, users can select to enable a "Test Mode" that is great for performing a dry run of the protocol.
 
 For a more detailed explanation of this protocol, including deck setup and reagent setup, please see this guide: [link to guide](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-neb-next-ultra/NEBNext+Ultra+II+-+Protocol+Library+Readme.pdf)
 
@@ -19,7 +19,7 @@ Explanation of complex parameters below:
 * **Test Mode (dry run)**: Select whether to perform a dry run (Yes) instead of a sample run
 * **Use Modules**: Select whether or not you are using our Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) and [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * **Reuse Tips**: Select whether or not to reuse tips for certain steps (selecting yes will reuse tips in a sterile way, saving on the amount of tips used and eliminating the need to replace tips during the run)
-* **Use Thermocycler**: Select whether or not you will use our on-deck [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module). If not using (select "No"), the user will be prompted to move the sample plate to an off-deck thermocycler.
+* **Use Thermocycler**: Select whether or not you will use our on-deck GEN1 thermocycler module. If not using (select "No"), the user will be prompted to move the sample plate to an off-deck thermocycler.
 * **Use Opentrons Offsets**: Select whether to use Z offsets used by the Opentrons Science Team ("Yes") or use the default Z heights of the labware ("No")
 * **Perform ERAT Step**: Select whether or not to perform the ERAT step.
 * **Perform Ligation Step**: Select whether or not to perform the Ligation step.
@@ -32,7 +32,7 @@ Explanation of complex parameters below:
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
+* Thermocycler Module (GEN1). Note: this protocol has only been verified with our GEN1 Thermocycler.
 
 
 ### Labware
