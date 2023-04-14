@@ -148,9 +148,9 @@ def run(ctx):
     long_frag_buffer = reag_rack.rows()[3][0]  # D1
     elution_buffer = reag_rack.rows()[3][1]  # D2
 
-    edta = reservoir.wells()[0].bottom(z=3)
+    edta = reservoir.wells()[2].bottom(z=3)
     ethanol = reservoir.wells()[1].bottom(z=3)
-    nuc_free_water = reservoir.wells()[2].bottom(z=3)
+    nuc_free_water = reservoir.wells()[0].bottom(z=3)
     trash = reservoir.wells()[-1].top(z=-3)
 
     # PROTOCOL ####################################################
@@ -170,6 +170,7 @@ def run(ctx):
             pip = p20
 
         pip.aspirate(reag_vol, tube, rate=0.5)
+        slow_tip_withdrawal(pip, tube)
         pip.touch_tip(v_offset=-5)
         pip.dispense(reag_vol, mix_tube)
         pip.drop_tip()
@@ -274,13 +275,13 @@ def run(ctx):
 
     pick_up_one()
     m300.mix(15, 200, beads)
-    slow_tip_withdrawal(m300, beads)
-    m300.touch_tip(v_offset=-10)
 
     if bead_vol >= 20:
         pip = m300
     else:
         pip = p20
+        slow_tip_withdrawal(m300, beads)
+        m300.touch_tip(v_offset=-10)
         m300.drop_tip()
         pick_up_20()
 
@@ -424,6 +425,7 @@ def run(ctx):
     for reag, vol in zip(reags, mix_volumes):
         pick_up_20()
         p20.aspirate(vol, reag)
+        slow_tip_withdrawal(p20, tube)
         p20.dispense(vol, pool_well)
         p20.mix(2, 20, pool_well)
         slow_tip_withdrawal(p20, pool_well)
@@ -436,11 +438,7 @@ def run(ctx):
 
     pick_up_one()
     m300.mix(15, 200, beads)  # should this always be bead volume?
-    slow_tip_withdrawal(m300, beads)
-    m300.touch_tip(v_offset=-10)
-    m300.drop_tip()
 
-    pick_up_one()
     m300.aspirate(bead_vol, beads, rate=0.5)
     slow_tip_withdrawal(m300, beads)
     m300.touch_tip(v_offset=-15)

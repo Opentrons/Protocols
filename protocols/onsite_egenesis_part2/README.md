@@ -6,12 +6,14 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+For a detailed description of this protocol, please refer to the [Ligation Sequencing Amplicons Native Barcoding](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite_egenesis_part2/manual.pdf)
+
+Note: select the barcode numbered well to start from counting by column. "1" would be A1, "8" would be H1, "10" would be B2, so on and so forth.
 
 
 ### Modules
@@ -19,9 +21,9 @@ This protocol does stuff!
 
 
 ### Labware
-* Barcode 96 Well Plate 200 µL #1234
-* Axygen 96 Well Plate 2000 µL #1234
-* Eppendorf 96 Well Plate 200 µL #1234
+* Barcode 96 Well Plate 200 µL
+* Axygen 96 Deep Well Plate 2000 µL
+* Eppendorf 96 Well Plate 200 µL
 * [USA Scientific 12 Well Reservoir 22 mL #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * Opentrons 96 Filter Tip Rack 20 µL
@@ -42,7 +44,26 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. Make first mix.
+2. Mixing and distribute first mix.
+3. Pause for thermal cycling.
+4. Distributing barcode.
+5. Pooling samples.
+6. Transfer beads to plate.
+7. Incubating (hula step).
+8. Remove supernatant.
+9. Two ethanol washes.
+10. Adding nuc free water.
+11. Incubating (hula step).
+12. Transfer to fresh well.
+13. Make and add final mix.
+14. Transfer beads to plate.
+15. Incubating (hula step).
+16. Removing supernatant.
+17. Two washes.
+18. Adding nuc free water.
+19. Incubating (hula step).
+20. Transfer to fresh well. 
 
 
 ### Process
