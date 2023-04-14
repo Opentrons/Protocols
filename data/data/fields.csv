@@ -99,6 +99,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_well_start,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
 bead_add,1
@@ -852,7 +853,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,66
+num_samp,67
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
