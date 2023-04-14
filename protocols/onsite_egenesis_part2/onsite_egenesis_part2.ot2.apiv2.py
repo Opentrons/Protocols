@@ -47,12 +47,12 @@ def create_thread(ctx, cancel_token):
 def run(ctx):
     cancellationToken = CancellationToken()
 
-    # [num_samp] = get_values(  # noqa: F821
-    #     "num_samp")
+    [num_samp, barcode_well_start] = get_values(  # noqa: F821
+        "num_samp", "barcode_well_start")
 
-    num_samp = 24
+    # num_samp = 24
     flash = True
-    barcode_well_start = 4
+    # barcode_well_start = 4
 
     barcode_well_start -= 1
 

@@ -51,7 +51,7 @@ def run(ctx):
     #
     # num_samp = 2
     test_mode = False
-    # flash = True
+    flash = True
 
     if not 2 <= num_samp <= 8:
         raise Exception("Enter a sample number between 1-8")
