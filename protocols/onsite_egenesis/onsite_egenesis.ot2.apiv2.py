@@ -50,7 +50,7 @@ def run(ctx):
         "num_samp")
     #
     # num_samp = 2
-    # test_mode = False
+    test_mode = False
     # flash = True
 
     if not 2 <= num_samp <= 8:
