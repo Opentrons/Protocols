@@ -12,7 +12,7 @@ def run(ctx):
 
     [num_samp, samp_vol, sds_vol, init_vol_bsa, init_vol_bca,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "num_samp","samp_vol", "sds_vol", "init_vol_bsa",
+        "num_samp", "samp_vol", "sds_vol", "init_vol_bsa",
             "init_vol_bca", "p20_mount", "p300_mount")
 
     if not 1 <= num_samp <= 24:
@@ -156,15 +156,6 @@ def run(ctx):
 
     p300.drop_tip()
 
-    # ctx.pause("""
-    # Close epps and transfer 4-in-1-rack with epps to heater-shaker module on
-    # slot 10. Remove 15 ml tube containing leftover BSA.
-    # Shake plate at RT for 5 min at 1000 rpm.
-    # Centrifuge eppendorfs containing BSA solutions for a few seconds to gather
-    # solution at the bottom of the tubes. Place open eppendorfs back
-    # in 4-in-1-rack on slot 1.
-    # """)
-
     ctx.comment('\n-------ADDING STANDARDS TO PLATE-----\n\n\n')
     for tube, dest_row in zip(standards, strip_tube_plate.rows()):
         p300.pick_up_tip()
@@ -183,7 +174,7 @@ def run(ctx):
 
     ctx.comment('\n-------ADDING SDS TO PLATE-----\n\n\n')
     p300.pick_up_tip()
-    for well in agilent_plate.wells()[:num_samp]:  # check this sample counter!!!!!
+    for well in agilent_plate.wells()[:num_samp]:
         p300.aspirate(40-samp_vol, sds)
         p300.dispense(40-samp_vol, well)
     p300.drop_tip()
