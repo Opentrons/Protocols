@@ -14,11 +14,17 @@ metadata = {
 def run(ctx):
 
     [csv_factors, vol_media_tubes, vol_mix,
-     reps_mix] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix')
+     reps_mix, type_pipette_small] = get_values(  # noqa: F821
+        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
+        'type_pipette_small')
 
     vol_pre_airgap_1000 = 50.0
-    vol_pre_airgap_300 = 20.0
+    if type_pipette_small == 'p300_single_gen2':
+        vol_pre_airgap_small = 20.0
+        tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
+    else:
+        vol_pre_airgap_small = 2.0
+        tiprack_small_type = 'opentrons_96_filtertiprack_20ul'
 
     class WellH(Well):
         def __init__(self, well, height=5, min_height=3,
@@ -61,14 +67,14 @@ def run(ctx):
                          slot, f'factor {factor_ids} tuberack')
         for slot, factor_ids in zip(['4', '7'], ['1-15', '16-30'])]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
-    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
+    tiprack_small = [ctx.load_labware(tiprack_small_type, '3')]
     tiprack1000 = [
         ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot)
         for slot in ['6']]
 
     # pipettes
-    p300 = ctx.load_instrument('p300_single_gen2', 'left',
-                               tip_racks=tiprack300)
+    pip_small = ctx.load_instrument(type_pipette_small, 'left',
+                                    tip_racks=tiprack_small)
     p1000 = ctx.load_instrument('p1000_single_gen2', 'right',
                                 tip_racks=tiprack1000)
 
@@ -128,8 +134,8 @@ def run(ctx):
 
     def custom_distribute(info, pip):
         pip_volume = pip.tip_racks[0].wells()[0].max_volume
-        vol_pre_airgap = vol_pre_airgap_300 if pip == \
-            p300 else vol_pre_airgap_1000
+        vol_pre_airgap = vol_pre_airgap_small if pip == \
+            pip_small else vol_pre_airgap_1000
         max_vol = pip_volume
         sets = []
         running = []
@@ -143,7 +149,7 @@ def run(ctx):
                     running = []
                     current_vol = 0
                 running.append({well: vol})
-                current_vol += vol + vol_pre_airgap_300
+                current_vol += vol + vol_pre_airgap_small
         sets.append(running)
         return sets
 
@@ -184,29 +190,29 @@ def run(ctx):
         factor_info = [
             {well: vol}
             for well, vol in zip(wells_ordered, factor_vols)]
-        factor_sets = custom_distribute(factor_info, pip=p300)
+        factor_sets = custom_distribute(factor_info, pip=pip_small)
         for factor_set in factor_sets:
             # aspirate total vol needed
-            if not p300.has_tip:
-                p300.pick_up_tip()
+            if not pip_small.has_tip:
+                pip_small.pick_up_tip()
             # pre-air_gap to fully void tip on blow_out
             for d in factor_set:
-                p300.aspirate(vol_pre_airgap_300, factor.well.top())
+                pip_small.aspirate(vol_pre_airgap_small, factor.well.top())
                 asp_vol = sum(d.values())
-                p300.aspirate(asp_vol, factor.height_dec(asp_vol))
+                pip_small.aspirate(asp_vol, factor.height_dec(asp_vol))
             # total_factor_vol = sum([sum(dict.values()) for dict in
             # factor_set])
             # p300.aspirate(total_factor_vol,
             #               factor.height_dec(total_factor_vol))
-            slow_withdraw(factor.well, p300)
+            slow_withdraw(factor.well, pip_small)
             for i, dict in enumerate(factor_set):
                 for well, vol in dict.items():
-                    p300.dispense(
-                            vol+vol_pre_airgap_300, well.bottom(well.depth/2))
+                    pip_small.dispense(
+                        vol+vol_pre_airgap_small, well.bottom(well.depth/2))
                 if i == len(factor_set) - 1:
-                    p300.blow_out(well.top(-2))
-        if p300.has_tip:
-            p300.drop_tip()
+                    pip_small.blow_out(well.top(-2))
+        if pip_small.has_tip:
+            pip_small.drop_tip()
 
     # mix
     for well in plate.wells()[:len(data)]:

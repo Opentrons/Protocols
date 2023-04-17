@@ -99,6 +99,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_well_start,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
 bead_add,1
@@ -771,8 +772,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,7
-mount_m300,12
+mount_m20,8
+mount_m300,13
 mount_p1000,1
 mount_p20,10
 mount_p300,6
@@ -852,14 +853,14 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,66
+num_samp,67
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,165
+num_samples,166
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1357,6 +1358,7 @@ temp_s4_part1,1
 temp_s4_part2,1
 temp_s7_part1,1
 temp_s7_part2,1
+temp_set_reservoir,1
 tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
@@ -1486,6 +1488,7 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
+type_pipette_small,1
 udi_start_col,1
 uploaded_csv,18
 uploaded_csv_mastermix,1
