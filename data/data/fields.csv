@@ -772,8 +772,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,7
-mount_m300,12
+mount_m20,8
+mount_m300,13
 mount_p1000,1
 mount_p20,10
 mount_p300,6
@@ -860,7 +860,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,165
+num_samples,166
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1358,6 +1358,7 @@ temp_s4_part1,1
 temp_s4_part2,1
 temp_s7_part1,1
 temp_s7_part2,1
+temp_set_reservoir,1
 tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
