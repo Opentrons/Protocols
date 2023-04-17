@@ -28,8 +28,8 @@
     "label": "smaller pipette type",
     "name": "type_pipette_small",
     "options": [
-       { "label": "P300 (20-200ul)", "value": "p300_single_gen2" },
-       { "label": "P20 (1-20ul)", "value": "p20_single_gen2" }
+      { "label": "P300 (20-200ul)", "value": "p300_single_gen2" },
+      { "label": "P20 (1-20ul)", "value": "p20_single_gen2" }
      ]
   }
 ]

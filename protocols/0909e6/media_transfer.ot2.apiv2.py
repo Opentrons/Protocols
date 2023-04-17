@@ -22,6 +22,7 @@ def run(ctx):
     if type_pipette_small == 'p300_single_gen2':
         vol_pre_airgap_small = 20.0
         tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
+    
     else:
         vol_pre_airgap_small = 2.0
         tiprack_small_type = 'opentrons_96_filtertiprack_20ul'
