@@ -1,6 +1,6 @@
 import math
 from opentrons.types import Point
-from opentrons import protocol_api
+from opentrons import protocol_api, types
 
 metadata = {
     'protocolName': 'Reaction Library Screening',
@@ -85,9 +85,11 @@ def run(ctx):
 
         current_modifier = 1/8
         current = default_current*current_modifier
-        ctx._hw_manager.hardware._attached_instruments[
-            pip._implementation.get_mount()
-            ].update_config_item('pick_up_current', current)
+
+        instr = types.Mount.RIGHT if pip.mount == 'right' else types.Mount.LEFT
+        if not ctx.is_simulating():
+            ctx._hw_manager.hardware._attached_instruments[
+                instr].update_config_item('pick_up_current', current)
 
         well = offset_pickup_wells[offset_pickup_counter]
         offset_pickup_counter += 1
@@ -95,9 +97,10 @@ def run(ctx):
         pip.pick_up_tip(well)
 
         # reset current to default
-        ctx._hw_manager.hardware._attached_instruments[
-            pip._implementation.get_mount()
-            ].update_config_item('pick_up_current', default_current)
+        if not ctx.is_simulating():
+            ctx._hw_manager.hardware._attached_instruments[
+                pip._implementation.get_mount()
+                ].update_config_item('pick_up_current', default_current)
 
     def wick(well, pip, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
