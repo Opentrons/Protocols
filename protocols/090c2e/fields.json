@@ -18,13 +18,13 @@
       "type": "float",
       "label": "XP1 buffer volume (in ul)",
       "name": "vol_xp1",
-      "default": 525.0
+      "default": 320.0
     },
     {
       "type": "float",
       "label": "XP1/Mag-Bind removal volume (in ul)",
       "name": "vol_removal",
-      "default": 1080.0
+      "default": 700.0
     },
     {
       "type": "int",
@@ -45,15 +45,6 @@
       "options": [
         { "label": "Yes", "value": 1 },
         { "label": "No", "value": 0 }
-      ]
-    },
-    {
-      "type": "dropDown",
-      "label": "Labware for Samples Input",
-      "name": "_samp_labware",
-      "options": [
-        { "label": "QIAGEN 96 Tube Rack, 1.2mL", "value": "qiagen_96_tuberack_1200ul" },
-        { "label": "NEST 96 Well Plate, 2mL", "value": "nest_96_wellplate_2ml_deep" }
       ]
     },
     {

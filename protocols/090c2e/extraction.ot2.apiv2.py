@@ -38,7 +38,6 @@ def run(ctx: protocol_api.ProtocolContext):
      _mag_time,
      _air_dry,
      _add_water,
-     _samp_labware,
      _elution_vol,
      flow_rate_wash,
      _off_deck,
@@ -51,7 +50,6 @@ def run(ctx: protocol_api.ProtocolContext):
          '_mag_time',
          '_air_dry',
          '_add_water',
-         '_samp_labware',
          '_elution_vol',
          'flow_rate_wash',
          '_off_deck',
@@ -67,7 +65,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     m300_mount = _m300_mount  # mount for 8-channel p300 pipette
     num_cols = math.ceil(_num_samps/8)  # number of sample columns
-    samp_labware = _samp_labware  # labware containing sample
     elution_vol = _elution_vol  # volume of elution buffer
     inc_time = _inc_time  # time for binding step
     mag_time = _mag_time  # time on magnetic module
@@ -85,7 +82,7 @@ def run(ctx: protocol_api.ProtocolContext):
     pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 10)
     # Eluted DNA
     # samp_plate = ctx.load_labware(samp_labware, 4)
-    mag_plate = mag_deck.load_labware(samp_labware)
+    mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')
 
     # load tipracks
     tips = [
@@ -295,7 +292,11 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(140, col)
             if not off_deck:
-                m300.mix(10, 100, col)
+                side = 1 if idx % 2 == 0 else -1
+                radius = col.diameter/2 if col.diameter else col.width/2
+                bead_loc = col.bottom().move(
+                    types.Point(x=side*radius*0.6, z=2))
+                m300.mix(10, 100, bead_loc)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.blow_out()
@@ -381,11 +382,15 @@ def run(ctx: protocol_api.ProtocolContext):
         'VHB Buffer': vhb,
         # 'CSPW 2 Buffer': cspw2,
         'Elution Buffer': elution_buffer,
-        'ETOH': etoh,
+        'ETOH': etoh
     }
     for key in reagent_keys:
         for x in reagent_keys[key]:
             ctx.comment(f'load {x.current_volume} of {key} in {x}')
+
+    ctx.comment(f'load {_num_samps*100} of water in reservoir 2 \
+(slot 3) channel 9')
+    
     # for x in rbb:
     #     ctx.comment(f'load {x.current_volume} in {x}')
 
@@ -424,7 +429,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for _ in range(2):
             flow_rate(asp=20, disp=20)
             m300.mix(1, 100, src)
-            m300.aspirate(160, src)
+            m300.aspirate(vol_xp1/2, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             flow_rate(disp=10)
             m300.dispense(60, dest.top(-1))
@@ -449,16 +454,23 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment(incubate_msg)
 
         if num_cols > 1:
-            num_mixes = math.ceil(2*inc_time/num_cols)
+            num_mixes = math.ceil(inc_time/num_cols)
         else:
             num_mixes = 10
+        m300.flow_rate.aspirate *= 3
+        m300.flow_rate.dispense *= 3
         for _ in range(num_mixes):
-            for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
+            for i, (col, t_d) in enumerate(
+                    zip(mag_samps, all_tips[t_start:t_end])):
+                side = 1 if i % 2 == 0 else -1
+                radius = col.diameter/2 if col.diameter else col.width/2
+                bead_loc = col.bottom().move(types.Point(
+                    x=side*radius*0.6, z=2))
                 if _ == 0:
                     m300.custom_pick_up()
                 if not m300.has_tip:
                     m300.custom_pick_up(t_d)
-                m300.mix(8, 150, col)
+                m300.mix(8, 150, bead_loc)
                 ctx.delay(seconds=1)
                 m300.blow_out(col.top(-2))
                 m300.touch_tip()
@@ -468,6 +480,8 @@ def run(ctx: protocol_api.ProtocolContext):
                     ctx.delay(seconds=30)
         if m300.has_tip:
             m300.drop_tip(t_d)
+        m300.flow_rate.aspirate /= 3
+        m300.flow_rate.dispense /= 3
 
         t_start += num_cols
         t_end += num_cols
@@ -499,21 +513,54 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Wash with ETOH Buffer (2)
     wash(etoh2_wells, 'ETOH (second wash)', fin_wash)
+    ctx.delay(minutes=1)
+    for i, src in enumerate(mag_samps_h):
+        side = -1 if i % 2 == 0 else 1
+        radius = src.diameter/2 if src.diameter else src.width/2
+        anti_bead_loc = src.bottom().move(
+            types.Point(x=side*radius*0.7, z=2))
+        m300.custom_pick_up()
+        flow_rate(asp=30, disp=30)
+        m300.aspirate(100, anti_bead_loc)
+        ctx.delay(seconds=0.5)
+        m300.dispense(120, liquid_waste)
+        flow_rate()
+        m300.blow_out()
+        m300.drop_tip()
 
     # Air dry for 10 minutes
     mag_deck.engage(7)
     if add_water:
-        for src in mag_samps_h:
+        for i, src in enumerate(mag_samps_h):
+            side = -1 if i % 2 == 0 else 1
+            radius = src.diameter/2 if src.diameter else src.width/2
+            anti_bead_loc = src.bottom().move(
+                types.Point(x=side*radius*0.7, z=2))
             m300.custom_pick_up()
             m300.aspirate(100, h2o)
             flow_rate(asp=30, disp=30)
             m300.dispense(80, src)
             ctx.delay(seconds=0.5)
-            m300.aspirate(100, src)
+            m300.aspirate(100, anti_bead_loc)
             flow_rate()
             m300.dispense(120, liquid_waste)
             m300.blow_out()
             m300.drop_tip()
+
+    ctx.delay(minutes=1)
+    for i, src in enumerate(mag_samps_h):
+        side = -1 if i % 2 == 0 else 1
+        radius = src.diameter/2 if src.diameter else src.width/2
+        anti_bead_loc = src.bottom().move(
+            types.Point(x=side*radius*0.7, z=2))
+        m300.custom_pick_up()
+        flow_rate(asp=30, disp=30)
+        m300.aspirate(100, anti_bead_loc)
+        ctx.delay(seconds=0.5)
+        m300.dispense(120, liquid_waste)
+        flow_rate()
+        m300.blow_out()
+        m300.drop_tip()
 
     ctx.home()
     air_dry_msg = f'\nAir drying the beads for {air_dry} minutes. \
@@ -537,7 +584,11 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.slow_tip_withdrawal(10, src, to_surface=True)
         m300.dispense_h(elution_vol, col)
         if not off_deck:
-            m300.mix(10, 50, col)
+            side = 1 if idx % 2 == 0 else -1
+            radius = col.diameter/2 if col.diameter else col.width/2
+            bead_loc = col.bottom().move(
+                types.Point(x=side*radius*0.6, z=2))
+            m300.mix(10, 50, bead_loc)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
         m300.blow_out(col.bottom(6))
         for _ in range(2):
@@ -558,21 +609,41 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Transfer elution to PCR plate
     if not off_deck:
-        for col in mag_samps_h:
-            m300.custom_pick_up()
-            m300.mix(10, 50, col)
-            m300.slow_tip_withdrawal(10, col, to_surface=True)
-            m300.blow_out(col.bottom(6))
-            for _ in range(2):
-                m300.move_to(col.bottom(5))
-                m300.move_to(col.bottom(6))
-            m300.drop_tip(home_after=False)
+        if num_cols > 1:
+            num_mixes = math.ceil(inc_time/num_cols)
+        else:
+            num_mixes = 10
+
+        tip_list = []
+        for n_mix in range(num_mixes):
+            for i, col in enumerate(mag_samps_h):
+                if n_mix == 0:
+                    m300.custom_pick_up()
+                    current_tip = m300._last_tip_picked_up_from
+                    tip_list.append(current_tip)
+                else:
+                    m300.pick_up_tip(tip_list[i])
+                side = 1 if idx % 2 == 0 else -1
+                radius = col.diameter/2 if col.diameter else col.width/2
+                bead_loc = col.bottom().move(
+                    types.Point(x=side*radius*0.6, z=2))
+                m300.mix(10, 50, bead_loc)
+                m300.slow_tip_withdrawal(10, col, to_surface=True)
+                m300.blow_out(col.bottom(6))
+                for _ in range(2):
+                    m300.move_to(col.bottom(5))
+                    m300.move_to(col.bottom(6))
+                if n_mix == num_mixes - 1:
+                    m300.drop_tip(home_after=False)
+                else:
+                    m300.return_tip()
     else:
-        ctx.comment('Please perform manual resupsension off deck.')
+        ctx.pause('Please remove samples and mix off-deck for 10 minutes \
+then resume run.')
 
     mag_deck.engage(7)
     mag_msg = '\nIncubating on Mag Deck for 3 minutes.\n'
-    ctx.delay(minutes=3, msg=mag_msg)
+    ctx.delay(minutes=mag_time, msg=mag_msg)
 
     ctx.comment(f'\nTransferring {elution_vol}uL to final PCR plate\n')
     t_start += num_cols
