@@ -149,7 +149,7 @@ def run(ctx):
                     running = []
                     current_vol = 0
                 running.append({well: vol})
-                current_vol += vol + vol_pre_airgap_small
+                current_vol += vol + vol_pre_airgap
         sets.append(running)
         return sets
 
