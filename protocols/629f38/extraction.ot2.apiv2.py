@@ -15,22 +15,24 @@ TEST_MODE_AIRDRY = False
 
 def run(ctx):
 
-    [num_samples, lw_deepwell_plate, mixreps, time_settling_minutes,
-     time_airdry_minutes, vol_final_elution] = get_values(  # noqa: F821
-        'num_samples', 'lw_deepwell_plate', 'mixreps', 'time_settling_minutes',
-        'time_airdry_minutes', 'vol_final_elution')
+    [num_samples, lw_deepwell_plate, starting_vol, mixreps,
+     time_settling_minutes, time_airdry_minutes,
+     vol_final_elution] = get_values(  # noqa: F821
+        'num_samples', 'lw_deepwell_plate', 'starting_vol',
+        'mixreps', 'time_settling_minutes', 'time_airdry_minutes',
+        'vol_final_elution')
 
     if TEST_MODE_BEADS:
         mixreps = 1
     vol_mix = 200
     z_offset = 3.0
     radial_offset_fraction = 0.4  # fraction of radius
-    starting_vol = 200
-    vol_binding_buffer = 216
-    vol_quick_dna_magbinding_buffer = 250
-    vol_dna_pre_wash_buffer = 250
-    vol_g_dna_wash_buffer = 450
-    vol_elution = 50
+    vol_scalar = starting_vol/200
+    vol_binding_buffer = 216*vol_scalar
+    vol_quick_dna_magbinding_buffer = 250*vol_scalar
+    vol_dna_pre_wash_buffer = 250*vol_scalar
+    vol_g_dna_wash_buffer = 450*vol_scalar
+    vol_elution = vol_final_elution + 15
     engage_height = 7.6
 
     ctx.max_speeds['X'] = 200
