@@ -15,6 +15,15 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "sample input volume (in ul)",
+    "name": "starting_vol",
+    "options": [
+      { "label": "200ul", "value": 200.0 },
+      { "label": "400ul", "value": 400.0 }
+    ]
+  },
+  {
     "type": "int",
     "label": "mixing repetitions for resuspension",
     "name": "mixreps",
