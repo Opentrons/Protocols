@@ -10,17 +10,17 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, sds_vol, init_vol_bsa, init_vol_bca,
+    [num_samp, samp_vol, sds_vol, init_vol_bsa, init_vol_bca,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "num_samp", "sds_vol", "init_vol_bsa",
+        "num_samp", "samp_vol", "sds_vol", "init_vol_bsa",
             "init_vol_bca", "p20_mount", "p300_mount")
 
     if not 1 <= num_samp <= 24:
         raise Exception("Enter a sample number between 1-24")
 
     # modules
-    hs_mod = ctx.load_module('heaterShakerModuleV1', 10)
-    hs_mod.close_labware_latch()
+    # hs_mod = ctx.load_module('heaterShakerModuleV1', 10)
+    # hs_mod.close_labware_latch()
 
     # labware
     reservoir = ctx.load_labware('agilent_1_reservoir_290ml', 11)
@@ -29,8 +29,8 @@ def run(ctx):
     bsa_tuberack = ctx.load_labware('opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 4)  # noqa:E501
 
     strip_tube_plate = ctx.load_labware('3dprint_96_tuberack_200ul', 7)
-    sample_plate = ctx.load_labware('costar_96_wellplate_330ul', 8)
-    agilent_plate = ctx.load_labware('agilent_96_wellplate_500ul', 3)
+    sample_plate = ctx.load_labware('agilent_96_wellplate_500ul', 8)
+    agilent_plate = ctx.load_labware('agilent_96_wellplate_1400ul', 3)
     uv_plate = ctx.load_labware('greineruvstar_96_wellplate_392ul', 5)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in [9]]
@@ -68,7 +68,7 @@ def run(ctx):
                                p300_mount, tip_racks=tips300)
 
     # mapping
-    sds = reservoir.wells()[0]
+    sds = reservoir.wells()[0].bottom(z=4)
     samples = sample_rack.wells()[:num_samp]
     start_samp_vol = 10
 
@@ -109,8 +109,11 @@ def run(ctx):
     with SDS buffer, seal plate and perform PIXUL sonication.
     After sonication, wash bottom of the plate, centrifuge and transfer
     supernatant to new plate using a multichannel pipette offline.
-    Place new plate containing supernatant on slot 2.
+
+    Place new plate containing supernatant on slot 8.
     Remove empty epps from slot 1.
+    Place 8 new eppendorfs in slot 1 in positions A1-B2.
+
     """)
 
     ctx.comment('\n-------ADDING BSA TO STANDARD TUBES-----\n\n\n')
@@ -153,21 +156,10 @@ def run(ctx):
 
     p300.drop_tip()
 
-    ctx.pause("""
-    Close epps and transfer 4-in-1-rack with epps to heater-shaker module on
-    slot 10. Remove 15 ml tube containing leftover BSA.
-    Shake plate at RT for 5 min at 1000 rpm.
-    Centrifuge eppendorfs containing BSA solutions for a few seconds to gather
-    solution at the bottom of the tubes. Place open eppendorfs back
-    in 4-in-1-rack on slot 1.
-    """)
-
     ctx.comment('\n-------ADDING STANDARDS TO PLATE-----\n\n\n')
     for tube, dest_row in zip(standards, strip_tube_plate.rows()):
         p300.pick_up_tip()
-        for well in dest_row:
-            p300.aspirate(35, tube)
-            p300.dispense(35, well)
+        p300.distribute(35, tube, [well for well in dest_row], new_tip='never')
         p300.drop_tip()
         ctx.comment('\n')
 
@@ -183,8 +175,8 @@ def run(ctx):
     ctx.comment('\n-------ADDING SDS TO PLATE-----\n\n\n')
     p300.pick_up_tip()
     for well in agilent_plate.wells()[:num_samp]:
-        p300.aspirate(30, sds)
-        p300.dispense(30, well)
+        p300.aspirate(40-samp_vol, sds)
+        p300.dispense(40-samp_vol, well)
     p300.drop_tip()
 
     ctx.comment('\n-------ADDING SAMPLE TO PLATE-----\n\n\n')
@@ -203,8 +195,8 @@ def run(ctx):
                            agilent_plate.wells()[:num_samp],
                            chunked_uv_wells):
         p20.pick_up_tip()
-        p20.aspirate(10, s)
-        p20.dispense(10, d)
+        p20.aspirate(samp_vol, s)
+        p20.dispense(samp_vol, d)
         p20.mix(5, 20, d)
         for uv_well in chunk:
             p20.aspirate(10, d)
@@ -229,18 +221,19 @@ def run(ctx):
     p300.pick_up_tip()
     for i in range(8):
         p300.aspirate(200, bca)
-        p300.dispense(200, uv_plate.rows()[i][0])
+        p300.dispense(200, uv_plate.rows()[i][0].top())
         p300.aspirate(200, bca)
-        p300.dispense(200, uv_plate.rows()[i][1])
+        p300.dispense(200, uv_plate.rows()[i][1].top())
         adjust_height(200, 'bsa')
     ctx.comment('\n')
 
     # transfer bca to samples
     for well in uv_dispense_wells[:num_samp*2]:
         p300.aspirate(200, bca)
-        p300.dispense(200, well)
+        p300.dispense(200, well.top())
         adjust_height(200, 'bca')
     p300.drop_tip()
 
-    ctx.pause("""Seal UV-start plate on slot 5 and transfer to heater-shaker
-                 module on slot 10""")
+    ctx.pause("""Seal UV-star plate on slot 5 & mix manually for 30 seconds.
+    Transfer plate to 37°C incubator for 30 min.
+    Measure with Varioskan after incubation.""")

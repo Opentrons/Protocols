@@ -7,6 +7,12 @@
   },
   {
     "type": "int",
+    "label": "Sample Volume (this will be subtracted from 40ul to determine buffer volume)",
+    "name": "samp_vol",
+    "default": 10
+  },
+  {
+    "type": "int",
     "label": "SDS Volume",
     "name": "sds_vol",
     "default": 60
