@@ -247,7 +247,7 @@ def run(ctx):
         p20.drop_tip()
     ctx.comment('\n\n\n')
 
-    ctx.delay(seconds=20)  # 20 minutes
+    ctx.delay(minutes=20)  # 20 minutes
 
     # add edta
     for samp in sample_plus_barcode_plate.wells()[:num_samp]:
@@ -317,13 +317,13 @@ def run(ctx):
         m300.aspirate(bead_and_samp_vol if bead_and_samp_vol <= 200 else 200, pool_well)  # noqa:E501
         slow_tip_withdrawal(m300, pool_well)
         m300.move_to(pool_well.top(z=-5))
-        ctx.delay(seconds=6)  # 120 seconds
+        ctx.delay(seconds=120)  # 120 seconds
         m300.dispense(bead_and_samp_vol if bead_and_samp_vol <= 200 else 200, pool_well)  # noqa:E501
 
     slow_tip_withdrawal(m300, pool_well)
     m300.touch_tip(v_offset=-15)
     m300.drop_tip()
-    ctx.delay(seconds=6)
+    ctx.delay(seconds=60)
 
     mag_mod.engage(height_from_base=3)
     ctx.delay(minutes=5.5)
@@ -333,18 +333,23 @@ def run(ctx):
     pick_up_one()
     if bead_and_samp_vol <= 200:
         m300.aspirate(bead_and_samp_vol, pool_well, rate=0.1)
+        m300.touch_tip()
         m300.dispense(bead_and_samp_vol, trash)
         m300.blow_out()
+        m300.touch_tip()
     else:
         aspirate_vol = bead_and_samp_vol / 2
         for _ in range(2):
             m300.aspirate(aspirate_vol, pool_well, rate=0.1)
+            m300.touch_tip()
             m300.dispense(aspirate_vol, trash)
             m300.blow_out()
+            m300.touch_tip()
 
     m300.aspirate(20, pool_well.bottom(z=0.5), rate=0.05)
     m300.dispense(20, trash)
     m300.blow_out()
+    m300.touch_tip()
     m300.drop_tip()
 
     ctx.comment('\n----------------TWO ETHANOL WASHES-----------\n\n')
@@ -356,26 +361,33 @@ def run(ctx):
         for _ in range(4):
             m300.aspirate(175, ethanol, rate=0.8)
             slow_tip_withdrawal(m300, reservoir.wells()[1])
+            m300.touch_tip()
             m300.dispense(175, pool_well.top(z=-2))
-            ctx.delay(seconds=2)
             m300.blow_out()
 
         ctx.comment('\n---------REMOVING SUPERNATANT-----------\n\n')
         for _ in range(3):
             m300.aspirate(200, pool_well, rate=0.1)
+            m300.touch_tip()
             m300.dispense(200, trash)
             m300.blow_out()
+            m300.touch_tip()
 
         m300.aspirate(100, pool_well, rate=0.1)
+        m300.touch_tip()
         m300.dispense(100, trash)
         m300.blow_out()
+        m300.touch_tip()
 
         m300.aspirate(20, pool_well.bottom(z=0.5), rate=0.05)
+        m300.touch_tip()
         m300.dispense(20, trash)
+        m300.blow_out()
+        m300.touch_tip()
 
         m300.drop_tip()
 
-    ctx.delay(seconds=30)
+    ctx.delay(seconds=30)  # ethanol dry
 
     mag_mod.disengage()
 
@@ -397,12 +409,12 @@ def run(ctx):
         m300.aspirate(35, pool_well)
         slow_tip_withdrawal(m300, pool_well)
         m300.move_to(pool_well.top(z=-5))
-        ctx.delay(seconds=12)  # 120 seconds
+        ctx.delay(seconds=120)  # 120 seconds
         m300.dispense(35, pool_well)
     slow_tip_withdrawal(m300, pool_well)
     m300.touch_tip(v_offset=-15)
     m300.drop_tip()
-    ctx.delay(seconds=6)  # 60
+    ctx.delay(seconds=60)  # 60
 
     mag_mod.engage(height_from_base=3)
     ctx.delay(minutes=3)
@@ -432,12 +444,14 @@ def run(ctx):
         p20.touch_tip()
         p20.drop_tip()
 
+    ctx.delay(minutes=20)
+
     ctx.comment('\n---------TRANSFERRING BEADS TO PLATE-----------\n\n')
 
     bead_vol = 20
 
     pick_up_one()
-    m300.mix(15, 200, beads)  # should this always be bead volume?
+    m300.mix(15, 200, beads)
 
     m300.aspirate(bead_vol, beads, rate=0.5)
     slow_tip_withdrawal(m300, beads)
@@ -457,12 +471,12 @@ def run(ctx):
         m300.aspirate(50, pool_well)
         slow_tip_withdrawal(m300, pool_well)
         m300.move_to(pool_well.top(z=-5))
-        ctx.delay(seconds=12)  # 120 seconds
+        ctx.delay(seconds=120)  # 120 seconds
         m300.dispense(50, pool_well)
     slow_tip_withdrawal(m300, pool_well)
     m300.touch_tip(v_offset=-15)
     m300.drop_tip()
-    ctx.delay(seconds=6)
+    ctx.delay(seconds=60)
 
     mag_mod.engage(height_from_base=3)
     ctx.delay(minutes=3)
@@ -472,8 +486,10 @@ def run(ctx):
     pick_up_one()
     m300.aspirate(50, pool_well, rate=0.1)
     m300.aspirate(20, pool_well.bottom(z=0.5), rate=0.01)
+    m300.touch_tip()
     m300.dispense(70, trash)
     m300.blow_out()
+    m300.touch_tip()
     m300.drop_tip()
 
     ctx.comment('\n----------------TWO WASHES-----------\n\n')
@@ -483,11 +499,13 @@ def run(ctx):
         pick_up_one()
         m300.aspirate(125, long_frag_buffer)
         slow_tip_withdrawal(m300, long_frag_buffer)
+        m300.touch_tip()
         m300.dispense(125, pool_well.top(z=-2), rate=0.5)
         m300.move_to(pool_well.top())
         mag_mod.disengage()
         m300.mix(15, 125, pool_well)
         slow_tip_withdrawal(m300, pool_well)
+        m300.touch_tip()
         mag_mod.engage(height_from_base=3)
         ctx.delay(minutes=3)
 
@@ -495,9 +513,10 @@ def run(ctx):
 
         m300.aspirate(125, pool_well, rate=0.1)
         m300.aspirate(20, pool_well.bottom(z=0.5), rate=0.01)
+        m300.touch_tip()
         m300.dispense(145, trash)
         m300.blow_out()
-
+        m300.touch_tip()
         m300.drop_tip()
 
     mag_mod.disengage()
@@ -522,12 +541,12 @@ def run(ctx):
         m300.aspirate(15, pool_well)
         slow_tip_withdrawal(m300, pool_well)
         m300.move_to(pool_well.top(z=-5))
-        ctx.delay(seconds=12)  # 120 seconds
+        ctx.delay(seconds=120)  # 120 seconds
         m300.dispense(15, pool_well)
     slow_tip_withdrawal(m300, pool_well)
     m300.touch_tip(v_offset=-15)
     m300.drop_tip()
-    ctx.delay(seconds=6)  # 60
+    ctx.delay(seconds=60)  # 60
 
     mag_mod.engage(height_from_base=3)
     ctx.delay(minutes=3)
