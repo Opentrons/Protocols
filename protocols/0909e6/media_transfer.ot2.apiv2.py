@@ -18,7 +18,7 @@ def run(ctx):
         'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
         'type_pipette_small')
 
-    vol_pre_airgap_1000 = 50.0
+    vol_pre_airgap_1000 = 100.0
     if type_pipette_small == 'p300_single_gen2':
         vol_pre_airgap_small = 20.0
         tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
