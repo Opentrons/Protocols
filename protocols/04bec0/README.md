@@ -25,11 +25,8 @@ E,117.17,162.28,88.7,135.69,322.46,321,285.73,375.51
 F,130.01,172.35,93.48,136.36,326.26,285.79,316.29,344.37
 ```
 
-<<<<<<< HEAD
 You can also download a template from [this link](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04bec0/ex.csv).
 
-=======
->>>>>>> ac7f3a1ef (04bec0)
 
 ### Labware
 * Beckman Fed Batch Plate #Beckman Coulter
