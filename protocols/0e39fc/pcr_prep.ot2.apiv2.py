@@ -25,7 +25,7 @@ def run(ctx):
     pcr_plate = ctx.load_labware('biorad_384_wellplate_50ul_', '2',
                                  'PCR plate')
     reagent_plate = ctx.load_labware(
-        'biorad_96_tuberack_with_applied_biosystems_0.2ml', '5',
+        'biorad_96_wellplate_200ul_pcr', '5',
         'reagent plate')
     reagent_rack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
