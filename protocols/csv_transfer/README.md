@@ -11,7 +11,7 @@
 
 Accomplish complex workflows, easily with this Custom CSV Transfer Protocol. This protocol utilizes a CSV to specify aspiration height, labware, pipette, as well as source and destination wells.</br>
 </br>
-To use, simply upload a CSV (download a template with the proper format [here]((https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv)) and select the parameters that match the OT-2 below before downloading the Python protocol. The protocol can then be used on the OT-2 and will make all of the transfers outlined in the CSV.
+To use, simply upload a CSV (download a template with the proper format [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv) and select the parameters that match the OT-2 below before downloading the Python protocol. The protocol can then be used on the OT-2 and will make all of the transfers outlined in the CSV.
 
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
 
