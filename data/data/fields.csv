@@ -353,6 +353,7 @@ dispension_height_mm,2
 dispmode,1
 disposal_vol,2
 disposal_volume,1
+dmso_dil_factor,1
 dmsovol,1
 dna,1
 dna_asp_rate,1
@@ -676,8 +677,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,74
-m300_mount,94
+m20_mount,76
+m300_mount,95
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -782,6 +783,7 @@ move_side,2
 move_vol,1
 mp_type,1
 multi_pip_info,1
+n,1
 n1_col,1
 n1_primer_well,1
 n2_col,1
@@ -937,7 +939,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,141
+p300_mount,142
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1056,6 +1058,8 @@ poolvol,1
 post_aspiration_wait,2
 post_size_selection_volume,1
 post_user_sample_volume,1
+pre_dil_factor,1
+pre_dilution,1
 prefill,1
 prepare_mastermix,2
 prepare_standard,2
