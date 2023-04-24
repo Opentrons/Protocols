@@ -548,7 +548,7 @@ init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,17
+input_csv,18
 input_file,10
 input_file2,6
 input_labware,1
@@ -776,8 +776,8 @@ mount,2
 mount_m20,8
 mount_m300,13
 mount_p1000,2
-mount_p20,10
-mount_p300,7
+mount_p20,11
+mount_p300,8
 mount_side,1
 move_side,2
 move_vol,1
