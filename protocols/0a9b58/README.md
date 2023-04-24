@@ -33,7 +33,7 @@ This protocol performs a pooling or normalization protocol depending on the user
 ### Deck Setup
 
 * This is the deck setup for the normalization protocol. For the pooling protocol, the reservoir is not needed in slot 1, and the tip rack in slot 5 is not needed.
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0a9b58/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0a9b58/Screen+Shot+2023-04-24+at+4.01.28+PM.png)
 
 
 ### Protocol Steps

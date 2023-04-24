@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Serial Dilution"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. ",
+    "internal": "056f47",
+    "labware": "\nNEST 12 Well Reservoir 15 mL #360102\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Serial Dilution\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/056f47/Screen+Shot+2023-04-24+at+3.42.36+PM.png)\n\n\n\n",
+        "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. \n\n\n",
+        "internal": "056f47\n",
+        "labware": "* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Transfer 2.4 uL * n from DMSO reservoir to columns 2-12 in Dilution Plates DMSO 1-1, keep tips\n2. Transfer 2.4 uL * n from DMSO reservoir to all wells in Dilution Plates DMSO 1-2, discard tips\n3. Transfer 7.2 uL * n from column 1 of Compound Stocks to column 1 of Dilution Plate DMSO 1-1, keep tips\n4. Transfer 4.8 uL * n from column 1 of Dilution plate DMSO 1-1 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), keep tips\n5. Transfer 4.8 uL * n from column 11 of Dilution plate DMSO 1-1 to column 1 of Dilution Plate DMSO 1-2, mixing after, keep tips.\n6. Transfer 4.8 uL * n\u00a0 from column 1 of Dilution plate DMSO 1-2 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), discard tips\n\n\n\n",
+        "title": "DMSO and Compound Stock Solution Addition - Part 2"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nTransfer 2.4 uL * n from DMSO reservoir to columns 2-12 in Dilution Plates DMSO 1-1, keep tips\nTransfer 2.4 uL * n from DMSO reservoir to all wells in Dilution Plates DMSO 1-2, discard tips\nTransfer 7.2 uL * n from column 1 of Compound Stocks to column 1 of Dilution Plate DMSO 1-1, keep tips\nTransfer 4.8 uL * n from column 1 of Dilution plate DMSO 1-1 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), keep tips\nTransfer 4.8 uL * n from column 11 of Dilution plate DMSO 1-1 to column 1 of Dilution Plate DMSO 1-2, mixing after, keep tips.\nTransfer 4.8 uL * n\u00a0 from column 1 of Dilution plate DMSO 1-2 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), discard tips\n",
+    "title": "DMSO and Compound Stock Solution Addition - Part 2"
+}

@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "056f47.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/056f47",
+    "slug": "056f47",
+    "status": "ok"
+}
