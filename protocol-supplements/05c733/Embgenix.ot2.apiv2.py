@@ -47,10 +47,10 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tipracks200)
 
-    m20.flow_rate.aspirate /= 3
-    m20.flow_rate.dispense /= 3
-    m300.flow_rate.aspirate /= 3
-    m300.flow_rate.dispense /= 3
+    m20.flow_rate.aspirate /= 1.5
+    m20.flow_rate.dispense /= 1.5
+    m300.flow_rate.aspirate /= 1.5
+    m300.flow_rate.dispense /= 1.5
 
     # reagents
     num_cols = math.ceil(num_samples/8)
@@ -119,18 +119,20 @@ def run(ctx):
                 pip.aspirate(vol_per_row*len(chunk), source)
                 for well in chunk:
                     pip.dispense(vol_per_row, well.bottom(1))
-                    wick(pip, well)
+                    slow_withdraw(well, m300)
+                    # wick(pip, well)
             pip.drop_tip()
 
             # reassign pipette based on transfer volume per sample
-            pip = m300 if volume > 20 else m20
+            [pip, vol_preairgap] = [m300, 20] if volume > 20 else [m20, 2]
             if not new_tip:
                 pick_up(pip, 8)
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
-                pip.transfer(volume, distribution_column[0].bottom(0.5),
-                             s.bottom(1), new_tip='never')
+                pip.aspirate(vol_preairgap, distribution_column[0].top())
+                pip.aspirate(volume, distribution_column[0].bottom(0.5))
+                pip.dispense(pip.current_volume, s.bottom(1))
                 if mix_reps > 0:
                     pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
@@ -147,7 +149,9 @@ def run(ctx):
             for i, s in enumerate(final_destinations_s):
                 if not pip.has_tip:
                     pick_up(pip, 1)
-                pip.transfer(volume, source, s.bottom(0.5), new_tip='never')
+                pip.aspirate(vol_preairgap, distribution_column[0].top())
+                pip.aspirate(volume, distribution_column[0].bottom(0.5))
+                pip.dispense(volume, source.bottom(0.5))
                 pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
