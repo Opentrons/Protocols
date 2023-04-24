@@ -115,8 +115,8 @@ def run(ctx):
         del ctx.max_speeds['Z']
 
     def custom_touch_tip(loc, pip, z=-1):
-        if loc.width:
-            magnitude = loc.width/2
+        if loc.length:
+            magnitude = loc.length/2
         else:
             magnitude = loc.diameter/2
         touch_points = [
@@ -252,7 +252,7 @@ def run(ctx):
         m300.aspirate(vol_acetone2, acetone_channel.bottom(2))
         slow_withdraw(acetone_channel, m300, z=-1)
         custom_touch_tip(acetone_channel, m300)
-        m300.move_to(d.top().move(Point(x=d.width/2, z=-1)))
+        m300.move_to(d.top().move(Point(x=d.length/2, z=-1)))
         m300.dispense(vol_acetone2)
         ctx.delay(seconds=2)
         custom_touch_tip(d, m300)
