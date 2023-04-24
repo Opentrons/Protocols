@@ -31,7 +31,8 @@ def run(ctx):
 
     # pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips200)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tips200)
 
     # mapping
     dmso_plate_1 = ctx.loaded_labwares[4]
