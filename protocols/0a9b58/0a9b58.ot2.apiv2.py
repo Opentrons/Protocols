@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [protocol, csv_samp, p20_mount] = get_values(  # noqa: F821
-        "protocol", "csv_samp", "p20_mount")
+    [protocol, csv_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "protocol", "csv_samp", "p20_mount", "p300_mount")
 
     if "normalization" in csv_samp.lower() and protocol == "pooling":
         raise Exception("""
@@ -38,6 +38,8 @@ def run(ctx):
         dest_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3)
         tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                 for slot in [4, 5]]
+        tips3 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+                 for slot in [6]]
 
     if protocol == "pooling":
         source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 2)
@@ -47,14 +49,13 @@ def run(ctx):
 
     # pipettes
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips3)
 
     # protocol
     if protocol == "normalization":
 
         # transfer water
         ctx.comment('\n ------------- TRANSFERRING WATER ------------ \n\n')
-
-        p20.pick_up_tip()
         for line in csv_lines:
             water_vol = float(line[1])
             dest_well = dest_plate.wells_by_name()[line[3]]
@@ -63,8 +64,15 @@ def run(ctx):
                 continue
 
             else:
-                p20.transfer(water_vol, water, dest_well, new_tip='never')
-        p20.drop_tip()
+                pip = p300 if water_vol > 20 else p20
+                if not pip.has_tip:
+                    pip.pick_up_tip()
+                pip.transfer(water_vol, water, dest_well, new_tip='never')
+
+        if p20.has_tip:
+            p20.drop_tip()
+        if p300.has_tip:
+            p300.drop_tip()
 
         # dna
         ctx.comment('\n ------------- TRANSFERRING DNA ------------ \n\n')
@@ -81,10 +89,11 @@ def run(ctx):
                 raise Exception("DNA volume found which is less than 1.0ul")
 
             else:
-                p20.pick_up_tip()
-                p20.transfer(dna_vol, source_well,
+                pip = p300 if water_vol > 20 else p20
+                pip.pick_up_tip()
+                pip.transfer(dna_vol, source_well,
                              dest_well, new_tip='never')
-                p20.drop_tip()
+                pip.drop_tip()
 
     if protocol == "pooling":
 
