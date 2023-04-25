@@ -1,4 +1,5 @@
 from opentrons.types import Point
+from opentrons import types
 
 
 metadata = {
@@ -57,9 +58,9 @@ def run(ctx):
 
     def pickup_p300(mode='single'):
         current = 0.1 if mode == 'single' else 0.5
+
         ctx._hw_manager.hardware._attached_instruments[
-            p300._implementation.get_mount()].update_config_item(
-                'pick_up_current', current)
+            types.Mount.RIGHT].update_config_item('pick_up_current', current)
 
         p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])
         tip_data[mode]['count'] += 1
