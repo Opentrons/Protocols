@@ -1,4 +1,11 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samples":8,"reagent_labware":"nest_12_reservoir_15ml","starting_conc":60,"prepare_standard":true,"p1000_mount":"left","p300_mount":"right"}""")
+    return [_all_values[n] for n in names]
+
+
 from opentrons.types import Point
+from opentrons import types
 
 
 metadata = {
@@ -57,9 +64,9 @@ def run(ctx):
 
     def pickup_p300(mode='single'):
         current = 0.1 if mode == 'single' else 0.5
+
         ctx._hw_manager.hardware._attached_instruments[
-            p300._implementation.get_mount()].update_config_item(
-                'pick_up_current', current)
+            types.Mount.RIGHT].update_config_item('pick_up_current', current)
 
         p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])
         tip_data[mode]['count'] += 1
