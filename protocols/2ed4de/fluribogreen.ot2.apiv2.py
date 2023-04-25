@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":8,"reagent_labware":"nest_12_reservoir_15ml","starting_conc":60,"prepare_standard":true,"p1000_mount":"left","p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 from opentrons.types import Point
 from opentrons import types
 
