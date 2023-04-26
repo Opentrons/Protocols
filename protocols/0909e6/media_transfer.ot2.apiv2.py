@@ -18,12 +18,12 @@ def run(ctx):
         'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
         'type_pipette_small')
 
-    vol_pre_airgap_1000 = 100.0
+    vol_pre_airgap_1000 = 150.0
     if type_pipette_small == 'p300_single_gen2':
-        vol_pre_airgap_small = 20.0
+        vol_pre_airgap_small = 50.0
         tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
     else:
-        vol_pre_airgap_small = 2.0
+        vol_pre_airgap_small = 5.0
         tiprack_small_type = 'opentrons_96_filtertiprack_20ul'
 
     class WellH(Well):
@@ -197,8 +197,12 @@ def run(ctx):
                 pip_small.pick_up_tip()
             # pre-air_gap to fully void tip on blow_out
             for d in factor_set:
-                pip_small.aspirate(vol_pre_airgap_small, factor.well.top())
                 asp_vol = sum(d.values())
+                if asp_vol + vol_pre_airgap_small <= pip_small.max_volume:
+                    ag_vol = vol_pre_airgap_small
+                else:
+                    ag_vol = pip_small.max_volume - asp_vol
+                pip_small.aspirate(ag_vol, factor.well.top())
                 pip_small.aspirate(asp_vol, factor.height_dec(asp_vol))
             # total_factor_vol = sum([sum(dict.values()) for dict in
             # factor_set])
