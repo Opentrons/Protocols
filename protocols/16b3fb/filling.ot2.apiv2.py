@@ -7,7 +7,6 @@ metadata = {
     'author': 'Nick <ndiehl@opentrons.com>'
 }
 
-vol_bulb = 150
 num_bulbs = 432
 num_racks = math.ceil(num_bulbs/48)
 vol_preairgap = 0
