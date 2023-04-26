@@ -2,23 +2,26 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': 'Custom Bulb Filling',
-    'apiLevel': '2.14',
+    'protocolName': 'Custom Bulb Filling - 150ul',
+    'apiLevel': '2.13',
     'author': 'Nick <ndiehl@opentrons.com>'
 }
 
-vol_bulb = 100
+vol_bulb = 150
 num_bulbs = 432
 num_racks = math.ceil(num_bulbs/48)
-vol_preairgap = 100.0
+vol_preairgap = 0
 
 
 def run(ctx):
 
+    [vol_bulb] = get_values(  # noqa: F821
+        'vol_bulb')
+
     buffer = ctx.load_labware('nest_1_reservoir_195ml', '10').wells()[0]
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '11')]
     bulb_racks = [
-        ctx.load_labware('agfiltration_48_tuberack_150ul', slot,
+        ctx.load_labware('ag_48_tuberack_150ul', slot,
                          f'bulb rack {slot}')
         for slot in range(1, 1+num_racks)]
 
@@ -39,11 +42,11 @@ def run(ctx):
 
     bulbs = [well for rack in bulb_racks for well in rack.wells()][:num_bulbs]
 
-    buffer_liquid = ctx.define_liquid(
-        name='buffer',
-        description='buffer',
-        display_color='#0000FF')
-    buffer.load_liquid(buffer_liquid, 190000)
+    # buffer_liquid = ctx.define_liquid(
+    #     name='buffer',
+    #     description='buffer',
+    #     display_color='#0000FF')
+    # buffer.load_liquid(buffer_liquid, 190000)
 
     # create distribution sets
     num_bulbs_per_asp = math.floor(
@@ -57,13 +60,14 @@ def run(ctx):
 
     p1000.pick_up_tip()
     for d_set in distribution_sets:
+        p1000.blow_out(buffer.top())
         if vol_preairgap > 0:
             for _ in range(len(d_set)):
                 p1000.aspirate(vol_preairgap, buffer.top())
                 p1000.aspirate(vol_bulb, buffer.bottom(2))
                 slow_withdraw(p1000, buffer)
         else:
-            p1000.aspirate(vol_bulb*len(d_set))
+            p1000.aspirate(vol_bulb*len(d_set), buffer.bottom(2))
             slow_withdraw(p1000, buffer)
         for d in d_set:
             p1000.dispense(vol_bulb+vol_preairgap, d.top(-1))
