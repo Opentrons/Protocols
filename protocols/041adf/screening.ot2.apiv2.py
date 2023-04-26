@@ -27,7 +27,7 @@ def run(ctx):
     vol_acetone2 = 200.0
 
     # modules and labware
-    hs = ctx.load_module('heaterShakerModuleV1', '4')
+    hs = ctx.load_module('heaterShakerModuleV1', '1')
     hs_plate = hs.load_labware(
         'opentrons_96_deep_well_adapter_nest_wellplate_2ml_deep',
         'reaction plate')
@@ -36,17 +36,17 @@ def run(ctx):
                                     'azides')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['1', '7']]
+        for slot in ['4', '10']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['8', '9']]
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '6', 'reservoir')
-    oligo_plate = ctx.load_labware('roarprinted_48_wellplate_1500ul', '2',
+        for slot in ['6', '9']]
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5', 'reservoir')
+    oligo_plate = ctx.load_labware('roarprinted_48_wellplate_1500ul', '11',
                                    'oligos')
     supernatant_plates = [
         ctx.load_labware(
             'nest_96_wellplate_2ml_deep', slot, f'supernatant plate {i+1}')
-        for i, slot in enumerate(['10', '11'])]
+        for i, slot in enumerate(['7', '8'])]
 
     # pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', mount_m20,
