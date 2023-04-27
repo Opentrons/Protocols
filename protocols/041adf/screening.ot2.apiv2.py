@@ -99,8 +99,7 @@ def run(ctx):
         # reset current to default
         # if not ctx.is_simulating():
         ctx._hw_manager.hardware._attached_instruments[
-            pip._implementation.get_mount()
-            ].update_config_item('pick_up_current', default_current)
+            instr].update_config_item('pick_up_current', default_current)
 
     def wick(well, pip, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
