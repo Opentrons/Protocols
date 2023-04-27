@@ -190,7 +190,8 @@ def run(ctx):
     #     for i, d in enumerate(media_set):
     #         well = [key for key in d.keys()][0]
     #         vol = [val for val in d.values()][0]
-    #         p1000.dispense(vol+vol_pre_airgap_1000, well.bottom(well.depth/2))
+    #         p1000.dispense(vol+vol_pre_airgap_1000,
+    #                        well.bottom(well.depth/2))
     #         if i == len(media_set) - 1:
     #             p1000.blow_out(well.bottom(well.depth/2))
     #         slow_withdraw(well, p1000)
@@ -210,24 +211,49 @@ def run(ctx):
                 pip_small.pick_up_tip()
             # pre-air_gap to fully void tip on blow_out
             for d in factor_set:
-                asp_vol = sum(d.values())
+                well = [k for k in d.keys()][0]
+                asp_vol = [k for k in d.values()][0]
                 if asp_vol + vol_pre_airgap_small <= pip_small.max_volume:
                     ag_vol = vol_pre_airgap_small
                 else:
                     ag_vol = pip_small.max_volume - asp_vol
                 pip_small.aspirate(ag_vol, factor.well.top())
                 pip_small.aspirate(asp_vol, factor.height_dec(asp_vol))
+                slow_withdraw(factor.well, pip_small)
+                pip_small.dispense(
+                    pip_small.current_volume, well.bottom(well.depth/2))
+                pip_small.blow_out(well.top(-2))
+
             # total_factor_vol = sum([sum(dict.values()) for dict in
             # factor_set])
             # p300.aspirate(total_factor_vol,
             #               factor.height_dec(total_factor_vol))
-            slow_withdraw(factor.well, pip_small)
-            for i, dict in enumerate(factor_set):
-                for well, vol in dict.items():
-                    pip_small.dispense(
-                        vol+vol_pre_airgap_small, well.bottom(well.depth/2))
-                if i == len(factor_set) - 1:
-                    pip_small.blow_out(well.top(-2))
+            # for i, dict in enumerate(factor_set):
+            #     for well, vol in dict.items():
+            #         pip_small.dispense(
+            #             vol+vol_pre_airgap_small, well.bottom(well.depth/2))
+            #     if i == len(factor_set) - 1:
+            #         pip_small.blow_out(well.top(-2))
+
+            # for d in factor_set:
+            #     asp_vol = sum(d.values())
+            #     if asp_vol + vol_pre_airgap_small <= pip_small.max_volume:
+            #         ag_vol = vol_pre_airgap_small
+            #     else:
+            #         ag_vol = pip_small.max_volume - asp_vol
+            #     pip_small.aspirate(ag_vol, factor.well.top())
+            #     pip_small.aspirate(asp_vol, factor.height_dec(asp_vol))
+            # # total_factor_vol = sum([sum(dict.values()) for dict in
+            # # factor_set])
+            # # p300.aspirate(total_factor_vol,
+            # #               factor.height_dec(total_factor_vol))
+            # slow_withdraw(factor.well, pip_small)
+            # for i, dict in enumerate(factor_set):
+            #     for well, vol in dict.items():
+            #         pip_small.dispense(
+            #             vol+vol_pre_airgap_small, well.bottom(well.depth/2))
+            #     if i == len(factor_set) - 1:
+            #         pip_small.blow_out(well.top(-2))
         if pip_small.has_tip:
             pip_small.drop_tip()
 
