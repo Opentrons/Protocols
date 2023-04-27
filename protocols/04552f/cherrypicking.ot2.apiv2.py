@@ -35,9 +35,9 @@ def run(ctx):
         'p300_single_gen2', mount_p300, tip_racks=tipracks_300)
 
     media_liquid = ctx.define_liquid(
-        name="media",
-        description="media",
-        display_color="#00FF00",
+        name='media',
+        description='media',
+        display_color='#00FF00',
     )
     media = tuberack50.wells()[0]
     media.load_liquid(media_liquid, 25000)
@@ -67,10 +67,13 @@ def run(ctx):
     media_sources = []
     media_dests = []
     for i, line in enumerate(data):
-        source_labware = source_plates[int(line[0].split('.')[-1])-1]
+        source_ind = (int(line[0].split('.')[-1]) - 1) % 2
+        dest_ind = (int(line[3].split('.')[-1]) - 1) % 2
+
+        source_labware = source_plates[source_ind]
         source_well = source_labware.wells_by_name()[line[1]]
         vol_picking = float(line[2])
-        dest_labware = dest_plates[int(line[3].split('.')[-1])-1]
+        dest_labware = dest_plates[dest_ind]
         dest_well = dest_labware.wells_by_name()[line[4]]
         vol_seeding = float(line[5])
         # vol_trashing = float(line[6])
@@ -87,8 +90,8 @@ def run(ctx):
             pick_up(p300)
             p300.distribute(vols, media, [s.top() for s in sources],
                             new_tip='never')
-            ctx.comment(f'Plate {source_plates.index(source_labware)+1} \
-finished.')
+            ctx.pause(f'Plate {source_plates.index(source_labware)+1} \
+finished. Load new plate if necessary.')
         if i > 0 and last_dest_lw != dest_labware:
             media_bool = True
             dests = [media_dest[0] for media_dest in media_dests]
@@ -97,7 +100,8 @@ finished.')
                 pick_up(p300)
             p300.distribute(vols, media, [d.top(-1) for d in dests],
                             new_tip='never')
-            ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} finished.')
+            ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} \
+finished. Load new plate if necessary.')
         if p300.has_tip:
             p300.drop_tip()
 
