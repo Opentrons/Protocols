@@ -18,9 +18,9 @@ def run(ctx):
         'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
         'type_pipette_small')
 
-    vol_pre_airgap_1000 = 150.0
+    vol_pre_airgap_1000 = 100.0
     if type_pipette_small == 'p300_single_gen2':
-        vol_pre_airgap_small = 50.0
+        vol_pre_airgap_small = 20.0
         tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
     else:
         vol_pre_airgap_small = 5.0
@@ -163,24 +163,37 @@ def run(ctx):
         for vol in vols_split:
             media_info.append({well: vol})
 
-    media_sets = custom_distribute(media_info, pip=p1000)
-    for media_set in media_sets:
+    for d in media_info:
+        well = list(d.keys())[0]
+        asp_vol = list(d.values())[0]
         if p1000.current_volume:
             p1000.dispense(p1000.current_volume, current_media.well.top())
-        # pre-air_gap to fully void tip on blow_out
-        for d in media_set:
-            asp_vol = sum(d.values())
-            check_media(asp_vol)
-            p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
-            p1000.aspirate(asp_vol, current_media.height_dec(asp_vol))
+        check_media(asp_vol)
+        p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
+        p1000.aspirate(asp_vol, current_media.height_dec(asp_vol))
         slow_withdraw(current_media.well, p1000)
-        for i, d in enumerate(media_set):
-            well = [key for key in d.keys()][0]
-            vol = [val for val in d.values()][0]
-            p1000.dispense(vol+vol_pre_airgap_1000, well.bottom(well.depth/2))
-            if i == len(media_set) - 1:
-                p1000.blow_out(well.bottom(well.depth/2))
-            slow_withdraw(well, p1000)
+        p1000.dispense(p1000.current_volume, well.bottom(well.depth/2))
+        p1000.blow_out(well.bottom(well.depth/2))
+        slow_withdraw(well, p1000)
+
+    # media_sets = custom_distribute(media_info, pip=p1000)
+    # for media_set in media_sets:
+    #     if p1000.current_volume:
+    #         p1000.dispense(p1000.current_volume, current_media.well.top())
+    #     # pre-air_gap to fully void tip on blow_out
+    #     for d in media_set:
+    #         asp_vol = sum(d.values())
+    #         check_media(asp_vol)
+    #         p1000.aspirate(vol_pre_airgap_1000, current_media.well.top())
+    #         p1000.aspirate(asp_vol, current_media.height_dec(asp_vol))
+    #     slow_withdraw(current_media.well, p1000)
+    #     for i, d in enumerate(media_set):
+    #         well = [key for key in d.keys()][0]
+    #         vol = [val for val in d.values()][0]
+    #         p1000.dispense(vol+vol_pre_airgap_1000, well.bottom(well.depth/2))
+    #         if i == len(media_set) - 1:
+    #             p1000.blow_out(well.bottom(well.depth/2))
+    #         slow_withdraw(well, p1000)
     p1000.return_tip()
     p1000.reset_tipracks()
 
