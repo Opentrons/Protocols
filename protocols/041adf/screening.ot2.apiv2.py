@@ -115,6 +115,7 @@ def run(ctx):
         del ctx.max_speeds['Z']
 
     def custom_touch_tip(loc, pip, z=-1):
+        pip.default_speed /= 5
         if loc.length:
             magnitude = loc.length/2
         else:
@@ -123,6 +124,7 @@ def run(ctx):
             loc.top().move(Point(x=side*magnitude, z=z)) for side in [-1, 1]]
         for t_p in touch_points:
             pip.move_to(t_p)
+        pip.default_speed *= 5
 
     def reagent_transfer(vol, reagent, destinations, num_tips=8,
                          new_tip='once', mix_reps=0, mix_vol=0, touch_tip=True,
@@ -146,7 +148,7 @@ def run(ctx):
                 pip.mix(mix_reps, mix_vol, d.bottom(2), rate=rate)
             if touch_tip:
                 slow_withdraw(d, pip, z=d.depth/2)
-                custom_touch_tip(d, pip, d.depth/2)
+                custom_touch_tip(d, pip, -1*d.depth/2)
             slow_withdraw(d, pip)
             if new_tip == 'always':
                 pip.drop_tip()
