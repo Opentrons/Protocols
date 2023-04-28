@@ -33,8 +33,9 @@ def run(ctx):
         temp_module = ctx.load_module('thermocycler')
         heat_func = temp_module.set_block_temperature
     else:
-        tips20.insert(ctx.load_labware('opentrons_96_tiprack_20ul', '8'))
-        tips300.insert(ctx.load_labware('opentrons_96_tiprack_300ul', '11'))
+        tips20.insert(-1, ctx.load_labware('opentrons_96_tiprack_20ul', '8'))
+        tips300.insert(
+            -1, ctx.load_labware('opentrons_96_tiprack_300ul', '11'))
         temp_module = ctx.load_module('temperature module gen2', '7')
         heat_func = temp_module.set_temperature
 
