@@ -7,6 +7,16 @@
     },
     {
       "type": "dropDown",
+      "label": "Wellplate type",
+      "name": "lw_deepwell_plate",
+      "options": [
+        { "label": "NEST 96 Deep Well Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
+        { "label": "Thermo Scientific Nunc 96 Well Plate 2000 uL", "value": "thermoscientificnunc_96_wellplate_2000ul" },
+        { "label": "USA Scientific 96 Deep Well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" }
+      ]
+    },
+    {
+      "type": "dropDown",
       "label": "Pipette Mount",
       "name": "_m300_mount",
       "options": [

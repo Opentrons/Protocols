@@ -667,7 +667,7 @@ loc_csv,1
 loc_rnase,1
 loc_tween,1
 lw_checkit,1
-lw_deepwell_plate,2
+lw_deepwell_plate,3
 lw_dmso,1
 lw_hplc,1
 lw_tiprack300,1
@@ -1521,6 +1521,7 @@ vol,2
 vol_a_to_b,1
 vol_aliqout,1
 vol_ampure_beads,1
+vol_bulb,1
 vol_c_to_d,1
 vol_cd154,1
 vol_culture_medium,1
