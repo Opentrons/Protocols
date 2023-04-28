@@ -295,7 +295,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(
-                    types.Point(x=side*radius*0.6, z=2))
+                    types.Point(x=side*radius*0.5, z=3))
                 m300.mix(10, 100, bead_loc)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
@@ -419,7 +419,7 @@ def run(ctx: protocol_api.ProtocolContext):
     #    flash_lights()
     #    ctx.pause('Please make sure samples are loaded on MagDeck')
 
-    # Transfer 320 µL XP1/ Mag-bind Beads master mixture
+    # Transfer vol XP1/ Mag-bind Beads master mixture
     ctx.comment('\nTransferring XP1/ Mag-bind master mixture\n')
 
     m300.custom_pick_up()
@@ -428,7 +428,7 @@ def run(ctx: protocol_api.ProtocolContext):
         src = xp1[idx//3]
         for _ in range(2):
             flow_rate(asp=20, disp=20)
-            m300.mix(1, 100, src)
+            m300.mix(3, 150, src)
             m300.aspirate(vol_xp1/2, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             flow_rate(disp=10)
@@ -454,7 +454,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment(incubate_msg)
 
         if num_cols > 1:
-            num_mixes = math.ceil(inc_time/num_cols)
+            num_mixes = math.ceil(1.5*inc_time/num_cols)
         else:
             num_mixes = 10
         m300.flow_rate.aspirate *= 3
@@ -465,7 +465,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 side = 1 if i % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(types.Point(
-                    x=side*radius*0.6, z=2))
+                    x=side*radius*0.5, z=3))
                 if _ == 0:
                     m300.custom_pick_up()
                 if not m300.has_tip:
@@ -494,10 +494,10 @@ def run(ctx: protocol_api.ProtocolContext):
     flow_rate(asp=40, disp=40)
     for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
         m300.custom_pick_up()
-        remove_supernatant(vol_removal/2, src)
-        m300.drop_tip()
-        m300.custom_pick_up()
-        remove_supernatant(vol_removal/2, src)
+        remove_supernatant(vol_removal, src)
+        # m300.drop_tip()
+        # m300.custom_pick_up()
+        # remove_supernatant(vol_removal/2, src)
         m300.drop_tip(t_d)
 
     flow_rate()
@@ -518,7 +518,7 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         radius = src.diameter/2 if src.diameter else src.width/2
         anti_bead_loc = src.bottom().move(
-            types.Point(x=side*radius*0.7, z=2))
+            types.Point(x=side*radius*0.5, z=3))
         m300.custom_pick_up()
         flow_rate(asp=30, disp=30)
         m300.aspirate(100, anti_bead_loc)
@@ -535,11 +535,11 @@ def run(ctx: protocol_api.ProtocolContext):
             side = -1 if i % 2 == 0 else 1
             radius = src.diameter/2 if src.diameter else src.width/2
             anti_bead_loc = src.bottom().move(
-                types.Point(x=side*radius*0.7, z=2))
+                types.Point(x=side*radius*0.5, z=3))
             m300.custom_pick_up()
             m300.aspirate(100, h2o)
             flow_rate(asp=30, disp=30)
-            m300.dispense(80, src)
+            m300.dispense(80, anti_bead_loc)
             ctx.delay(seconds=0.5)
             m300.aspirate(100, anti_bead_loc)
             flow_rate()
@@ -552,7 +552,7 @@ def run(ctx: protocol_api.ProtocolContext):
         side = -1 if i % 2 == 0 else 1
         radius = src.diameter/2 if src.diameter else src.width/2
         anti_bead_loc = src.bottom().move(
-            types.Point(x=side*radius*0.7, z=2))
+            types.Point(x=side*radius*0.5, z=3))
         m300.custom_pick_up()
         flow_rate(asp=30, disp=30)
         m300.aspirate(100, anti_bead_loc)
@@ -564,7 +564,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.home()
     air_dry_msg = f'\nAir drying the beads for {air_dry} minutes. \
-    Please add elution buffer at 65C to 12-well reservoir.\n'
+Please add elution buffer at 70C to 12-well reservoir.\n'
     ctx.delay(minutes=air_dry, msg=air_dry_msg)
     flash_lights()
     if not ctx.is_simulating():
@@ -587,7 +587,7 @@ def run(ctx: protocol_api.ProtocolContext):
             side = 1 if idx % 2 == 0 else -1
             radius = col.diameter/2 if col.diameter else col.width/2
             bead_loc = col.bottom().move(
-                types.Point(x=side*radius*0.6, z=2))
+                types.Point(x=side*radius*0.5, z=3))
             m300.mix(10, 50, bead_loc)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
         m300.blow_out(col.bottom(6))
@@ -603,14 +603,14 @@ def run(ctx: protocol_api.ProtocolContext):
             test_speaker('/var/lib/jupyter/notebooks/all-i-want-ot2.mp3')
         else:
             test_speaker()
-    ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
-    When complete, replace samples and click RESUME\n')
+    # ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
+    # When complete, replace samples and click RESUME\n')
     ctx.set_rail_lights(True)
 
     # Transfer elution to PCR plate
     if not off_deck:
         if num_cols > 1:
-            num_mixes = math.ceil(inc_time/num_cols)
+            num_mixes = math.ceil(1.5*inc_time/num_cols)
         else:
             num_mixes = 10
 
@@ -626,7 +626,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(
-                    types.Point(x=side*radius*0.6, z=2))
+                    types.Point(x=side*radius*0.5, z=3))
                 m300.mix(10, 50, bead_loc)
                 m300.slow_tip_withdrawal(10, col, to_surface=True)
                 m300.blow_out(col.bottom(6))
@@ -642,7 +642,7 @@ def run(ctx: protocol_api.ProtocolContext):
 then resume run.')
 
     mag_deck.engage(7)
-    mag_msg = '\nIncubating on Mag Deck for 3 minutes.\n'
+    mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes.\n'
     ctx.delay(minutes=mag_time, msg=mag_msg)
 
     ctx.comment(f'\nTransferring {elution_vol}uL to final PCR plate\n')
