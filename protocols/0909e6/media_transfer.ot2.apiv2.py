@@ -13,9 +13,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors, vol_media_tubes, vol_mix,
+    [csv_factors, lw_factors, vol_media_tubes, vol_mix,
      reps_mix, type_pipette_small] = get_values(  # noqa: F821
-        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
+        'csv_factors', 'lw_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
         'type_pipette_small')
 
     vol_pre_airgap_1000 = 100.0
@@ -63,9 +63,8 @@ def run(ctx):
     tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                   '1', 'media tuberack')
     tuberacks15 = [
-        ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
-                         slot, f'factor {factor_ids} tuberack')
-        for slot, factor_ids in zip(['4', '7'], ['1-15', '16-30'])]
+        ctx.load_labware(lw_factors, slot, f'factor tuberack {i+1}')
+        for i, slot in enumerate(['4', '7'])]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
     tiprack_small = [ctx.load_labware(tiprack_small_type, '3')]
     tiprack1000 = [
@@ -102,9 +101,11 @@ def run(ctx):
 
     factor_tubes = [
         well for rack in tuberacks15 for well in rack.wells()][:num_factors]
+    ref_vol = tuberacks15[0].wells()[0].max_volume / 1000  # 2ml or 15ml
+    ref_height = tuberacks15[0].wells()[0].depth
     factor_heights = [
         # ensure tip is submerged
-        round(vol/15*tuberacks15[0].wells()[0].depth*0.9, 1)
+        round(vol/ref_vol*ref_height*0.9, 1)
         for vol in factor_volumes_ml]
     factors = [
         WellH(well, current_volume=vol*1000, height=height)
