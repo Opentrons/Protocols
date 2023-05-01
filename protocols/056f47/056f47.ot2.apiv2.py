@@ -29,7 +29,7 @@ def run(ctx):
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                for slot in [6]]
 
-    # pipettes
+    # pipette
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tips200)
