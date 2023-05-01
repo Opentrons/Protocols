@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol serially diluted compound stock with DMSO. There is an optional predilution step in this protocol. For detailed protocol steps, please see below. 
+This protocol serially diluted compound stock with DMSO. There is an optional predilution step in this protocol. For detailed protocol steps, please see below. Slots 6, 7, 8, 9 are nest deep well plates, and slots 2, 4, 5, 10, 11 are nest pcr plates.
 
 
 ### Labware

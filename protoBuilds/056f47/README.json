@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. ",
+    "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. Note: if n < 15, use NEST PCR plates, if n > 15, use deep well plates. ",
     "internal": "056f47",
     "labware": "\nNEST 12 Well Reservoir 15 mL #360102\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sample Prep\n\t* Serial Dilution\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/056f47/Screen+Shot+2023-04-24+at+3.42.36+PM.png)\n\n\n\n",
-        "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. \n\n\n",
+        "description": "This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. Note: if n < 15, use NEST PCR plates, if n > 15, use deep well plates. \n\n\n",
         "internal": "056f47\n",
         "labware": "* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",

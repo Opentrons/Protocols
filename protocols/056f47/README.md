@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. 
+This protocol serially diluted compound stock with DMSO. For detailed protocol steps, please see below. Note: if n < 15, use NEST PCR plates, if n > 15, use deep well plates. 
 
 
 ### Labware
