@@ -127,7 +127,7 @@ def run(ctx):
 
     def reagent_transfer(vol, reagent, destinations, num_tips=8,
                          new_tip='once', mix_reps=0, mix_vol=0, touch_tip=True,
-                         rate=1.0):
+                         rate=1.0, h_asp=1.0, h_disp=1.0):
         pip = m20 if vol <= 20 else m300
         if num_tips == 8:
             pick_up_func = pick_up
@@ -146,7 +146,7 @@ def run(ctx):
             if mix_reps > 0:
                 pip.mix(mix_reps, mix_vol, d.bottom(2), rate=rate)
             if touch_tip:
-                slow_withdraw(d, pip, z=d.depth/2)
+                slow_withdraw(d, pip, z=-1*d.depth/2)
                 custom_touch_tip(d, pip, -1*d.depth/2)
             slow_withdraw(d, pip)
             if new_tip == 'always':
@@ -173,7 +173,7 @@ def run(ctx):
     ]
     for oligo, oligo_dest_set in zip(oligos, oligo_dest_sets):
         reagent_transfer(vol_oligo, oligo, oligo_dest_set, num_tips=1,
-                         new_tip='always', rate=0.5)
+                         new_tip='always', rate=0.5, h_asp=5.0, h_disp=5.0)
 
     # transfer remaining reagents
     for azide, d in zip(azides, reaction_samples):
