@@ -127,7 +127,7 @@ def run(ctx):
 
     def reagent_transfer(vol, reagent, destinations, num_tips=8,
                          new_tip='once', mix_reps=0, mix_vol=0, touch_tip=True,
-                         rate=1.0, h_asp=1.0, h_disp=1.0):
+                         rate=1.0, h_asp=1.0, h_disp=4.0):
         pip = m20 if vol <= 20 else m300
         if num_tips == 8:
             pick_up_func = pick_up
