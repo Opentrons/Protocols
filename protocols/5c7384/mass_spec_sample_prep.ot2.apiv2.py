@@ -116,7 +116,8 @@ resuming.')
     caa_source = caa if p20.channels == 1 else [caa]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, caa_source[i % 8], s, mix_after=(2, 5), new_tip='never')
+        p20.transfer(5, caa_source[i % 8], s, mix_after=(2, 5),
+                     new_tip='never')
         p20.drop_tip()
 
     heat_func(25)
