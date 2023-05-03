@@ -14,13 +14,13 @@ def run(ctx):
     # labware
     dmso = ctx.load_labware('nest_12_reservoir_15ml', 1).wells()[0]
 
-    plates = [ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    plates = [ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt' if n < 15 else "nest_96_wellplate_2ml_deep",   # noqa: E501
                                slot, 'plate')
               for slot in [4, 5]]
 
     plates = plates
 
-    compound_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    compound_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt' if n < 15 else "nest_96_wellplate_2ml_deep",  # noqa: E501
                                       2,
                                       'plate')
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -29,7 +29,7 @@ def run(ctx):
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                for slot in [6]]
 
-    # pipettes
+    # pipette
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tips200)

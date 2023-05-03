@@ -21,12 +21,19 @@ def run(ctx):
     # labware
     dmso = ctx.load_labware('nest_12_reservoir_15ml', 1).wells()[0]
 
-    plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot, 'plate')
-              for slot in [2, 4, 5, 6, 7, 8, 9, 10, 11]]
+    plates = [ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+              slot, 'plate')
+              for slot in [2, 4, 5, 10, 11]]
+
+    plates = plates
+    deep_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep',
+                   slot, 'plate')
+                   for slot in [6, 7, 8, 9]]
+    deep_plates = deep_plates
     tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
             for slot in [3]]
 
-    # pipettes
+    # pipette
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips)
 
     # mapping

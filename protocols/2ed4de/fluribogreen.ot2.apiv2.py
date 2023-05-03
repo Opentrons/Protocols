@@ -19,7 +19,7 @@ def run(ctx):
 
     final_transfer_vol = 100
     sample_vol = 25
-    max_working_vol = 1000
+    max_working_vol = 1500
     mix_reps = 10
     max_factor_1_dil = max_working_vol/sample_vol
 
@@ -112,8 +112,9 @@ def run(ctx):
             factors = [dil_factor]
 
         # pre add diluent
+        overage_modulator = 1.5
         for i, factor in enumerate(factors):
-            dil_vol = (factor-1)*sample_vol*(i+1)
+            dil_vol = (factor-1)*sample_vol*(i+1)*overage_modulator
             for j, well in enumerate(dil_set[i][:num_samples]):
                 p1000.pick_up_tip()
                 p1000.transfer(dil_vol, buffer[j//5], well, new_tip='never')
@@ -123,8 +124,9 @@ def run(ctx):
         # transfer sample
         for i, s in enumerate(starting_samples):
             pickup_p300('single')
-            p300.aspirate(sample_vol, s.bottom(2))
-            p300.dispense(sample_vol, dil_set[0][i].bottom(3))
+            p300.aspirate(sample_vol*overage_modulator, s.bottom(2))
+            p300.dispense(sample_vol*overage_modulator,
+                          dil_set[0][i].bottom(3))
             p300.mix(1, 20, dil_set[0][i].bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
@@ -132,15 +134,14 @@ def run(ctx):
         # perform dilution
         for i, factor in enumerate(factors):
             pickup_p300('multi')
-            total_vol = sample_vol*(i+1)*factor
+            total_vol = sample_vol*(i+1)*factor*overage_modulator
             mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
             if i == 0:
                 p300.mix(mix_reps, mix_vol, dil_set[i][0])
             else:
-                p300.transfer(sample_vol*(i+1), dil_set[i-1][0].bottom(3),
+                p300.transfer(sample_vol*(i+1)*overage_modulator,
+                              dil_set[i-1][0].bottom(3),
                               dil_set[i][0].bottom(3),
-
-
                               mix_after=(5, mix_vol),
                               new_tip='never')
             drop(p300)

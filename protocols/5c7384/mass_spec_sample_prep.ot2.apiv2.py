@@ -27,8 +27,8 @@ def run(ctx):
     mag_plate = magdeck.load_labware(plate_def)
     reagent_plate = ctx.load_labware(plate_def, '5', 'reagent plate')
     etoh_plate = ctx.load_labware(plate_def, '2', 'ethanol plate')
-    acetonitrile = ctx.load_labware(
-        plate_def, '3', 'acetonitrile plate').wells()[:num_samples]
+    acetonitrile_plate = ctx.load_labware(
+        plate_def, '3', 'acetonitrile plate')
     if module_type == 'thermocycler':
         temp_module = ctx.load_module('thermocycler')
         heat_func = temp_module.set_block_temperature
@@ -46,27 +46,29 @@ def run(ctx):
     mag_samples_s = mag_plate.wells()[:num_samples]
     mag_samples_m = mag_plate.rows()[0][:num_cols]
 
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips20)
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+    p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tips20)
+    p300 = ctx.load_instrument(p300_type, p300_mount,
                                tip_racks=tips300)
 
     if p20.channels == 1:
         dtt = reagent_plate.columns()[0]
         caa = reagent_plate.columns()[1]
         mag_bead_stock = reagent_plate.columns()[2]
+        acetonitrile = acetonitrile_plate.wells()[:num_samples]
+        trypsin = reagent_plate.columns()[5]
     else:
         dtt = reagent_plate.rows()[0][0]
         caa = reagent_plate.rows()[0][1]
         mag_bead_stock = reagent_plate.rows()[0][2]
+        acetonitrile = acetonitrile_plate.rows()[0][:num_cols]
+        trypsin = reagent_plate.rows()[0][5]
 
     if p300.channels == 1:
         etoh = etoh_plate.wells()[:num_samples]
         abc = reagent_plate.columns()[3:5]
-        trypsin = reagent_plate.columns()[5]
     else:
         etoh = etoh_plate.rows()[0][:num_cols]
         abc = reagent_plate.rows()[0][3:5]
-        trypsin = reagent_plate.rows()[0][5]
 
     heat_func(60)
 
@@ -102,16 +104,20 @@ resuming.')
 
     """ Reduction and Alkylation """
     samples = samples_s if p20.channels == 1 else samples_m
+    dtt_source = dtt if p20.channels == 1 else [dtt]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, dtt[i % 8], s, mix_after=(2, 5), new_tip='never')
+        p20.transfer(5, dtt_source[i % 8], s, mix_after=(2, 5),
+                     new_tip='never')
         p20.drop_tip()
 
     ctx.delay(minutes=30, msg='Incubating 30 minutes at 60C for reduction.')
 
+    caa_source = caa if p20.channels == 1 else [caa]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, caa[i % 8], s, mix_after=(2, 5), new_tip='never')
+        p20.transfer(5, caa_source[i % 8], s, mix_after=(2, 5),
+                     new_tip='never')
         p20.drop_tip()
 
     heat_func(25)
@@ -119,9 +125,10 @@ resuming.')
 alkylation.')
 
     """ Protein Binding """
+    mb_source = mag_bead_stock if p20.channels == 1 else [mag_bead_stock]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, mag_bead_stock[i % 8], s, mix_after=(2, 5),
+        p20.transfer(5, mb_source[i % 8], s, mix_after=(2, 5),
                      new_tip='never')
         p20.drop_tip()
 
@@ -200,7 +207,7 @@ plate of ethanol before resuming.')
                          new_tip='never')
             p20.drop_tip()
     else:
-        samples = samples_s
+        samples = samples_m
         for i, s in enumerate(samples):
             _pick_up(p20)
             p20.transfer(5, trypsin, s, mix_after=(2, 5), new_tip='never')
