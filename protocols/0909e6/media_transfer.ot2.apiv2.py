@@ -20,10 +20,10 @@ def run(ctx):
 
     vol_pre_airgap_1000 = 100.0
     if type_pipette_small == 'p300_single_gen2':
-        vol_pre_airgap_small = 20.0
+        vol_pre_airgap_small = 30.0
         tiprack_small_type = 'opentrons_96_filtertiprack_200ul'
     else:
-        vol_pre_airgap_small = 5.0
+        vol_pre_airgap_small = 10.0
         tiprack_small_type = 'opentrons_96_filtertiprack_20ul'
 
     class WellH(Well):
