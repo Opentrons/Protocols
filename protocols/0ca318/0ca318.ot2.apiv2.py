@@ -11,8 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, source_type, p20_mount, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "source_type", "p20_mount", "m20_mount")
+    [num_samp, source_type, mmx_type,
+        p20_mount, m20_mount] = get_values(  # noqa: F821
+        "num_samp", "source_type", "mmx_type", "p20_mount", "m20_mount")
 
     # num_samp = 96
     # source_type = "tuberack"
@@ -35,7 +36,10 @@ def run(ctx):
         sample_tubes = [tube for rack in samples_racks
                         for row in rack.rows() for tube in row][:num_samp]
 
-    mmx_plate = temp_mod.load_labware('opentrons_96_aluminumblock_nest_wellplate_100ul')  # noqa: E501
+    if mmx_type == "mmx_wellplate":
+        mmx_plate = temp_mod.load_labware('opentrons_96_aluminumblock_nest_wellplate_100ul')  # noqa: E501
+    else:
+        mmx_plate = temp_mod.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap')  # noqa: E501
 
     tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
             for slot in [6, 9]]
@@ -60,73 +64,14 @@ def run(ctx):
     remainder = False if num_samp % 8 == 0 else True
 
     num_mmx_cols = math.ceil(num_samp/24)
+    if mmx_type == "mmx_wellplate":
+        mmx = mmx_plate.rows()[0][:num_mmx_cols]*24
+    else:
+        mmx = mmx_plate.rows()[0][:num_mmx_cols]*96
 
-    mmx = mmx_plate.rows()[0][:num_mmx_cols]*24
     unfilled_mmx_col = mmx_plate.rows()[0][5]
 
     # transfer sample
-
-    if source_type == "wellplate":
-        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
-        m20.pick_up_tip()
-
-        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
-
-            m20.aspirate(10, s_col, rate=0.5)
-            m20.dispense(10, d_col.top(), rate=0.5)
-            m20.blow_out()
-            m20.aspirate(11.5, s_col, rate=0.5)
-            m20.dispense(11.5, d_col.top(), rate=0.5)
-            m20.blow_out()
-            ctx.comment('\n')
-        m20.drop_tip()
-
-        if remainder:
-            ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
-            remaining_wells = num_samp % 8
-            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]
-            p20.pick_up_tip()
-
-            for well in unfilled_col:
-                p20.aspirate(10, unfilled_mmx_col, rate=0.5)
-                p20.dispense(10, well.top(), rate=0.5)
-                p20.blow_out()
-                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
-                p20.dispense(11.5, well.top(), rate=0.5)
-                p20.blow_out()
-            p20.drop_tip()
-
-    else:
-
-        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
-        m20.pick_up_tip()
-
-        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
-
-            m20.aspirate(10, s_col, rate=0.5)
-            m20.dispense(10, d_col, rate=0.5)
-            m20.blow_out()
-            m20.aspirate(11.5, s_col, rate=0.5)
-            m20.dispense(11.5, d_col, rate=0.5)
-            m20.blow_out()
-            ctx.comment('\n')
-        m20.drop_tip()
-
-        if remainder:
-            ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
-            remaining_wells = num_samp % 8
-            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]
-            p20.pick_up_tip()
-
-            for well in unfilled_col:
-                p20.aspirate(10, unfilled_mmx_col, rate=0.5)
-                p20.dispense(10, well, rate=0.5)
-                p20.blow_out()
-                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
-                p20.dispense(11.5, well, rate=0.5)
-                p20.blow_out()
-            p20.drop_tip()
-
     if source_type == "tuberack":
         ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
         for tube, dest in zip(sample_tubes, pcr_plate.wells()):
@@ -135,6 +80,52 @@ def run(ctx):
             p20.dispense(2.5, dest)
             p20.blow_out()
             p20.drop_tip()
+
+    if mmx_type == 'mmx_wellplate':
+        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
+        m20.pick_up_tip()
+
+        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
+
+            m20.aspirate(10, s_col, rate=0.5)
+            m20.dispense(10, d_col.top(), rate=0.5)  # noqa: E501
+            m20.blow_out()
+            m20.aspirate(11.5, s_col, rate=0.5)
+            m20.dispense(11.5, d_col.top(), rate=0.5)  # noqa: E501
+            m20.blow_out()
+            ctx.comment('\n')
+        m20.drop_tip()
+
+        if remainder:
+            ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
+            remaining_wells = num_samp % 8
+            unfilled_col = pcr_plate.columns()[num_full_cols][:remaining_wells]
+            p20.pick_up_tip()
+
+            for well in unfilled_col:
+                p20.aspirate(10, unfilled_mmx_col, rate=0.5)
+                p20.dispense(10, well.top(), rate=0.5)  # noqa: E501
+                p20.blow_out()
+                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
+                p20.dispense(11.5, well.top(), rate=0.5)  # noqa: E501
+                p20.blow_out()
+            p20.drop_tip()
+
+    elif mmx_type == "mmx_tuberack":
+
+        ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
+        p20.pick_up_tip()
+
+        for s, d in zip(mmx, pcr_plate.wells()[:num_samp]):
+
+            p20.aspirate(10, s, rate=0.5)
+            p20.dispense(10, d.top(), rate=0.5)  # noqa: E501
+            p20.blow_out()
+            p20.aspirate(11.5, s, rate=0.5)
+            p20.dispense(11.5, d.top(), rate=0.5)  # noqa: E501
+            p20.blow_out()
+            ctx.comment('\n')
+        p20.drop_tip()
 
     ctx.comment('\n\n------------Running PCR-------------\n')
 

@@ -13,6 +13,8 @@
 ## Description
 This protocol begins with mastermix addition, then proceeds to do pcr. Note: mastermix is loaded on the temperature module on slot 4. One column of mastermix is for 24 (3 columns) of samples. That is, for 48 samples, you should load two columns of mastermix. For 48-72 samples, 3 columns of mastermix, so on and so forth. If there are multiple columns of mastermix, the volume should be split evenly between the number of columns you are running. For unfilled columns, mastermix should always be placed in column 6 of the plate on slot 3.
 
+If you select tube racks for mastermix, each tube accomodates 24 samples in slot 3, and should be placed in the first row (maximum 4 tubes in first row for 96 samples). Mastermix volume should be distributed equally for all tubes in the first row. 
+
 The NEST 96 100ul plate should be placed on the 96 aluminum adaptor on the temperature module, which will be at 4C to keep the temperature cool.
 
 See below for the two types of deck states before pcr. If you select the tube rack deck state, tubes should be placed by row in one tube rack before moving onto another, in the order of slots 4, 5, 1, 2. That is, for 27 samples, you should fill the entire first tube rack on slot 4, then the first 3 tubes in the first row of the tube rack in slot 5.
@@ -43,8 +45,8 @@ See below for the two types of deck states before pcr. If you select the tube ra
 
 
 ### Protocol Steps
-1. Mastermix added.
-2. Sample added (if needed).
+1. Sample added (if needed).
+2. Mastermix added.
 3. Lid of thermocycler closes, pcr.
 
 
