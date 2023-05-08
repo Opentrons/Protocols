@@ -4,12 +4,13 @@ from opentrons.protocol_api.labware import Well
 import math
 from types import MethodType
 import subprocess
+from opentrons.protocols.api_support.types import APIVersion
 
 metadata = {
     'protocolName': 'Omega Bio-Tek Mag-Bind Environmental DNA 96 Kit',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.13'
 }
 
 AUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3'
@@ -102,7 +103,7 @@ def run(ctx: protocol_api.ProtocolContext):
     class WellH(Well):
         def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
             self.well = well
             # specified minimum well bottom clearance
             self.min_height = min_height
