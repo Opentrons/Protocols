@@ -66,11 +66,13 @@ def run(ctx):
         [val for val in line.split(',')]
         for line in input_csv.splitlines()][1:]
 
+    output_wells = final_plate.wells()[:16] + final_plate.wells()[95:79:-1]
+
     # prealocate water,
     for i, line in enumerate(data):
         water_vol = float(line[2])
         pip = p20 if water_vol <= 20 else p300
-        dest_well = final_plate.wells()[i]
+        dest_well = output_wells[i]
         if not pip.has_tip:
             if pip == p20:
                 pip.pick_up_tip()
@@ -84,7 +86,7 @@ def run(ctx):
     for i, line in enumerate(data):
         buffer_vol = float(line[3])
         pip = p20 if buffer_vol <= 20 else p300
-        dest_well = final_plate.wells()[i]
+        dest_well = output_wells[i]
         if not pip.has_tip:
             if pip == p20:
                 pip.pick_up_tip()
@@ -99,7 +101,7 @@ def run(ctx):
         probe_vol = float(line[4])
         probe = tuberack.wells_by_name()[line[5].upper().strip()]
         pip = p20 if probe_vol <= 20 else p300
-        dest_well = final_plate.wells()[i]
+        dest_well = output_wells[i]
         if not probe == last_probe:
             if pip.has_tip:
                 pip.drop_tip()
@@ -117,7 +119,7 @@ def run(ctx):
         total_vol = float(line[6])
         pip = p20 if sample_vol <= 20 else p300
         sample_well, dest_well = [
-            sample_rack.wells()[i], final_plate.wells()[i]]
+            sample_rack.wells()[i], output_wells[i]]
         if 0.8*total_vol < pip.max_volume:
             mix_vol = 0.8*total_vol
         else:
@@ -135,5 +137,5 @@ def run(ctx):
 
     # transfer protease
     for i, line in enumerate(data):
-        dest_well = final_plate.wells()[i]
+        dest_well = output_wells[i]
         p20.transfer(5, protease, dest_well, mix_after=(3, 20))
