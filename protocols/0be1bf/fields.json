@@ -1,0 +1,14 @@
+[
+    {
+        "type": "int",
+        "label": "number of reactions",
+        "name": "num_rxns",
+        "default": 11
+    },
+    {
+        "type": "float",
+        "label": "starting concentration of template (mg/ml)",
+        "name": "concentration_template",
+        "default": 0.6
+    }
+]
