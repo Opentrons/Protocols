@@ -16,8 +16,15 @@
       {"label": "In tube racks", "value": "tuberack"}
     ]
   },
-
-
+  {
+    "type": "dropDown",
+    "label": "What is the mastermix in in slot 3 temperature module?",
+    "name": "mmx_type",
+    "options": [
+      {"label": "In a 96 wellplate aluminum block", "value": "mmx_wellplate"},
+      {"label": "Nest 1.5mL in a 24 aluminum block", "value": "mmx_tuberack"}
+    ]
+  },
   {
     "type": "dropDown",
     "label": "P20 Single-Channel Mount",
