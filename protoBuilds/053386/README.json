@@ -1,0 +1,36 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "For detailed protocol steps, please see below. The trash will be used as a waste reservoir for supernatant removal. This protocol is for full plates (96 samples) exclusively. The protocol will pause to prompt the user to replace tips when needed, and pause for certain centrifuging steps.",
+    "internal": "053386",
+    "labware": "\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/053386/deck.png)\n\n\n",
+        "description": "For detailed protocol steps, please see below. The trash will be used as a waste reservoir for supernatant removal. This protocol is for full plates (96 samples) exclusively. The protocol will pause to prompt the user to replace tips when needed, and pause for certain centrifuging steps.\n\n\n",
+        "internal": "053386\n",
+        "labware": "* [Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Manually picked 1 islet per well into a 96-well plate with 100 \u03bcl of PBS pre-added into each well.\n2. Spin down the plate at 200g for 5 min.\n3. Pipette out 80 \u03bcl of supernatant.\n4. Add 100 \u03bcl of pre-warmed 0.05% Trypsin into each well.\n5. Digest the islets for 9 min at 37oC thermo incubator.\n6. Pipette trituration with a volume of 80 \u03bcl 12 times towards the end of incubation.  \n7. Stop the digestion by adding 100 \u03bcl of PBS+10%FBS into each well. Pipette mix.\n8. Spin down the plate at 400g for 5 min.\n9. 1. Pipette out 150 \u03bcl of supernatant.\n10. Wash once with 100 \u03bcl of PBS+10%FBS/well. Pipette mix.\n11. Spin down the plate at 400g for 5 min.\n12. Pipette out 100 \u03bcl of supernatant.\n13. Add 100 \u03bcl of cold methanol into each well. Incubate at -20oC for 10 min.\n14. Spin down the plate at 800g for 5 min at 4oC.\n15. Pipette out 100 \u03bcl of supernatant.\n16. Wash cells with 200 \u03bcl of wash-resuspension buffer (3xSSC+0.5 %BSA+0.2U/\u03bcl RNase inhibitor + 1mM DTT). Pipette mix 3x.\n17. Pellet cells at 800g for 6 min.\n18. Aspirate and discard 180 \u03bcl of supernatant\n\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/053386/reagents.png)\n\n\n",
+        "title": "Human Islets - Preprocessing"
+    },
+    "modules": [
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nManually picked 1 islet per well into a 96-well plate with 100 \u03bcl of PBS pre-added into each well.\nSpin down the plate at 200g for 5 min.\nPipette out 80 \u03bcl of supernatant.\nAdd 100 \u03bcl of pre-warmed 0.05% Trypsin into each well.\nDigest the islets for 9 min at 37oC thermo incubator.\nPipette trituration with a volume of 80 \u03bcl 12 times towards the end of incubation.  \nStop the digestion by adding 100 \u03bcl of PBS+10%FBS into each well. Pipette mix.\nSpin down the plate at 400g for 5 min.\n\n\nPipette out 150 \u03bcl of supernatant.\n\n\nWash once with 100 \u03bcl of PBS+10%FBS/well. Pipette mix.\nSpin down the plate at 400g for 5 min.\nPipette out 100 \u03bcl of supernatant.\nAdd 100 \u03bcl of cold methanol into each well. Incubate at -20oC for 10 min.\nSpin down the plate at 800g for 5 min at 4oC.\nPipette out 100 \u03bcl of supernatant.\nWash cells with 200 \u03bcl of wash-resuspension buffer (3xSSC+0.5 %BSA+0.2U/\u03bcl RNase inhibitor + 1mM DTT). Pipette mix 3x.\nPellet cells at 800g for 6 min.\nAspirate and discard 180 \u03bcl of supernatant\n",
+    "reagent-setup": "",
+    "title": "Human Islets - Preprocessing"
+}
