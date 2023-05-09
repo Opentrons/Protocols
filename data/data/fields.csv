@@ -231,6 +231,7 @@ component_2_height,1
 component_2_volume,1
 component_3_volume,1
 conc_target,1
+concentration_template,1
 control_plate,1
 count_mix,1
 count_plates,1
@@ -857,6 +858,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
+num_rxns,1
 num_samp,67
 num_samp_p1,1
 num_samp_p2,1
