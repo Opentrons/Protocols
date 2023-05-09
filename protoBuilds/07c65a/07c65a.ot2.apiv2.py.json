@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Sample Dilution with CSV Input',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, p20_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"p20_mount\")\n\n    csv_lines = [[val.strip() for val in line.split(',')]\n                 for line in csv_samp.splitlines()\n                 if line.split(',')[0].strip()][1:]\n\n    # labware\n    temp_mod = ctx.load_module('temperature module gen2', 3)\n    temp_mod.set_temperature(4)\n    temp_rack = temp_mod.load_labware('opentrons_24_aluminumblock_nest_2ml_snapcap')  # noqa: E501\n    dna_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 6)  # noqa: E501\n\n    tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n              for slot in [11]]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips20)\n\n    # PICK UP ONE TIP WITH P300 MULTI PIPETTE ######################\n    num_chan = 1\n    tips_ordered = [\n        tip\n        for row in tips20[0].rows()[\n            len(tips20[0].rows())-num_chan::-1*num_chan]\n        for tip in row]\n\n    tip_count = 0\n\n    def pick_up_one():\n\n        current = 0.1\n        if p20_mount == \"right\":\n            ctx._hw_manager.hardware._attached_instruments[types.Mount.RIGHT].update_config_item('pick_up_current', current)  # noqa: E501\n        elif p20_mount == \"left\":\n            ctx._hw_manager.hardware._attached_instruments[types.Mount.LEFT].update_config_item('pick_up_current', current)  # noqa: E501\n\n        nonlocal tip_count\n        m20.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # mapping\n    water = temp_rack.wells()[0]\n\n    # protocol\n    ctx.comment('\\n---------------ADDING WATER TO PLATE----------------\\n\\n')\n    for row in csv_lines:\n        volume = float(row[1])\n        well = dna_plate.wells_by_name()[row[0]]\n        pick_up_one()\n        m20.aspirate(volume, water)\n        m20.dispense(volume, well)\n        m20.mix(3, volume, well)\n        m20.drop_tip()\n",
+    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Sample Dilution with CSV Input',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, p20_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"p20_mount\")\n\n    csv_lines = [[val.strip() for val in line.split(',')]\n                 for line in csv_samp.splitlines()\n                 if line.split(',')[0].strip()][1:]\n\n    # labware\n    temp_mod = ctx.load_module('temperature module gen2', 4)\n    temp_mod.set_temperature(4)\n    temp_rack = temp_mod.load_labware('opentrons_24_aluminumblock_nest_2ml_snapcap')  # noqa: E501\n    dna_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 6)  # noqa: E501\n\n    tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n              for slot in [11]]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips20)\n\n    # PICK UP ONE TIP WITH P300 MULTI PIPETTE ######################\n    num_chan = 1\n    tips_ordered = [\n        tip\n        for row in tips20[0].rows()[\n            len(tips20[0].rows())-num_chan::-1*num_chan]\n        for tip in row]\n\n    tip_count = 0\n\n    def pick_up_one():\n\n        current = 0.1\n        if p20_mount == \"right\":\n            ctx._hw_manager.hardware._attached_instruments[types.Mount.RIGHT].update_config_item('pick_up_current', current)  # noqa: E501\n        elif p20_mount == \"left\":\n            ctx._hw_manager.hardware._attached_instruments[types.Mount.LEFT].update_config_item('pick_up_current', current)  # noqa: E501\n\n        nonlocal tip_count\n        m20.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # mapping\n    water = temp_rack.wells()[0]\n\n    # protocol\n    ctx.comment('\\n---------------ADDING WATER TO PLATE----------------\\n\\n')\n    for row in csv_lines:\n        volume = float(row[1])\n        well = dna_plate.wells_by_name()[row[0]]\n        pick_up_one()\n        m20.aspirate(volume, water)\n        m20.dispense(volume, well)\n        m20.mix(3, volume, well)\n        m20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1162,9 +1162,9 @@
     ],
     "labware": [
         {
-            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 3",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 4",
             "share": false,
-            "slot": "3",
+            "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
         },
         {
@@ -1194,9 +1194,9 @@
     },
     "modules": [
         {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 3",
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 4",
             "share": false,
-            "slot": "3",
+            "slot": "4",
             "type": "tempdeck"
         }
     ]
