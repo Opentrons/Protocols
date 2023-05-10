@@ -1,0 +1,124 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Aliquot',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.13'\n    }\n\n\ndef run(ctx):\n    [num_aliquots, vol_aliquot, lw_source, type_pip,\n     mount_pip] = get_values(  # noqa: F821\n        'num_aliquots', 'vol_aliquot', 'lw_source', 'type_pip', 'mount_pip')\n\n    # labware\n    num_racks = math.ceil(num_aliquots/24)\n    dest_racks = [\n        ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot,\n            f'rack {i+1}')\n        for i, slot in enumerate(['4', '5', '1', '2'][:num_racks])]\n    source = ctx.load_labware(lw_source, '6', 'source (A1)').wells()[0]\n\n    pip = ctx.load_instrument(type_pip, mount_pip)\n\n    tiprack = [\n        ctx.load_labware(f'opentrons_96_tiprack_{pip.max_volume}ul', '3')]\n    pip.tip_racks = tiprack\n\n    def slow_withdraw(well, pip=pip, delay_seconds=2.0):\n        pip.default_speed /= 10\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 10\n\n    aliquots = [\n        well for rack in dest_racks for well in rack.wells()][:num_aliquots]\n    pip.pick_up_tip()\n    for a in aliquots:\n        pip.aspirate(vol_aliquot, source.bottom(3))\n        slow_withdraw(source)\n        pip.dispense(vol_aliquot, a.bottom(2))\n        slow_withdraw(a)\n    pip.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of aliquots (1-96)",
+            "name": "num_aliquots",
+            "type": "int"
+        },
+        {
+            "default": 200,
+            "label": "volume of aliquot",
+            "name": "vol_aliquot",
+            "type": "int"
+        },
+        {
+            "label": "source container",
+            "name": "lw_source",
+            "options": [
+                {
+                    "label": "Opentrons 15 Tube Rack with Falcon 15 mL Conical",
+                    "value": "opentrons_15_tuberack_falcon_15ml_conical"
+                },
+                {
+                    "label": "NEST 1 Well Reservoir 195 mL",
+                    "value": "nest_1_reservoir_195ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "pipette type",
+            "name": "type_pip",
+            "options": [
+                {
+                    "label": "P300 single-channel GEN2",
+                    "value": "p300_single_gen2"
+                },
+                {
+                    "label": "P20 single-channel GEN2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P1000 single-channel GEN2",
+                    "value": "p1000_single_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "pipette mount",
+            "name": "mount_pip",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "rack 3 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "rack 4 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "rack 1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "rack 2 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "source (A1) on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_15_tuberack_falcon_15ml_conical"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Aliquot",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
