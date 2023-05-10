@@ -1,0 +1,90 @@
+{
+    "content": "# flake8: noqa\n\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Luciferase Reporter Assay for NF-kB Activation - Protocol 3: Treatment',\n    'author': 'Boren Lin, Opentrons',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\nTOTAL_COl = 12\n\nMEDIUM_VOL = 120\nPBS_VOL = 50\nTREATMENT_VOL = 100\n\ndef run(ctx):\n\n\n    [p300_mount] = get_values(  # noqa: F821\n        \"p300_mount\")\n\n    # labware\n    working_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', 6, 'working plate')\n    treatment_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', 5, 'treatment')\n    reagent_stock = ctx.load_labware('nest_12_reservoir_15ml', 3, 'reagent stock')\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 9, 'waste')\n    tiprack = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n               for slot in [8, 11, 1, 4]]\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount, tip_racks=tiprack)\n\n    pbs = reagent_stock.wells()[0]\n    treatment = treatment_plate.rows()[0][:TOTAL_COl]\n    cells_all = working_plate.rows()[0][:TOTAL_COl]\n    waste = waste_res.wells()[0]\n\n    #protocol\n    ctx.comment('\\n\\n\\n~~~~~~~~REMOVE SUPERNATANT and WASH~~~~~~~~\\n')\n\n    for i in range(TOTAL_COl):\n        p300.pick_up_tip()\n        final = cells_all[i]\n        p300.move_to(final.top(z=-0.2))\n        p300.aspirate(MEDIUM_VOL*1.2, final.bottom(z=0.2).move(Point(x=-2.5)), rate = 0.2)\n        p300.dispense(MEDIUM_VOL*1.2, waste.top(z=-5), rate = 3)\n        p300.blow_out\n        p300.drop_tip()\n\n    p300.pick_up_tip()\n    for j in range(TOTAL_COl):\n        final = cells_all[j]\n        p300.aspirate(PBS_VOL, pbs.bottom(z=0.5), rate = 3)\n        p300.air_gap(20)\n        p300.dispense(PBS_VOL+20, final.top(z=-2), rate = 0.3)\n        p300.blow_out()\n        p300.touch_tip()\n    p300.drop_tip()\n\n    for k in range(TOTAL_COl):\n        p300.pick_up_tip()\n        final = cells_all[k]\n        p300.move_to(final.top(z=-0.2))\n        p300.aspirate(PBS_VOL*1.5, final.bottom(z=0.2).move(Point(x=-2.5)), rate = 0.2)\n        p300.dispense(PBS_VOL*1.5, waste.top(z=-5), rate = 3)\n        p300.blow_out\n        p300.drop_tip()\n\n    ctx.comment('\\n\\n\\n~~~~~~~~TREAT CELLS~~~~~~~~\\n')\n\n    for start, end in zip(treatment, cells_all):\n        p300.pick_up_tip()\n        p300.aspirate(TREATMENT_VOL, start.bottom(z=0.5), rate = 3)\n        p300.air_gap(20)\n        p300.dispense(TREATMENT_VOL+20, end.top(z=-4), rate = 0.3)\n        p300.blow_out()\n        p300.touch_tip()\n        p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "reagent stock on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "treatment on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "working plate on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "waste on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin, Opentrons",
+        "protocolName": "Luciferase Reporter Assay for NF-kB Activation - Protocol 3: Treatment",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
