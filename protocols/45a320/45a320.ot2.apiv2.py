@@ -8,7 +8,7 @@ metadata = {
 
 
 def run(ctx):
-    """Protocol."""
+    """Protocol..."""
     [num_samp, sample_tube_clearance, p20_rate, p1000_rate,
         p20_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "sample_tube_clearance",
