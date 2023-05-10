@@ -20,13 +20,13 @@
         "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
         "protocol-steps": "1. Transfer cell suspension from CELL STOCK to WORKING PLATE (100 uL per well)\n\n\n",
-        "reagent-setup": "A NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)\nA Corning 96 Well Plate 360 \u00b5L Flat loaded on Slot 6 (WORKING PLATE)\nAn Opentrons 96 Tip Rack 300 \u00b5L loaded on Slot 8\n\n",
+        "reagent-setup": "1. A NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)\n2. A Corning 96 Well Plate 360 \u00b5L Flat loaded on Slot 6 (WORKING PLATE)\n3. An Opentrons 96 Tip Rack 300 \u00b5L loaded on Slot 8\n\n",
         "title": "Luciferase Reporter Assay for NF-kB Activation - Protocol 1: Cell Culture Preparation"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
     "protocol-steps": "\nTransfer cell suspension from CELL STOCK to WORKING PLATE (100 uL per well)\n",
-    "reagent-setup": "A NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)\nA Corning 96 Well Plate 360 \u00b5L Flat loaded on Slot 6 (WORKING PLATE)\nAn Opentrons 96 Tip Rack 300 \u00b5L loaded on Slot 8",
+    "reagent-setup": "\nA NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)\nA Corning 96 Well Plate 360 \u00b5L Flat loaded on Slot 6 (WORKING PLATE)\nAn Opentrons 96 Tip Rack 300 \u00b5L loaded on Slot 8\n",
     "title": "Luciferase Reporter Assay for NF-kB Activation - Protocol 1: Cell Culture Preparation"
 }

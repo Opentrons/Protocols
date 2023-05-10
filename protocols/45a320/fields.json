@@ -6,6 +6,12 @@
   "default": 12
   },
   {
+  "type": "int",
+  "label": "Sample tube clearance (mm above bottom of tube)",
+  "name": "sample_tube_clearance",
+  "default": 20
+  },
+  {
   "type": "float",
   "label": "P20 Dispense Flow Rate",
   "name": "p20_rate",

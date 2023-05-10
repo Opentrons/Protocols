@@ -34,9 +34,9 @@ Mammalian cervical cancer cell line HeLa (ATCC, Manassas, VA, USA) or HeLa-origi
 
 
 ### Reagent Setup
-A NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)
-A Corning 96 Well Plate 360 µL Flat loaded on Slot 6 (WORKING PLATE)
-An Opentrons 96 Tip Rack 300 µL loaded on Slot 8
+1. A NEST 12 Well Reservoir 15 mL filled with suspended cells in Well 1 loaded on Slot 3 (CELL STOCK)
+2. A Corning 96 Well Plate 360 µL Flat loaded on Slot 6 (WORKING PLATE)
+3. An Opentrons 96 Tip Rack 300 µL loaded on Slot 8
 
 ### Protocol Steps
 1. Transfer cell suspension from CELL STOCK to WORKING PLATE (100 uL per well)
