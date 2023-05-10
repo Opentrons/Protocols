@@ -1,6 +1,6 @@
 """Protocol."""
 metadata = {
-    'protocolName': 'ReliaPrep™ Viral TNA Miniprep System, Custom',
+    'protocolName': 'ReliaPrep™ Viral TNA Miniprep System, Custom Workflow',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.10'
@@ -195,8 +195,6 @@ def run(ctx):
             col_counter += 1
 
         for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
-            if i % 4 == 0:
-                p20.pick_up_tip()
 
             if not p20.has_tip:
                 p20.pick_up_tip()
