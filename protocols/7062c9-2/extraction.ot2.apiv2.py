@@ -1,4 +1,4 @@
-from opentrons.types import Point
+from opentrons.types import Point, Mount
 import json
 import os
 import math
@@ -98,9 +98,10 @@ def run(ctx):
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(85)
 
-    ctx._implementation._hw_manager.hardware._attached_instruments[
-        m300._implementation.get_mount()].update_config_item(
-            'pick_up_current', 0.5)
+    mount = Mount.LEFT if m300.mount == 'left' else Mount.RIGHT
+    ctx._hw_manager.hardware._attached_instruments[
+        mount].update_config_item(
+            'pick_up_current', 0.1)
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
