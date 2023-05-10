@@ -9,9 +9,10 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_samp, p20_rate, p1000_rate,
+    [num_samp, sample_tube_clearance, p20_rate, p1000_rate,
         p20_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p20_rate", "p1000_rate", "p20_mount", "p1000_mount")
+        "num_samp", "sample_tube_clearance",
+        "p20_rate", "p1000_rate", "p20_mount", "p1000_mount")
 
     # load labware
     samples = ctx.load_labware('opentrons_15_tuberack_8000ul', '1',
@@ -65,7 +66,7 @@ def run(ctx):
     for sample_tube, final_tube in zip(samples.wells(),
                                        final_tubes_pt1):
         p1000.pick_up_tip()
-        p1000.aspirate(200, sample_tube)
+        p1000.aspirate(200, sample_tube.bottom(z=sample_tube_clearance))
         p1000.dispense(200, final_tube)
         p1000.blow_out()
         p1000.touch_tip()
@@ -115,8 +116,9 @@ def run(ctx):
     # 3 washes
     ctx.comment('\n\n3 Washes\n')
     p1000.flow_rate.dispense = 0.75*p1000.flow_rate.dispense
-    p1000.pick_up_tip()
+
     for _ in range(3):
+        p1000.pick_up_tip()
         for tube in final_tubes_pt2:
             p1000.aspirate(500, wash_solution)
             p1000.dispense(500, tube.top())
@@ -128,7 +130,7 @@ def run(ctx):
                 collection tube. Place back on the tube rack
                 and select "Resume".
                 ''')
-    p1000.drop_tip()
+        p1000.drop_tip()
     p1000.home()
     ctx.pause('''
             Please ensure that empty tubes are on the even columns of the final
@@ -184,7 +186,6 @@ def run(ctx):
     airgap = 4
     col_counter = 0
     for i, elute in enumerate(final_tubes_pt2[:num_samp]):
-        ctx.comment('hello')
         if i % 2 == 0:
             chunks = chunks_A
 
@@ -193,8 +194,13 @@ def run(ctx):
         if i % 2 == 0 and i > 0:
             col_counter += 1
 
-        p20.pick_up_tip()
-        for chunk in chunks[col_counter*8:col_counter*8+8]:
+        for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
+            if i % 4 == 0:
+                p20.pick_up_tip()
+
+            if not p20.has_tip:
+                p20.pick_up_tip()
+
             p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
             for well in chunk:
@@ -206,5 +212,8 @@ def run(ctx):
             p20.air_gap(airgap)
             p20.dispense(4+airgap, elute.bottom(z=-20))
             p20.blow_out()
-        p20.drop_tip()
+
+            if i % 4 == 0:
+                if p20.has_tip:
+                    p20.drop_tip()
         ctx.comment('\n\n')
