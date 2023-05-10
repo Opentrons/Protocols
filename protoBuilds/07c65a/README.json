@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol dilutes sample with water at 4C, mixing with the transfer volume for 3 repetitions upon dispensing. The multi-channel pipette will be used as a single for this protocol.\n\nCSV Sample Format: Below, you should upload a .csv file formatted in the following way, being sure to include the header line:\nDestination Well, Transfer Volume\nA1, 5\nB1, 2\netc.\n",
+    "internal": "07c65a",
+    "labware": "\nArmadillo 96 Well Plate 200 \u00b5L PCR Full Skirt #AB2396\nOpentrons 24 Well Aluminum Block with NEST 2 mL Snapcap\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/07c65a/deck.png)\n\n\n",
+        "description": "This protocol dilutes sample with water at 4C, mixing with the transfer volume for 3 repetitions upon dispensing. The multi-channel pipette will be used as a single for this protocol.\n\n* `CSV Sample Format`: Below, you should upload a .csv file formatted in the following way, being sure to include the header line:\n```\nDestination Well, Transfer Volume\nA1, 5\nB1, 2\netc.\n```\n\n",
+        "internal": "07c65a\n",
+        "labware": "* Armadillo 96 Well Plate 200 \u00b5L PCR Full Skirt #AB2396\n* [Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
+        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Add water to sample according to csv\n2. Mix for 3 repetitions\n3. Repeat until csv is completed\n\n\n",
+        "title": "Sample Dilution with CSV Input"
+    },
+    "modules": [
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nAdd water to sample according to csv\nMix for 3 repetitions\nRepeat until csv is completed\n",
+    "title": "Sample Dilution with CSV Input"
+}

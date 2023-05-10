@@ -1,0 +1,300 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'IVT Aliquots',\n    'author': 'Nick Diehl <ndiehl@opentrons.com>',\n    'apiLevel': '2.14'\n}\n\nrxn_vol = 500.0\nfactor_overage = 1.1\nconcentration_target = 0.1\n\n\ndef run(ctx):\n\n    [num_rxns, concentration_template] = get_values(  # noqa: F821\n        'num_rxns', 'concentration_template')\n\n    # labware\n    mix_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',\n        '4', 'component rack')\n    rack15 = ctx.load_labware(\n        'opentrons_15_tuberack_5000ul', '8', 'mix tube')\n    aliquot_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',\n        '5', 'aliquot rack')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '6', 'reservoir')\n    tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '1')]\n    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]\n\n    template_vol = round(rxn_vol*concentration_target/concentration_template,\n                         2)\n    mix_volumes = [\n        20.0, 1.0, 35.0, 35.0, 35.0, 35.0, 20.0, 16.0, 2.5, 5.0, template_vol]\n    mix_map = {\n        well: vol\n        for well, vol in zip(mix_rack.wells()[:len(mix_volumes)], mix_volumes)\n    }\n    enzyme_volumes = [25, 0.1]\n    enzyme_map = {\n        well: vol\n        for well, vol in zip(\n            mix_rack.wells()[len(mix_volumes):len(mix_volumes)+2],\n            enzyme_volumes)\n    }\n\n    colors = [\n        '#5b3811',\n        '#ddb4ca',\n        '#4f3e24',\n        '#584582',\n        '#860916',\n        '#1f6f7e',\n        '#95bb6d',\n        '#f5ea87',\n        '#539a51',\n        '#992d16',\n        '#5f50cf',\n        '#159668',\n        '#897f77',\n        '#2bad24',\n        '#3bbac0',\n        '#44971e',\n        '#d11e7f',\n        '#4cfe77',\n        '#ee06d2',\n        '#9ffd59']\n\n    for letter, (well, vol) in zip('ABCDEFGHIJK', mix_map.items()):\n\n        temp = ctx.define_liquid(\n            name=letter,\n            description='',\n            display_color=colors.pop()\n        )\n        well.load_liquid(temp, vol*num_rxns*1.1)\n\n    for letter, (well, vol) in zip(['TP', 'P'], enzyme_map.items()):\n\n        temp = ctx.define_liquid(\n            name=letter,\n            description='',\n            display_color=colors.pop()\n        )\n        well.load_liquid(temp, vol*num_rxns*1.1)\n\n    mix_tube = rack15.wells()[0]\n    enzyme_mix_tube = mix_rack.rows()[0][-1]\n    dn = mix_rack.wells()[len(mix_volumes)+2]\n    cac = mix_rack.wells()[len(mix_volumes)+3]\n    rxns = aliquot_rack.wells()[:num_rxns]\n    water = reservoir.wells()[0]\n    licl_h2o = reservoir.wells()[1]\n\n    [vol_dn, vol_cac] = [8, 2]\n\n    mix_tube_liq = ctx.define_liquid(\n            name='mix tube',\n            description='non-enzyme mix components',\n            display_color=colors.pop()\n    )\n    enzyme_mix_tube_liq = ctx.define_liquid(\n            name='enzyme mix tube',\n            description='enzyme mix components',\n            display_color=colors.pop()\n    )\n    water_liq = ctx.define_liquid(\n            name='water',\n            description='',\n            display_color=colors.pop()\n    )\n    licl_h2o_liq = ctx.define_liquid(\n            name='LiCl + H2O',\n            description='1:1 ratio of LiCl and H2O',\n            display_color=colors.pop()\n    )\n\n    mix_tube.load_liquid(mix_tube_liq, 0)\n    enzyme_mix_tube.load_liquid(enzyme_mix_tube_liq, 0)\n\n    dn_liq = ctx.define_liquid(\n        name='DN',\n        description='',\n        display_color=colors.pop()\n    )\n    dn.load_liquid(dn_liq, vol_dn)\n\n    cac_liq = ctx.define_liquid(\n        name='CaC',\n        description='',\n        display_color=colors.pop()\n    )\n    cac.load_liquid(cac_liq, vol_cac)\n\n    vol_water = rxn_vol - (sum(mix_volumes) + sum(enzyme_volumes))\n    vol_licl_h2o = (rxn_vol + sum([vol_dn, vol_cac]))*2\n\n    water.load_liquid(water_liq, vol_water)\n    licl_h2o.load_liquid(licl_h2o_liq, vol_licl_h2o)\n\n    # pipettes\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', 'left', tip_racks=tiprack_300)\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', 'right', tip_racks=tiprack_20)\n\n    def slow_withdraw(pip, well, delay_seconds=1.0):\n        pip.default_speed /= 10\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 10\n\n    # initial mix\n    for i, (well, vol) in enumerate(mix_map.items()):\n        transfer_vol = vol*num_rxns*factor_overage\n        pip = p300 if transfer_vol > 20 else p20\n        num_trans = math.ceil(\n            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)\n        vol_per_trans = round(transfer_vol/num_trans, 2)\n        pip.pick_up_tip()\n        for i in range(num_trans):\n            pip.aspirate(vol_per_trans, well.bottom(1.0))\n            slow_withdraw(pip, well)\n            if i < num_trans - 1:\n                pip.dispense(pip.current_volume, mix_tube.top())\n            else:\n                pip.dispense(pip.current_volume, mix_tube.bottom(2))\n                slow_withdraw(pip, mix_tube)\n            slow_withdraw(pip, mix_tube)\n        if i == len(mix_map.items()) - 1:\n            pip.mix(5, pip.max_volume*0.8, mix_tube)\n            slow_withdraw(pip, mix_tube)\n        pip.drop_tip()\n\n    # enzyme mix\n    for i, (well, vol) in enumerate(enzyme_map.items()):\n        transfer_vol = vol*num_rxns*factor_overage\n        pip = p300 if transfer_vol > 20 else p20\n        num_trans = math.ceil(\n            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)\n        vol_per_trans = round(transfer_vol/num_trans, 2)\n        pip.pick_up_tip()\n        for _ in range(num_trans):\n            pip.aspirate(vol_per_trans, well.bottom(1.0))\n            slow_withdraw(pip, well)\n            pip.dispense(pip.current_volume, enzyme_mix_tube.bottom(3))\n            slow_withdraw(pip, enzyme_mix_tube)\n        if i == len(enzyme_map.items()) - 1:\n            pip.mix(5, pip.max_volume*0.8, enzyme_mix_tube)\n            slow_withdraw(pip, enzyme_mix_tube)\n        pip.drop_tip()\n\n    # water addition\n    pip = p300 if vol_water >= 20 else p20\n    num_trans = math.ceil(vol_water/pip.tip_racks[0].wells()[0].max_volume)\n    vol_per_trans = round(vol_water/num_trans, 2)\n    pip.pick_up_tip()\n    for d in rxns:\n        for _ in range(num_trans):\n            pip.aspirate(vol_per_trans, water)\n            slow_withdraw(pip, water)\n            pip.dispense(pip.current_volume, d.bottom(2))\n            slow_withdraw(pip, d)\n    pip.drop_tip()\n\n    # mix addition\n    vol_mix = sum(mix_volumes)\n    pip = p300 if vol_mix >= 20 else p20\n    num_trans = math.ceil(vol_mix/pip.tip_racks[0].wells()[0].max_volume)\n    vol_per_trans = round(vol_mix/num_trans, 2)\n    for d in rxns:\n        pip.pick_up_tip()\n        for _ in range(num_trans):\n            pip.aspirate(vol_per_trans, mix_tube)\n            slow_withdraw(pip, mix_tube)\n            pip.dispense(pip.current_volume, d.bottom(2))\n            slow_withdraw(pip, d)\n        pip.drop_tip()\n\n    ctx.pause('Place enzymes in tuberack.')\n\n    # enzyme mix addition\n    vol_enzyme_mix = sum(enzyme_volumes)\n    pip = p300 if vol_enzyme_mix >= 20 else p20\n    num_trans = math.ceil(\n        vol_enzyme_mix/pip.tip_racks[0].wells()[0].max_volume)\n    vol_per_trans = round(vol_enzyme_mix/num_trans, 2)\n    for d in rxns:\n        pip.pick_up_tip()\n        for _ in range(num_trans):\n            pip.aspirate(vol_per_trans, enzyme_mix_tube)\n            slow_withdraw(pip, enzyme_mix_tube)\n            pip.dispense(pip.current_volume, d.bottom(2))\n            slow_withdraw(pip, d)\n        pip.drop_tip()\n\n    ctx.pause('INCUBATION')\n\n    # DN and CaC\n    for vol, reagent in zip([vol_dn, vol_cac], [dn, cac]):\n        pip = p20 if vol < 20 else p300\n        for d in rxns:\n            pip.pick_up_tip()\n            pip.aspirate(vol, reagent)\n            slow_withdraw(pip, reagent)\n            pip.dispense(vol, d)\n            slow_withdraw(pip, d)\n            pip.drop_tip()\n\n    ctx.pause('INCUBATION')\n\n    # LiCl and H2O\n    pip = p300 if vol_licl_h2o >= 20 else p20\n    vol_pre_airgap = 20.0\n    num_trans = math.ceil(\n        vol_licl_h2o/(pip.tip_racks[0].wells()[0].max_volume - vol_pre_airgap))\n    vol_per_trans = round(vol_licl_h2o/num_trans, 2)\n    for d in rxns:\n        pip.pick_up_tip()\n        for i in range(num_trans):\n            pip.aspirate(vol_pre_airgap, licl_h2o.top())\n            pip.aspirate(vol_per_trans, licl_h2o)\n            slow_withdraw(pip, licl_h2o)\n            if i < num_trans - 1:\n                pip.dispense(pip.current_volume, d.top(-1))\n                pip.blow_out()\n                ctx.delay(seconds=2.0)\n            else:\n                pip.dispense(pip.current_volume, d.bottom(2))\n                slow_withdraw(pip, d)\n        pip.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 80.76
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Opentrons 15 Tube Rack with Eppendorf 5 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_15_tuberack_5000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 25.76
+                },
+                "A2": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 25.76
+                },
+                "A3": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 25.76
+                },
+                "A4": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 25.76
+                },
+                "A5": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 25.76
+                },
+                "B1": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 25.76
+                },
+                "B2": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 25.76
+                },
+                "B3": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 25.76
+                },
+                "B4": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 25.76
+                },
+                "B5": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 25.76
+                },
+                "C1": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 25.76
+                },
+                "C2": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 25.76
+                },
+                "C3": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 25.76
+                },
+                "C4": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 25.76
+                },
+                "C5": {
+                    "depth": 55,
+                    "diameter": 14.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 5000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 25.76
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 11,
+            "label": "number of reactions",
+            "name": "num_rxns",
+            "type": "int"
+        },
+        {
+            "default": 0.6,
+            "label": "starting concentration of template (mg/ml)",
+            "name": "concentration_template",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "component rack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "aliquot rack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "reservoir on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "mix tube on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.14",
+        "author": "Nick Diehl <ndiehl@opentrons.com>",
+        "protocolName": "IVT Aliquots"
+    },
+    "modules": []
+}

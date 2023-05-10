@@ -1,0 +1,115 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Human Islets - Preprocessing',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [m300_mount] = get_values(  # noqa: F821\n        \"m300_mount\")\n\n    # modules\n    temp_mod = ctx.load_module('temperature module gen2', 1)\n    temp_mod.set_temperature(25)\n\n    # labware\n    temp_plate = temp_mod.load_labware(\n                                       'opentrons_96_aluminumblock_generic_pcr_strip_200ul',  # noqa: E501\n                                       label='sample plate')\n\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 2)\n\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n            for slot in [3, 4, 5, 6, 7, 8, 9, 10, 11]]\n\n    # pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips)\n\n    # mapping\n    trash = ctx.loaded_labwares[12].wells()[0].top()\n\n    wash_buff = reservoir.wells()[0]\n    trypsin = reservoir.wells()[1]\n    pbs = reservoir.wells()[2]\n    meoh = reservoir.wells()[3]\n\n    sample_cols = temp_plate.rows()[0]\n\n    def remove_super(vol):\n        for col in sample_cols:\n            pick_up()\n            m300.aspirate(vol, col)\n            m300.dispense(vol, trash)\n            m300.drop_tip()\n\n    def pick_up():\n        try:\n            m300.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(f\"Replace empty tip rack for {m300}\")\n            m300.reset_tipracks()\n            m300.pick_up_tip()\n\n    # protocol\n    ctx.comment('\\n---------------REMOVE SUPER----------------\\n\\n')\n    remove_super(80)\n\n    ctx.comment('\\n---------------ADD TRYPSIN----------------\\n\\n')\n    pick_up()\n    for col in sample_cols:\n        m300.aspirate(100, trypsin)\n        m300.dispense(100, col.top())\n    m300.drop_tip()\n\n    temp_mod.set_temperature(37)\n    ctx.delay(minutes=7)\n\n    for col in sample_cols:\n        pick_up()\n        m300.mix(12, 80, col)\n        m300.drop_tip()\n\n    temp_mod.set_temperature(25)\n\n    ctx.comment('\\n---------------ADD PBS----------------\\n\\n')\n    for col in sample_cols:\n        pick_up()\n        m300.aspirate(100, pbs)\n        m300.dispense(100, col)\n        m300.mix(5, 150, col)\n        m300.drop_tip()\n\n    ctx.pause(\"Spin down plate at 400g for 5 minutes.\")\n\n    ctx.comment('\\n---------------REMOVE SUPER----------------\\n\\n')\n    remove_super(150)\n\n    ctx.comment('\\n---------------ADD PBS----------------\\n\\n')\n    for col in sample_cols:\n        pick_up()\n        m300.aspirate(100, pbs)\n        m300.dispense(100, col)\n        m300.mix(5, 112, col)\n        m300.drop_tip()\n\n    ctx.pause(\"Spin down plate at 400g for 5 minutes.\")\n\n    ctx.comment('\\n---------------REMOVE SUPER----------------\\n\\n')\n    remove_super(100)\n\n    ctx.comment('\\n---------------ADD MEOH----------------\\n\\n')\n    pick_up()\n    for col in sample_cols:\n        m300.aspirate(100, meoh)\n        m300.dispense(100, col.top())\n    m300.drop_tip()\n\n    ctx.pause(\"\"\"\n                Incubate at -20C for 5 minutes.\n                Spin down plate at 800g for 5 minutes at 4C.\n                \"\"\")\n\n    ctx.comment('\\n---------------REMOVE SUPER----------------\\n\\n')\n    remove_super(100)\n\n    ctx.comment('\\n---------------ADD WASH BUFFER----------------\\n\\n')\n    for col in sample_cols:\n        pick_up()\n        m300.aspirate(200, wash_buff)\n        m300.dispense(200, col)\n        m300.mix(3, 180, col)\n        m300.drop_tip()\n\n    ctx.pause(\"\"\"Pellet cells at 800g for 6 minutes.\n                 Place back on deck to remove 180ul of super.\"\"\")\n\n    ctx.comment('\\n---------------REMOVE SUPER----------------\\n\\n')\n    remove_super(180)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "sample plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Human Islets - Preprocessing",
+        "source": "Custom Protocol Request"
+    },
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw sample plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
+}

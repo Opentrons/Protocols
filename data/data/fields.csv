@@ -231,6 +231,7 @@ component_2_height,1
 component_2_volume,1
 component_3_volume,1
 conc_target,1
+concentration_template,1
 control_plate,1
 count_mix,1
 count_plates,1
@@ -257,7 +258,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,14
+csv_samp,15
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -671,6 +672,7 @@ lw_deepwell_plate,3
 lw_dmso,1
 lw_factors,1
 lw_hplc,1
+lw_source,1
 lw_tiprack300,1
 lw_tuberack,1
 lwaste,1
@@ -678,8 +680,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,76
-m300_mount,95
+m20_mount,77
+m300_mount,98
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -780,6 +782,7 @@ mount_m300,13
 mount_p1000,2
 mount_p20,11
 mount_p300,8
+mount_pip,1
 mount_side,1
 move_side,2
 move_vol,1
@@ -831,6 +834,7 @@ ntc_primer_well,1
 nuc_free_water_vol_well,1
 num,3
 num_384_cols,1
+num_aliquots,1
 num_antibodies,1
 num_cell_lines,2
 num_col,8
@@ -857,6 +861,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
+num_rxns,1
 num_samp,67
 num_samp_p1,1
 num_samp_p2,1
@@ -924,7 +929,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,125
+p20_mount,126
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1495,6 +1500,7 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
+type_pip,1
 type_pipette_small,1
 udi_start_col,1
 uploaded_csv,18
@@ -1522,6 +1528,7 @@ vial_map,1
 vol,2
 vol_a_to_b,1
 vol_aliqout,1
+vol_aliquot,1
 vol_ampure_beads,1
 vol_bulb,1
 vol_c_to_d,1
