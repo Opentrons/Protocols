@@ -2361,7 +2361,7 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.11",
+        "apiLevel": "2.13",
         "author": "Nick <protocols@opentrons.com>",
         "protocolName": "Capping Assay: Steps 3-6"
     },

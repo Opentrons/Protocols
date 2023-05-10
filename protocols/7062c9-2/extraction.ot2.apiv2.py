@@ -6,7 +6,7 @@ import math
 metadata = {
     'protocolName': 'Capping Assay: Steps 3-6',
     'author': 'Nick <protocols@opentrons.com>',
-    'apiLevel': '2.11'
+    'apiLevel': '2.13'
 }
 
 TEST_MODE = False
