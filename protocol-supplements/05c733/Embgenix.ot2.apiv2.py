@@ -90,19 +90,27 @@ def run(ctx):
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*well.diameter/2*0.8, z=3)))
 
-    def slow_withdraw(well, pip=m20):
+    def slow_withdraw(well, pip=m20, delay_seconds=2.0):
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
+        if delay_seconds > 0:
+            ctx.delay(seconds=delay_seconds)
         pip.move_to(well.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
 
-    def column_distribute(volume, source, distribution_column,
+    def column_distribute(volume,
+                          source,
+                          distribution_column,
                           final_destinations_s=samples_s,
-                          final_destinations_m=samples_m, mix_reps=10,
-                          mix_vol=10, new_tip=True, drop_tip=True):
+                          final_destinations_m=samples_m,
+                          mix_reps=10,
+                          mix_vol=10,
+                          new_tip=True,
+                          drop_tip=True,
+                          overage_factor=1.1):
         if num_cols > 1:
-            vol_per_row = volume*num_cols*1.1  # overage
+            vol_per_row = volume*num_cols*overage_factor  # overage
             pip = m300
             vol_per_row = vol_per_row if vol_per_row > 20 else vol_per_row*1.2
             pick_up(pip, 1)
@@ -118,23 +126,24 @@ def run(ctx):
             for chunk in distribution_chunks:
                 pip.aspirate(vol_per_row*len(chunk), source)
                 for well in chunk:
-                    pip.dispense(vol_per_row, well.bottom(1))
+                    pip.dispense(vol_per_row, well.bottom(-2))
                     slow_withdraw(well, m300)
                     # wick(pip, well)
             pip.drop_tip()
 
             # reassign pipette based on transfer volume per sample
-            [pip, vol_preairgap] = [m300, 20] if volume > 20 else [m20, 2]
+            [pip, vol_preairgap] = [m300, 20] if volume > 20 else [m20, 5]
             if not new_tip:
                 pick_up(pip, 8)
             for i, s in enumerate(final_destinations_m):
                 if not pip.has_tip:
                     pick_up(pip, 8)
                 pip.aspirate(vol_preairgap, distribution_column[0].top())
-                pip.aspirate(volume, distribution_column[0].bottom(0.5))
-                pip.dispense(pip.current_volume, s.bottom(1))
+                pip.aspirate(volume, distribution_column[0].bottom(-2))
+                pip.dispense(volume, s.bottom(-2))
                 if mix_reps > 0:
-                    pip.mix(mix_reps, mix_vol, s.bottom(1))
+                    pip.mix(mix_reps, mix_vol, s.bottom(-2))
+                pip.dispense(pip.current_volume, s.bottom(-2))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
                 if new_tip:
@@ -150,8 +159,8 @@ def run(ctx):
                 if not pip.has_tip:
                     pick_up(pip, 1)
                 pip.aspirate(vol_preairgap, distribution_column[0].top())
-                pip.aspirate(volume, distribution_column[0].bottom(0.5))
-                pip.dispense(volume, source.bottom(0.5))
+                pip.aspirate(volume, distribution_column[0].bottom(-2))
+                pip.dispense(volume, source.bottom(-2))
                 pip.mix(mix_reps, mix_vol, s.bottom(1))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
@@ -232,16 +241,22 @@ temperature module before resuming.')
                           distribution_plate.columns()[4],
                           final_destinations_m=ligation_samples_m,
                           mix_reps=0,
-                          new_tip=False,
-                          drop_tip=False)
+                          new_tip=True,
+                          drop_tip=False,
+                          overage_factor=1.25)
 
         for s, d in zip(dilution2_samples_m, ligation_samples_m):
             if not m20.has_tip:
                 pick_up(m20, 8)
-            wick(m20, d)
-            m20.transfer(vol_wd2_product, s, d, mix_after=(10, 20),
-                         new_tip='never')
-            wick(m20, d)
+            # wick(m20, d)
+            m20.aspirate(5, s.top())
+            m20.aspirate(vol_wd2_product, s)
+            slow_withdraw(s)
+            m20.dispense(vol_wd2_product, d.bottom(-1))
+            m20.mix(10, 20-m20.current_volume, d.bottom(-1))
+            m20.dispense(m20.current_volume, d.bottom(-1))
+            slow_withdraw(d)
+            # wick(m20, d)
             m20.drop_tip()
 
         # library prep mm
