@@ -1,0 +1,60 @@
+{
+    "content": "# flake8: noqa\n\nmetadata = {\n    'protocolName': 'Luciferase Reporter Assay for NF-kB Activation - Protocol 1: Cell Culture Preparation',\n    'author': 'Boren Lin, Opentrons',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\nTOTAL_COl = 12\n\ndef run(ctx):\n\n\n    [p300_mount] = get_values(  # noqa: F821\n        \"p300_mount\")\n\n    # labware\n    working_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', 6,\n                                     'working plate')\n    cell_stock = ctx.load_labware('nest_12_reservoir_15ml', 3, 'cell stock')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 8)\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount, tip_racks=[tiprack])\n\n    cells_source = cell_stock.wells()[0]\n    cells_final = working_plate.rows()[0][:TOTAL_COl]\n\n    # protocol\n    ctx.comment('\\n\\n\\n~~~~~~~~TRANSFER CELLS~~~~~~~~\\n')\n    p300.pick_up_tip()\n    p300.mix(5, 200, cells_source.bottom(z=5), rate = 3)\n    p300.mix(5, 200, cells_source.bottom(z=2), rate = 3)\n\n    for i in range(TOTAL_COl):\n        p300.mix(3, 200, cells_source.bottom(z=1), rate = 3)\n        p300.aspirate(100, cells_source.bottom(z=0.5), rate = 0.5)\n        p300.air_gap(15)\n        final = cells_final[i]\n        p300.dispense(115, final.top(z=-2), rate = 0.75)\n        p300.blow_out()\n        p300.touch_tip()\n\n    p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "cell stock on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "working plate on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin, Opentrons",
+        "protocolName": "Luciferase Reporter Assay for NF-kB Activation - Protocol 1: Cell Culture Preparation",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
