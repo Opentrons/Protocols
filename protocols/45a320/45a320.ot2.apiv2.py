@@ -122,6 +122,7 @@ def run(ctx):
             p1000.aspirate(500, wash_solution)
             p1000.dispense(500, tube.top())
             p1000.home()
+        p1000.drop_tip()
         ctx.pause('''
                 Recap samples, centrifuge for approximately 1 minute at
                 approximately 15000 RPM. Discard the collection tube
@@ -129,7 +130,6 @@ def run(ctx):
                 collection tube. Place back on the tube rack
                 and select "Resume".
                 ''')
-        p1000.drop_tip()
     p1000.home()
     ctx.pause('''
             Please ensure that empty tubes are on the even columns of the final
