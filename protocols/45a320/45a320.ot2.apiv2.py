@@ -208,7 +208,7 @@ def run(ctx):
                 p20.dispense(4, well)
             p20.air_gap(airgap)
             p20.dispense(4+airgap, elute.bottom(z=-20))
-            p20.blow_out()
+            # p20.blow_out()
 
             if i % 4 == 0:
                 if p20.has_tip:
