@@ -195,8 +195,7 @@ def run(ctx):
 
         for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
 
-            if not p20.has_tip:
-                p20.pick_up_tip()
+            p20.pick_up_tip()
 
             p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
@@ -207,10 +206,8 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            p20.dispense(4+airgap, elute.bottom(z=-20))
+            # p20.dispense(4+airgap, elute.bottom(z=-20))
             # p20.blow_out()
 
-            if i % 4 == 0:
-                if p20.has_tip:
-                    p20.drop_tip()
+            p20.drop_tip()
         ctx.comment('\n\n')
