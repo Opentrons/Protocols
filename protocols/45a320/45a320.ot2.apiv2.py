@@ -87,10 +87,9 @@ def run(ctx):
     ctx.comment('\n\nIncubating and Adding Isopropanol\n')
     ctx.delay(minutes=10)
     p1000.home()
-    ctx.pause('''
+    ctx.comment('''
               Incubation complete. Please ensure empty tubes have binding
-              columns prepped. Select "Resume" on the Opentrons App to continue
-              ''')
+              columns prepped.''')
 
     # move isopropanol and sample to binding column
     ctx.comment('\n\nAdding Isopropanol to Tube Rack, then Binding Column\n')
