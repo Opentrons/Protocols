@@ -193,9 +193,9 @@ def run(ctx):
         if i % 2 == 0 and i > 0:
             col_counter += 1
 
-        for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
+        p20.pick_up_tip()
 
-            p20.pick_up_tip()
+        for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
 
             p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
@@ -206,8 +206,8 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            # p20.dispense(4+airgap, elute.bottom(z=-20))
+            p20.dispense(p20.current_volume, elute.top())
             # p20.blow_out()
 
-            p20.drop_tip()
+        p20.drop_tip()
         ctx.comment('\n\n')
