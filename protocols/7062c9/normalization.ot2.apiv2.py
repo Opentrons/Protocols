@@ -13,9 +13,11 @@ def run(ctx):
         'input_csv', 'p300_mount', 'p20_mount')
 
     # labware
-    sample_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
-        'sample rack')
+    sample_racks = [
+        ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot,
+            f'sample rack {i+1}')
+        for i, slot in enumerate(['7', '4'])]
     final_plate = ctx.load_labware('neptune_96_aluminumblock_200ul',
                                    '5', 'normalized plate')
     tuberack = ctx.load_labware(
@@ -67,7 +69,8 @@ def run(ctx):
     # parse csv
     data = [
         [val for val in line.split(',')]
-        for line in input_csv.splitlines()][1:]
+        for line in input_csv.splitlines()[1:]
+        if line and line.split(',')[0].strip()]
 
     output_wells = final_plate.wells()[:16] + final_plate.wells()[95:79:-1]
 
@@ -117,12 +120,13 @@ def run(ctx):
     drop_all_tips()
 
     # transfer sample and mix
+    samples = [well for rack in sample_racks for well in rack.wells()]
     for i, line in enumerate(data):
         sample_vol = float(line[1])
         total_vol = float(line[6])
         pip = p20 if sample_vol <= 20 else p300
         sample_well, dest_well = [
-            sample_rack.wells()[i], output_wells[i]]
+            samples[i], output_wells[i]]
         if 0.8*total_vol < pip.max_volume:
             mix_vol = 0.8*total_vol
         else:
