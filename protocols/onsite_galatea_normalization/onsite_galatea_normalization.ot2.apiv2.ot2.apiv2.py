@@ -146,7 +146,7 @@ def run(ctx):
 
     ctx.comment('\n------------ADDING DNA TO FINAL PLATE-------------\n\n')
 
-    boundary = 12.0
+    boundary = 20.0
 
     for line in csv_rows:
         p20.pick_up_tip()
