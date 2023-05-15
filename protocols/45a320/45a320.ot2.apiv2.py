@@ -87,10 +87,9 @@ def run(ctx):
     ctx.comment('\n\nIncubating and Adding Isopropanol\n')
     ctx.delay(minutes=10)
     p1000.home()
-    ctx.pause('''
+    ctx.comment('''
               Incubation complete. Please ensure empty tubes have binding
-              columns prepped. Select "Resume" on the Opentrons App to continue
-              ''')
+              columns prepped.''')
 
     # move isopropanol and sample to binding column
     ctx.comment('\n\nAdding Isopropanol to Tube Rack, then Binding Column\n')
@@ -123,6 +122,7 @@ def run(ctx):
             p1000.aspirate(500, wash_solution)
             p1000.dispense(500, tube.top())
             p1000.home()
+        p1000.drop_tip()
         ctx.pause('''
                 Recap samples, centrifuge for approximately 1 minute at
                 approximately 15000 RPM. Discard the collection tube
@@ -130,7 +130,6 @@ def run(ctx):
                 collection tube. Place back on the tube rack
                 and select "Resume".
                 ''')
-        p1000.drop_tip()
     p1000.home()
     ctx.pause('''
             Please ensure that empty tubes are on the even columns of the final
@@ -194,10 +193,9 @@ def run(ctx):
         if i % 2 == 0 and i > 0:
             col_counter += 1
 
-        for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
+        p20.pick_up_tip()
 
-            if not p20.has_tip:
-                p20.pick_up_tip()
+        for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
 
             p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
@@ -208,10 +206,8 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            p20.dispense(4+airgap, elute.bottom(z=-20))
-            p20.blow_out()
+            p20.dispense(p20.current_volume, elute.top())
+            # p20.blow_out()
 
-            if i % 4 == 0:
-                if p20.has_tip:
-                    p20.drop_tip()
+        p20.drop_tip()
         ctx.comment('\n\n')
