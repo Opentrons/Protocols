@@ -146,6 +146,8 @@ def run(ctx):
 
     ctx.comment('\n------------ADDING DNA TO FINAL PLATE-------------\n\n')
 
+    boundary = 12.0
+
     for line in csv_rows:
         p20.pick_up_tip()
         source_well_name = line[0]
@@ -156,9 +158,11 @@ def run(ctx):
         transfer_vol = round(float(line[3]))
         transfer_vol = 1 if transfer_vol < 0.5 else transfer_vol
 
-        p20.aspirate(6 if transfer_vol > 6 else transfer_vol, source_well)
-        p20.dispense(6 if transfer_vol > 6 else transfer_vol,
-                     dest_well.bottom(z=1.5))
+        p20.aspirate(
+            boundary if transfer_vol > boundary else transfer_vol, source_well)
+        p20.dispense(
+            boundary if transfer_vol > boundary else transfer_vol,
+            dest_well.bottom(z=1.5))
         p20.blow_out()
         p20.drop_tip()
 
@@ -171,8 +175,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up(m20)
-            m20.aspirate(6, s_col.bottom(-0.5))
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col.bottom(-0.5))
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -182,8 +186,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up_less()
-            m20.aspirate(6, s_col)
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col)
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -192,8 +196,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[4]):
             pick_up_less()
-            m20.aspirate(6, s_col)
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col)
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
