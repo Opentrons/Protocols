@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Cherrypicking"
+        ]
+    },
+    "description": "This protocol performs a custom cherrypicking for any number of source and destination plates using a P20 single-channel pipette. An output file mapping each sample ID, source plate ID, and destination plate ID is output for each run.\nThe input .csv file should be formatted as follows including header line\n,clone ID,0ur plate ID,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest. Plate ID,Dest Well,Volume (in ul)\nn1,CL-1418591,1,biorad_96_wellplate_200ul_pcr,2,B06,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A01,15\nn2,CL-1418640,1,biorad_96_wellplate_200ul_pcr,2,D12,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A02,15\nn3,CL-1418621,1,biorad_96_wellplate_200ul_pcr,2,H09,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A03,15\nn4,CL-1418715,2,biorad_96_wellplate_200ul_pcr,3,H09,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A04,15\nn5,CL-1418738,3,biorad_96_wellplate_200ul_pcr,4,A01,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A05,15\nn6,CL-1418818,3,biorad_96_wellplate_200ul_pcr,4,A11,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A06,15\nn7,CL-1418744,3,biorad_96_wellplate_200ul_pcr,4,G01,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A07,15\nn8,CL-1418866,4,biorad_96_wellplate_200ul_pcr,5,C05,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A08,15\nn9,CL-1418976,5,biorad_96_wellplate_200ul_pcr,6,C07,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A09,15\n...",
+    "internal": "0df680",
+    "labware": "\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Cherrypicking\n\n\n",
+        "description": "This protocol performs a custom cherrypicking for any number of source and destination plates using a P20 single-channel pipette. An output file mapping each sample ID, source plate ID, and destination plate ID is output for each run.\n\nThe input .csv file should be formatted as follows **including header line**\n\n```\n,clone ID,0ur plate ID,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest. Plate ID,Dest Well,Volume (in ul)\nn1,CL-1418591,1,biorad_96_wellplate_200ul_pcr,2,B06,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A01,15\nn2,CL-1418640,1,biorad_96_wellplate_200ul_pcr,2,D12,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A02,15\nn3,CL-1418621,1,biorad_96_wellplate_200ul_pcr,2,H09,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A03,15\nn4,CL-1418715,2,biorad_96_wellplate_200ul_pcr,3,H09,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A04,15\nn5,CL-1418738,3,biorad_96_wellplate_200ul_pcr,4,A01,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A05,15\nn6,CL-1418818,3,biorad_96_wellplate_200ul_pcr,4,A11,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A06,15\nn7,CL-1418744,3,biorad_96_wellplate_200ul_pcr,4,G01,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A07,15\nn8,CL-1418866,4,biorad_96_wellplate_200ul_pcr,5,C05,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A08,15\nn9,CL-1418976,5,biorad_96_wellplate_200ul_pcr,6,C07,1,biorad_96_wellplate_200ul_pcr,11,RAILPB03,A09,15\n...\n```\n\n\n",
+        "internal": "0df680\n",
+        "labware": "* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "title": "Cherrypicking"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "Cherrypicking"
+}
