@@ -66,6 +66,13 @@ def run(ctx):
         p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])
         tip_data[mode]['count'] += 1
 
+    def slow_withdraw(pip, well, delay_seconds=2.0):
+        pip.default_speed /= 16
+        if delay_seconds > 0:
+            ctx.delay(seconds=delay_seconds)
+        pip.move_to(well.top())
+        pip.default_speed *= 16
+
     # parse csv
     data = [
         [val for val in line.split(',')]
@@ -73,6 +80,11 @@ def run(ctx):
         if line and line.split(',')[0].strip()]
 
     output_wells = final_plate.wells()[:16] + final_plate.wells()[95:79:-1]
+
+    p20.flow_rate.aspirate /= 2
+    p300.flow_rate.aspirate /= 2
+    p20.flow_rate.dispense /= 2
+    p300.flow_rate.dispense /= 2
 
     # prealocate water,
     for i, line in enumerate(data):
@@ -85,7 +97,9 @@ def run(ctx):
             else:
                 pickup_p300('single')
         pip.aspirate(water_vol, water)
+        slow_withdraw(pip, water)
         pip.dispense(water_vol, dest_well)
+        slow_withdraw(pip, dest_well)
     drop_all_tips()
 
     # prealocate buffer
@@ -99,7 +113,9 @@ def run(ctx):
             else:
                 pickup_p300('single')
         pip.aspirate(buffer_vol, buffer)
+        slow_withdraw(pip, buffer)
         pip.dispense(buffer_vol, dest_well)
+        slow_withdraw(pip, dest_well)
     drop_all_tips()
 
     last_probe = None
@@ -116,7 +132,9 @@ def run(ctx):
             else:
                 pickup_p300('single')
         pip.aspirate(probe_vol, probe)
+        slow_withdraw(pip, probe)
         pip.dispense(probe_vol, dest_well)
+        slow_withdraw(pip, dest_well)
     drop_all_tips()
 
     # transfer sample and mix
@@ -136,8 +154,10 @@ def run(ctx):
         else:
             pickup_p300('single')
         pip.aspirate(sample_vol, sample_well)
+        slow_withdraw(pip, sample_well)
         pip.dispense(sample_vol, dest_well)
         pip.mix(3, mix_vol, dest_well)
+        slow_withdraw(pip, dest_well)
         drop_all_tips()
 
     ctx.pause('Put sample plate in the thermal cycler for 30min')
@@ -145,4 +165,10 @@ def run(ctx):
     # transfer protease
     for i, line in enumerate(data):
         dest_well = output_wells[i]
-        p20.transfer(5, protease, dest_well, mix_after=(3, 20))
+        p20.pick_up_tip()
+        p20.aspirate(5, protease)
+        slow_withdraw(p20, protease)
+        p20.dispense(5, dest_well),
+        p20.mix(3, 20, dest_well)
+        slow_withdraw(p20, dest_well)
+        p20.drop_tip()
