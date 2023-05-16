@@ -1,5 +1,5 @@
 {
-    "content": "import csv\nfrom datetime import datetime\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick Diehl <ndiehl@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    now = datetime.now()  # current date and time\n    today = now.strftime('%Y%m%d')\n\n    [input_csv] = get_values(  # noqa: F821\n        'input_csv')\n\n    p20 = ctx.load_instrument('p20_single_gen2', 'left')\n\n    vol_pre_airgap = 2.0\n\n    # determine starting tip\n    if not ctx.is_simulating:\n        output_path = f'/data/{today}.csv'\n    else:\n        output_path = f'protocols/0df680/supplements/{today}.csv'\n\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in input_csv.splitlines()[1:]\n        if line.split(',')[0].strip()]\n\n    def parse_well(well_str):\n        return f'{well_str[0].upper()}{int(well_str[1:])}'\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds >= 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    def pickup(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    lw_map_sources = {}\n    lw_map_dests = {}\n    output_data = []\n\n    # tipracks\n    used_slots = []\n    for line in data:\n        slots = [int(line[4]), int(line[8])]\n        for s in slots:\n            if s not in used_slots:\n                used_slots.append(s)\n\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in [str(s) for s in range(1, 12)]\n        if slot not in used_slots]\n\n    p20.tip_racks = tipracks20\n\n    # transfers\n    for line in data:\n        clone_id = line[1].upper()\n        source_plate_id = line[2].upper()\n        source_lw = line[3]\n        source_slot = line[4]\n        source_well = parse_well(line[5])\n        source_h = float(line[6])\n        dest_lw = line[7]\n        dest_slot = line[8]\n        dest_plate_id = line[9]\n        dest_well = parse_well(line[10])\n        vol = float(line[11])\n\n        # load labware if needed\n        if not ctx.loaded_labwares[int(source_slot)]:\n            ctx.load_labware(source_lw, source_slot)\n        if not ctx.loaded_labwares[int(dest_slot)]:\n            ctx.load_labware(dest_lw, dest_slot)\n\n        # check whether a deck refill is needed:\n        # reset map if anything doesn't match\n        if source_slot in lw_map_sources and lw_map_sources[\n                source_slot] != source_plate_id:\n            ctx.pause('Replace deck with next set of source plates before \\\nresuming.')\n            lw_map_sources = {}\n        if dest_slot in lw_map_dests and lw_map_dests[\n                dest_slot] != dest_plate_id:\n            ctx.pause('Replace deck with next set of dest plates before \\\nresuming.')\n            lw_map_dests = {}\n\n        # update map with new labware\n        lw_map_sources[source_slot] = source_plate_id\n        lw_map_dests[dest_slot] = dest_plate_id\n\n        # perform transfer\n        source = ctx.loaded_labwares[int(source_slot)].wells_by_name(\n            )[source_well]\n        dest = ctx.loaded_labwares[int(dest_slot)].wells_by_name(\n            )[dest_well]\n        pickup(p20)\n        if vol_pre_airgap > 0:\n            p20.aspirate(vol_pre_airgap, source.top())\n        p20.aspirate(vol, source.bottom(source_h))\n        slow_withdraw(p20, source)\n        p20.dispense(p20.current_volume, dest)\n        slow_withdraw(p20, dest)\n        p20.drop_tip()\n\n        # log data\n        transfer_data = {\n            'clone-id': clone_id,\n            'source-plate-id': source_plate_id,\n            'dest-plate-id': dest_plate_id\n        }\n        output_data.append(transfer_data)\n\n    # write output\n    with open(output_path, 'w') as output_file:\n        writer = csv.writer(output_file)\n        writer.writerow(['cloneID', 'source plate ID', 'destination plate ID'])\n        for t_data in output_data:\n            writer.writerow([t_data['clone-id'],\n                            t_data['source-plate-id'],\n                            t_data['dest-plate-id']])\n",
+    "content": "import csv\nfrom datetime import datetime\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick Diehl <ndiehl@opentrons.com>',\n    'apiLevel': '2.14'\n}\n\n\ndef run(ctx):\n\n    now = datetime.now()  # current date and time\n    today = now.strftime('%Y%m%d')\n\n    [input_csv] = get_values(  # noqa: F821\n        'input_csv')\n\n    p20 = ctx.load_instrument('p20_single_gen2', 'left')\n\n    vol_pre_airgap = 2.0\n\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in input_csv.splitlines()[1:]\n        if line.split(',')[0].strip()]\n\n    def parse_well(well_str):\n        return f'{well_str[0].upper()}{int(well_str[1:])}'\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds >= 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    def pickup(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause('Replace the tips')\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    lw_map_sources = {}\n    lw_map_dests = {}\n    output_data = []\n\n    source_liq = ctx.define_liquid(\n        'source', '', '#50D5FF')\n    dest_liq = ctx.define_liquid(\n        'destination', '', '#B925FF')\n\n    # tipracks\n    used_slots = []\n    for line in data:\n        slots = [int(line[4]), int(line[8])]\n        for s in slots:\n            if s not in used_slots:\n                used_slots.append(s)\n\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in [s for s in range(1, 12)]\n        if slot not in used_slots]\n\n    p20.tip_racks = tipracks20\n\n    # transfers\n    used_tempdeck = False\n    for line in data:\n        clone_id = line[1].upper()\n        source_plate_id = line[2].upper()\n        source_lw = line[3]\n        source_slot = line[4]\n        source_well = parse_well(line[5])\n        source_h = float(line[6])\n        dest_lw = line[7]\n        dest_slot = line[8]\n        dest_plate_id = line[9]\n        dest_well = parse_well(line[10])\n        vol = float(line[11])\n\n        # load labware if needed\n        if int(source_slot) not in ctx.loaded_labwares:\n            s_plate = ctx.load_labware(\n                source_lw, source_slot,\n                f'source {source_plate_id}')\n            [well.load_liquid(source_liq, volume=200)\n             for well in s_plate.wells()]\n        if int(dest_slot) not in ctx.loaded_labwares:\n            if not used_tempdeck:\n                tempdeck = ctx.load_module('temperature module gen2', \n                                           dest_slot)\n                d_plate = tempdeck.load_labware(\n                    dest_lw, f'destination {dest_plate_id}')\n                tempdeck.set_temperature(4)\n                used_tempdeck = True\n            else:\n                d_plate = ctx.load_labware(\n                    dest_lw, dest_slot, f'destination {dest_plate_id}')\n            [well.load_liquid(dest_liq, volume=200)\n             for well in d_plate.wells()]\n\n        # check whether a deck refill is needed:\n        # reset map if anything doesn't match\n        if source_slot in lw_map_sources and lw_map_sources[\n                source_slot] != source_plate_id:\n            ctx.pause('Replace deck with next set of source plates before \\nresuming.')\n            lw_map_sources = {}\n        if dest_slot in lw_map_dests and lw_map_dests[\n                dest_slot] != dest_plate_id:\n            ctx.pause('Replace deck with next set of dest plates before \\nresuming.')\n            lw_map_dests = {}\n\n        # update map with new labware\n        lw_map_sources[source_slot] = source_plate_id\n        lw_map_dests[dest_slot] = dest_plate_id\n\n        # perform transfer\n        source = ctx.loaded_labwares[int(source_slot)].wells_by_name(\n            )[source_well]\n        dest = ctx.loaded_labwares[int(dest_slot)].wells_by_name(\n            )[dest_well]\n        pickup(p20)\n        if vol_pre_airgap > 0:\n            p20.aspirate(vol_pre_airgap, source.top())\n        p20.aspirate(vol, source.bottom(source_h))\n        slow_withdraw(p20, source)\n        p20.dispense(p20.current_volume, dest)\n        slow_withdraw(p20, dest)\n        p20.drop_tip()\n\n        # log data\n        transfer_data = {\n            'clone-id': clone_id,\n            'source-plate-id': source_plate_id,\n            'source-plate-well': source_well,\n            'dest-plate-id': dest_plate_id,\n            'dest-plate-well': dest_well,\n        }\n        output_data.append(transfer_data)\n\n    # file writing\n    if not ctx.is_simulating:\n        output_path = f'/var/lib/jupyter/notebooks/{today}.csv'\n        with open(output_path, 'w') as output_file:\n            writer = csv.writer(output_file)\n            writer.writerow(\n                ['cloneID', 'source plate ID', 'source plate well',\n                 'destination plate ID', 'destination plate well'])\n            for t_data in output_data:\n                writer.writerow([t_data['clone-id'],\n                                t_data['source-plate-id'],\n                                t_data['source-plate-well'],\n                                t_data['dest-plate-id']],\n                                t_data['dest-plate-well'])\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -23,64 +23,64 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 2",
+            "name": "source 1 on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 3",
+            "name": "source 2 on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 4",
+            "name": "source 3 on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 5",
+            "name": "source 4 on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "name": "source 5 on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 7",
+            "name": "source 7 on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 8",
+            "name": "source 9 on 8",
             "share": false,
             "slot": "8",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
+            "name": "source 10 on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
+            "name": "source 12 on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "name": "destination RAILPB03 on Temperature Module GEN2 on 11",
             "share": false,
             "slot": "11",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -90,9 +90,16 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.13",
+        "apiLevel": "2.14",
         "author": "Nick Diehl <ndiehl@opentrons.com>",
         "protocolName": "Cherrypicking"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 11 lw destination RAILPB03 on Temperature Module GEN2 on 11",
+            "share": false,
+            "slot": "11",
+            "type": "tempdeck"
+        }
+    ]
 }
