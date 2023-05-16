@@ -24,14 +24,16 @@ def run(ctx):
                                  '3', label='Reservoir')
     final_plate_384 = ctx.load_labware('filtrouslab_384_wellplate_50ul', '8')
     tiprack1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '4')
-    tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')
+    tiprack20 = [
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+        for slot in ['5', '6']]
 
     if not 1 <= num_samp <= 12:
         raise Exception('Enter a sample number between 1-12')
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
-                              tip_racks=[tiprack20])
+                              tip_racks=tiprack20)
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=[tiprack1000])
 
@@ -193,10 +195,9 @@ def run(ctx):
         if i % 2 == 0 and i > 0:
             col_counter += 1
 
-        p20.pick_up_tip()
-
         for i, chunk in enumerate(chunks[col_counter*8:col_counter*8+8]):
 
+            p20.pick_up_tip()
             p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
             for well in chunk:
@@ -208,6 +209,6 @@ def run(ctx):
             p20.air_gap(airgap)
             p20.dispense(p20.current_volume, elute.top())
             # p20.blow_out()
+            p20.drop_tip()
 
-        p20.drop_tip()
         ctx.comment('\n\n')
