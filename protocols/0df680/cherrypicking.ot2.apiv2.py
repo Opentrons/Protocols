@@ -5,7 +5,7 @@ from opentrons import protocol_api
 metadata = {
     'protocolName': 'Cherrypicking',
     'author': 'Nick Diehl <ndiehl@opentrons.com>',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -20,12 +20,6 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', 'left')
 
     vol_pre_airgap = 2.0
-
-    # determine starting tip
-    if not ctx.is_simulating:
-        output_path = f'/data/{today}.csv'
-    else:
-        output_path = f'protocols/0df680/supplements/{today}.csv'
 
     data = [
         [val.strip() for val in line.split(',')]
@@ -46,13 +40,18 @@ def run(ctx):
         try:
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace the tips")
+            ctx.pause('Replace the tips')
             pip.reset_tipracks()
             pip.pick_up_tip()
 
     lw_map_sources = {}
     lw_map_dests = {}
     output_data = []
+
+    source_liq = ctx.define_liquid(
+        'source', '', '#50D5FF')
+    dest_liq = ctx.define_liquid(
+        'destination', '', '#B925FF')
 
     # tipracks
     used_slots = []
@@ -64,12 +63,13 @@ def run(ctx):
 
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in [str(s) for s in range(1, 12)]
+        for slot in [s for s in range(1, 12)]
         if slot not in used_slots]
 
     p20.tip_racks = tipracks20
 
     # transfers
+    used_tempdeck = False
     for line in data:
         clone_id = line[1].upper()
         source_plate_id = line[2].upper()
@@ -84,10 +84,25 @@ def run(ctx):
         vol = float(line[11])
 
         # load labware if needed
-        if not ctx.loaded_labwares[int(source_slot)]:
-            ctx.load_labware(source_lw, source_slot)
-        if not ctx.loaded_labwares[int(dest_slot)]:
-            ctx.load_labware(dest_lw, dest_slot)
+        if int(source_slot) not in ctx.loaded_labwares:
+            s_plate = ctx.load_labware(
+                source_lw, source_slot,
+                f'source {source_plate_id}')
+            [well.load_liquid(source_liq, volume=200)
+             for well in s_plate.wells()]
+        if int(dest_slot) not in ctx.loaded_labwares:
+            if not used_tempdeck:
+                tempdeck = ctx.load_module('temperature module gen2', 
+                                           dest_slot)
+                d_plate = tempdeck.load_labware(
+                    dest_lw, f'destination {dest_plate_id}')
+                tempdeck.set_temperature(4)
+                used_tempdeck = True
+            else:
+                d_plate = ctx.load_labware(
+                    dest_lw, dest_slot, f'destination {dest_plate_id}')
+            [well.load_liquid(dest_liq, volume=200)
+             for well in d_plate.wells()]
 
         # check whether a deck refill is needed:
         # reset map if anything doesn't match
@@ -124,15 +139,23 @@ resuming.')
         transfer_data = {
             'clone-id': clone_id,
             'source-plate-id': source_plate_id,
-            'dest-plate-id': dest_plate_id
+            'source-plate-well': source_well,
+            'dest-plate-id': dest_plate_id,
+            'dest-plate-well': dest_well,
         }
         output_data.append(transfer_data)
 
-    # write output
-    with open(output_path, 'w') as output_file:
-        writer = csv.writer(output_file)
-        writer.writerow(['cloneID', 'source plate ID', 'destination plate ID'])
-        for t_data in output_data:
-            writer.writerow([t_data['clone-id'],
-                            t_data['source-plate-id'],
-                            t_data['dest-plate-id']])
+    # file writing
+    if not ctx.is_simulating:
+        output_path = f'/var/lib/jupyter/notebooks/{today}.csv'
+        with open(output_path, 'w') as output_file:
+            writer = csv.writer(output_file)
+            writer.writerow(
+                ['cloneID', 'source plate ID', 'source plate well',
+                 'destination plate ID', 'destination plate well'])
+            for t_data in output_data:
+                writer.writerow([t_data['clone-id'],
+                                t_data['source-plate-id'],
+                                t_data['source-plate-well'],
+                                t_data['dest-plate-id']],
+                                t_data['dest-plate-well'])
