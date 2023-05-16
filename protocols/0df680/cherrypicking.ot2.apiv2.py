@@ -92,7 +92,7 @@ def run(ctx):
              for well in s_plate.wells()]
         if int(dest_slot) not in ctx.loaded_labwares:
             if not used_tempdeck:
-                tempdeck = ctx.load_module('temperature module gen2', 
+                tempdeck = ctx.load_module('temperature module gen2',
                                            dest_slot)
                 d_plate = tempdeck.load_labware(
                     dest_lw, f'destination {dest_plate_id}')
