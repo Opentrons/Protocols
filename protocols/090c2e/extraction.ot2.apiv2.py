@@ -665,4 +665,4 @@ then resume run.')
 
     mag_deck.disengage()
     ctx.comment('Protocol complete! Please store samples at -20C or \
-    continue processing')
+continue processing')
