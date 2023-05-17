@@ -36,7 +36,7 @@ Opentrons 4-in-1 tuberack with 4x6 1.5ml tube insert
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Upload your `.csv` file containing wells to process, and input the mount side for your P20 single-channel pipette, and the incubation temperature (in degrees C).
+1. Upload your `.csv` file containing wells to process, and input the mount side for your P50 single-channel pipette, and the incubation temperature (in degrees C).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
