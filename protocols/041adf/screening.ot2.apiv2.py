@@ -15,10 +15,14 @@ def run(ctx):
     [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821
         'num_samples', 'mount_m20', 'mount_m300')
 
+    num_samples = 60
+    mount_m20 = 'left'
+    mount_m300 = 'right'
+
     vol_dmso = 8.7
     vol_teaa = 2.9
     vol_h2o = 1.0
-    vol_oligo = 3.0
+    vol_oligo = 25.0
     vol_azides = 3.6
     vol_cu_ligand = 5.4
     vol_sodium_ascorbate = 5.4
@@ -27,26 +31,26 @@ def run(ctx):
     vol_acetone2 = 200.0
 
     # modules and labware
-    hs = ctx.load_module('heaterShakerModuleV1', '1')
+    hs = ctx.load_module('heaterShakerModuleV1', '7')
     hs_plate = hs.load_labware(
-        'opentrons_96_deep_well_adapter_nest_wellplate_2ml_deep',
+        'biorad_96_wellplate_200ul_pcr',
         'reaction plate')
     hs.close_labware_latch()
-    azides_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '3',
+    azides_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
                                     'azides')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['4', '10']]
+        for slot in ['10', '4']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['6', '9']]
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5', 'reservoir')
-    oligo_plate = ctx.load_labware('roarprinted_48_wellplate_1500ul', '11',
+        for slot in ['5', '9']]
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'reservoir')
+    oligo_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '11',
                                    'oligos')
     supernatant_plates = [
         ctx.load_labware(
-            'nest_96_wellplate_2ml_deep', slot, f'supernatant plate {i+1}')
-        for i, slot in enumerate(['7', '8'])]
+            'biorad_96_wellplate_200ul_pcr', slot, f'supernatant plate {i+1}')
+        for i, slot in enumerate(['3', '6'])]
 
     # pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', mount_m20,
@@ -56,7 +60,7 @@ def run(ctx):
 
     # reagents
     num_cols = math.ceil(num_samples/6)
-    num_rows = math.ceil(num_samples/10)
+    # num_rows = math.ceil(num_samples/10)
     oligos = oligo_plate.rows()[0][:3]
     [teaa, h2o, dmso, sodium_ascorbate, cu_ligand] = reservoir.rows()[0][:5]
     acetone1 = reservoir.rows()[0][5:7]
@@ -68,9 +72,7 @@ def run(ctx):
         plate.rows()[0][1:1+num_cols] for plate in supernatant_plates]
 
     default_current = 0.6
-    offset_pickup_wells = [
-        well for row in m20.tip_racks[-1].rows()[::-1] for well in row[::-1]]
-    offset_pickup_counter = 0
+    offset_pickup_counter = {m20: 0, m300: 0}
 
     def pick_up(pip, num_tips=8):
         try:
@@ -81,7 +83,6 @@ def run(ctx):
             pip.pick_up_tip()
 
     def pick_up_single(pip):
-        nonlocal offset_pickup_counter
 
         current_modifier = 1/8
         current = default_current*current_modifier
@@ -91,10 +92,12 @@ def run(ctx):
         ctx._hw_manager.hardware._attached_instruments[
             instr].update_config_item('pick_up_current', current)
 
-        well = offset_pickup_wells[offset_pickup_counter]
-        offset_pickup_counter += 1
+        tip_loc = [
+            tip for col in pip.tip_racks[-1].columns()[::-1]
+            for tip in col[::-1]][offset_pickup_counter[pip]]
+        offset_pickup_counter[pip] += 1
 
-        pip.pick_up_tip(well)
+        pip.pick_up_tip(tip_loc)
 
         # reset current to default
         # if not ctx.is_simulating():
@@ -127,7 +130,7 @@ def run(ctx):
 
     def reagent_transfer(vol, reagent, destinations, num_tips=8,
                          new_tip='once', mix_reps=0, mix_vol=0, touch_tip=True,
-                         rate=1.0):
+                         rate=1.0, h_asp=1.0, h_disp=4.0):
         pip = m20 if vol <= 20 else m300
         if num_tips == 8:
             pick_up_func = pick_up
@@ -146,7 +149,7 @@ def run(ctx):
             if mix_reps > 0:
                 pip.mix(mix_reps, mix_vol, d.bottom(2), rate=rate)
             if touch_tip:
-                slow_withdraw(d, pip, z=d.depth/2)
+                slow_withdraw(d, pip, z=-1*d.depth/2)
                 custom_touch_tip(d, pip, -1*d.depth/2)
             slow_withdraw(d, pip)
             if new_tip == 'always':
@@ -161,8 +164,8 @@ def run(ctx):
 
     # transfer oligos
     all_oligo_dests = [
-        well for row in hs_plate.rows()[1:1+num_rows]
-        for well in row[1:11]][:num_samples]
+        well for col in hs_plate.columns()[1:1+num_cols]
+        for well in col[1:7]][:num_samples]
     num_oligos = len(oligos)
     max_dests_per_oligo = math.ceil(len(all_oligo_dests)/num_oligos)
     oligo_dest_sets = [
@@ -173,7 +176,7 @@ def run(ctx):
     ]
     for oligo, oligo_dest_set in zip(oligos, oligo_dest_sets):
         reagent_transfer(vol_oligo, oligo, oligo_dest_set, num_tips=1,
-                         new_tip='always', rate=0.5)
+                         new_tip='always', rate=0.5, h_asp=5.0, h_disp=10.0)
 
     # transfer remaining reagents
     for azide, d in zip(azides, reaction_samples):
@@ -187,7 +190,7 @@ def run(ctx):
     # heater shaker incubation
     hs.set_and_wait_for_temperature(37)
     hs.set_and_wait_for_shake_speed(200)
-    ctx.delay(minutes=240)
+    ctx.delay(minutes=1)
     hs.deactivate_shaker()
 
     ctx.pause('Resume when ready.')
@@ -195,16 +198,20 @@ def run(ctx):
     # add acetone
     pick_up(m300)
     ctx.delay(seconds=2)
+    num_asp = math.ceil(
+        vol_acetone2/m300.tip_racks[0].wells()[0].max_volume)
+    vol_per_asp = round(vol_acetone2/num_asp, 2)
     for i, d in enumerate(reaction_samples):
         acetone_channel = acetone1[i//5]
         if i == 0:
             m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
-        m300.aspirate(vol_acetone1, acetone_channel.bottom(2))
-        slow_withdraw(acetone_channel, m300, z=-1)
-        custom_touch_tip(acetone_channel, m300)
-        m300.dispense(vol_acetone1, d.top(-1))
-        ctx.delay(seconds=2)
-        custom_touch_tip(d, m300)
+        for _ in range(num_asp):
+            m300.aspirate(vol_per_asp, acetone_channel.bottom(2))
+            slow_withdraw(acetone_channel, m300, z=-1)
+            custom_touch_tip(acetone_channel, m300)
+            m300.dispense(vol_per_asp, d.top(-1))
+            ctx.delay(seconds=2)
+            custom_touch_tip(d, m300)
     m300.drop_tip()
 
     # add sodium acetate
@@ -225,7 +232,7 @@ def run(ctx):
 
     vol_supernatant = sum([vol_dmso, vol_teaa, vol_h2o, vol_oligo, vol_azides,
                            vol_cu_ligand, vol_sodium_ascorbate, vol_acetone1,
-                           vol_sodium_acetate])
+                           vol_sodium_acetate])*2
 
     supernatant_height = 7.0
 
@@ -245,18 +252,23 @@ def run(ctx):
 
     # add acetone 2
     pick_up(m300)
+    num_asp = math.ceil(
+        vol_acetone2/m300.tip_racks[0].wells()[0].max_volume)
+    vol_per_asp = round(vol_acetone2/num_asp, 2)
     for i, d in enumerate(reaction_samples):
         acetone_channel = acetone2[i//10]
+        x_offset = d.length/2 if d.length else d.diameter/2
         if i == 0:
             m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
             ctx.delay(seconds=2)
-        m300.aspirate(vol_acetone2, acetone_channel.bottom(2))
-        slow_withdraw(acetone_channel, m300, z=-1)
-        custom_touch_tip(acetone_channel, m300)
-        m300.move_to(d.top().move(Point(x=d.length/2, z=-1)))
-        m300.dispense(vol_acetone2)
-        ctx.delay(seconds=2)
-        custom_touch_tip(d, m300)
+        for _ in range(num_asp):
+            m300.aspirate(vol_per_asp, acetone_channel.bottom(2))
+            slow_withdraw(acetone_channel, m300, z=-1)
+            custom_touch_tip(acetone_channel, m300)
+            m300.move_to(d.top().move(Point(x=x_offset, z=-1)))
+            m300.dispense(vol_per_asp)
+            ctx.delay(seconds=2)
+            custom_touch_tip(d, m300)
 
     ctx.pause('Resume when ready')
 
