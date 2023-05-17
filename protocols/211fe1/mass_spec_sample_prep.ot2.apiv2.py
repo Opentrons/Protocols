@@ -29,6 +29,7 @@ def run(ctx):
         well.strip().upper()
         for well in samples_csv.splitlines()[0].split(',')
         if well
+
     ]
     samples = [
         tc_plate.wells_by_name()[well]
