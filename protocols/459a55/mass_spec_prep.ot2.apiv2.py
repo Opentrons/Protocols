@@ -11,11 +11,10 @@ def run(ctx):
 
     [p300_mount, p20_mount, num_samples] = get_values(  # noqa: F821
         'p300_mount', 'p20_mount', 'num_samples')
-    # [p300_mount, p20_mount, num_samples] = ['left', 'right', 12]
 
     # check
     if num_samples > 22 or num_samples < 1:
-        raise Exception('Invalid number of samples (must be 1-20)')
+        raise Exception('Invalid number of samples (must be 1-22)')
     if p300_mount == p20_mount:
         raise Exception('Pipette mounts cannot match.')
 
