@@ -247,8 +247,10 @@ can not exceed the height of the labware.')
 
     def remove_supernatant(vol, src):
         w = int(str(src).split(' ')[0][1:])
-        radi = float(src.width)/4 if src.width is not None else \
-            float(src.diameter)/4
+        if src.width is not None:
+            radi = float(src.width)/4
+        else:
+            radi = float(src.diameter)/4
         x0 = radi if w % 2 == 0 else -radi
         while vol > 180:
             m300.aspirate(180, src.bottom().move(types.Point(x=x0, y=0, z=1)))
