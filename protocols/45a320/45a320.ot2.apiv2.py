@@ -207,7 +207,7 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            p20.dispense(p20.current_volume, elute.top())
+            # p20.dispense(p20.current_volume, elute.top())
             # p20.blow_out()
             p20.drop_tip()
 
