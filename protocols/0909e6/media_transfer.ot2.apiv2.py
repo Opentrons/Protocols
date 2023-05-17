@@ -1,5 +1,3 @@
-from io import StringIO
-import csv
 import math
 from opentrons.protocol_api.labware import Well
 
@@ -63,8 +61,17 @@ def run(ctx):
     tuberack50 = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                   '1', 'media tuberack')
     tuberacks15 = [
-        ctx.load_labware(lw_factors, slot, f'factor tuberack {i+1}')
-        for i, slot in enumerate(['4', '7'])]
+        ctx.load_labware(
+            'opentrons_15_tuberack_falcon_15ml_conical', slot,
+            f'factors {tube_set}')
+        for i, (slot, tube_set) in enumerate(
+            zip(['4', '7'], ['1-15', '16-30']))]
+    tuberacks2 = [
+        ctx.load_labware(
+            'opentrons_15_tuberack_falcon_15ml_conical', slot,
+            f'factors {tube_set}')
+        for i, (slot, tube_set) in enumerate(
+            zip(['5', '8'], ['31-54', '55-78']))]
     plate = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '2')
     tiprack_small = [ctx.load_labware(tiprack_small_type, '3')]
     tiprack1000 = [
@@ -87,26 +94,32 @@ def run(ctx):
             [vol_media_tube*1000 for vol_media_tube in vol_media_list])]
 
     # parse data
-    f = StringIO(csv_factors)
-    reader = csv.reader(f, delimiter=',')
-    data = []
-    factor_volumes_ml = None
-    for i, row in enumerate(reader):
-        if i == 1:
-            factor_volumes_ml = [float(val) for val in row[1:] if val]
-        if i > 1:
-            content = [float(val) for val in row if val]
-            data.append(content)
-    num_factors = len(data[0]) - 1  # exclude media volume
+    factor_data = [
+        [float(val) for val in line.split(',')[1:] if val.strip()]
+        for line in csv_factors.splitlines()[2:]
+    ]
 
+    all_factor_tubes = [
+        well for rack_set in [tuberacks15, tuberacks2]
+        for rack in rack_set
+        for well in rack.wells()]
+
+    factor_indices = [
+        int(cell.strip().split(' ')[-1]) - 1
+        for cell in csv_factors.splitlines()[0].split(',')[1:]
+        if cell.strip()]
     factor_tubes = [
-        well for rack in tuberacks15 for well in rack.wells()][:num_factors]
-    ref_vol = tuberacks15[0].wells()[0].max_volume / 1000  # 2ml or 15ml
-    ref_height = tuberacks15[0].wells()[0].depth
+        all_factor_tubes[ind] for ind in factor_indices]
+    factor_volumes_ml = [
+        float(cell)*1000 for cell in csv_factors.splitlines()[1].split(',')[1:]
+        if cell.strip()]
+    # ref_vol = tuberacks15[0].wells()[0].max_volume / 1000  # 2ml or 15ml
+    # ref_height = tuberacks15[0].wells()[0].depth
     factor_heights = [
         # ensure tip is submerged
-        round(vol/ref_vol*ref_height*0.9, 1)
-        for vol in factor_volumes_ml]
+        round(factor_vol/(factor_tube.max_volume/1000)*factor_tube.depth*0.9,
+              1)
+        for factor_tube, factor_vol in zip(factor_tubes, factor_volumes_ml)]
     factors = [
         WellH(well, current_volume=vol*1000, height=height)
         for well, vol, height in zip(
@@ -157,7 +170,7 @@ def run(ctx):
     # transfer media
     p1000.pick_up_tip()
     wells_ordered = [well for row in plate.rows() for well in row]
-    vols_media = [line[0] for line in data]
+    vols_media = [float(line[0]) for line in csv_factors.splitlines()[2:]]
     media_info = []
     for well, vol_media in zip(wells_ordered, vols_media):
         vols_split = split_media_vol(vol_media)
@@ -201,7 +214,7 @@ def run(ctx):
 
     # transfer factors
     for i, factor in enumerate(factors):
-        factor_vols = [line[1+i] for line in data]
+        factor_vols = [line[i] for line in factor_data]
         factor_info = [
             {well: vol}
             for well, vol in zip(wells_ordered, factor_vols)]
@@ -259,7 +272,7 @@ def run(ctx):
             pip_small.drop_tip()
 
     # mix
-    for well in plate.wells()[:len(data)]:
+    for well in plate.wells()[:len(factor_data)]:
         p1000.pick_up_tip()
         p1000.mix(reps_mix, vol_mix, well.bottom(2))
         slow_withdraw(well, p1000)
