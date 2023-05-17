@@ -24,7 +24,6 @@ def run(ctx):
     test_well = plate.wells()[0]
 
     pip.pick_up_tip()
-
     ctx.pause('''Welcome to the OT-2 Test Drive Protocol-
                     This is the `Pause` function.
                     Pauses can be put at any point during a protocol
