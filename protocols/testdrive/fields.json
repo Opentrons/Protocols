@@ -5,7 +5,7 @@
     "name": "well_plate",
     "options": [
        { "label": "Bio-RAD 96 Well Plate 200ul PCR", "value": "biorad_96_wellplate_200ul_pcr" },
-       { "label": "Corning 12 Well Plate 360ul Flat", "value": "corning_96_wellplate_360ul_flat" },
+       { "label": "Corning 96 Well Plate 360ul Flat", "value": "corning_96_wellplate_360ul_flat" },
        { "label": "NEST 96 Well Plate 100ul PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
        { "label": "NEST 96 Well Plate 200ul Flat", "value": "nest_96_wellplate_200ul_flat" },
        { "label": "NEST 96 Well Plate 2mL Deep", "value": "nest_96_wellplate_2ml_deep" },
