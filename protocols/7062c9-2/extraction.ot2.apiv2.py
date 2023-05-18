@@ -21,8 +21,8 @@ def run(ctx):
     park_tips = True
     sample_incubation_mixing = True
     mag_height = 11.5
-    z_offset = 0.0
-    radial_offset = 0.3
+    z_offset = 0.5
+    radial_offset = 0.5
     wash1_vol = 200.0
     wash2_vol = 200.0
     elution_vol = 100.0
