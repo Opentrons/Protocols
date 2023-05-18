@@ -271,6 +271,8 @@ def run(ctx):
             ctx.delay(seconds=2)
             custom_touch_tip(d, m300)
 
+    ctx.home()
+
     ctx.pause('Resume when ready')
 
     # transfer supernatant 2
