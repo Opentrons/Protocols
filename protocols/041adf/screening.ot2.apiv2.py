@@ -15,10 +15,6 @@ def run(ctx):
     [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821
         'num_samples', 'mount_m20', 'mount_m300')
 
-    num_samples = 60
-    mount_m20 = 'left'
-    mount_m300 = 'right'
-
     vol_dmso = 8.7
     vol_teaa = 2.9
     vol_h2o = 1.0
