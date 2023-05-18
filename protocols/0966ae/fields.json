@@ -1,0 +1,35 @@
+[
+    {
+        "type": "int",
+        "label": "number of plates (1-9)",
+        "name": "num_plates",
+        "default": 9
+    },
+    {
+        "type": "dropDown",
+        "label": "perform day 1 steps",
+        "name": "do_day1",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "perform day 2 steps",
+        "name": "do_day2",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "P300 GEN2 single-channel pipette mount",
+        "name": "mount_p300",
+        "options": [
+            { "label": "left", "value": "left" },
+            { "label": "right", "value": "right" }
+        ]
+    }
+]
