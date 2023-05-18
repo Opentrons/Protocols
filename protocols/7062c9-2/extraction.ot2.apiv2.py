@@ -198,6 +198,7 @@ resuming.')
                 waste_vol = 0
             waste_vol += vol
 
+        m300.flow_rate.aspirate /= 4
         num_trans = math.ceil(vol/(200 - air_gap_vol))
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
@@ -224,6 +225,7 @@ resuming.')
                 m300.air_gap(20)
             if drop:
                 _drop(m300)
+        m300.flow_rate.aspirate *= 4
 
     def wash(vol, source, change_tips_for_samples=True, mix_reps=mix_reps,
              park=True, resuspend=True, drop=True):
@@ -306,7 +308,7 @@ resuming.')
         for h in heating_samples_m:
             m300.aspirate(elution_vol*1.2, elution_solution)
             slow_withdraw(m300, elution_solution)
-            m300.dispense(elution_vol*2, h)
+            m300.dispense(elution_vol*2, h.bottom(3))
             slow_withdraw(m300, h)
         m300.home()
 
