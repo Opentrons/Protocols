@@ -6,34 +6,22 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sterile Workflows
+	* Cell Culture
 
 
 ## Description
-This protocol does stuff!
+This protocol performs a custom sterile 384-wellplate prep on up to 9 plates.
 
 
 ### Labware
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Corning 384 Well Plate 112 µL Flat #3640](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/384-Well-Microplates/Corning%C2%AE-384-well-Clear-Polystyrene-Microplates/p/corning384WellClearPolystyreneMicroplates)
+* Ananda 384 Well Plate 100 µL Flat
 
 
 ### Pipettes
 * [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-
-
-### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0966ae/deck.png)
-
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0966ae/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
