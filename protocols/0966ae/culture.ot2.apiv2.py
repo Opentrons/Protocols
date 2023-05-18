@@ -1,7 +1,7 @@
 metadata = {
     'protocolName': '384-Well Plate Prep',
     'author': 'Nick Diehl <ndiehl@opentrons.com>',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -12,7 +12,7 @@ def run(ctx):
 
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '1')]
     tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '2')
+        'opentrons_15_tuberack_falcon_15ml_conical', '2')
     plates384 = [
         ctx.load_labware('ananda_384_wellplate_100ul', slot,
                          f'plate {i+1}')
@@ -29,6 +29,20 @@ def run(ctx):
     vol_coating_solution = 100.0
     vol_water1 = 100.0
     vol_water2 = 100.0
+
+    coating_solution_liq = ctx.define_liquid(
+        name='coating solution',
+        description='',
+        color='B925FF'
+    )
+    water_liq = ctx.define_liquid(
+        name='water',
+        description='',
+        color='50D5FF'
+    )
+
+    coating_solution.load_liquid(coating_solution_liq, volume=10000)
+    water.load_liquid(water_liq, volume=10000)
 
     def slow_withdraw(well, delay_seconds=2.0, pip=p300):
         pip.default_speed /= 16
@@ -63,11 +77,16 @@ def run(ctx):
             for well in row[3::3]]
         p300.pick_up_tip()
         for d in dests1:
-            custom_transfer(vol_coating_solution, coating_solution, d)
+            custom_transfer(vol_coating_solution, coating_solution, d, h_asp=5)
         p300.drop_tip()
+
+    if not do_day2:
+        ctx.comment('Day 1 complete.')
 
     """ DAY 2 """
     if do_day2:
+        if do_day1:
+            ctx.pause('Day 1 complete.')
         sources2 = [
             well for plate in plates384
             for row in [
@@ -85,7 +104,7 @@ def run(ctx):
             for well in row[3::3]]
         p300.pick_up_tip()
         for d in dests3:
-            custom_transfer(vol_water1, water, d)
+            custom_transfer(vol_water1, water, d, h_asp=5)
         p300.drop_tip()
 
         ctx.delay(minutes=10)
@@ -96,7 +115,7 @@ def run(ctx):
             for well in row[3::3]]
         p300.pick_up_tip()
         for d in dests4:
-            custom_transfer(vol_water1, water, d)
+            custom_transfer(vol_water1, water, d, h_asp=5)
         p300.drop_tip()
 
         ctx.delay(minutes=10)
@@ -118,7 +137,7 @@ def run(ctx):
             for well in row[1:-3:3]]
         p300.pick_up_tip()
         for d in dests6:
-            custom_transfer(vol_water2, water, d)
+            custom_transfer(vol_water2, water, d, h_asp=5)
         p300.drop_tip()
 
         ctx.delay(minutes=10)
@@ -129,7 +148,7 @@ def run(ctx):
             for well in row[1:-3:3]]
         p300.pick_up_tip()
         for d in dests7:
-            custom_transfer(vol_water2, water, d)
+            custom_transfer(vol_water2, water, d, h_asp=5)
         p300.drop_tip()
 
         sources8 = sources5
@@ -142,7 +161,7 @@ def run(ctx):
         dests9 = dests3
         p300.pick_up_tip()
         for d in dests9:
-            custom_transfer(vol_water1, water, d)
+            custom_transfer(vol_water1, water, d, h_asp=5)
         p300.drop_tip()
 
         ctx.delay(minutes=10)
@@ -150,7 +169,7 @@ def run(ctx):
         dests10 = dests4
         p300.pick_up_tip()
         for d in dests10:
-            custom_transfer(vol_water1, water, d)
+            custom_transfer(vol_water1, water, d, h_asp=5)
         p300.drop_tip()
 
         ctx.delay(minutes=10)
