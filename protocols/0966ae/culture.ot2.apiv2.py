@@ -14,7 +14,7 @@ def run(ctx):
     tuberack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '2')
     plates384 = [
-        ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
+        ctx.load_labware('ananda_384_wellplate_100ul', slot,
                          f'plate {i+1}')
         for i, slot in enumerate(range(3, 3+num_plates))]
 
