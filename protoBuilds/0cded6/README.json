@@ -13,7 +13,7 @@
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* NGS Library Prep\n\t* Illumina COVIDSeq\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cded6/deck.png)\n\n\n",
-        "description": "This protocol performs Anneal RNA for the Illumina COVIDSeq protocol.\n\nLinks:  \n* [1. Anneal RNA](./0cded6)\n* [2. Synthesize First Strand cDNA](./0cded6-synthesize)\n* [3. Amplify cDNA](./0cded6-amplify)\n* [4. Tagment PCR Amplicons](./0cded6-tagment)\n* [5. Post Tagmentation Clean Up](./0cded6-cleanup)\n* [6. Amplify Tagmented Amplicons](./0cded6-amplify2)\n\n\n",
+        "description": "\nThis protocol performs Anneal RNA for the Illumina COVIDSeq protocol.\n\nLinks:  \n* [1. Anneal RNA](./0cded6)\n* [2. Synthesize First Strand cDNA](./0cded6-synthesize)\n* [3. Amplify cDNA](./0cded6-amplify)\n* [4. Tagment PCR Amplicons](./0cded6-tagment)\n* [5. Post Tagmentation Clean Up](./0cded6-cleanup)\n* [6. Amplify Tagmented Amplicons](./0cded6-amplify2)\n\n\n",
         "internal": "0cded6\n",
         "labware": "* Quantgene 96 Aluminum Block 200 \u00b5L\n* Agilent 96 Well Plate 200 \u00b5L #5042-8502\n* Agilent With Nonskirted 96 Well Plate 200 \u00b5L\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
         "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
