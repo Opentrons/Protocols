@@ -31,7 +31,7 @@ This protocol performs a custom mass spec sample prep for up to 20 samples.
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the mount side for your P1000 single-channel pipette, the number of capsules to fill, and the volume to fill each capsule (in ul).
+1. Input the mount side for your P300 single-channel pipette, P20 single-channel pipette, and the number of samples.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.

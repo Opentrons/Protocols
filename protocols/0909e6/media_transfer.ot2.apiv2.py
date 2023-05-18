@@ -11,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_factors, lw_factors, vol_media_tubes, vol_mix,
+    [csv_factors, vol_media_tubes, vol_mix,
      reps_mix, type_pipette_small] = get_values(  # noqa: F821
-        'csv_factors', 'lw_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
+        'csv_factors', 'vol_media_tubes', 'vol_mix', 'reps_mix',
         'type_pipette_small')
 
     vol_pre_airgap_1000 = 100.0
@@ -68,7 +68,7 @@ def run(ctx):
             zip(['4', '7'], ['1-15', '16-30']))]
     tuberacks2 = [
         ctx.load_labware(
-            'opentrons_15_tuberack_falcon_15ml_conical', slot,
+            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
             f'factors {tube_set}')
         for i, (slot, tube_set) in enumerate(
             zip(['5', '8'], ['31-54', '55-78']))]

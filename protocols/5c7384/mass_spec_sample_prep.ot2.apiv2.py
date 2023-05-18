@@ -55,20 +55,20 @@ def run(ctx):
         caa = reagent_plate.columns()[1]
         mag_bead_stock = reagent_plate.columns()[2]
         acetonitrile = acetonitrile_plate.wells()[:num_samples]
-        trypsin = reagent_plate.columns()[5]
     else:
         dtt = reagent_plate.rows()[0][0]
         caa = reagent_plate.rows()[0][1]
         mag_bead_stock = reagent_plate.rows()[0][2]
         acetonitrile = acetonitrile_plate.rows()[0][:num_cols]
-        trypsin = reagent_plate.rows()[0][5]
 
     if p300.channels == 1:
         etoh = etoh_plate.wells()[:num_samples]
         abc = reagent_plate.columns()[3:5]
+        trypsin = reagent_plate.columns()[5]
     else:
         etoh = etoh_plate.rows()[0][:num_cols]
         abc = reagent_plate.rows()[0][3:5]
+        trypsin = reagent_plate.rows()[0][5]
 
     heat_func(60)
 
@@ -104,20 +104,16 @@ resuming.')
 
     """ Reduction and Alkylation """
     samples = samples_s if p20.channels == 1 else samples_m
-    dtt_source = dtt if p20.channels == 1 else [dtt]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, dtt_source[i % 8], s, mix_after=(2, 5),
-                     new_tip='never')
+        p20.transfer(5, dtt, s, mix_after=(2, 5), new_tip='never')
         p20.drop_tip()
 
     ctx.delay(minutes=30, msg='Incubating 30 minutes at 60C for reduction.')
 
-    caa_source = caa if p20.channels == 1 else [caa]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, caa_source[i % 8], s, mix_after=(2, 5),
-                     new_tip='never')
+        p20.transfer(5, caa, s, mix_after=(2, 5), new_tip='never')
         p20.drop_tip()
 
     heat_func(25)
@@ -125,10 +121,9 @@ resuming.')
 alkylation.')
 
     """ Protein Binding """
-    mb_source = mag_bead_stock if p20.channels == 1 else [mag_bead_stock]*8
     for i, s in enumerate(samples):
         _pick_up(p20)
-        p20.transfer(5, mb_source[i % 8], s, mix_after=(2, 5),
+        p20.transfer(5, mag_bead_stock, s, mix_after=(2, 5),
                      new_tip='never')
         p20.drop_tip()
 

@@ -367,6 +367,8 @@ dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
 do_cool_samples,1
+do_day1,1
+do_day2,1
 do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
@@ -781,7 +783,7 @@ mount_m20,8
 mount_m300,13
 mount_p1000,2
 mount_p20,11
-mount_p300,8
+mount_p300,9
 mount_pip,1
 mount_side,1
 move_side,2
@@ -850,7 +852,7 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,31
+num_plates,32
 num_pool_sources,1
 num_pools,1
 num_primers,3
@@ -869,7 +871,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,166
+num_samples,172
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
