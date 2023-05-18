@@ -195,8 +195,8 @@ def run(ctx):
     pick_up(m300)
     ctx.delay(seconds=2)
     num_asp = math.ceil(
-        vol_acetone2/m300.tip_racks[0].wells()[0].max_volume)
-    vol_per_asp = round(vol_acetone2/num_asp, 2)
+        vol_acetone1/m300.tip_racks[0].wells()[0].max_volume)
+    vol_per_asp = round(vol_acetone1/num_asp, 2)
     for i, d in enumerate(reaction_samples):
         acetone_channel = acetone1[i//5]
         if i == 0:
