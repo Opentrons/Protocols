@@ -12,8 +12,12 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821
-        'num_samples', 'mount_m20', 'mount_m300')
+    # [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821
+    #     'num_samples', 'mount_m20', 'mount_m300')
+
+    num_samples = 60
+    mount_m20 = 'left'
+    mount_m300 = 'right'
 
     vol_dmso = 8.7
     vol_teaa = 2.9
@@ -238,12 +242,13 @@ def run(ctx):
     vol_per_asp = round(vol_supernatant/num_asp, 2)
     for s, d in zip(reaction_samples, supernatant_samples1):
         pick_up(m300)
-        m300.aspirate(vol_per_asp, s.bottom(supernatant_height), rate=0.5)
-        slow_withdraw(s, m300, z=-1)
-        custom_touch_tip(s, m300)
-        m300.dispense(vol_per_asp, d.bottom(2), rate=0.5)
-        slow_withdraw(d, m300, z=-1)
-        custom_touch_tip(d, m300)
+        for _ in range(num_asp):
+            m300.aspirate(vol_per_asp, s.bottom(supernatant_height), rate=0.5)
+            slow_withdraw(s, m300, z=-1)
+            custom_touch_tip(s, m300)
+            m300.dispense(vol_per_asp, d.bottom(2), rate=0.5)
+            slow_withdraw(d, m300, z=-1)
+            custom_touch_tip(d, m300)
         m300.drop_tip()
 
     # add acetone 2
@@ -273,10 +278,11 @@ def run(ctx):
         vol_acetone2/m300.tip_racks[0].wells()[0].max_volume)
     vol_per_asp = round(vol_acetone2/num_asp, 2)
     for s, d in zip(reaction_samples, supernatant_samples2):
-        m300.aspirate(vol_per_asp, s.bottom(supernatant_height), rate=0.5)
-        slow_withdraw(s, m300, z=-1)
-        custom_touch_tip(s, m300)
-        m300.dispense(vol_per_asp, d.bottom(2), rate=0.5)
-        slow_withdraw(d, m300, z=-1)
-        custom_touch_tip(d, m300)
+        for _ in range(num_asp):
+            m300.aspirate(vol_per_asp, s.bottom(supernatant_height), rate=0.5)
+            slow_withdraw(s, m300, z=-1)
+            custom_touch_tip(s, m300)
+            m300.dispense(vol_per_asp, d.bottom(2), rate=0.5)
+            slow_withdraw(d, m300, z=-1)
+            custom_touch_tip(d, m300)
     m300.drop_tip()
