@@ -246,7 +246,7 @@ Continue?')
 
     # DNA template addition
     for (template, vol), d in zip(
-            template_map.items(), 
+            template_map.items(),
             aliquot_rack.wells()[:len(template_volumes)]):
         pip = p300 if vol >= 20 else p20
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
