@@ -672,7 +672,6 @@ loc_tween,1
 lw_checkit,1
 lw_deepwell_plate,3
 lw_dmso,1
-lw_factors,1
 lw_hplc,1
 lw_source,1
 lw_tiprack300,1
@@ -880,6 +879,7 @@ num_samples_per_plate,1
 num_samps,6
 num_sets,2
 num_slides,2
+num_templates,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
