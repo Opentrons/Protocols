@@ -14,7 +14,7 @@ def run(ctx):
             "pre_dil_factor", "m20_mount")
     #
     # dmso_dil_factor = 1.5
-    # m20_mount = 'left'
+    # m20_mount = 'right'
     # pre_dilution = False
     # pre_dil_factor = 2
 
@@ -48,7 +48,7 @@ def run(ctx):
     media_plate_22 = ctx.loaded_labwares[8]
 
     # protocol
-    dmso_vol = -4.8*(1-dmso_dil_factor)
+    dmso_vol = -13.3*(1-dmso_dil_factor)
 
     # transfer dmso to most cols dilution plates dmso 1-1, 1-2
     m20.pick_up_tip()
@@ -103,28 +103,27 @@ def run(ctx):
                             [dmso_plate_11, dmso_plate_21],
                             [dmso_plate_12, dmso_plate_22]):
         m20.pick_up_tip()
-        m20.aspirate(7.2, compound)
-        m20.dispense(7.2, first_plate.wells()[0])
+        m20.aspirate(20, compound)
+        m20.dispense(20, first_plate.wells()[0])
         for i, col in enumerate(first_plate.rows()[0][:10]):
-            m20.aspirate(4.8, first_plate.rows()[0][i])
-            m20.dispense(4.8, first_plate.rows()[0][i+1])
-            m20.mix(6, 0.9*(dmso_vol+4.8), first_plate.rows()[0][i+1])
+            m20.aspirate(13.3, first_plate.rows()[0][i])
+            m20.dispense(13.3, first_plate.rows()[0][i+1])
+            m20.mix(6, 0.9*(dmso_vol+13.3), first_plate.rows()[0][i+1])
         ctx.comment('\n\n')
 
-        m20.aspirate(4.8, first_plate.rows()[0][10])
-        m20.dispense(4.8, second_plate.rows()[0][0])
-        m20.mix(6, 0.9*(dmso_vol+4.8), second_plate.rows()[0][0])
+        m20.aspirate(13.3, first_plate.rows()[0][10])
+        m20.dispense(13.3, second_plate.rows()[0][0])
+        m20.mix(6, 0.9*(dmso_vol+13.3), second_plate.rows()[0][0])
 
         for i, col in enumerate(second_plate.rows()[0][:10]):
-            m20.aspirate(4.8, second_plate.rows()[0][i])
-            m20.dispense(4.8, second_plate.rows()[0][i+1])
-            m20.mix(6, 0.9*(dmso_vol+4.8), second_plate.rows()[0][i+1])
+            m20.aspirate(13.3, second_plate.rows()[0][i])
+            m20.dispense(13.3, second_plate.rows()[0][i+1])
+            m20.mix(6, 0.9*(dmso_vol+13.3), second_plate.rows()[0][i+1])
         m20.drop_tip()
         ctx.comment('\n\n\n\n\n\n\n\n')
 
     ctx.pause("Replace Tip Rack")
     m20.reset_tipracks()
-
     for source_plate, dest_plate in zip(
 
                                         [dmso_plate_11, dmso_plate_12,
