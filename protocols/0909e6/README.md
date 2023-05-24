@@ -32,7 +32,7 @@ This protocol performs a custom 12-factor cell culture assay in a 96-deepwell pl
 
 ### Reagent Setup
 ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0909e6/reagents2.png)  
-Note that factors 16-30 are arranged in the same format as factors 1-15.
+NOTE that factors 16-30 are arranged in the same format as factors 1-15.
 
 
 ### Process
