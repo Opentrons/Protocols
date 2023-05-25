@@ -15,6 +15,7 @@ def run(ctx):
     [num_samples, mount_m20, mount_m300] = get_values(  # noqa: F821
         'num_samples', 'mount_m20', 'mount_m300')
 
+    # [num_samples, mount_m20, mount_m300] = 60, 'left', 'right'
     lw_deepwell = 'nest_96_wellplate_2000ul'
 
     vol_dmso = 8.7
@@ -27,6 +28,7 @@ def run(ctx):
     vol_acetone1 = 300.0
     vol_sodium_acetate = 30.0
     vol_acetone2 = 200.0
+    do_mix_acetone = True
 
     # modules and labware
     hs = ctx.load_module('heaterShakerModuleV1', '7')
@@ -59,9 +61,8 @@ def run(ctx):
     # num_rows = math.ceil(num_samples/10)
     oligos = oligo_plate.rows()[0][:3]
     [teaa, h2o, dmso, sodium_ascorbate, cu_ligand] = reservoir.rows()[0][:5]
-    acetone1 = reservoir.rows()[0][5:7]
-    sodium_acetate = reservoir.rows()[0][7]
-    acetone2 = reservoir.rows()[0][8:9]
+    acetone = reservoir.rows()[0][6:12]
+    sodium_acetate = reservoir.rows()[0][5]
     reaction_samples = hs_plate.rows()[0][1:1+num_cols]
     azides = azides_plate.rows()[0][1:1+num_cols]
     [supernatant_samples1, supernatant_samples2] = [
@@ -153,6 +154,24 @@ def run(ctx):
         if pip.has_tip:
             pip.drop_tip()
 
+    channel_index = 0
+    channel_vol = 0
+    max_vol = acetone[0].max_volume * 0.90  # 90% of capacity
+
+    def check_acetone(vol):
+        nonlocal channel_index
+        nonlocal channel_vol
+        vol_total = vol * 8  # multichannel
+        if channel_vol + vol_total > max_vol:
+            channel_index += 1
+            channel_vol = 0
+        if channel_index == len(acetone):
+            ctx.pause('Refill acetone (reservoir channels 7-12).')
+            channel_index = 0
+            channel_vol = 0
+        channel_vol += vol_total
+        return acetone[channel_index]
+
     # transfer initial reagents to reaction plate
     reagent_transfer(vol_dmso, dmso, reaction_samples)
     reagent_transfer(vol_teaa, teaa, reaction_samples)
@@ -198,14 +217,16 @@ def run(ctx):
         vol_acetone1/m300.tip_racks[0].wells()[0].max_volume)
     vol_per_asp = round(vol_acetone1/num_asp, 2)
     for i, d in enumerate(reaction_samples):
-        acetone_channel = acetone1[i//5]
-        if i == 0:
-            m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
-        for _ in range(num_asp):
+        for n in range(num_asp):
+            acetone_channel = check_acetone(vol_per_asp)
+            if i == 0 and n == 0:
+                m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
             m300.aspirate(vol_per_asp, acetone_channel.bottom(2))
             slow_withdraw(acetone_channel, m300, z=-1)
             custom_touch_tip(acetone_channel, m300)
             m300.dispense(vol_per_asp, d.top(-1))
+            if n == num_asp - 1 and do_mix_acetone:
+                m300.mix(5, 200, d.bottom(5))
             ctx.delay(seconds=2)
             custom_touch_tip(d, m300)
     m300.drop_tip()
@@ -253,12 +274,12 @@ def run(ctx):
         vol_acetone2/m300.tip_racks[0].wells()[0].max_volume)
     vol_per_asp = round(vol_acetone2/num_asp, 2)
     for i, d in enumerate(reaction_samples):
-        acetone_channel = acetone2[i//10]
         x_offset = d.length/2 if d.length else d.diameter/2
-        if i == 0:
-            m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
-            ctx.delay(seconds=2)
-        for _ in range(num_asp):
+        for n in range(num_asp):
+            acetone_channel = check_acetone(vol_per_asp)
+            if i == 0 and n == 0:
+                m300.mix(2, 300, acetone_channel.bottom(2))  # pre-wet
+                ctx.delay(seconds=2)
             m300.aspirate(vol_per_asp, acetone_channel.bottom(2))
             slow_withdraw(acetone_channel, m300, z=-1)
             custom_touch_tip(acetone_channel, m300)
@@ -277,10 +298,12 @@ def run(ctx):
     vol_per_asp = round(vol_acetone2/num_asp, 2)
     for s, d in zip(reaction_samples, supernatant_samples2):
         for _ in range(num_asp):
+            if not m300.has_tip:
+                pick_up(m300)
             m300.aspirate(vol_per_asp, s.bottom(supernatant_height), rate=0.5)
             slow_withdraw(s, m300, z=-1)
             custom_touch_tip(s, m300)
             m300.dispense(vol_per_asp, d.bottom(4), rate=0.5)
             slow_withdraw(d, m300, z=-1)
             custom_touch_tip(d, m300)
-    m300.drop_tip()
+        m300.drop_tip()

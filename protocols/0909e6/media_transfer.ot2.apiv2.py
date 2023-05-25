@@ -110,20 +110,20 @@ def run(ctx):
         if cell.strip()]
     factor_tubes = [
         all_factor_tubes[ind] for ind in factor_indices]
-    factor_volumes_ml = [
+    factor_volumes_ul = [
         float(cell)*1000 for cell in csv_factors.splitlines()[1].split(',')[1:]
         if cell.strip()]
     # ref_vol = tuberacks15[0].wells()[0].max_volume / 1000  # 2ml or 15ml
     # ref_height = tuberacks15[0].wells()[0].depth
     factor_heights = [
         # ensure tip is submerged
-        round(factor_vol/(factor_tube.max_volume/1000)*factor_tube.depth*0.9,
+        round(factor_vol/(factor_tube.max_volume)*factor_tube.depth*0.9,
               1)
-        for factor_tube, factor_vol in zip(factor_tubes, factor_volumes_ml)]
+        for factor_tube, factor_vol in zip(factor_tubes, factor_volumes_ul)]
     factors = [
-        WellH(well, current_volume=vol*1000, height=height)
+        WellH(well, current_volume=vol, height=height)
         for well, vol, height in zip(
-            factor_tubes, factor_volumes_ml, factor_heights)]
+            factor_tubes, factor_volumes_ul, factor_heights)]
 
     def slow_withdraw(well, pip=p1000):
         ctx.max_speeds['A'] = 25
@@ -170,7 +170,8 @@ def run(ctx):
     # transfer media
     p1000.pick_up_tip()
     wells_ordered = [well for row in plate.rows() for well in row]
-    vols_media = [float(line[0]) for line in csv_factors.splitlines()[2:]]
+    vols_media = [
+        float(line.split(',')[0]) for line in csv_factors.splitlines()[2:]]
     media_info = []
     for well, vol_media in zip(wells_ordered, vols_media):
         vols_split = split_media_vol(vol_media)
