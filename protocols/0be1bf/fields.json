@@ -7,7 +7,7 @@
     },
     {
         "type": "int",
-        "label": "number of templates",
+        "label": "number of DNA templates",
         "name": "num_templates",
         "default": 10
     },

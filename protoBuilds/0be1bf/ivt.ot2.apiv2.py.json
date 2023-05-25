@@ -225,16 +225,22 @@
     ],
     "fields": [
         {
-            "default": 11,
+            "type": "int",
             "label": "number of reactions",
             "name": "num_rxns",
-            "type": "int"
+            "default": 11
         },
         {
-            "default": 0.6,
-            "label": "starting concentration of template (mg/ml)",
+            "type": "int",
+            "label": "number of DNA templates",
+            "name": "num_templates",
+            "default": 10
+        },
+        {
+            "type": "str",
+            "label": "starting concentrations of template (mg/ml, comma-separated)",
             "name": "concentration_template",
-            "type": "float"
+            "default": "0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6"
         }
     ],
     "instruments": [
