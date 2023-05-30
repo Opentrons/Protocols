@@ -1,0 +1,35 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Illumina COVIDSeq"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs Syntehsize First Strand cDNA for the Illumina COVIDSeq protocol.\nLinks:\n* 1. Anneal RNA\n* 2. Synthesize First Strand cDNA\n* 3. Amplify cDNA\n* 4. Tagment PCR Amplicons\n* 5. Post Tagmentation Clean Up\n* 6. Amplify Tagmented Amplicons",
+    "internal": "0cded6",
+    "labware": "\nQuantgene 96 Aluminum Block 200 \u00b5L\nAgilent 96 Well Plate 200 \u00b5L #5042-8502\nAgilent With Nonskirted 96 Well Plate 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* NGS Library Prep\n\t* Illumina COVIDSeq\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cded6/deck.png)\n\n\n",
+        "description": "This protocol performs Syntehsize First Strand cDNA for the Illumina COVIDSeq protocol.\n\nLinks:  \n* [1. Anneal RNA](./0cded6)\n* [2. Synthesize First Strand cDNA](./0cded6-synthesize)\n* [3. Amplify cDNA](./0cded6-amplify)\n* [4. Tagment PCR Amplicons](./0cded6-tagment)\n* [5. Post Tagmentation Clean Up](./0cded6-cleanup)\n* [6. Amplify Tagmented Amplicons](./0cded6-amplify2)\n\n\n",
+        "internal": "0cded6\n",
+        "labware": "* Quantgene 96 Aluminum Block 200 \u00b5L\n* Agilent 96 Well Plate 200 \u00b5L #5042-8502\n* Agilent With Nonskirted 96 Well Plate 200 \u00b5L\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "reagent-setup": "![reagent calculator](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cded6/reagent+composition+calculator.png)  \n![reagent layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cded6/reagent+layouts.png)  \n![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0cded6/reagents.png)\n\n\n",
+        "title": "2. Illumina COVIDSeq - Synthesize First Strand cDNA"
+    },
+    "modules": [
+        "Opentrons Magnetic Module (GEN2)",
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "reagent-setup": "\n\n",
+    "title": "\nIllumina COVIDSeq - Synthesize First Strand cDNA\n"
+}

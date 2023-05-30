@@ -144,6 +144,8 @@ def run(ctx):
 
     ctx.comment('\n------------ADDING DNA TO FINAL PLATE-------------\n\n')
 
+    boundary = 20.0
+
     for line in csv_rows:
         p20.pick_up_tip()
         source_well_name = line[0]
@@ -153,8 +155,10 @@ def run(ctx):
         dest_well = final_plate.wells_by_name()[dest_well_name]
         transfer_vol = round(float(line[3]))
 
+
         p20.transfer(transfer_vol, source_well, dest_well.bottom(z=1.5),
                      new_tip='never')
+
 
         p20.blow_out()
         p20.drop_tip()
@@ -168,8 +172,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up(m20)
-            m20.aspirate(6, s_col.bottom(-0.5))
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col.bottom(-0.5))
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -179,8 +183,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up_less()
-            m20.aspirate(6, s_col)
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col)
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -189,8 +193,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[4]):
             pick_up_less()
-            m20.aspirate(6, s_col)
-            m20.dispense(6, d_col)
+            m20.aspirate(boundary, s_col)
+            m20.dispense(boundary, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()

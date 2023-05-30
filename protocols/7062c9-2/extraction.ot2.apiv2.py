@@ -21,8 +21,8 @@ def run(ctx):
     park_tips = True
     sample_incubation_mixing = True
     mag_height = 11.5
-    z_offset = 0.0
-    radial_offset = 0.3
+    z_offset = 0.5
+    radial_offset = 0.5
     wash1_vol = 200.0
     wash2_vol = 200.0
     elution_vol = 100.0
@@ -101,7 +101,7 @@ def run(ctx):
     mount = Mount.LEFT if m300.mount == 'left' else Mount.RIGHT
     ctx._hw_manager.hardware._attached_instruments[
         mount].update_config_item(
-            'pick_up_current', 0.1)
+            'pick_up_current', 1)
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
@@ -129,6 +129,16 @@ def run(ctx):
             tip_log[pip]['tips'] = [tip for rack in pip.tip_racks
                                     for tip in rack.wells()]
         tip_log[pip]['max'] = len(tip_log[pip]['tips'])
+
+    m300.flow_rate.aspirate /= 2
+    m300.flow_rate.dispense /= 2
+
+    def slow_withdraw(pip, well, delay_seconds=2.0):
+        pip.default_speed /= 16
+        if delay_seconds > 0:
+            ctx.delay(seconds=delay_seconds)
+        pip.move_to(well.top())
+        pip.default_speed *= 16
 
     def _pick_up(pip=m300, loc=None):
         if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:
@@ -188,7 +198,8 @@ resuming.')
                 waste_vol = 0
             waste_vol += vol
 
-        num_trans = math.ceil(vol/200)
+        m300.flow_rate.aspirate /= 4
+        num_trans = math.ceil(vol/(200 - air_gap_vol))
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             if not m300.has_tip:
@@ -205,12 +216,16 @@ resuming.')
                     # void air gap if necessary
                     m300.dispense(m300.current_volume, m.top())
                 m300.move_to(m.center())
-                m300.transfer(vol_per_trans, loc, waste, new_tip='never',
-                              air_gap=air_gap_vol)
+                m300.aspirate(vol_per_trans, loc)
+                slow_withdraw(m300, m)
+                if air_gap_vol > 0:
+                    m300.aspirate(air_gap_vol, m.top())
+                m300.dispense(m300.current_volume, waste)
                 m300.blow_out(waste)
                 m300.air_gap(20)
             if drop:
                 _drop(m300)
+        m300.flow_rate.aspirate *= 4
 
     def wash(vol, source, change_tips_for_samples=True, mix_reps=mix_reps,
              park=True, resuspend=True, drop=True):
@@ -235,7 +250,7 @@ resuming.')
         if resuspend and magdeck.status == 'engaged':
             magdeck.disengage()
 
-        num_trans = math.ceil(vol/200)
+        num_trans = math.ceil(vol/(200-air_gap_vol))
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             if not m300.has_tip:
@@ -244,8 +259,12 @@ resuming.')
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, source.top())
-                m300.transfer(vol_per_trans, source, m.top(),
-                              air_gap=air_gap_vol, new_tip='never')
+                m300.aspirate(vol_per_trans, source)
+                slow_withdraw(m300, source)
+                if air_gap_vol > 0:
+                    m300.aspirate(air_gap_vol, source.top())
+                m300.dispense(m300.current_volume, m.top())
+                slow_withdraw(m300, m)
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
@@ -287,8 +306,10 @@ resuming.')
         # pre-heat elution buffer
         _pick_up(m300)
         for h in heating_samples_m:
-            m300.transfer(elution_vol*1.2, elution_solution, h,
-                          new_tip='never')
+            m300.aspirate(elution_vol*1.2, elution_solution)
+            slow_withdraw(m300, elution_solution)
+            m300.dispense(elution_vol*2, h.bottom(3))
+            slow_withdraw(m300, h)
         m300.home()
 
         ctx.delay(minutes=temp_time, msg=f'Incubating at 85C for {temp_time} \
@@ -305,13 +326,19 @@ minutes')
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
             m300.aspirate(vol*1.2, h)
+            slow_withdraw(m300, h)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
+            slow_withdraw(m300, m)
             for _ in range(mix_reps):
                 m300.aspirate(vol*mix_volume_percentage, m.bottom())
                 m300.dispense(vol*mix_volume_percentage, m.bottom().move(Point(
                     x=side*radius*radial_offset, z=3)))
-            m300.transfer(vol, m.bottom(), h, new_tip='never')
+                slow_withdraw(m300, m)
+            m300.aspirate(vol, m.bottom())
+            slow_withdraw(m300, m)
+            m300.dispense(vol, h)
+            slow_withdraw(m300, h)
             m300.blow_out(h.bottom(h.depth/2))
             if park:
                 m300.drop_tip(spot)
@@ -327,8 +354,11 @@ minutes')
                 _pick_up(m300, spot)
             else:
                 _pick_up(m300)
-            m300.transfer(vol, h, m, mix_before=(5, 0.5*vol),
-                          new_tip='never')
+            m300.mix(5, 0.5*vol, h)
+            m300.aspirate(vol, h)
+            slow_withdraw(m300, h)
+            m300.dispense(vol, m)
+            slow_withdraw(m300, h)
             m300.blow_out(m.bottom(m.depth/2))
             _drop(m300)
 
@@ -343,9 +373,17 @@ minutes')
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset+2))
             m300.move_to(m.center())
-            m300.transfer(0.8*vol, loc, e, air_gap=air_gap_vol,
-                          new_tip='never')
+            m300.aspirate(0.8*vol, loc)
+            slow_withdraw(m300, m)
+            if air_gap_vol > 0:
+                m300.aspirate(air_gap_vol, m.top())
+            m300.dispense(m300.current_volume, e)
+            slow_withdraw(m300, e)
             m300.drop_tip()
+
+        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.dispense *= 5
+        m300.flow_rate.blow_out *= 5
 
     """
     ACTIONS
@@ -355,7 +393,10 @@ minutes')
     # add beads
     m300.mix(10, 150, beads)
     for m in mag_samples_m:
-        m300.transfer(bead_vol, beads, m, new_tip='never')
+        m300.aspirate(bead_vol, beads)
+        slow_withdraw(m300, beads)
+        m300.dispense(bead_vol, m)
+        slow_withdraw(m300, m)
     m300.home()
 
     # prewash
@@ -378,8 +419,8 @@ minutes')
         m300.drop_tip(p)
 
     m300.default_speed = 200
-    m300.flow_rate.aspirate = 46.43
-    m300.flow_rate.dispense = 92.86
+    # m300.flow_rate.aspirate = 46.43
+    # m300.flow_rate.dispense = 92.86
     mixes_per_min = 0.5
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
@@ -395,6 +436,7 @@ minutes')
                 m300.dispense(sample_vol*mix_volume_percentage,
                               s.bottom().move(Point(
                                 x=side*radius*radial_offset, z=7)))
+                slow_withdraw(m300, s)
                 m300.blow_out(
                     s.bottom(sample_mixing_blowout_height_from_bottom))
             m300.drop_tip(p)

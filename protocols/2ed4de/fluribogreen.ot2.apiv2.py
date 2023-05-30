@@ -35,13 +35,15 @@ def run(ctx):
                                        'standards and buffers')
     tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '7')
     tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')
-    tiprack200m = ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')
+    tiprack200m = [
+        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+        for slot in ['9', '10']]
 
     # load pipettes
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=[tipracks1000])
     p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
-                               tip_racks=[tiprack200m])
+                               tip_racks=tiprack200m)
 
     tip_data = {
         'single': {
@@ -75,6 +77,7 @@ def run(ctx):
 
     working_standard_1 = reagent_labware.wells()[0]
     assay_buffer_1 = reagent_labware.wells()[1:3]
+    dye = reagent_labware.wells()[5]
     working_standard_2 = reagent_labware.wells()[9]
     assay_buffer_2 = reagent_labware.wells()[10:12]
     starting_samples = sample_rack.wells()[:num_samples]
@@ -177,6 +180,18 @@ def run(ctx):
         for dest in dest_set:
             p300.pick_up_tip()
             p300.transfer(final_transfer_vol, source.bottom(3), dest.bottom(3),
+                          mix_before=(mix_reps, 0.8*final_transfer_vol),
+                          new_tip='never')
+            drop(p300)
+
+    # transfer dye
+    for i, source in enumerate(
+            [deepplate.rows_by_name()['A'][0], sample_1_final_loc,
+             deepplate.rows_by_name()['A'][6], sample_2_final_loc]):
+        dest_set = flatplate.rows()[0][i*3:(i+1)*3]
+        for dest in dest_set:
+            p300.pick_up_tip()
+            p300.transfer(100, dye.bottom(2), dest.bottom(),
                           mix_before=(mix_reps, 0.8*final_transfer_vol),
                           new_tip='never')
             drop(p300)

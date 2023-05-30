@@ -21,13 +21,10 @@ def run_quiet_process(command):
 
 
 def test_speaker(song=AUDIO_FILE_PATH):
-    print('Speaker')
-    print('Next\t--> CTRL-C')
     try:
         run_quiet_process('mpg123 {}'.format(song))
     except KeyboardInterrupt:
         pass
-        print()
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -62,7 +59,7 @@ def run(ctx: protocol_api.ProtocolContext):
     _fin_wash = 600
 
     if not 1 <= _num_samps <= 96:
-        raise Exception("The 'Number of Samples' should be between 1 and 96")
+        raise Exception('The Number of Samples should be between 1 and 96')
 
     # define all custom variables above here with descriptions
 
@@ -123,13 +120,13 @@ def run(ctx: protocol_api.ProtocolContext):
             if cse:
                 self.height = (current_volume/cse)
             else:
-                raise Exception("""Labware definition must
-                supply well radius or well length and width.""")
+                raise Exception('Labware definition must \
+supply well radius or well length and width.')
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+                raise Exception('Specified liquid volume \
+can not exceed the height of the labware.')
 
         def height_dec(self, vol, ppt, bottom=False):
             # decrement height (mm)
@@ -195,15 +192,15 @@ def run(ctx: protocol_api.ProtocolContext):
     def custom_pick_up(self, loc=None):
         nonlocal t_start
         nonlocal t_end
-        """`custom_pick_up` will pause the protocol when tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
+        # `custom_pick_up` will pause the protocol when tip boxes are out of
+        # tips, prompting the user to replace all tip racks. Once tipracks are
+        # reset, the protocol will start picking up tips from the first tip
+        # box as defined in the slot order when assigning the labware def
+        # for that tip box. `pick_up()` will track tips for both pipettes if
+        # applicable.
 
-        :param loc: User can manually specify location for tip pick up
-        """
+        # :param loc: User can manually specify location for tip pick up
+
         if loc:
             self.pick_up_tip(loc)
         else:
@@ -211,7 +208,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 self.pick_up_tip()
             except protocol_api.labware.OutOfTipsError:
                 flash_lights()
-                ctx.pause("Replace empty tip racks")
+                ctx.pause('Replace empty tip racks')
                 self.reset_tipracks()
                 t_start = 0
                 t_end = int(num_cols)
@@ -237,22 +234,23 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.delay(seconds=0.25)
 
     def flow_rate(asp=92.86, disp=92.86, blow=92.86):
-        """
-        This function can be used to quickly modify the flow rates of the m300
-        If no parameters are entered, the flow rates will be
-        reset.
+        # This function can be used to quickly modify the flow rates of the
+        # pipette. If no parameters are entered, the flow rates will be
+        # reset.
 
-        :param asp: Aspiration flow rate, in uL/sec
-        :param disp: Dispense flow rate, in uL/sec
-        """
+        # :param asp: Aspiration flow rate, in uL/sec
+        # :param disp: Dispense flow rate, in uL/sec
+
         m300.flow_rate.aspirate = asp
         m300.flow_rate.dispense = disp
         m300.flow_rate.blow_out = blow
 
     def remove_supernatant(vol, src):
         w = int(str(src).split(' ')[0][1:])
-        radi = float(src.width)/4 if src.width is not None else \
-            float(src.diameter)/4
+        if src.width is not None:
+            radi = float(src.width)/4
+        else:
+            radi = float(src.diameter)/4
         x0 = radi if w % 2 == 0 else -radi
         while vol > 180:
             m300.aspirate(180, src.bottom().move(types.Point(x=x0, y=0, z=1)))
@@ -271,7 +269,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
         if mag_deck.status == 'engaged':
             mag_deck.disengage()
-        ctx.comment(f'\nPerforming wash step: {msg}\n')
+        ctx.comment(f'Performing wash step: {msg}')
         flow_rate()
         for idx, (col, src) in enumerate(zip(mag_samps_h, srcs)):
             m300.custom_pick_up()
@@ -309,14 +307,14 @@ def run(ctx: protocol_api.ProtocolContext):
 
         if off_deck:
             flash_lights()
-            ctx.pause("Please remove plate for manual resuspension")
+            ctx.pause('Please remove plate for manual resuspension')
 
         mag_deck.engage(7)
-        mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
+        mag_msg = f'Incubating on Mag Deck for {mag_time} minutes'
         ctx.delay(minutes=mag_time, msg=mag_msg)
 
         # Discard Supernatant
-        ctx.comment(f'\nRemoving supernatant for wash: {msg}\n')
+        ctx.comment(f'Removing supernatant for wash: {msg}')
         t_start += num_cols
         t_end += num_cols
         for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
@@ -333,7 +331,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # protocol
     ctx.set_rail_lights(True)
     # # Transfer 700µL CSPL Buffer + 20µL Prot K
-    # ctx.comment('\nTransferring 720uL of CSPL Buffer + Proteinase K\n')
+    # ctx.comment('Transferring 720uL of CSPL Buffer + Proteinase K')
     #
     # m300.custom_pick_up()
     # for idx, col in enumerate(init_samps):
@@ -398,7 +396,7 @@ def run(ctx: protocol_api.ProtocolContext):
     #     ctx.comment(f'load {x.current_volume} in {x}')
 
     # if samp_labware == 'qiagen_96_tuberack_1200ul':
-    #    ctx.comment('\nTransferring 500uL of sample to plate on MagDeck\n')
+    #    ctx.comment('Transferring 500uL of sample to plate on MagDeck')
 
     #    flow_rate(asp=20)
     #   for src, dest in zip(init_samps, mag_samps_h):
@@ -423,7 +421,7 @@ def run(ctx: protocol_api.ProtocolContext):
     #    ctx.pause('Please make sure samples are loaded on MagDeck')
 
     # Transfer vol XP1/ Mag-bind Beads master mixture
-    ctx.comment('\nTransferring XP1/ Mag-bind master mixture\n')
+    ctx.comment('Transferring XP1/ Mag-bind master mixture')
 
     m300.custom_pick_up()
     flow_rate(blow=10)
@@ -452,8 +450,8 @@ def run(ctx: protocol_api.ProtocolContext):
         flash_lights()
         ctx.pause('Please incubate samples for 10 minutes post resuspension.')
     else:
-        incubate_msg = f'\nIncubating at room temperature for {inc_time} \
-        minutes plus mixing\n'
+        incubate_msg = f'Incubating at room temperature for {inc_time} \
+        minutes plus mixing'
         ctx.comment(incubate_msg)
 
         if num_cols > 1:
@@ -489,11 +487,11 @@ def run(ctx: protocol_api.ProtocolContext):
         t_start += num_cols
         t_end += num_cols
     mag_deck.engage(7)
-    mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
+    mag_msg = f'Incubating on Mag Deck for {mag_time} minutes'
     ctx.delay(minutes=mag_time, msg=mag_msg)
 
     # Discard Supernatant
-    ctx.comment('\nRemoving supernatant\n')
+    ctx.comment('Removing supernatant')
     flow_rate(asp=40, disp=40)
     for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
         m300.custom_pick_up()
@@ -566,8 +564,8 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.drop_tip()
 
     ctx.home()
-    air_dry_msg = f'\nAir drying the beads for {air_dry} minutes. \
-Please add elution buffer at 70C to 12-well reservoir.\n'
+    air_dry_msg = f'Air drying the beads for {air_dry} minutes. \
+Please add elution buffer at 70C to 12-well reservoir.'
     ctx.delay(minutes=air_dry, msg=air_dry_msg)
     flash_lights()
     if not ctx.is_simulating():
@@ -579,7 +577,7 @@ Please add elution buffer at 70C to 12-well reservoir.\n'
 
     mag_deck.disengage()
     # Add Elution Buffer
-    ctx.comment(f'\nAdding {elution_vol}uL Elution Buffer to samples\n')
+    ctx.comment(f'Adding {elution_vol}uL Elution Buffer to samples')
 
     for idx, (col, src) in enumerate(zip(mag_samps_h, elution_wells)):
         m300.custom_pick_up()
@@ -607,7 +605,7 @@ Please add elution buffer at 70C to 12-well reservoir.\n'
         else:
             test_speaker()
     # ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
-    # When complete, replace samples and click RESUME\n')
+    # When complete, replace samples and click RESUME')
     ctx.set_rail_lights(True)
 
     # Transfer elution to PCR plate
@@ -645,10 +643,10 @@ Please add elution buffer at 70C to 12-well reservoir.\n'
 then resume run.')
 
     mag_deck.engage(7)
-    mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes.\n'
+    mag_msg = f'Incubating on Mag Deck for {mag_time} minutes.'
     ctx.delay(minutes=mag_time, msg=mag_msg)
 
-    ctx.comment(f'\nTransferring {elution_vol}uL to final PCR plate\n')
+    ctx.comment(f'Transferring {elution_vol}uL to final PCR plate')
     t_start += num_cols
     if t_start >= 60:
         t_start -= 60
@@ -656,7 +654,9 @@ then resume run.')
     flow_rate(asp=20)
     for src, dest, tip in zip(mag_samps, pcr_samps, all_tips[t_start:]):
         w = int(str(src).split(' ')[0][1:])
-        radi = float(src.width)/4 if src.width is not None else \
+        if src.width is not None:
+            radi = float(src.width)/4
+        else:
             float(src.diameter)/4
         x0 = radi if w % 2 == 0 else -radi
         m300.custom_pick_up()
@@ -666,5 +666,5 @@ then resume run.')
         m300.drop_tip(tip)
 
     mag_deck.disengage()
-    ctx.comment('\nProtocol complete! Please store samples at -20C or \
-    continue processing')
+    ctx.comment('Protocol complete! Please store samples at -20C or \
+continue processing')

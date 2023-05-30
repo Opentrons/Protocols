@@ -6,9 +6,15 @@
         "default": 11
     },
     {
-        "type": "float",
-        "label": "starting concentration of template (mg/ml)",
+        "type": "int",
+        "label": "number of DNA templates",
+        "name": "num_templates",
+        "default": 10
+    },
+    {
+        "type": "str",
+        "label": "starting concentrations of template (mg/ml, comma-separated)",
         "name": "concentration_template",
-        "default": 0.6
+        "default": "0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6"
     }
 ]

@@ -367,6 +367,8 @@ dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
 do_cool_samples,1
+do_day1,1
+do_day2,1
 do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
@@ -549,7 +551,7 @@ init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,18
+input_csv,19
 input_file,10
 input_file2,6
 input_labware,1
@@ -670,7 +672,6 @@ loc_tween,1
 lw_checkit,1
 lw_deepwell_plate,3
 lw_dmso,1
-lw_factors,1
 lw_hplc,1
 lw_source,1
 lw_tiprack300,1
@@ -781,7 +782,7 @@ mount_m20,8
 mount_m300,13
 mount_p1000,2
 mount_p20,11
-mount_p300,8
+mount_p300,9
 mount_pip,1
 mount_side,1
 move_side,2
@@ -850,7 +851,7 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,31
+num_plates,32
 num_pool_sources,1
 num_pools,1
 num_primers,3
@@ -869,7 +870,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,166
+num_samples,172
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -878,6 +879,7 @@ num_samples_per_plate,1
 num_samps,6
 num_sets,2
 num_slides,2
+num_templates,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -1205,6 +1207,7 @@ sample_rows,1
 sample_size,1
 sample_slots,1
 sample_trans_vol,1
+sample_tube_clearance,1
 sample_type,1
 sample_vol,24
 sample_volume,5

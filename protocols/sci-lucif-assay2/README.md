@@ -30,7 +30,7 @@ The table below lists examples of transfection master mix preparation. To make t
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-lucif/pt2-1.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-lucif/Screen+Shot+2023-05-10+at+4.49.57+PM.png)
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-lucif/pt2-2.png)
 
 
