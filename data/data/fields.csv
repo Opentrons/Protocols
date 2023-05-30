@@ -845,7 +845,7 @@ num_drug_plates,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
-num_mastermix,2
+num_mastermix,3
 num_mixes,1
 num_mm,2
 num_of_dilutions,2
@@ -946,7 +946,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,144
+p300_mount,146
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
