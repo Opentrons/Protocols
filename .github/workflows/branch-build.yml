@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: 'actions/setup-python@v4'
         with:
-          python-version: '3.8'
+          python-version: '3.9'
       - run: curl https://pyenv.run | bash
       - run: sudo apt-get update && sudo apt-get install libsystemd-dev
       - uses: 'actions/checkout@v3'
