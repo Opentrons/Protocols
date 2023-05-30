@@ -101,7 +101,7 @@ def run(ctx):
     mount = Mount.LEFT if m300.mount == 'left' else Mount.RIGHT
     ctx._hw_manager.hardware._attached_instruments[
         mount].update_config_item(
-            'pick_up_current', 0.1)
+            'pick_up_current', 1)
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
