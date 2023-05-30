@@ -33,12 +33,12 @@ def run(ctx):
     coating_solution_liq = ctx.define_liquid(
         name='coating solution',
         description='',
-        color='B925FF'
+        display_color='B925FF'
     )
     water_liq = ctx.define_liquid(
         name='water',
         description='',
-        color='50D5FF'
+        display_color='50D5FF'
     )
 
     coating_solution.load_liquid(coating_solution_liq, volume=10000)
@@ -68,7 +68,7 @@ def run(ctx):
             pip.blow_out(destination.bottom(h_disp))
         slow_withdraw(destination)
 
-    """ DAY 1 """
+    # DAY 1
     if do_day1:
         dests1 = [
             well for plate in plates384
@@ -83,7 +83,7 @@ def run(ctx):
     if not do_day2:
         ctx.comment('Day 1 complete.')
 
-    """ DAY 2 """
+    # DAY 2
     if do_day2:
         if do_day1:
             ctx.pause('Day 1 complete.')
