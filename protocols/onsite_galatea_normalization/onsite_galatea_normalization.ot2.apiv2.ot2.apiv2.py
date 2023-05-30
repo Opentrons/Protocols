@@ -155,10 +155,8 @@ def run(ctx):
         dest_well = final_plate.wells_by_name()[dest_well_name]
         transfer_vol = round(float(line[3]))
 
-
         p20.transfer(transfer_vol, source_well, dest_well.bottom(z=1.5),
                      new_tip='never')
-
 
         p20.blow_out()
         p20.drop_tip()
