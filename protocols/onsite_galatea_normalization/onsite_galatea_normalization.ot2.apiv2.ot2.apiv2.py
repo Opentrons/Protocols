@@ -136,8 +136,6 @@ def run(ctx):
         if transfer_vol <= 0:
             continue
 
-        transfer_vol = 5 if transfer_vol >= 5 else transfer_vol
-
         p20.aspirate(transfer_vol, water)
         p20.dispense(transfer_vol, dest_well.bottom(z=1.5))
         p20.blow_out()
@@ -156,13 +154,10 @@ def run(ctx):
         dest_well_name = line[0]
         dest_well = final_plate.wells_by_name()[dest_well_name]
         transfer_vol = round(float(line[3]))
-        transfer_vol = 1 if transfer_vol < 0.5 else transfer_vol
 
-        p20.aspirate(
-            boundary if transfer_vol > boundary else transfer_vol, source_well)
-        p20.dispense(
-            boundary if transfer_vol > boundary else transfer_vol,
-            dest_well.bottom(z=1.5))
+        p20.transfer(transfer_vol, source_well, dest_well.bottom(z=1.5),
+                     new_tip='never')
+
         p20.blow_out()
         p20.drop_tip()
 
@@ -260,6 +255,8 @@ def run(ctx):
             m20.mix(10, 14, col, rate=0.5)
             m20.blow_out()
             m20.drop_tip()
+
+    ctx.pause("Second buffer just added to plate. Resume for pooling.")
 
     ctx.comment('\n----------POOLING-----------\n\n')
     # are we for sure 96 samples
