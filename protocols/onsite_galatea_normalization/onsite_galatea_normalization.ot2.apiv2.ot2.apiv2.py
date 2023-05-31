@@ -28,7 +28,7 @@ class CancellationToken:
 
 
 def turn_on_blinking_notification(hardware, pause):
-    """FLASH SETUP."""
+    """FLASH SETUP"""
     while pause.is_continued:
         hardware.set_lights(rails=True)
         sleep(1)
@@ -144,8 +144,6 @@ def run(ctx):
 
     ctx.comment('\n------------ADDING DNA TO FINAL PLATE-------------\n\n')
 
-    boundary = 20.0
-
     for line in csv_rows:
         p20.pick_up_tip()
         source_well_name = line[0]
@@ -170,8 +168,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up(m20)
-            m20.aspirate(boundary, s_col.bottom(-0.5))
-            m20.dispense(boundary, d_col)
+            m20.aspirate(6, s_col.bottom(-0.5))
+            m20.dispense(6, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -181,8 +179,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[0]):
             pick_up_less()
-            m20.aspirate(boundary, s_col)
-            m20.dispense(boundary, d_col)
+            m20.aspirate(6, s_col)
+            m20.dispense(6, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
@@ -191,8 +189,8 @@ def run(ctx):
         for s_col, d_col in zip(final_plate.rows()[0],
                                 barcode_plate.rows()[4]):
             pick_up_less()
-            m20.aspirate(boundary, s_col)
-            m20.dispense(boundary, d_col)
+            m20.aspirate(6, s_col)
+            m20.dispense(6, d_col)
             m20.mix(10, 8, d_col)
             m20.blow_out()
             m20.drop_tip()
