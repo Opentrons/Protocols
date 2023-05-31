@@ -31,12 +31,10 @@ setup:
 venvs/ot2:
 	mkdir -p venvs
 	virtualenv venvs/ot2
-	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
 	pip install pipenv==2021.5.29 && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) setup && \
-	python setup.py install && \
 	popd
 
 .PHONY: parse-errors
