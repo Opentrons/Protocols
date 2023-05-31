@@ -28,7 +28,7 @@ class CancellationToken:
 
 
 def turn_on_blinking_notification(hardware, pause):
-    """FLASH SETUP."""
+    """FLASH SETUP"""
     while pause.is_continued:
         hardware.set_lights(rails=True)
         sleep(1)
