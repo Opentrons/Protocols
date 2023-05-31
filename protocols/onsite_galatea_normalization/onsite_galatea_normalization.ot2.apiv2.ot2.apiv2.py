@@ -144,8 +144,6 @@ def run(ctx):
 
     ctx.comment('\n------------ADDING DNA TO FINAL PLATE-------------\n\n')
 
-    boundary = 20.0
-
     for line in csv_rows:
         p20.pick_up_tip()
         source_well_name = line[0]
