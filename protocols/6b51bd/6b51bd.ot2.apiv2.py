@@ -2,22 +2,25 @@ from opentrons.protocol_api.labware import Well, OutOfTipsError
 from types import MethodType
 import math
 import csv
+from opentrons.protocols.api_support.types import APIVersion
 
 metadata = {
     'title': 'Custom Dilution From CSV',
     'author': 'Steve Plonk',
-    'apiLevel': '2.10'
+    'apiLevel': '2.13'
 }
 
 
 def run(ctx):
 
-    [mix_asp_rate, mix_disp_rate, dead_vol, labware_plate, labware_reservoir,
-     clearance_plate, clearance_reservoir, clearance_aspirate,
-     clearance_dispense, mix_reps, uploaded_csv] = get_values(  # noqa: F821
-        "mix_asp_rate", "mix_disp_rate", "dead_vol", "labware_plate",
-        "labware_reservoir", "clearance_plate", "clearance_reservoir",
-        "clearance_aspirate", "clearance_dispense", "mix_reps", "uploaded_csv")
+    [mix_asp_rate, mix_disp_rate, dead_vol, labware_parent, labware_child,
+     labware_reservoir, clearance_plate, clearance_reservoir,
+     clearance_aspirate, clearance_dispense, mix_reps,
+     uploaded_csv] = get_values(  # noqa: F821
+        'mix_asp_rate', 'mix_disp_rate', 'dead_vol', 'labware_parent',
+        'labware_child', 'labware_reservoir', 'clearance_plate',
+        'clearance_reservoir', 'clearance_aspirate', 'clearance_dispense',
+        'mix_reps', 'uploaded_csv')
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -26,10 +29,10 @@ def run(ctx):
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     plates_child = [
-     ctx.load_labware(labware_plate, slot, "Child Plate") for slot in sorted(
+     ctx.load_labware(labware_child, slot, 'Child Plate') for slot in sorted(
       list(set([int(tfer['Child Plate Location']) for tfer in tfers])))]
     plates_parent = [
-     ctx.load_labware(labware_plate, slot, "Parent Plate") for slot in sorted(
+     ctx.load_labware(labware_parent, slot, 'Parent Plate') for slot in sorted(
       list(set([int(tfer['Parent Plate Location']) for tfer in tfers])))]
 
     if not 1 <= len(plates_child) <= 3:
@@ -55,8 +58,8 @@ def run(ctx):
      'opentrons_96_filtertiprack_200ul', str(slot)) for slot in [6]]
 
     # p300 single, p20 single
-    p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
-    p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
+    p300s = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)
+    p20s = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tips20)
 
     def pause_attention(message):
         ctx.set_rail_lights(False)
@@ -68,7 +71,7 @@ def run(ctx):
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
             self.well = well
             self.min_height = min_height
             self.comp_coeff = comp_coeff
@@ -83,8 +86,8 @@ def run(ctx):
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+                raise Exception('Specified liquid volume \
+can not exceed the height of the labware.')
 
         def height_dec(self, vol):
             if self.diameter is not None:
@@ -100,7 +103,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return self.well.bottom(self.height)
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -116,12 +119,12 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return self.well.bottom(self.height)
             else:
-                return(self.well.top())
+                return self.well.top()
 
     # buffer in reservoir with vol and liquid height tracking
-    reservoir = ctx.load_labware(labware_reservoir, '9', "Reservoir")
+    reservoir = ctx.load_labware(labware_reservoir, '9', 'Reservoir')
     vol_per_well = round(0.90909*reservoir.wells()[0].max_volume)
 
     # count of reservoir wells to be filled
@@ -137,17 +140,16 @@ def run(ctx):
          'Number of reservoir wells to be filled must be between 1 and 12.')
 
     pause_attention(
-     """Please ensure that the first {0} reservoir wells are each filled with
-     at least {1} mL of buffer. Then resume.""".format(
-      filledwells_count, round(vol_per_well / 1000)))
+     'Please ensure that the first {0} reservoir wells are each filled \
+with at least {1} mL of buffer. Then \
+resume.'.format(filledwells_count, round(vol_per_well / 1000)))
 
     def pick_up_or_refill(self):
         try:
             self.pick_up_tip()
         except OutOfTipsError:
-            pause_attention(
-             """Please Refill the {} Tip Boxes
-                and Empty the Tip Waste.""".format(self))
+            pause_attention('Please Refill the {} Tip Boxes \
+and Empty the Tip Waste.'.format(self))
             self.reset_tipracks()
             self.pick_up_tip()
 
@@ -180,7 +182,7 @@ def run(ctx):
             try:
                 buffer_source = next(buffer_well)
             except StopIteration:
-                ctx.comment("buffer supply is exhausted")
+                ctx.comment('buffer supply is exhausted')
                 break
         reps = math.ceil(float(tfer[
          'Volume Buffer (ul)']) / pip._tip_racks[0].wells()[0].max_volume)
