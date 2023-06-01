@@ -34,13 +34,13 @@ def run(ctx):
     p300 = ctx.load_instrument(
         'p300_single_gen2', mount_p300, tip_racks=tipracks_300)
 
-    media_liquid = ctx.define_liquid(
-        name='media',
-        description='media',
-        display_color='#00FF00',
-    )
+    # media_liquid = ctx.define_liquid(
+    #     name='media',
+    #     description='media',
+    #     display_color='#00FF00',
+    # )
     media = tuberack50.wells()[0]
-    media.load_liquid(media_liquid, 25000)
+    # media.load_liquid(media_liquid, 25000)
 
     data = [
         line.split(',')
@@ -82,9 +82,7 @@ def run(ctx):
         pip = p300 if vol_picking >= 20 else p20
 
         # check for media
-        media_bool = False
         if i > 0 and last_source_lw != source_labware:
-            media_bool = True
             sources = [media_source[0] for media_source in media_sources]
             vols = [media_source[1] for media_source in media_sources]
             pick_up(p300)
@@ -92,8 +90,9 @@ def run(ctx):
                             new_tip='never')
             ctx.pause(f'Plate {source_plates.index(source_labware)+1} \
 finished. Load new plate if necessary.')
+            media_sources = []
+
         if i > 0 and last_dest_lw != dest_labware:
-            media_bool = True
             dests = [media_dest[0] for media_dest in media_dests]
             vols = [media_dest[1] for media_dest in media_dests]
             if not p300.has_tip:
@@ -102,15 +101,13 @@ finished. Load new plate if necessary.')
                             new_tip='never')
             ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} \
 finished. Load new plate if necessary.')
+            media_dests = []
+
         if p300.has_tip:
             p300.drop_tip()
 
         last_source_lw = source_labware
         last_dest_lw = dest_labware
-
-        if media_bool:
-            media_sources = []
-            media_dests = []
 
         pick_up(pip)
         pip.mix(3, 20, source_well.bottom(1))
