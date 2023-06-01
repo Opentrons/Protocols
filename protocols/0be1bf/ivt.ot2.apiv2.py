@@ -256,8 +256,8 @@ Continue?')
             pip.aspirate(vol_per_trans, template)
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
-            if n == len(num_trans) - 1:
-                pip.mix(pip.max_volume*0.8, d.bottom(2))
+            if n == num_trans - 1:
+                pip.mix(5, pip.max_volume*0.8, d.bottom(2))
             slow_withdraw(pip, d)
         pip.drop_tip()
 
