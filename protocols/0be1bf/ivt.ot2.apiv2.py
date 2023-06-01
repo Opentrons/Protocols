@@ -7,16 +7,15 @@ metadata = {
     'apiLevel': '2.14'
 }
 
-rxn_vol = 500.0
-factor_overage = 1.1
+factor_overage = 1.2
 concentration_target = 0.1
 
 
 def run(ctx):
 
-    [num_rxns, num_templates,
+    [num_rxns, rxn_vol, num_templates,
      concentration_template] = get_values(  # noqa: F821
-        'num_rxns', 'num_templates', 'concentration_template')
+        'num_rxns', 'rxn_vol', 'num_templates', 'concentration_template')
 
     # labware
     rack1 = ctx.load_labware(
@@ -58,7 +57,7 @@ Continue?')
         for well, vol in zip(rack2.wells()[:len(template_volumes)],
                              template_volumes)
     }
-    enzyme_volumes = [0.1, 25]
+    enzyme_volumes = [10, 25]
     enzyme_map = {
         well: vol
         for well, vol in zip(
@@ -125,7 +124,7 @@ Continue?')
     water = reservoir.wells()[0]
     licl_h2o = reservoir.wells()[1]
 
-    [vol_dn, vol_cac] = [8, 2]
+    [vol_dn, vol_cac] = [8, 25]
 
     mix_tube_liq = ctx.define_liquid(
             name='mix tube',
@@ -201,7 +200,7 @@ Continue?')
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         for i in range(num_trans):
-            pip.aspirate(vol_per_trans, well.bottom(1.0))
+            pip.aspirate(vol_per_trans, well.bottom(3.0))
             slow_withdraw(pip, well)
             if i < num_trans - 1:
                 pip.dispense(pip.current_volume, mix_tube.top())
@@ -253,10 +252,12 @@ Continue?')
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(vol/num_trans, 2)
         pip.pick_up_tip()
-        for _ in range(num_trans):
+        for n in range(num_trans):
             pip.aspirate(vol_per_trans, template)
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
+            if n == num_trans - 1:
+                pip.mix(5, pip.max_volume*0.8, d.bottom(2))
             slow_withdraw(pip, d)
         pip.drop_tip()
 
