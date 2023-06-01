@@ -600,6 +600,7 @@ labware_6,1
 labware_96,1
 labware_96rxnplate,1
 labware_aliquots,1
+labware_child,1
 labware_clinical_samples_1,1
 labware_clinical_samples_2,1
 labware_collect_plate,1
@@ -614,10 +615,11 @@ labware_magneticmodule,5
 labware_mm,1
 labware_mmplate,1
 labware_p300_tips,1
+labware_parent,1
 labware_patient_samples,1
 labware_pcr,1
 labware_pcr_plate,10
-labware_plate,3
+labware_plate,2
 labware_plates,9
 labware_pool,1
 labware_pre_pcr_plate,2
