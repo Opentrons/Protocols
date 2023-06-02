@@ -6,6 +6,12 @@
         "default": 11
     },
     {
+        "type": "float",
+        "label": "reaction volume",
+        "name": "rxn_vol",
+        "default": 500.0
+    },
+    {
         "type": "int",
         "label": "number of DNA templates",
         "name": "num_templates",

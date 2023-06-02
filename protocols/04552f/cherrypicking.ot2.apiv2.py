@@ -1,3 +1,4 @@
+import csv
 from opentrons import protocol_api
 
 metadata = {
@@ -9,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, mount_p300, mount_p20] = get_values(  # noqa: F821
-        'input_csv', 'mount_p300', 'mount_p20')
+    [mount_p300, mount_p20] = get_values(  # noqa: F821
+        'mount_p300', 'mount_p20')
 
     source_plates = [
         ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
@@ -42,16 +43,23 @@ def run(ctx):
     media = tuberack50.wells()[0]
     media.load_liquid(media_liquid, 25000)
 
-    data = [
-        line.split(',')
-        for line in input_csv.splitlines()[1:] if line]
+    # input file
+    jupyter_dir = '/var/lib/jupyter/notebooks'
+    file_dir = f'{jupyter_dir}/input.csv'
+    with open(file_dir) as f:
+        reader = csv.reader(f)
+        data = []
+        for i, row in enumerate(reader):
+            if i > 0 and row[0].strip():
+                data.append(row)
 
     def pick_up(pip):
         try:
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            ctx.pause(f'Replace {pip} tipracks, slots \
-{",".join([rack.parent for rack in pip.tip_racks])} before resuming.')
+            rack_prompt = ', '.join([rack.parent for rack in pip.tip_racks])
+            ctx.pause(f'Replace {pip} tipracks, slots {rack_prompt} \
+before resuming.')
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -82,9 +90,7 @@ def run(ctx):
         pip = p300 if vol_picking >= 20 else p20
 
         # check for media
-        media_bool = False
         if i > 0 and last_source_lw != source_labware:
-            media_bool = True
             sources = [media_source[0] for media_source in media_sources]
             vols = [media_source[1] for media_source in media_sources]
             pick_up(p300)
@@ -92,8 +98,9 @@ def run(ctx):
                             new_tip='never')
             ctx.pause(f'Plate {source_plates.index(source_labware)+1} \
 finished. Load new plate if necessary.')
+            media_sources = []
+
         if i > 0 and last_dest_lw != dest_labware:
-            media_bool = True
             dests = [media_dest[0] for media_dest in media_dests]
             vols = [media_dest[1] for media_dest in media_dests]
             if not p300.has_tip:
@@ -102,15 +109,13 @@ finished. Load new plate if necessary.')
                             new_tip='never')
             ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} \
 finished. Load new plate if necessary.')
+            media_dests = []
+
         if p300.has_tip:
             p300.drop_tip()
 
         last_source_lw = source_labware
         last_dest_lw = dest_labware
-
-        if media_bool:
-            media_sources = []
-            media_dests = []
 
         pick_up(pip)
         pip.mix(3, 20, source_well.bottom(1))
