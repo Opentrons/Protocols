@@ -7,13 +7,15 @@ metadata = {
     'description': ''
 }
 
-num_curves = 1
 flow_rate_modulator = 0.25  # 25% of default flow rates
 reps_mix = 5
 vol_mix = 100.0
 
 
 def run(ctx):
+
+    [num_curves] = get_values(  # noqa: F821
+     'num_curves')
 
     # labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')

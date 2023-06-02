@@ -6,36 +6,25 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Standard Curve
 
 
 ## Description
-This protocol does stuff!
+This protocol performs up to 8 11-point standard curve preparations in blood media from up to 8 different stocks.
 
 
 ### Labware
 * [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
-* Opentrons 96 Filter Tip Rack 20 µL
 * [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
+* Opentrons 96 Filter Tip Rack 20 µL
 * Opentrons 96 Filter Tip Rack 200 µL
 
 
 ### Pipettes
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
-
-### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08bbaf/deck.png)
-
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08bbaf/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
