@@ -2,20 +2,21 @@ metadata = {
     'protocolName': 'Thermocycler Example Protocol',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.0'
+    'apiLevel': '2.13'
     }
 
 
 def run(protocol):
-    [well_vol, lid_temp, init_temp, init_time,
-        d_temp, d_time, a_temp, a_time,
+    [type_tc, well_vol, lid_temp, init_temp, init_time,
+        type_tc, d_temp, d_time, a_temp, a_time,
         e_temp, e_time, no_cycles,
         fe_temp, fe_time, final_temp] = get_values(  # noqa: F821
-        'well_vol', 'lid_temp', 'init_temp', 'init_time', 'd_temp', 'd_time',
-        'a_temp', 'a_time', 'e_temp', 'e_time', 'no_cycles',
+        'type_tc', 'well_vol', 'lid_temp', 'init_temp', 'init_time',
+        'type_tc', 'd_temp', 'd_time', 'a_temp', 'a_time',
+        'e_temp', 'e_time', 'no_cycles',
         'fe_temp', 'fe_time', 'final_temp')
 
-    tc_mod = protocol.load_module('thermocycler')
+    tc_mod = protocol.load_module(type_tc)
 
     """
     Add liquid transfers here, if interested (make sure TC lid is open)

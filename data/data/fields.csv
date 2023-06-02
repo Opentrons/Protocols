@@ -1508,6 +1508,7 @@ twb_rate,1
 twelve_well_resv_lname,1
 type_pip,1
 type_pipette_small,1
+type_tc,1
 udi_start_col,1
 uploaded_csv,18
 uploaded_csv_mastermix,1
