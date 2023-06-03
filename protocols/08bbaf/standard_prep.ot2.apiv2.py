@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import math
 
+=======
+>>>>>>> a888950c3 (resolve)
 metadata = {
     'protocolName': 'Standard Curve Creation',
     'author': 'Nick <ndiehl@opentrons.com>',
