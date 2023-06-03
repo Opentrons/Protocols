@@ -843,6 +843,7 @@ num_cell_lines,2
 num_col,8
 num_cols,3
 num_columns,1
+num_curves,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
