@@ -2,6 +2,7 @@
     "author": "Opentrons",
     "categories": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Sample Prep": [
             "Standard Curve"
         ]
@@ -24,6 +25,8 @@
     "pipettes": "\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
 =======
+=======
+>>>>>>> de9b5d7db (08bbaf)
         "Broad Category": [
             "Specific Category"
         ]
@@ -51,6 +54,32 @@
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
     "protocol-steps": "\nStep 1...\n",
     "reagent-setup": "",
+<<<<<<< HEAD
 >>>>>>> a888950c3 (resolve)
+=======
+=======
+        "Sample Prep": [
+            "Standard Curve"
+        ]
+    },
+    "description": "This protocol performs up to 8 11-point standard curve preparations in blood media from up to 8 different stocks.",
+    "internal": "08bbaf",
+    "labware": "\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Standard Curve\n\n\n",
+        "description": "This protocol performs up to 8 11-point standard curve preparations in blood media from up to 8 different stocks.\n\n\n",
+        "internal": "08bbaf\n",
+        "labware": "* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "title": "Standard Curve Creation"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+>>>>>>> 90e858783 (08bbaf)
+>>>>>>> de9b5d7db (08bbaf)
     "title": "Standard Curve Creation"
 }
