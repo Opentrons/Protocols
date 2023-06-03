@@ -684,7 +684,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,77
-m300_mount,98
+m300_mount,102
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1435,6 +1435,7 @@ tipwell_start,1
 tmod_1_lname,1
 tmod_2_lname,1
 total_mixing_volume,2
+total_plate,4
 total_samples,5
 touch_radius,1
 touch_tip,2
