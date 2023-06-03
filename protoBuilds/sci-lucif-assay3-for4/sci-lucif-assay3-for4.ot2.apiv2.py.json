@@ -1,0 +1,95 @@
+{
+    "content": "# flake8: noqa\n\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 3: Treatment',\n    'author': 'Boren Lin, Opentrons',\n    'description': 'The protocol performs liquid handling to apply test articles (e.g., serial dilutions of drug candidates) to the reporter cells cultured in 96-well plates.',\n    'apiLevel': '2.13'\n}\n\nPLATE_SLOT = [2, 5, 8, 11]\nTOTAL_COL = 12\n\nTREAT_PLATE_SLOT = [1, 4, 7, 10]\n\nSUPERNATANT = 120\nTREATMENT_VOL = 100\n\ndef run(ctx):\n\n    [TOTAL_PLATE, m300_mount] = get_values(  # noqa: F821\n        \"TOTAL_PLATE\", \"m300_mount\")\n\n    # labware\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 9, 'waste')\n    tiprack_refill = ctx.load_labware('opentrons_96_tiprack_300ul', 3)\n    tips_refill_loc = tiprack_refill.rows()[0][:12]\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 6)\n    p300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=[tiprack])\n\n    waste = waste_res.wells()[0]\n\n    #protocol\n\n    for x in range(TOTAL_PLATE):\n        working_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', PLATE_SLOT[x])\n        treat_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', TREAT_PLATE_SLOT[x])\n        cells_all = working_plate.rows()[0][:TOTAL_COL]\n        treatment = treat_plate.rows()[0][:TOTAL_COL]\n\n        ctx.comment('\\n\\n\\n~~~~~~~~REMOVE SUPERNATANT~~~~~~~~\\n')\n\n        p300.pick_up_tip()\n        for i in range(TOTAL_COL):\n            start = cells_all[i]\n            p300.move_to(start.top(z=-0.2))\n            p300.aspirate(SUPERNATANT*1.1, start.bottom(z=0.2).move(Point(x=-2.5)), rate = 0.2)\n            p300.dispense(SUPERNATANT*1.1, waste.top(z=-5), rate = 3)\n            p300.blow_out\n        p300.drop_tip()\n\n        ctx.comment('\\n\\n\\n~~~~~~~~TREAT CELLS~~~~~~~~\\n')\n\n        ctx.pause('Place a New Full Tipbox on Slot 3')\n        for j in range(TOTAL_COL):\n            start = treatment[j]\n            end = cells_all[j]\n            p300.pick_up_tip(tips_refill_loc[j])\n            p300.aspirate(TREATMENT_VOL, start.bottom(z=0.2), rate = 3)\n            p300.air_gap(20)\n            p300.dispense(TREATMENT_VOL+20, end.top(z=-4), rate = 0.3)\n            p300.blow_out()\n            p300.touch_tip()\n            p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Total Number of Plates",
+            "name": "TOTAL_PLATE",
+            "options": [
+                {
+                    "label": "1",
+                    "value": 1
+                },
+                {
+                    "label": "2",
+                    "value": 2
+                },
+                {
+                    "label": "3",
+                    "value": 3
+                },
+                {
+                    "label": "4",
+                    "value": 4
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 1",
+            "share": false,
+            "slot": "1",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "waste on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin, Opentrons",
+        "description": "The protocol performs liquid handling to apply test articles (e.g., serial dilutions of drug candidates) to the reporter cells cultured in 96-well plates.",
+        "protocolName": "Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 3: Treatment"
+    },
+    "modules": []
+}
