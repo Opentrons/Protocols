@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protocolName': 'Standard Curve Creation',
     'author': 'Nick <ndiehl@opentrons.com>',
