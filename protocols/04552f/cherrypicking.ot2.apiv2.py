@@ -1,4 +1,3 @@
-import csv
 from opentrons import protocol_api
 
 metadata = {
