@@ -26,11 +26,7 @@ Original plate position in OT-2 workspace,Original position,Picking volume (ul),
 
 You can also donwload a template file from [this link](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04552f/ex.csv).
 
-To reflect the changes of your input .csv file, perform the following steps:
-1. Save your input file as *exactly* `input.csv`.
-2. Upload your file to the top level of your robot's Jupyter Notebook server by following [these instructions](https://support.opentrons.com/s/article/Uploading-files-through-Jupyter-Notebook).
-
-Reanalyzing your protocol will update the protocol with the file content of `input.csv`!
+To reflect the changes of your input .csv file, perform the following: paste the content of your .csv file as a multi-line string on line 18 of your download protocol, setting the variable `INPUT_CSV`.
 
 ### Labware
 * [Corning 384 Well Plate 112 µL Flat #3640](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/384-Well-Microplates/Corning%C2%AE-384-well-Clear-Polystyrene-Microplates/p/corning384WellClearPolystyreneMicroplates)
