@@ -3,12 +3,6 @@
     "custom_labware_defs": [],
     "fields": [
         {
-            "default": "Original plate position in OT-2 workspace,Original position,Picking volume (ul),Destination plate position,Destination position,Seeding volume,Trashing volume,Cell medium original plate,Cell medium destination plate\n1.1,B1,20,2.1,B1,20,0,40,40\n1.1,B5,30,2.1,B2,20,10,30,40\n1.1,C16,50,2.2,B1,30,20,10,30\n1.2,B6,10,2.2,B2,10,0,50,50\n1.2,D4,20,2.2,B3,10,10,40,50\n1.2,E5,30,2.2,B4,20,10,30,40\n",
-            "label": "input .csv file",
-            "name": "input_csv",
-            "type": "textFile"
-        },
-        {
             "label": "P300 GEN2 single-channel pipette mount",
             "name": "mount_p300",
             "options": [
