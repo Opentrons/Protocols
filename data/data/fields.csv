@@ -676,6 +676,8 @@ lw_checkit,1
 lw_deepwell_plate,3
 lw_dmso,1
 lw_hplc,1
+lw_media,1
+lw_refill,1
 lw_source,1
 lw_tiprack300,1
 lw_tuberack,1
@@ -786,7 +788,7 @@ mount_m300,13
 mount_p1000,2
 mount_p20,11
 mount_p300,9
-mount_pip,1
+mount_pip,2
 mount_side,1
 move_side,2
 move_vol,1
@@ -849,6 +851,7 @@ num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
 num_gene,1
+num_lw,1
 num_mag_beads_tubes,1
 num_mastermix,3
 num_mixes,1
@@ -1512,8 +1515,8 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
+type_pip,2
 type_matrix,1
-type_pip,1
 type_pipette_small,1
 type_tc,1
 udi_start_col,1
@@ -1580,6 +1583,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
+vol_refill,1
 vol_removal,1
 vol_sample,7
 vol_sample_redissolved,1
