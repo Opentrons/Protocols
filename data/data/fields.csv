@@ -231,6 +231,7 @@ component_2_height,1
 component_2_volume,1
 component_3_volume,1
 conc_target,1
+concentration_csv,2
 concentration_template,1
 control_plate,1
 count_mix,1
@@ -887,12 +888,14 @@ num_tests,1
 num_tipracks,1
 num_tubes,2
 num_wells,2
+number_of_columns,1
 number_of_dna_samples,1
 number_of_oligo_standards,1
 number_of_plates,4
 number_of_samples,18
 number_of_samples_to_process,5
 number_of_slides_to_process,1
+number_of_standards,2
 numinc,1
 numplates,6
 numpools,1
@@ -1309,6 +1312,7 @@ start_column,1
 start_index_tip,1
 start_tip,1
 start_urea_vol,1
+starting_buffer_volume,1
 starting_conc,2
 starting_diluent_vol,1
 starting_plasma_vol,1
