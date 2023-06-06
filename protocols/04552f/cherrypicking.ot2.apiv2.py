@@ -1,4 +1,3 @@
-import csv
 from opentrons import protocol_api
 
 metadata = {
@@ -6,6 +5,11 @@ metadata = {
     'author': 'Nick <ndiehl@opentrons.com>',
     'apiLevel': '2.13'
 }
+
+# COPY AND PASTE THE CONTENT OF YOUR .CSV BELOW
+
+INPUT_FILE = """
+"""
 
 
 def run(ctx):
@@ -35,23 +39,22 @@ def run(ctx):
     p300 = ctx.load_instrument(
         'p300_single_gen2', mount_p300, tip_racks=tipracks_300)
 
-    media_liquid = ctx.define_liquid(
-        name='media',
-        description='media',
-        display_color='#00FF00',
-    )
     media = tuberack50.wells()[0]
-    media.load_liquid(media_liquid, 25000)
 
     # input file
-    jupyter_dir = '/var/lib/jupyter/notebooks'
-    file_dir = f'{jupyter_dir}/input.csv'
-    with open(file_dir) as f:
-        reader = csv.reader(f)
-        data = []
-        for i, row in enumerate(reader):
-            if i > 0 and row[0].strip():
-                data.append(row)
+    # jupyter_dir = '/var/lib/jupyter/notebooks'
+    # file_dir = f'{jupyter_dir}/input.csv'
+    # with open(file_dir) as f:
+    #     reader = csv.reader(f)
+    #     data = []
+    #     for i, row in enumerate(reader):
+    #         if i > 0 and row[0].strip():
+    #             data.append(row)
+
+    data = [
+        [val.strip() for val in line.split(',')]
+        for line in INPUT_FILE.splitlines()[1:]
+        if line and line.split(',')[0].strip()]
 
     def pick_up(pip):
         try:
@@ -75,6 +78,7 @@ before resuming.')
     media_sources = []
     media_dests = []
     for i, line in enumerate(data):
+        print(line)
         source_ind = (int(line[0].split('.')[-1]) - 1) % 2
         dest_ind = (int(line[3].split('.')[-1]) - 1) % 2
 

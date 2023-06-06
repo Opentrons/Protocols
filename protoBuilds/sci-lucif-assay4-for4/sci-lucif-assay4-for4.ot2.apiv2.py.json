@@ -1,0 +1,101 @@
+{
+    "content": "# flake8: noqa\n\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 4: Luciferase Activity Measurement',\n    'author': 'Boren Lin, Opentrons',\n    'description': 'The protocol performs liquid handling for reporter cell lysis and luciferase-catalyzed chemical reaction in 96-well plates, ready for bioluminescence measurement by a microplate reader.',\n    'apiLevel': '2.13'\n}\n\nPLATE_SLOT = [2, 5, 8, 11]\nTOTAL_COL = 12\n\nSUPERNATANT =100\nPBS_VOL = 100\nLYSIS_VOL = 30\nLUC_VOL = 100\n\ndef run(ctx):\n\n    [TOTAL_PLATE, m300_mount] = get_values(  # noqa: F821\n        \"TOTAL_PLATE\", \"m300_mount\")\n\n    # labware\n    reagent_stock = ctx.load_labware('nest_12_reservoir_15ml', 4, 'lysis buffer, luciferase reagent')\n    PBS_stock = ctx.load_labware('nest_1_reservoir_195ml', 9, 'PBS')\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 6, 'waste')\n    tips_refill = ctx.load_labware('opentrons_96_tiprack_300ul', 3)\n    tips_refill_loc = tips_refill.wells()[:95]\n    tips = ctx.load_labware('opentrons_96_tiprack_300ul', 1)\n    p300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=[tips])\n\n    pbs = PBS_stock.wells()[0]\n    lysis = reagent_stock.wells()[0]\n    luciferase = reagent_stock.wells()[6:6+TOTAL_PLATE]\n    waste = waste_res.wells()[0]\n\n    #protocol\n\n    for x in range(TOTAL_PLATE):\n        ctx.pause('Place a New Full Tipbox on Slot 3')\n\n        working_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', PLATE_SLOT[x])\n        cells_all = working_plate.rows()[0][:TOTAL_COL]\n\n        ctx.comment('\\n\\n\\n~~~~~~~~REMOVE SUPERNATANT and WASH~~~~~~~~\\n')\n        for i in range(TOTAL_COL):\n            tip_loc = int(i*8)\n            p300.pick_up_tip(tips_refill_loc[tip_loc])\n            start = cells_all[i]\n            end = waste\n            p300.move_to(start.top(z=-0.2))\n            p300.aspirate(SUPERNATANT*1.2, start.bottom(z=0.2).move(Point(x=-2.5)), rate = 0.2)\n            p300.air_gap(20)\n            p300.dispense(SUPERNATANT*1.2+20, end.top(z=-5), rate = 3)\n            p300.blow_out\n            p300.return_tip()\n\n        p300.pick_up_tip()\n        for j in range(TOTAL_COL):\n            start = pbs\n            end = cells_all[j]\n            p300.aspirate(PBS_VOL, start.bottom(z=0.5), rate = 3)\n            p300.air_gap(20)\n            p300.dispense(PBS_VOL+20, end.top(z=-2), rate = 0.3)\n            p300.blow_out()\n            p300.touch_tip()\n        p300.drop_tip()\n\n        for k in range(TOTAL_COL):\n            tip_loc = int(k*8)\n            p300.pick_up_tip(tips_refill_loc[tip_loc])\n            start = cells_all[k]\n            end = waste\n            p300.move_to(start.top(z=-0.2))\n            p300.aspirate(PBS_VOL*1.2, start.bottom(z=0.2).move(Point(x=-2.5)), rate = 0.2)\n            p300.air_gap(20)\n            p300.dispense(PBS_VOL*1.2+20, end.top(z=-5), rate = 3)\n            p300.blow_out\n            p300.drop_tip()\n\n        ctx.comment('\\n\\n\\n~~~~~~~~ADD LYSIS BUFFER~~~~~~~~\\n')\n        p300.pick_up_tip()\n        for l in range(TOTAL_COL):\n            start = lysis\n            end = cells_all[l]\n            p300.aspirate(LYSIS_VOL, start.bottom(z=0.5), rate = 0.5)\n            ctx.delay(seconds=2)\n            p300.air_gap(20)\n            p300.dispense(LYSIS_VOL+20, end.bottom(z=5), rate = 0.3)\n            ctx.delay(seconds=2)\n            p300.touch_tip()\n        p300.drop_tip()\n\n        ctx.delay(minutes=5)\n\n        ctx.comment('\\n\\n\\n~~~~~~~~ADD LUCIFERASE ASSAY REAGENT~~~~~~~~\\n')\n        p300.pick_up_tip()\n        for m in range(TOTAL_COL):\n            start = luciferase[x]\n            end = cells_all[m]\n            p300.aspirate(LUC_VOL, start.bottom(z=0.5), rate = 0.75)\n            ctx.delay(seconds=2)\n            p300.air_gap(20)\n            p300.dispense(LUC_VOL+20, end.top(z=-0.5), rate = 0.75)\n            p300.touch_tip()\n        p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Total Number of Plates",
+            "name": "TOTAL_PLATE",
+            "options": [
+                {
+                    "label": "1",
+                    "value": 1
+                },
+                {
+                    "label": "2",
+                    "value": 2
+                },
+                {
+                    "label": "3",
+                    "value": 3
+                },
+                {
+                    "label": "4",
+                    "value": 4
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "lysis buffer, luciferase reagent on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "waste on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "PBS on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin, Opentrons",
+        "description": "The protocol performs liquid handling for reporter cell lysis and luciferase-catalyzed chemical reaction in 96-well plates, ready for bioluminescence measurement by a microplate reader.",
+        "protocolName": "Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 4: Luciferase Activity Measurement"
+    },
+    "modules": []
+}

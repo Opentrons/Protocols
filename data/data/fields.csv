@@ -231,6 +231,7 @@ component_2_height,1
 component_2_volume,1
 component_3_volume,1
 conc_target,1
+concentration_csv,2
 concentration_template,1
 control_plate,1
 count_mix,1
@@ -551,7 +552,7 @@ init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,19
+input_csv,18
 input_file,10
 input_file2,6
 input_labware,1
@@ -684,7 +685,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,77
-m300_mount,98
+m300_mount,102
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -843,6 +844,7 @@ num_cell_lines,2
 num_col,8
 num_cols,3
 num_columns,1
+num_curves,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
@@ -886,12 +888,14 @@ num_tests,1
 num_tipracks,1
 num_tubes,2
 num_wells,2
+number_of_columns,1
 number_of_dna_samples,1
 number_of_oligo_standards,1
 number_of_plates,4
 number_of_samples,18
 number_of_samples_to_process,5
 number_of_slides_to_process,1
+number_of_standards,2
 numinc,1
 numplates,6
 numpools,1
@@ -1308,6 +1312,7 @@ start_column,1
 start_index_tip,1
 start_tip,1
 start_urea_vol,1
+starting_buffer_volume,1
 starting_conc,2
 starting_diluent_vol,1
 starting_plasma_vol,1
@@ -1376,6 +1381,7 @@ temp_s4_part2,1
 temp_s7_part1,1
 temp_s7_part2,1
 temp_set_reservoir,1
+temp_setting,1
 tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
@@ -1434,6 +1440,7 @@ tipwell_start,1
 tmod_1_lname,1
 tmod_2_lname,1
 total_mixing_volume,2
+total_plate,4
 total_samples,5
 touch_radius,1
 touch_tip,2
@@ -1524,7 +1531,7 @@ use_tuberack_b,1
 user_enzyme_volume,1
 user_enzyme_well,1
 using_magdeck,1
-using_tempdeck,3
+using_tempdeck,4
 v_0_tube,1
 v_0_tube1,2
 v_0_tube2,1
