@@ -22,8 +22,8 @@ def run(ctx):
 
     # labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
-    tuberack_stock = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
+    # tuberack_stock = ctx.load_labware(
+    #     'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
     tuberack_diluent = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', )
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
@@ -46,7 +46,7 @@ def run(ctx):
 
     # liquids
     diluents = tuberack_diluent.wells()[:num_curves]
-    stocks_b = tuberack_stock.wells()[:num_curves]
+    stocks_b = plate.columns()[0][:num_curves]
 
     def slow_withdraw(pip, well, delay_seconds=2.0):
         pip.default_speed /= 16
@@ -75,6 +75,7 @@ def run(ctx):
         for vol, d in zip(vols_diluent, diluent_destinations):
             vol_pre_airgap = 20 if 200 - vol > 20 else 200 - vol
             p300.aspirate(vol_pre_airgap, diluent_source.top())  # pre-airgap
+            mix_high_low(p300, reps_mix, 150, diluent_source)
             p300.aspirate(vol, diluent_source.bottom(3))
             slow_withdraw(p300, diluent_source)
             p300.dispense(p300.current_volume, d.bottom(5))
@@ -87,13 +88,13 @@ def run(ctx):
         p20.aspirate(2, stock_source.top())  # pre-airgap
         p20.aspirate(vol_stock, stock_source.bottom(3))
         slow_withdraw(p20, stock_source)
-        p20.dispense(p20.current_volume, plate.rows()[n][0].bottom(5))
-        slow_withdraw(p20, plate.rows()[n][0])
+        p20.dispense(p20.current_volume, plate.rows()[n][1].bottom(5))
+        slow_withdraw(p20, plate.rows()[n][1])
         p20.drop_tip()
 
         # serial dilution
-        sources = plate.rows()[n][:10]
-        destinations = plate.rows()[n][1:11]
+        sources = plate.rows()[n][1:11]
+        destinations = plate.rows()[n][2:]
 
         vol_reverse_pipette = 20.0
 
