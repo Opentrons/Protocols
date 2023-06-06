@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sterile Workflows
+	* Cell Culture
 
 
 ## Description
-This protocol does stuff!
+This protocol performs a custom media removal and re-addition for cell culture plates, in 24-, 96-, or 384-well format. The user can select which pipette they would like to use. Pipette compatibility with labware selection is automatically determined.
 
 
 ### Labware
@@ -22,19 +22,8 @@ This protocol does stuff!
 
 
 ### Pipettes
-* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-
-
-### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/01a6b9/deck.png)
-
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/01a6b9/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
+* [Opentrons Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons 8-Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Process
