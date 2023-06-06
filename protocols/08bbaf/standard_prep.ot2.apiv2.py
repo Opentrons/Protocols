@@ -21,7 +21,7 @@ def run(ctx):
         tempdeck.set_temperature(temp_setting)
 
     # labware
-    plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
+    plate = ctx.load_labware('thermo_96_wellplate_750ul', '1')
     # tuberack_stock = ctx.load_labware(
     #     'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
     tuberack_diluent = tempdeck.load_labware(
