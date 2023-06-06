@@ -1377,6 +1377,7 @@ temp_s4_part2,1
 temp_s7_part1,1
 temp_s7_part2,1
 temp_set_reservoir,1
+temp_setting,1
 tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
@@ -1526,7 +1527,7 @@ use_tuberack_b,1
 user_enzyme_volume,1
 user_enzyme_well,1
 using_magdeck,1
-using_tempdeck,3
+using_tempdeck,4
 v_0_tube,1
 v_0_tube1,2
 v_0_tube2,1

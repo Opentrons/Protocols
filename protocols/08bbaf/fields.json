@@ -4,5 +4,20 @@
         "label": "number of curves (1-8)",
         "name": "num_curves",
         "default": 1
+    },
+    {
+        "type": "dropDown",
+        "label": "cool temperature module",
+        "name": "using_tempdeck",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "int",
+        "label": "temperature setting (if using module, in degrees C)",
+        "name": "temp_setting",
+        "default": 4
     }
 ]
