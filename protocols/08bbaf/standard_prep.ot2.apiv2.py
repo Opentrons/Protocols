@@ -12,13 +12,20 @@ vol_mix = 100.0
 
 def run(ctx):
 
-    [num_curves] = get_values(  # noqa: F821
-     'num_curves')
+    [num_curves, using_tempdeck, temp_setting] = get_values(  # noqa: F821
+     'num_curves', 'using_tempdeck', 'temp_setting')
+
+    # modules
+    tempdeck = ctx.load_module('temperature module gen2', '7')
+    if using_tempdeck:
+        tempdeck.set_temperature(temp_setting)
 
     # labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
-    tuberack = ctx.load_labware(
+    tuberack_stock = ctx.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
+    tuberack_diluent = ctx.load_labware(
+        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', )
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
 
@@ -37,7 +44,7 @@ def run(ctx):
     vols_dilution = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
 
     # liquids
-    stocks_b = tuberack.wells()[:num_curves]
+    stocks_b = tuberack_stock.wells()[:num_curves]
 
     def slow_withdraw(pip, well, delay_seconds=2.0):
         pip.default_speed /= 16
