@@ -24,7 +24,7 @@ def run(ctx):
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
     tuberack_stock = ctx.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
-    tuberack_diluent = ctx.load_labware(
+    tuberack_diluent = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', )
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
@@ -41,9 +41,11 @@ def run(ctx):
     p300.flow_rate.dispense *= flow_rate_modulator
 
     vol_stock = 4.0
-    vols_dilution = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+    vols_diluent = [196, 50, 50, 100, 100, 100, 100, 50, 50, 50, 50]
+    vols_dilution = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
 
     # liquids
+    diluents = tuberack_diluent.wells()[:num_curves]
     stocks_b = tuberack_stock.wells()[:num_curves]
 
     def slow_withdraw(pip, well, delay_seconds=2.0):
@@ -65,6 +67,19 @@ def run(ctx):
 
     """ PROTOCOL STEPS"""
     for n in range(num_curves):
+
+        # pre-transfer diluent to plate
+        diluent_source = diluents[n]
+        diluent_destinations = plate.rows()[n][1:]
+        p300.pick_up_tip()
+        for vol, d in zip(vols_diluent, diluent_destinations):
+            vol_pre_airgap = 20 if 200 - vol > 20 else 200 - vol
+            p300.aspirate(vol_pre_airgap, diluent_source.top())  # pre-airgap
+            p300.aspirate(vol, diluent_source.bottom(3))
+            slow_withdraw(p300, diluent_source)
+            p300.dispense(p300.current_volume, d.bottom(5))
+            slow_withdraw(p300, d)
+        p300.drop_tip()
 
         # initial stock transfer to plate
         stock_source = stocks_b[n]

@@ -6,7 +6,7 @@
         "default": 1
     },
     {
-        "type": "bool",
+        "type": "dropDown",
         "label": "cool temperature module",
         "name": "using_tempdeck",
         "options": [
