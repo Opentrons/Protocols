@@ -17,8 +17,8 @@ def run(ctx):
      clearance_aspirate, clearance_dispense, mix_reps,
      uploaded_csv] = get_values(  # noqa: F821
         "mix_asp_rate", "mix_disp_rate", "dead_vol", "labware_parent",
-        "labware_child", "labware_reservoir", "clearance_plate", 
-        "clearance_reservoir", "clearance_aspirate", "clearance_dispense", 
+        "labware_child", "labware_reservoir", "clearance_plate",
+        "clearance_reservoir", "clearance_aspirate", "clearance_dispense",
         "mix_reps", "uploaded_csv")
 
     ctx.set_rail_lights(True)
