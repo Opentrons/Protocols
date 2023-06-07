@@ -37,7 +37,6 @@ def run(ctx: protocol_api.ProtocolContext):
      vol_removal,
      _mag_time,
      _air_dry,
-     _add_water,
      _elution_vol,
      flow_rate_wash,
      _off_deck,
@@ -50,7 +49,6 @@ def run(ctx: protocol_api.ProtocolContext):
          'vol_removal',
          '_mag_time',
          '_air_dry',
-         '_add_water',
          '_elution_vol',
          'flow_rate_wash',
          '_off_deck',
@@ -71,7 +69,6 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_time = _mag_time  # time on magnetic module
     air_dry = _air_dry  # time for air drying
     fin_wash = _fin_wash  # volume for final wash removal
-    add_water = _add_water  # True/False for adding water prior to air dry
     off_deck = _off_deck  # True/False perform resuspension off-deck
     music = _music  # play custom music (only in Oregon)
 
@@ -548,37 +545,37 @@ can not exceed the height of the labware.')
 
     # Air dry for 10 minutes
     mag_deck.engage(7)
-    if add_water:
-        for i, src in enumerate(mag_samps_h):
-            side = -1 if i % 2 == 0 else 1
-            radius = src.diameter/2 if src.diameter else src.width/2
-            anti_bead_loc = src.bottom().move(
-                types.Point(x=side*radius*0.5, z=3))
-            m300.custom_pick_up()
-            m300.aspirate(100, h2o)
-            flow_rate(asp=30, disp=30)
-            m300.dispense(80, anti_bead_loc)
-            ctx.delay(seconds=0.5)
-            m300.aspirate(100, anti_bead_loc)
-            flow_rate()
-            m300.dispense(120, liquid_waste)
-            m300.blow_out()
-            m300.drop_tip()
+    # if add_water:
+    #     for i, src in enumerate(mag_samps_h):
+    #         side = -1 if i % 2 == 0 else 1
+    #         radius = src.diameter/2 if src.diameter else src.width/2
+    #         anti_bead_loc = src.bottom().move(
+    #             types.Point(x=side*radius*0.5, z=3))
+    #         m300.custom_pick_up()
+    #         m300.aspirate(100, h2o)
+    #         flow_rate(asp=30, disp=30)
+    #         m300.dispense(80, anti_bead_loc)
+    #         ctx.delay(seconds=0.5)
+    #         m300.aspirate(100, anti_bead_loc)
+    #         flow_rate()
+    #         m300.dispense(120, liquid_waste)
+    #         m300.blow_out()
+    #         m300.drop_tip()
 
-    ctx.delay(minutes=1)
-    for i, src in enumerate(mag_samps_h):
-        side = -1 if i % 2 == 0 else 1
-        radius = src.diameter/2 if src.diameter else src.width/2
-        anti_bead_loc = src.bottom().move(
-            types.Point(x=side*radius*0.5, z=3))
-        m300.custom_pick_up()
-        flow_rate(asp=30, disp=30)
-        m300.aspirate(100, anti_bead_loc)
-        ctx.delay(seconds=0.5)
-        m300.dispense(120, liquid_waste)
-        flow_rate()
-        m300.blow_out()
-        m300.drop_tip()
+    # ctx.delay(minutes=1)
+    # for i, src in enumerate(mag_samps_h):
+    #     side = -1 if i % 2 == 0 else 1
+    #     radius = src.diameter/2 if src.diameter else src.width/2
+    #     anti_bead_loc = src.bottom().move(
+    #         types.Point(x=side*radius*0.5, z=3))
+    #     m300.custom_pick_up()
+    #     flow_rate(asp=30, disp=30)
+    #     m300.aspirate(100, anti_bead_loc)
+    #     ctx.delay(seconds=0.5)
+    #     m300.dispense(120, liquid_waste)
+    #     flow_rate()
+    #     m300.blow_out()
+    #     m300.drop_tip()
 
     ctx.home()
     air_dry_msg = f'Air drying the beads for {air_dry} minutes. \
