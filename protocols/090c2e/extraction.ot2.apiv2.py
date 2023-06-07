@@ -214,7 +214,6 @@ can not exceed the height of the labware.')
                 self.reset_tipracks()
                 t_start = 0
                 t_end = int(num_cols)
-                ctx.set_rail_lights(True)
                 self.pick_up_tip()
 
     # bind additional methods to pipettes
@@ -231,9 +230,11 @@ can not exceed the height of the labware.')
 
     # helper functions
     def flash_lights():
+        initial_status = ctx.rail_lights_on
         for _ in range(19):
             ctx.set_rail_lights(not ctx.rail_lights_on)
             ctx.delay(seconds=0.25)
+        ctx.set_rail_lights(initial_status)
 
     def mix_high_low(well, reps, vol, z_offset_low=1.0, z_offset_high=10.0,
                      x_offset=2.0, y_offset=1.0, pip=m300,
@@ -650,7 +651,6 @@ Please add elution buffer at 70C to 12-well reservoir.'
                 test_speaker()
         # ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
         # When complete, replace samples and click RESUME')
-        ctx.set_rail_lights(True)
         ctx.pause('Please remove samples and mix off-deck for 10 minutes \
 then resume run.')
 
