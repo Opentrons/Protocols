@@ -1,0 +1,80 @@
+[
+    {
+        "type": "float",
+    "label": "Final Plate Volume",
+    "name": "sample_vol",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Compound A Initial Vol",
+    "name": "compA_vol_init",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Compound B Initial Vol",
+    "name": "compb_vol_init",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Compound C Initial Vol",
+    "name": "compc_vol_init",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Compound D Initial Vol",
+    "name": "compD_vol_init",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Pre-Dilution Factor A",
+    "name": "pre_dil_factA",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Pre-Dilution Factor B",
+    "name": "pre_dil_factB",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Pre-Dilution Factor c",
+    "name": "pre_dil_factC",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Pre-Dilution Factor D",
+    "name": "pre_dil_factD",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Serial Dilution Factor A",
+    "name": "serial_dil_factA",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Serial Dilution Factor B",
+    "name": "serial_dil_factB",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Serial Dilution Factor C",
+    "name": "serial_dil_factC",
+    "default": 200
+    },
+    {
+        "type": "float",
+    "label": "Serial Dilution Factor D",
+    "name": "serial_dil_factD",
+    "default": 200
+    },
+]
