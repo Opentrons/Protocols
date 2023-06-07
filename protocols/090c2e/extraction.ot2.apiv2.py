@@ -98,8 +98,8 @@ def run(ctx: protocol_api.ProtocolContext):
     class WellH(Well):
         def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
-            # super().__init__(well.parent, well._core, APIVersion(2, 13))
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
+            # super().__init__(well._impl)
             self.well = well
             # specified minimum well bottom clearance
             self.min_height = min_height
@@ -368,7 +368,6 @@ can not exceed the height of the labware.')
     vhb = [WellH(well) for well in rsvr_12[0].wells()[4:8]]
     # cspw2 = [WellH(well) for well in rsvr_12[0].wells()[8:]]
     etoh = [WellH(well) for well in rsvr_12[1].wells()[:8]]
-    h2o = rsvr_12[1]['A9']
     elution_buffer = [WellH(well) for well in rsvr_12[1].wells()[10:]]
 
     vhb_wells = []
