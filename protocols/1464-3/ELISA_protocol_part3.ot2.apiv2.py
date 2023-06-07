@@ -24,7 +24,7 @@ def run(ctx):
 
     # instrument setup
     m300 = ctx.load_instrument(
-        'p300_multi',
+        'p300_multi_gen2',
         mount='left',
         tip_racks=tiprack_m300)
 
