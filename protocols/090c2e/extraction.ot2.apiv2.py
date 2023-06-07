@@ -236,9 +236,13 @@ can not exceed the height of the labware.')
             ctx.delay(seconds=0.25)
 
     def mix_high_low(well, reps, vol, z_offset_low=1.0, z_offset_high=10.0,
-                     x_offset=2.0, y_offset=1.0, pip=m300):
+                     x_offset=2.0, y_offset=1.0, pip=m300,
+                     switch_sides_x=True):
         for i in range(reps):
-            x_side = 1 if i % 2 == 0 else -1
+            if switch_sides_x:
+                x_side = 1 if i % 2 == 0 else -1
+            else:
+                x_side = 1
             y_side = 1 if (i//2) % 2 == 0 else -1
             pip.aspirate(vol, well.bottom().move(types.Point(
                 x=x_side*x_offset, y=y_side*y_offset, z=z_offset_low)))
@@ -307,9 +311,10 @@ can not exceed the height of the labware.')
             if not off_deck:
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
-                bead_loc = col.bottom().move(
-                    types.Point(x=side*radius*0.5, z=3))
-                m300.mix(10, 100, bead_loc)
+                # bead_loc = col.bottom().move(
+                #     types.Point(x=side*radius*0.5, z=3))
+                mix_high_low(col, 10, 200, z_offset_low=3,
+                             x_offset=side*radius*0.4, switch_sides_x=False)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.blow_out()
@@ -440,8 +445,7 @@ can not exceed the height of the labware.')
     for idx, dest in enumerate(mag_samps):
         src = xp1[idx//3]
         for _ in range(2):
-            flow_rate(asp=20, disp=20)
-            m300.mix(3, 150, src)
+            flow_rate(asp=40, disp=40)
             mix_high_low(src, 5, 200)
             m300.aspirate(vol_xp1/2, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
@@ -467,13 +471,11 @@ can not exceed the height of the labware.')
         minutes plus mixing'
         ctx.comment(incubate_msg)
 
-        if num_cols > 1:
-            num_mixes = math.ceil(1.5*inc_time/num_cols)
-        else:
-            num_mixes = 10
+        start_time = time.monotonic()
         m300.flow_rate.aspirate *= 3
         m300.flow_rate.dispense *= 3
-        for _ in range(num_mixes):
+        check_time = 8*60 if not ctx.is_simulating() else 1
+        while time.monotonic() - start_time < check_time:
             for i, (col, t_d) in enumerate(
                     zip(mag_samps, all_tips[t_start:t_end])):
                 side = 1 if i % 2 == 0 else -1
@@ -484,7 +486,8 @@ can not exceed the height of the labware.')
                     m300.custom_pick_up()
                 if not m300.has_tip:
                     m300.custom_pick_up(t_d)
-                m300.mix(8, 150, bead_loc)
+                mix_high_low(col, 10, 200, z_offset_low=3,
+                             x_offset=side*radius*0.4, switch_sides_x=False)
                 ctx.delay(seconds=1)
                 m300.blow_out(col.top(-2))
                 m300.touch_tip()
@@ -602,7 +605,8 @@ Please add elution buffer at 70C to 12-well reservoir.'
             radius = col.diameter/2 if col.diameter else col.width/2
             bead_loc = col.bottom().move(
                 types.Point(x=side*radius*0.5, z=3))
-            m300.mix(10, 50, bead_loc)
+            mix_high_low(col, 10, 50, z_offset_low=3, z_offset_high=6,
+                         x_offset=side*radius*0.4, switch_sides_x=False)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
         m300.blow_out(col.bottom(6))
         for _ in range(2):
@@ -623,18 +627,17 @@ Please add elution buffer at 70C to 12-well reservoir.'
 
     # Transfer elution to PCR plate
     if not off_deck:
-        if num_cols > 1:
-            num_mixes = math.ceil(1.5*inc_time/num_cols)
-        else:
-            num_mixes = 10
-
+        start_time = time.monotonic()
+        check_time = 8*60 if not ctx.is_simulating() else 1
         tip_list = []
-        for n_mix in range(num_mixes):
+        first = True
+        while time.monotonic() - start_time < check_time:
             for i, col in enumerate(mag_samps_h):
-                if n_mix == 0:
+                if first:
                     m300.custom_pick_up()
                     current_tip = m300._last_tip_picked_up_from
                     tip_list.append(current_tip)
+                    first = False
                 else:
                     m300.pick_up_tip(tip_list[i])
                 side = 1 if idx % 2 == 0 else -1
@@ -647,10 +650,7 @@ Please add elution buffer at 70C to 12-well reservoir.'
                 for _ in range(2):
                     m300.move_to(col.bottom(5))
                     m300.move_to(col.bottom(6))
-                if n_mix == num_mixes - 1:
-                    m300.drop_tip(home_after=False)
-                else:
-                    m300.return_tip()
+                m300.return_tip()
     else:
         ctx.pause('Please remove samples and mix off-deck for 10 minutes \
 then resume run.')
