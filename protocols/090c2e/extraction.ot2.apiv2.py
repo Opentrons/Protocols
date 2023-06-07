@@ -614,17 +614,6 @@ Please add elution buffer at 70C to 12-well reservoir.'
             m300.move_to(col.bottom(6))
         m300.drop_tip()
 
-    flash_lights()
-    ctx.home()
-    if not ctx.is_simulating():
-        if music:
-            test_speaker('/var/lib/jupyter/notebooks/all-i-want-ot2.mp3')
-        else:
-            test_speaker()
-    # ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
-    # When complete, replace samples and click RESUME')
-    ctx.set_rail_lights(True)
-
     # Transfer elution to PCR plate
     if not off_deck:
         start_time = time.monotonic()
@@ -652,6 +641,16 @@ Please add elution buffer at 70C to 12-well reservoir.'
                     m300.move_to(col.bottom(6))
                 m300.return_tip()
     else:
+        flash_lights()
+        ctx.home()
+        if not ctx.is_simulating():
+            if music:
+                test_speaker('/var/lib/jupyter/notebooks/all-i-want-ot2.mp3')
+            else:
+                test_speaker()
+        # ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
+        # When complete, replace samples and click RESUME')
+        ctx.set_rail_lights(True)
         ctx.pause('Please remove samples and mix off-deck for 10 minutes \
 then resume run.')
 
