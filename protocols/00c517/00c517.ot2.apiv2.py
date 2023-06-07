@@ -127,7 +127,9 @@ def run(ctx):
         vol_ctr = vol
         for _ in range(num_dispenses):
 
-            p300.aspirate(p300.max_volume if vol_ctr > 300 else vol_ctr, bsa)
+            p300.aspirate(p300.max_volume if vol_ctr > 300 else vol_ctr,
+                          bsa.bottom(h_bsa))
+            p300.touch_tip()
             p300.dispense(p300.max_volume if vol_ctr > 300 else vol_ctr, tube)
             adjust_height(p300.max_volume if vol_ctr > 300 else vol_ctr, 'bsa')
             vol_ctr -= p300.max_volume if vol_ctr > 300 else vol_ctr
@@ -137,7 +139,7 @@ def run(ctx):
 
     ctx.comment('\n-------ADDING SDS TO STANDARD TUBES-----\n\n\n')
 
-    sds_vols = list(reversed(standard_vols))
+    sds_vols = [0, 125, 250, 312.5, 375, 437.5, 468.75, 500]
     p300.pick_up_tip()
     for tube, vol in zip(standards, sds_vols):
         num_dispenses = math.ceil(vol/300)
@@ -208,9 +210,8 @@ def run(ctx):
 
     for i, s in enumerate(strip_tube_plate.wells()[:8]):
         p20.pick_up_tip()
-        p20.aspirate(10, s)
+        p20.aspirate(20, s)
         p20.dispense(10, uv_plate.rows()[i][0])
-        p20.aspirate(10, s)
         p20.dispense(10, uv_plate.rows()[i][1])
         p20.drop_tip()
 
@@ -220,16 +221,18 @@ def run(ctx):
     # transfer bca to standards
     p300.pick_up_tip()
     for i in range(8):
-        p300.aspirate(200, bca)
+        p300.aspirate(200, bca.bottom(h_bca))
+        p300.touch_tip()
         p300.dispense(200, uv_plate.rows()[i][0].top())
-        p300.aspirate(200, bca)
+        p300.aspirate(200, bca.bottom(h_bca))
         p300.dispense(200, uv_plate.rows()[i][1].top())
-        adjust_height(200, 'bsa')
+        adjust_height(200, 'bca')
     ctx.comment('\n')
 
     # transfer bca to samples
     for well in uv_dispense_wells[:num_samp*2]:
-        p300.aspirate(200, bca)
+        p300.aspirate(200, bca.bottom(h_bca))
+        p300.touch_tip()
         p300.dispense(200, well.top())
         adjust_height(200, 'bca')
     p300.drop_tip()
