@@ -7,6 +7,15 @@
     },
     {
         "type": "dropDown",
+        "label": "matrix type",
+        "name": "type_matrix",
+        "options": [
+            { "label": "blood", "value": "blood" },
+            { "label": "plasma", "value": "plasma" }
+        ]
+    },
+    {
+        "type": "dropDown",
         "label": "cool temperature module",
         "name": "using_tempdeck",
         "options": [

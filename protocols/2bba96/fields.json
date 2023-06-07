@@ -19,13 +19,25 @@
   },
   {
     "type": "dropDown",
-    "label": "Labware for Parent and Child Plates",
-    "name": "labware_plate",
+    "label": "Labware for Parent Plate",
+    "name": "labware_parent",
     "options": [
       { "label": "thermo_96_wellplate_ab_0800_200ul", "value": "thermo_96_wellplate_ab_0800_200ul" },
       { "label": "brand_96_wellplate_360ul", "value": "brand_96_wellplate_360ul" },
       { "label": "brooksframestar_96_wellplate_200ul", "value": "brooksframestar_96_wellplate_200ul" },
-      { "label": "biorad_96_wellplate_200ul_pcr", "value": "biorad_96_wellplate_200ul_pcr" }
+      { "label": "biorad_96_wellplate_200ul_pcr", "value": "biorad_96_wellplate_200ul_pcr" },
+      { "label": "axygen_96_wellplate_500ul", "value": "axygen_96_wellplate_500ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Child Plates",
+    "name": "labware_child",
+    "options": [
+      { "label": "thermo_96_wellplate_ab_0800_200ul", "value": "thermo_96_wellplate_ab_0800_200ul" },
+      { "label": "brand_96_wellplate_360ul", "value": "brand_96_wellplate_360ul" },
+      { "label": "brooksframestar_96_wellplate_200ul", "value": "brooksframestar_96_wellplate_200ul" },
+      { "label": "axygen_96_wellplate_500ul", "value": "axygen_96_wellplate_500ul" }
     ]
   },
   {

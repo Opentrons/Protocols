@@ -601,7 +601,7 @@ labware_6,1
 labware_96,1
 labware_96rxnplate,1
 labware_aliquots,1
-labware_child,1
+labware_child,2
 labware_clinical_samples_1,1
 labware_clinical_samples_2,1
 labware_collect_plate,1
@@ -616,11 +616,11 @@ labware_magneticmodule,5
 labware_mm,1
 labware_mmplate,1
 labware_p300_tips,1
-labware_parent,1
+labware_parent,2
 labware_patient_samples,1
 labware_pcr,1
 labware_pcr_plate,10
-labware_plate,2
+labware_plate,1
 labware_plates,9
 labware_pool,1
 labware_pre_pcr_plate,2
@@ -676,6 +676,8 @@ lw_checkit,1
 lw_deepwell_plate,3
 lw_dmso,1
 lw_hplc,1
+lw_media,1
+lw_refill,1
 lw_source,1
 lw_tiprack300,1
 lw_tuberack,1
@@ -786,7 +788,7 @@ mount_m300,13
 mount_p1000,2
 mount_p20,11
 mount_p300,9
-mount_pip,1
+mount_pip,2
 mount_side,1
 move_side,2
 move_vol,1
@@ -849,6 +851,7 @@ num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
 num_gene,1
+num_lw,1
 num_mag_beads_tubes,1
 num_mastermix,3
 num_mixes,1
@@ -1512,7 +1515,8 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
-type_pip,1
+type_pip,2
+type_matrix,1
 type_pipette_small,1
 type_tc,1
 udi_start_col,1
@@ -1579,6 +1583,7 @@ vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
+vol_refill,1
 vol_removal,1
 vol_sample,7
 vol_sample_redissolved,1
