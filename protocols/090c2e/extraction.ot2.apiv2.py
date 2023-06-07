@@ -1,3 +1,4 @@
+import time
 from opentrons import protocol_api
 from opentrons import types
 from opentrons.protocol_api.labware import Well
@@ -100,7 +101,8 @@ def run(ctx: protocol_api.ProtocolContext):
     class WellH(Well):
         def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
-            super().__init__(well.parent, well._core, APIVersion(2, 13))
+            # super().__init__(well.parent, well._core, APIVersion(2, 13))
+            super().__init__(well._impl)
             self.well = well
             # specified minimum well bottom clearance
             self.min_height = min_height
@@ -232,6 +234,16 @@ can not exceed the height of the labware.')
         for _ in range(19):
             ctx.set_rail_lights(not ctx.rail_lights_on)
             ctx.delay(seconds=0.25)
+
+    def mix_high_low(well, reps, vol, z_offset_low=1.0, z_offset_high=10.0,
+                     x_offset=2.0, y_offset=1.0, pip=m300):
+        for i in range(reps):
+            x_side = 1 if i % 2 == 0 else -1
+            y_side = 1 if (i//2) % 2 == 0 else -1
+            pip.aspirate(vol, well.bottom().move(types.Point(
+                x=x_side*x_offset, y=y_side*y_offset, z=z_offset_low)))
+            pip.dispense(vol, well.bottom().move(types.Point(
+                x=x_side*x_offset, y=y_side*y_offset, z=z_offset_high)))
 
     def flow_rate(asp=92.86, disp=92.86, blow=92.86):
         # This function can be used to quickly modify the flow rates of the
@@ -430,6 +442,7 @@ can not exceed the height of the labware.')
         for _ in range(2):
             flow_rate(asp=20, disp=20)
             m300.mix(3, 150, src)
+            mix_high_low(src, 5, 200)
             m300.aspirate(vol_xp1/2, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             flow_rate(disp=10)
