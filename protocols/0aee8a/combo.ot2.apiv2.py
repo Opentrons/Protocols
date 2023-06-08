@@ -3,8 +3,7 @@
 #Variable input idea as follows:
 def get_values(*names):
     import json
-    _all_values = json.loads("""{final_vol":70,"compA_vol_init": 100,"compB_vol_init": 100,"compC_vol_init": 100,"compD_vol_init": 100,
-                              "pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2, "serial_dil_factA": 2,
+    _all_values = json.loads("""{final_vol":70,"pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2, "serial_dil_factA": 2,
                               "serial_dil_factB": 2,"serial_dil_factC": 2,"serial_dil_factD": 2 }""")
     return[_all_values[n]for n in names]
 
@@ -18,8 +17,8 @@ metadata = {
 }
 def run(ctx):
 
-    [final_vol, compA_vol_init,compB_vol_init,compC_vol_init,compD_vol_init,pre_dil_factA,pre_dil_factB
-     ,pre_dil_factC,pre_dil_factD,serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values
+
+    [final_vol, pre_dil_factA, pre_dil_factB, pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values
     
     # Labware setup:
 
@@ -37,6 +36,8 @@ def run(ctx):
     vdpf1 = ctx.load_labware('nest_96_wellplate_100ul', '10')
     vdpf2 = ctx.load_labware('nest_96_wellplate_100ul', '11')
     
+    mix_reps = 4
+
     # Pipette setup
     p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=[p20_tip_rack])
     p300 = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=[p200_tip_rack])
@@ -63,23 +64,19 @@ def run(ctx):
     vol18 = vol2 / (-1 + serial_dil_factB)
     
     # 1st step
-    
+    destination1 = [well for col in [vsp.columns()[ind] for c in [0,11]] for well in col[1:]]
     p300.pick_up_tip()
-    for col in range([0], [11]):
-        for row in range(0, 7):
-            p300.transfer(vol1, dmso_res.wells()[0], vsp.rows[row][col])
-   
+    for d in destination1:
+          p300.transfer(vol1, dmso_res.well()['A1'], destination1, new_tip='never')
     p300.return_tip()
     
     # 2nd step
-   
+   destination2 = [well for row in [hsp.rows()[ind] for c in [0,7]] for well in col[1:]]
     p300.pick_up_tip()
-    for col in range(downl2, 13):
-        for row in [1, 8]:
-            p300.transfer(vol2, dmso_res.wells()[0], hsp.rows[row][col],
-                                new_tip='never')
+    for d in destination2:
+      p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
-    
+
 
     # 3rd step 
     if vol3 <= 20:
