@@ -13,6 +13,15 @@
     },
     {
         "type": "dropDown",
+        "label": "remove existing media",
+        "name": "do_remove_media",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "dropDown",
         "label": "media reservoir type",
         "name": "lw_media",
         "options": [
