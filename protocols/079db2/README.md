@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol reformats tubes from up to 4 custom tube racks to a 96 deepwell plate. The user has the option to dispense 25ul or 50ul into the deepwell plate. The sample input starts at A11 of the deepwell plate, moving by row.
 
 
 ### Labware
@@ -33,7 +33,9 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. Aspirate 25ul or 50ul from the tube rack to the well plate (start at A11)
+2. Grab new tip
+3. Repeat up to the number of samples specified, moving by row
 
 
 ### Process

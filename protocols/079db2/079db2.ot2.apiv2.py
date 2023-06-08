@@ -20,7 +20,7 @@ def run(ctx):
                  for slot in [1, 2, 3, 4]]
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', 6)
     tips = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-            for slot in [7, 8, 9]]
+            for slot in [8]]
 
     # pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
