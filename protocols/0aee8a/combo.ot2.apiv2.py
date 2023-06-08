@@ -3,9 +3,9 @@
 #Variable input idea as follows:
 def get_values(*names):
     import json
-    _all_values = json.loads("""{final_vol":,"compA_vol_init":,"compB_vol_init":,"compC_vol_init":,"compD_vol_init":,
-                              "pre_dil_factA":,"pre_dil_factB":,"pre_dil_factC":,"pre_dil_factD":, "serial_dil_factA":,
-                              "serial_dil_factB":,"serial_dil_factC":,"serial_dil_factD": }""")
+    _all_values = json.loads("""{final_vol":70,"compA_vol_init": 100,"compB_vol_init": 100,"compC_vol_init": 100,"compD_vol_init": 100,
+                              "pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2, "serial_dil_factA": 2,
+                              "serial_dil_factB": 2,"serial_dil_factC": 2,"serial_dil_factD": 2 }""")
     return[_all_values[n]for n in names]
 
 
@@ -17,6 +17,10 @@ metadata = {
     'apiLevel': '2.11'
 }
 def run(ctx):
+
+    [final_vol, compA_vol_init,compB_vol_init,compC_vol_init,compD_vol_init,pre_dil_factA,pre_dil_factB
+     ,pre_dil_factC,pre_dil_factD,serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values
+    
     # Labware setup:
 
     #Reagent Resevoir
@@ -57,7 +61,121 @@ def run(ctx):
     vol16 = vol2 / (-1 + serial_dil_factA)
     vol17 = vol18 + vol2
     vol18 = vol2 / (-1 + serial_dil_factB)
-
-    #1
+    
+    # 1st step
+    
     p300.pick_up_tip()
-    destination = []
+    for col in range([0], [11]):
+        for row in range(0, 7):
+            p300.transfer(vol1, dmso_res.wells()[0], vsp.rows[row][col])
+   
+    p300.return_tip()
+    
+    # 2nd step
+   
+    p300.pick_up_tip()
+    for col in range(downl2, 13):
+        for row in [1, 8]:
+            p300.transfer(vol2, dmso_res.wells()[0], hsp.rows[row][col],
+                                new_tip='never')
+    p300.drop_tip()
+    
+
+    # 3rd step 
+    if vol3 <= 20:
+            pipette = p20
+            source_well = 'A2'
+            dest_plate = vsp
+        else:
+            pipette = p300
+            source_well = 'A2'
+            dest_plate = vsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol3, dmso_res['A1'], dest_plate.wells_by_name()[source_well], new_tip='never')
+        if vol4 <= 20:
+            pipette = p20
+            source_well = 'A11'
+            dest_plate = vsp
+        else:
+            pipette = p300
+            source_well = 'A11'
+            dest_plate = vsp
+        pipette.transfer(vol4, dmso_res['A1'], dest_plate.wells_by_name()[source_well], new_tip='never')
+        pipette.drop_tip()
+    
+    
+    # Steps 7-12
+     if vol7 <= 20:
+            pipette = p20
+            source_well = 'B1'
+            dest_plate = hsp
+        else:
+            pipette = p300
+            source_well = 'B1'
+            dest_plate = hsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol7, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
+                         new_tip='never')
+        pipette.mix(3, 20, dest_plate.wells_by_name()[source_well])
+        pipette.drop_tip()
+    if vol8 <= 20:
+            pipette = p20
+            source_well = 'B2'
+            dest_plate = hsp
+        else:
+            pipette = p300
+            source_well = 'B2'
+            dest_plate = hsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol8, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
+                         new_tip='never')
+        pipette.mix(3, 20, dest_plate.wells_by_name()[source_well])
+        pipette.drop_tip()
+    
+
+    # Steps 13-14
+  
+    if vol9 <= 20:
+            pipette = p20
+            source_well = 'A1'
+            dest_plate = hsp
+        else:
+            pipette = p300
+            source_well = 'A1'
+            dest_plate = hsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol9 / 10, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
+                         new_tip='never')
+        pipette.drop_tip()
+        if vol10 <= 20:
+            pipette = p20
+            source_well = 'A2'
+            dest_plate = hsp
+        else:
+            pipette = p300
+            source_well = 'A2'
+            dest_plate = hsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol10, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
+                         new_tip='never')
+        pipette.drop_tip()
+  
+    # Steps 15-20
+     if vol11 <= 20:
+            pipette = p20
+            source_well = 'B1'
+            dest_plate = vsp
+        else:
+            pipette = p300
+            source_well = 'B1'
+            dest_plate = vsp
+        pipette.pick_up_tip()
+        pipette.transfer(vol11, hsp['A1'], dest_plate.wells_by_name()[source_well],
+                         mix_before=(3, 50), new_tip='never')
+        pipette.drop_tip()
+        pipette.pick_up_tip()
+        pipette.transfer(vol12, vsp['A1'], vsp['B1'], mix_after=(3, 50),
+                         new_tip='never')
+        pipette.transfer(vol12, vsp['B1'], vsp['C1'], mix_after=(3, 50),
+                         new_tip='never')
+        pipette.transfer(vol12, vsp['C1'], vsp['D1'], mix_after=(3, 50),
