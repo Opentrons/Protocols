@@ -27,7 +27,8 @@
         "options": [
             { "label": "PhenoPlate 96 Well Plate 425 µL", "value": "phenoplate_96_wellplate_425ul" },
             { "label": "PhenoPlate 384 Well Plate 145 µL", "value": "phenoplate_384_wellplate_145ul" },
-            { "label": "Corning 24 Well Plate 3.4 mL Flat", "value": "corning_24_wellplate_3.4ml_flat" }
+            { "label": "Corning 24 Well Plate 3.4 mL Flat", "value": "corning_24_wellplate_3.4ml_flat" },
+            { "label": "Corning 12 Well Plate 6.9 mL Flat", "value": "corning_12_wellplate_6.9ml_flat" }
         ]
     },
     {

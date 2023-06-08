@@ -1,3 +1,4 @@
+import math
 from opentrons import protocol_api
 
 metadata = {
@@ -19,7 +20,7 @@ def run(ctx):
 
     tip_vol_map = {
         20: '20',
-        300: '300',
+        300: '200',
         1000: '1000'
     }
 
@@ -78,19 +79,26 @@ def run(ctx):
     else:
         plate_locs = [well for plate in plates for well in plate.wells()]
 
+    num_trans = math.ceil(
+        vol_refill/pipette.tip_racks[0].wells()[0].max_volume)
+    vol_per_trans = round(vol_refill/num_trans, 1)
+
     for i, well in enumerate(plate_locs):
+
         # remove old volume
         pick_up()
-        pipette.aspirate(
-            vol_refill, well.bottom(offset_aspiration_from_bottom))
-        slow_withdraw(well)
-        pipette.dispense(vol_refill, waste)
+        for _ in range(num_trans):
+            pipette.aspirate(
+                vol_per_trans, well.bottom(offset_aspiration_from_bottom))
+            slow_withdraw(well)
+            pipette.dispense(vol_per_trans, waste)
         pipette.drop_tip()
 
         # add media
         pipette.pick_up_tip(media_tip)
-        pipette.aspirate(vol_refill, media.bottom(2))
-        slow_withdraw(media)
-        pipette.dispense(vol_refill, well.top(offset_dispense_from_top))
-        slow_withdraw(well)
+        for _ in range(num_trans):
+            pipette.aspirate(vol_per_trans, media.bottom(2))
+            slow_withdraw(media)
+            pipette.dispense(vol_per_trans, well.top(offset_dispense_from_top))
+            slow_withdraw(well)
         pipette.return_tip()
