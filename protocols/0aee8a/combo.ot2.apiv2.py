@@ -64,115 +64,107 @@ def run(ctx):
     vol18 = vol2 / (-1 + serial_dil_factB)
     
     # 1st step
-    destination1 = [well for col in [vsp.columns()[ind] for c in [0,11]] for well in col[1:]]
+    destination1 = [well for col in [vsp.columns()[c] for c in [0,11]] for well in col[1:]]
     p300.pick_up_tip()
     for d in destination1:
           p300.transfer(vol1, dmso_res.well()['A1'], destination1, new_tip='never')
     p300.return_tip()
     
     # 2nd step
-   destination2 = [well for row in [hsp.rows()[ind] for c in [0,7]] for well in col[1:]]
+    destination2 = [well for row in [hsp.rows()[c] for c in [0,7]] for well in row[1:]]
     p300.pick_up_tip()
     for d in destination2:
       p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
 
-
     # 3rd step 
-    if vol3 <= 20:
-            pipette = p20
-            source_well = 'A2'
-            dest_plate = vsp
-        else:
-            pipette = p300
-            source_well = 'A2'
-            dest_plate = vsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol3, dmso_res['A1'], dest_plate.wells_by_name()[source_well], new_tip='never')
-        if vol4 <= 20:
-            pipette = p20
-            source_well = 'A11'
-            dest_plate = vsp
-        else:
-            pipette = p300
-            source_well = 'A11'
-            dest_plate = vsp
-        pipette.transfer(vol4, dmso_res['A1'], dest_plate.wells_by_name()[source_well], new_tip='never')
-        pipette.drop_tip()
-    
+    pip = p20 if vol3 <= 20 else p300
+
+    pip.pick_up_tip()
+    pip.transfer(vol3, dmso_res['A1'], vsp['A2'], new_tip='never')
+
+    pip = p20 if vol4 <= 20 else p300
+    if not pip.has_tip:
+        pip.pick_up_tip()
+
+    pip.transfer(vol3, dmso_res['A1'], vsp['A11'], new_tip='never')
+    for pip in [p20, p300]:
+         if pip.has_tip:
+              pip.drop_tip()
     
     # Steps 7-12
-     if vol7 <= 20:
-            pipette = p20
-            source_well = 'B1'
-            dest_plate = hsp
-        else:
-            pipette = p300
-            source_well = 'B1'
-            dest_plate = hsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol7, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
-                         new_tip='never')
-        pipette.mix(3, 20, dest_plate.wells_by_name()[source_well])
-        pipette.drop_tip()
+    if vol7 <= 20:
+        pip = p20
+        source_well = 'B1'
+        dest_plate = hsp
+    else:
+        pip = p300
+        source_well = 'B1'
+        dest_plate = hsp
+    pip.pick_up_tip()
+    pip.transfer(vol7, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
+                        new_tip='never')
+    pip.mix(3, 20, dest_plate.wells_by_name()[source_well])
+    pip.drop_tip()
+
     if vol8 <= 20:
-            pipette = p20
-            source_well = 'B2'
-            dest_plate = hsp
-        else:
-            pipette = p300
-            source_well = 'B2'
-            dest_plate = hsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol8, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
-                         new_tip='never')
-        pipette.mix(3, 20, dest_plate.wells_by_name()[source_well])
-        pipette.drop_tip()
+        pip = p20
+        source_well = 'B2'
+        dest_plate = hsp
+    else:
+        pip = p300
+        source_well = 'B2'
+        dest_plate = hsp
+    pip.pick_up_tip()
+    pip.transfer(vol8, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
+                        new_tip='never')
+    pip.mix(3, 20, dest_plate.wells_by_name()[source_well])
+    pip.drop_tip()
     
 
     # Steps 13-14
   
     if vol9 <= 20:
-            pipette = p20
+            pip = p20
             source_well = 'A1'
             dest_plate = hsp
         else:
-            pipette = p300
+            pip = p300
             source_well = 'A1'
             dest_plate = hsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol9 / 10, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
+        pip.pick_up_tip()
+        pip.transfer(vol9 / 10, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
                          new_tip='never')
-        pipette.drop_tip()
+        pip.drop_tip()
         if vol10 <= 20:
-            pipette = p20
+            pip = p20
             source_well = 'A2'
             dest_plate = hsp
         else:
-            pipette = p300
+            pip = p300
             source_well = 'A2'
             dest_plate = hsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol10, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
+        pip.pick_up_tip()
+        pip.transfer(vol10, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
                          new_tip='never')
-        pipette.drop_tip()
+        pip.drop_tip()
   
     # Steps 15-20
      if vol11 <= 20:
-            pipette = p20
+            pip = p20
             source_well = 'B1'
             dest_plate = vsp
         else:
-            pipette = p300
+            pip = p300
             source_well = 'B1'
             dest_plate = vsp
-        pipette.pick_up_tip()
-        pipette.transfer(vol11, hsp['A1'], dest_plate.wells_by_name()[source_well],
+        pip.pick_up_tip()
+        pip.transfer(vol11, hsp['A1'], dest_plate.wells_by_name()[source_well],
                          mix_before=(3, 50), new_tip='never')
-        pipette.drop_tip()
-        pipette.pick_up_tip()
-        pipette.transfer(vol12, vsp['A1'], vsp['B1'], mix_after=(3, 50),
+        pip.drop_tip()
+        pip.pick_up_tip()
+        pip.transfer(vol12, vsp['A1'], vsp['B1'], mix_after=(3, 50),
                          new_tip='never')
-        pipette.transfer(vol12, vsp['B1'], vsp['C1'], mix_after=(3, 50),
+        pip.transfer(vol12, vsp['B1'], vsp['C1'], mix_after=(3, 50),
                          new_tip='never')
-        pipette.transfer(vol12, vsp['C1'], vsp['D1'], mix_after=(3, 50),
+        pip.transfer(vol12, vsp['C1'], vsp['D1'], mix_after=(3, 50),
