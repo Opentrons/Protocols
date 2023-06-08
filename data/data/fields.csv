@@ -374,6 +374,8 @@ do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
 do_plate_mm,1
+do_premix,1
+do_remove_media,1
 do_sds_step,1
 do_vortex_pause,1
 donor_384_type,1
@@ -495,6 +497,8 @@ height_final,1
 height_intermediate_high,1
 height_intermediate_low,1
 height_intermediate_middle,1
+height_offset_aspirate,1
+height_offset_dispense,1
 height_sample,1
 height_source,1
 hs_rpm,1
@@ -870,7 +874,7 @@ num_row,1
 num_rows_a,1
 num_rows_b,1
 num_rxns,1
-num_samp,67
+num_samp,68
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -957,7 +961,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,146
+p300_mount,147
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1602,7 +1606,7 @@ vol_tube3,1
 vol_wash,1
 vol_water,3
 vol_xp1,1
-volume,4
+volume,5
 volume_csv,1
 volume_eb_in_ul,2
 volume_final_elution_in_ul,2
