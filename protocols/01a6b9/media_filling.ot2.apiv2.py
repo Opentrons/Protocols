@@ -84,6 +84,7 @@ def run(ctx):
     vol_per_trans = round(vol_refill/num_trans, 1)
 
     for i, well in enumerate(plate_locs):
+
         # remove old volume
         pick_up()
         for _ in range(num_trans):
