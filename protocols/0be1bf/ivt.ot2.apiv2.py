@@ -105,9 +105,10 @@ Continue?')
             description='',
             display_color=template_color
         )
-        well.load_liquid(temp, vol*1.1)
+        well.load_liquid(temp, vol*factor_overage)
 
-    for letter, (well, vol) in zip(['P', 'TP'], enzyme_map.items()):
+    for letter, (well, vol) in zip(
+            ['P (1:100 dilution)', 'TP'], enzyme_map.items()):
 
         temp = ctx.define_liquid(
             name=letter,
@@ -124,7 +125,7 @@ Continue?')
     water = reservoir.wells()[0]
     licl_h2o = reservoir.wells()[1]
 
-    [vol_dn, vol_cac] = [8, 25]
+    [vol_dn, vol_cac] = [40, 25]
 
     mix_tube_liq = ctx.define_liquid(
             name='mix tube',
@@ -199,10 +200,11 @@ Continue?')
             transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
-        for i in range(num_trans):
-            pip.aspirate(vol_per_trans, well.bottom(3.0))
+        for n in range(num_trans):
+            depth = 1.5 if transfer_vol <= 10 else 3
+            pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
-            if i < num_trans - 1:
+            if n < num_trans - 1:
                 pip.dispense(pip.current_volume, mix_tube.top())
             else:
                 pip.dispense(pip.current_volume, mix_tube.bottom(2))
@@ -296,6 +298,7 @@ Continue?')
             slow_withdraw(pip, enzyme_mix_tube)
             pip.dispense(pip.current_volume, d.bottom(2))
             slow_withdraw(pip, d)
+        pip.mix(5, pip.max_volume*0.8, d)
         pip.drop_tip()
 
     ctx.pause('INCUBATION')
