@@ -77,7 +77,7 @@ def run(ctx):
       p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
 
-    # 3rd step 
+    # 3rd step
     pip = p20 if vol3 <= 20 else p300
 
     pip.pick_up_tip()
@@ -87,12 +87,52 @@ def run(ctx):
     if not pip.has_tip:
         pip.pick_up_tip()
 
-    pip.transfer(vol3, dmso_res['A1'], vsp['A11'], new_tip='never')
+    pip.transfer(vol4, dmso_res['A1'], vsp['A11'], new_tip='never')
     for pip in [p20, p300]:
          if pip.has_tip:
               pip.drop_tip()
     
-    # Steps 7-12
+    # 4th step
+    pip = p20 if vol5 <=20 else p300
+    if not pip.has_tip:
+        pip.pick_up_tip()
+        pip.transfer(vol5, dmso_res['A1'],hsp['B1'], new_tip='never')
+
+    pip = p20 if vol6 <=20 else p300
+    if not pip.has_tip:
+        pip.pick_up_tip()
+        pip.transfer(vol6, dmso_res['A1', hsp['G1']], new_tip='never')
+    for pip in [p20, p300]:
+         if pip.has_tip:
+              pip.drop_tip()
+
+
+    #5th step
+    pip = p20 if vol7 <= 20 else p300
+
+    pip.pick_up_tip()
+    pip.transfer(vol7, compound_plate['B1'], vsp['A2'], new_tip='once')
+    pip.drop_tip()
+
+    pip = p20 if vol8 <= 20 else p300
+    pip.pick_up_tip()
+    pip.transfer(vol8, dmso_res['B2'], vsp['A11'], new_tip='once')
+    pip.drop_tip()
+
+#6th step
+    pip = p20 if vol9 <= 20 else p300
+
+    pip.pick_up_tip()
+    pip.transfer(vol9, compound_plate['A1'], hsp['B1'], new_tip='once')
+    pip.drop_tip()
+
+    pip = p20 if vol10 <= 20 else p300
+    pip.pick_up_tip()
+    pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
+    pip.drop_tip()
+
+
+# Steps 7-12
     if vol7 <= 20:
         pip = p20
         source_well = 'B1'
@@ -122,7 +162,7 @@ def run(ctx):
     pip.drop_tip()
     
 
-    # Steps 13-14
+# Steps 13-14
   
     if vol9 <= 20:
             pip = p20
@@ -149,7 +189,7 @@ def run(ctx):
                          new_tip='never')
         pip.drop_tip()
   
-    # Steps 15-20
+ # Steps 15-20
      if vol11 <= 20:
             pip = p20
             source_well = 'B1'
