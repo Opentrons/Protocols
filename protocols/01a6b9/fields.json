@@ -30,6 +30,12 @@
         ]
     },
     {
+        "type": "float",
+        "label": "media dispense offset from top of well (in mm)",
+        "name": "height_offset",
+        "default": -1
+    },
+    {
         "type": "dropDown",
         "label": "plate type",
         "name": "lw_refill",
