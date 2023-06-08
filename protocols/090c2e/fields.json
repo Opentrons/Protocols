@@ -49,15 +49,6 @@
       "default": 10
     },
     {
-      "type": "dropDown",
-      "label": "Add Water Before Air Dry",
-      "name": "_add_water",
-      "options": [
-        { "label": "Yes", "value": 1 },
-        { "label": "No", "value": 0 }
-      ]
-    },
-    {
       "type": "int",
       "label": "Elution Volume (in µL)",
       "name": "_elution_vol",
