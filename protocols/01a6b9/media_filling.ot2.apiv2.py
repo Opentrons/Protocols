@@ -13,9 +13,11 @@ offset_aspiration_from_bottom = 0.5
 def run(ctx):
 
     [vol_refill, num_lw, do_remove_media, lw_refill, lw_media,
-     height_offset, type_pip, mount_pip] = get_values(  # noqa:F821
+     height_offset_aspirate, height_offset_dispense, type_pip,
+     mount_pip] = get_values(  # noqa:F821
      'vol_refill', 'num_lw', 'do_remove_media', 'lw_refill', 'lw_media',
-     'height_offset', 'type_pip', 'mount_pip')
+     'height_offset_aspirate', 'height_offset_dispense', 'type_pip',
+     'mount_pip')
 
     tip_vol_map = {
         20: '20',
@@ -92,7 +94,7 @@ def run(ctx):
             pick_up()
             for _ in range(num_trans):
                 pipette.aspirate(
-                    vol_per_trans, well.bottom(offset_aspiration_from_bottom))
+                    vol_per_trans, well.bottom(height_offset_aspirate))
                 slow_withdraw(well)
                 pipette.dispense(vol_per_trans, waste)
             pipette.drop_tip()
@@ -103,7 +105,7 @@ def run(ctx):
         for _ in range(num_trans):
             pipette.aspirate(vol_per_trans, media.bottom(2))
             slow_withdraw(media)
-            pipette.dispense(vol_per_trans, well.top(height_offset))
+            pipette.dispense(vol_per_trans, well.top(height_offset_dispense))
             slow_withdraw(well)
         if do_remove_media:
             if i == len(plate_locs) - 1:

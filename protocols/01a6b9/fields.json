@@ -31,8 +31,14 @@
     },
     {
         "type": "float",
+        "label": "media aspiration offset from bottom of well (in mm)",
+        "name": "height_offset_aspirate",
+        "default": 0.5
+    },
+    {
+        "type": "float",
         "label": "media dispense offset from top of well (in mm)",
-        "name": "height_offset",
+        "name": "height_offset_dispense",
         "default": -1
     },
     {

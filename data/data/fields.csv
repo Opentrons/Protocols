@@ -496,7 +496,8 @@ height_final,1
 height_intermediate_high,1
 height_intermediate_low,1
 height_intermediate_middle,1
-height_offset,1
+height_offset_aspirate,1
+height_offset_dispense,1
 height_sample,1
 height_source,1
 hs_rpm,1
