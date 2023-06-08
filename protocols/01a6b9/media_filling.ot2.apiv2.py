@@ -12,12 +12,12 @@ offset_aspiration_from_bottom = 0.5
 
 def run(ctx):
 
-    [vol_refill, num_lw, do_remove_media, lw_refill, lw_media,
+    [vol_refill, num_lw, do_remove_media, do_premix, lw_refill, lw_media,
      height_offset_aspirate, height_offset_dispense, type_pip,
      mount_pip] = get_values(  # noqa:F821
-     'vol_refill', 'num_lw', 'do_remove_media', 'lw_refill', 'lw_media',
-     'height_offset_aspirate', 'height_offset_dispense', 'type_pip',
-     'mount_pip')
+     'vol_refill', 'num_lw', 'do_remove_media', 'do_premix',
+     'lw_refill', 'lw_media', 'height_offset_aspirate',
+     'height_offset_dispense', 'type_pip', 'mount_pip')
 
     tip_vol_map = {
         20: '20',
@@ -102,6 +102,9 @@ def run(ctx):
         # add media
         if not pipette.has_tip:
             pipette.pick_up_tip(media_tip)
+        if do_premix:
+            pipette.mix(5, pipette.tip_racks[0].wells()[0].max_volume*0.8,
+                        media.bottom(2))
         for _ in range(num_trans):
             pipette.aspirate(vol_per_trans, media.bottom(2))
             slow_withdraw(media)

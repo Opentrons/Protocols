@@ -374,6 +374,7 @@ do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
 do_plate_mm,1
+do_premix,1
 do_remove_media,1
 do_sds_step,1
 do_vortex_pause,1

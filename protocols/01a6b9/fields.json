@@ -22,6 +22,15 @@
     },
     {
         "type": "dropDown",
+        "label": "premix source",
+        "name": "do_premix",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "dropDown",
         "label": "media reservoir type",
         "name": "lw_media",
         "options": [
