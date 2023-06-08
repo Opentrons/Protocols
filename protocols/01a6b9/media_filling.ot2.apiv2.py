@@ -13,10 +13,10 @@ offset_dispense_from_top = -1.0
 
 def run(ctx):
 
-    [vol_refill, num_lw, lw_refill, lw_media, type_pip,
+    [vol_refill, num_lw, do_remove_media, lw_refill, lw_media, type_pip,
      mount_pip] = get_values(  # noqa:F821
-     'vol_refill', 'num_lw', 'lw_refill', 'lw_media', 'type_pip',
-     'mount_pip')
+     'vol_refill', 'num_lw', 'do_remove_media', 'lw_refill', 'lw_media',
+     'type_pip', 'mount_pip')
 
     tip_vol_map = {
         20: '20',
@@ -83,22 +83,34 @@ def run(ctx):
         vol_refill/pipette.tip_racks[0].wells()[0].max_volume)
     vol_per_trans = round(vol_refill/num_trans, 1)
 
+    if not do_remove_media:
+        pipette.pick_up_tip(media_tip)
+
     for i, well in enumerate(plate_locs):
 
         # remove old volume
-        pick_up()
-        for _ in range(num_trans):
-            pipette.aspirate(
-                vol_per_trans, well.bottom(offset_aspiration_from_bottom))
-            slow_withdraw(well)
-            pipette.dispense(vol_per_trans, waste)
-        pipette.drop_tip()
+        if do_remove_media:
+            pick_up()
+            for _ in range(num_trans):
+                pipette.aspirate(
+                    vol_per_trans, well.bottom(offset_aspiration_from_bottom))
+                slow_withdraw(well)
+                pipette.dispense(vol_per_trans, waste)
+            pipette.drop_tip()
 
         # add media
-        pipette.pick_up_tip(media_tip)
+        if not pipette.has_tip:
+            pipette.pick_up_tip(media_tip)
         for _ in range(num_trans):
             pipette.aspirate(vol_per_trans, media.bottom(2))
             slow_withdraw(media)
             pipette.dispense(vol_per_trans, well.top(offset_dispense_from_top))
             slow_withdraw(well)
-        pipette.return_tip()
+        if do_remove_media:
+            if i == len(plate_locs) - 1:
+                pipette.drop_tip()
+            else:
+                pipette.return_tip()
+
+    if pipette.has_tip:
+        pipette.drop_tip()
