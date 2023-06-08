@@ -22,12 +22,33 @@
     },
     {
         "type": "dropDown",
+        "label": "premix source",
+        "name": "do_premix",
+        "options": [
+            { "label": "yes", "value": true },
+            { "label": "no", "value": false }
+        ]
+    },
+    {
+        "type": "dropDown",
         "label": "media reservoir type",
         "name": "lw_media",
         "options": [
             { "label": "NEST 1 Reservoir 195ml", "value": "nest_1_reservoir_195ml" },
             { "label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml" }
         ]
+    },
+    {
+        "type": "float",
+        "label": "media aspiration offset from bottom of well (in mm)",
+        "name": "height_offset_aspirate",
+        "default": 0.5
+    },
+    {
+        "type": "float",
+        "label": "media dispense offset from top of well (in mm)",
+        "name": "height_offset_dispense",
+        "default": -1
     },
     {
         "type": "dropDown",
