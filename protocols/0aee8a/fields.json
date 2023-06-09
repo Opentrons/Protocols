@@ -6,28 +6,13 @@
     "default": 200
     },
     {
-        "type": "float",
-    "label": "Compound A Initial Vol",
-    "name": "compA_vol_init",
-    "default": 200
-    },
-    {
-        "type": "float",
-    "label": "Compound B Initial Vol",
-    "name": "compb_vol_init",
-    "default": 200
-    },
-    {
-        "type": "float",
-    "label": "Compound C Initial Vol",
-    "name": "compc_vol_init",
-    "default": 200
-    },
-    {
-        "type": "float",
-    "label": "Compound D Initial Vol",
-    "name": "compD_vol_init",
-    "default": 200
+    "type": "dropDown",
+    "label": "Add pre-dilution step?",
+    "name": "pre_dilution",
+    "options": [
+        {"label": "yes, add pre-dilution step", "value": true},
+        {"label": "no, do not add pre-dilution step", "value": false}
+    ]
     },
     {
         "type": "float",
