@@ -3,7 +3,7 @@
 #Variable input idea as follows:
 def get_values(*names):
     import json
-    _all_values = json.loads("""{final_vol":70,"pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2, "serial_dil_factA": 2,
+    _all_values = json.loads("""{"final_vol":70,"pre_dilution":true,"pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2,"serial_dil_factA": 2,
                               "serial_dil_factB": 2,"serial_dil_factC": 2,"serial_dil_factD": 2 }""")
     return[_all_values[n]for n in names]
 
@@ -18,8 +18,7 @@ metadata = {
 def run(ctx):
 
 
-    [final_vol, pre_dil_factA, pre_dil_factB, pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values
-    
+    [final_vol, pre_dilution, pre_dil_factA, pre_dil_factB, pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values    
     # Labware setup:
 
     #Reagent Resevoir
@@ -62,22 +61,23 @@ def run(ctx):
     vol16 = vol2 / (-1 + serial_dil_factA)
     vol17 = vol18 + vol2
     vol18 = vol2 / (-1 + serial_dil_factB)
-    
-    # 1st step
+
+  #Procedure Step:  
+    #1
     destination1 = [well for col in [vsp.columns()[c] for c in [0,11]] for well in col[1:]]
     p300.pick_up_tip()
     for d in destination1:
           p300.transfer(vol1, dmso_res.well()['A1'], destination1, new_tip='never')
     p300.return_tip()
     
-    # 2nd step
+    # 2
     destination2 = [well for row in [hsp.rows()[c] for c in [0,7]] for well in row[1:]]
     p300.pick_up_tip()
     for d in destination2:
       p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
 
-    # 3rd step
+    # 3
     pip = p20 if vol3 <= 20 else p300
 
     pip.pick_up_tip()
@@ -92,7 +92,7 @@ def run(ctx):
          if pip.has_tip:
               pip.drop_tip()
     
-    # 4th step
+    # 4
     pip = p20 if vol5 <=20 else p300
     if not pip.has_tip:
         pip.pick_up_tip()
@@ -107,7 +107,7 @@ def run(ctx):
               pip.drop_tip()
 
 
-    #5th step
+    #5
     pip = p20 if vol7 <= 20 else p300
 
     pip.pick_up_tip()
@@ -119,7 +119,7 @@ def run(ctx):
     pip.transfer(vol8, dmso_res['B2'], vsp['A11'], new_tip='once')
     pip.drop_tip()
 
-#6th step
+    #6
     pip = p20 if vol9 <= 20 else p300
 
     pip.pick_up_tip()
@@ -131,81 +131,101 @@ def run(ctx):
     pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
     pip.drop_tip()
 
-#7th step
-if predilution    
-# Steps 7-12
-    if vol7 <= 20:
-        pip = p20
-        source_well = 'B1'
-        dest_plate = hsp
+#7 thru 9 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        pip.transfer(vol11,vsp["A2"],vsp["A1"],new_tip='once')
+        p300.mix(5,100,vsp["A1"])
     else:
-        pip = p300
-        source_well = 'B1'
-        dest_plate = hsp
-    pip.pick_up_tip()
-    pip.transfer(vol7, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
-                        new_tip='never')
-    pip.mix(3, 20, dest_plate.wells_by_name()[source_well])
-    pip.drop_tip()
+        pip.transfer(vol11,compound_plate["B1"],vsp["A1"],new_tip='once')
+        p300.mix(5,100,vsp["A1"])
+    p300.drop_tip()
 
-    if vol8 <= 20:
-        pip = p20
-        source_well = 'B2'
-        dest_plate = hsp
-    else:
-        pip = p300
-        source_well = 'B2'
-        dest_plate = hsp
-    pip.pick_up_tip()
-    pip.transfer(vol8, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
-                        new_tip='never')
-    pip.mix(3, 20, dest_plate.wells_by_name()[source_well])
-    pip.drop_tip()
+#Serial Dilution across row A of hsp plate
+# might need to use zip feature to use source# & destination#
+source3= [well for row in [vsp.row()[i] for i in [0:6] for well in col[0]]]
+destination3= [well for row in [vsp.row()[c] for c in [1:6]] for well in col[0]]
+p300.pick_up_tip()
+    for i in source3:
+        p300.transfer(vol12,source3,destination3, new_tip='never')
+        p300.mix(5,100,destination3)
+p300.drop_tip()
     
+#10 thru 12 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        pip.transfer(vol13,vsp["A11"],vsp["A12"],new_tip='once')
+        p300.mix(5,100,vsp["A12"])
+    else:
+        pip.transfer(vol13,compound_plate["B2"],vsp["A12"],new_tip='once')
+        p300.mix(5,100,vsp["A12"])
+    p300.drop_tip()
 
-# Steps 13-14
-  
-    if vol9 <= 20:
-            pip = p20
-            source_well = 'A1'
-            dest_plate = hsp
-        else:
-            pip = p300
-            source_well = 'A1'
-            dest_plate = hsp
-        pip.pick_up_tip()
-        pip.transfer(vol9 / 10, compound_plate['A1'], dest_plate.wells_by_name()[source_well],
-                         new_tip='never')
-        pip.drop_tip()
-        if vol10 <= 20:
-            pip = p20
-            source_well = 'A2'
-            dest_plate = hsp
-        else:
-            pip = p300
-            source_well = 'A2'
-            dest_plate = hsp
-        pip.pick_up_tip()
-        pip.transfer(vol10, compound_plate['A2'], dest_plate.wells_by_name()[source_well],
-                         new_tip='never')
-        pip.drop_tip()
-  
- # Steps 15-20
-     if vol11 <= 20:
-            pip = p20
-            source_well = 'B1'
-            dest_plate = vsp
-        else:
-            pip = p300
-            source_well = 'B1'
-            dest_plate = vsp
-        pip.pick_up_tip()
-        pip.transfer(vol11, hsp['A1'], dest_plate.wells_by_name()[source_well],
-                         mix_before=(3, 50), new_tip='never')
-        pip.drop_tip()
-        pip.pick_up_tip()
-        pip.transfer(vol12, vsp['A1'], vsp['B1'], mix_after=(3, 50),
-                         new_tip='never')
-        pip.transfer(vol12, vsp['B1'], vsp['C1'], mix_after=(3, 50),
-                         new_tip='never')
-        pip.transfer(vol12, vsp['C1'], vsp['D1'], mix_after=(3, 50),
+#Serial Dilution across row A of hsp plate
+# might need to use zip feature to use source# & destination#
+source4= [well for row in [vsp.row()[i] for i in [0:6] for well in col[11]]]
+destination4= [well for row in [vsp.row()[c] for c in [1:6]] for well in col[11]]
+p300.pick_up_tip()
+    for i in source4:
+        p300.transfer(vol14,source4,destination4, new_tip='never')
+        p300.mix(5,100,destination4)
+p300.drop_tip()
+
+
+#13 thru 15 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        pip.transfer(vol15,hsp["B1"],vsp["A1"],new_tip='once')
+        p300.mix(5,100,hsp["A1"])
+    else:
+        pip.transfer(vol15,compound_plate["A1"],hsp["A1"],new_tip='once')
+        p300.mix(5,100,hsp["A1"])
+    p300.drop_tip()
+
+#Serial Dilution across row A of hsp plate
+# might need to use zip feature to use source# & destination#
+source5= [well for col in [hsp.columns()[i] for i in [0:11] for well in row [0]]]
+destination5= [well for col in [hsp.columns()[c] for c in [1:12]] for well in row [0]]
+p300.pick_up_tip()
+    for i in source5:
+        p300.transfer(vol16,source4,destination4, new_tip='never')
+        p300.mix(5,100,destination4)
+p300.drop_tip()
+
+
+#16-18 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        pip.transfer(vol17,hsp["B1"],vsp["A1"],new_tip='once')
+        p300.mix(5,100,hsp["A1"])
+    else:
+        pip.transfer(vol17,compound_plate["A1"],hsp["A1"],new_tip='once')
+        p300.mix(5,100,hsp["A1"])
+    p300.drop_tip()
+
+#Serial Dilution across row A of hsp plate
+# might need to use zip feature to use source# & destination#
+source5= [well for col in [hsp.columns()[i] for i in [0:11] for well in row [0]]]
+destination5= [well for col in [hsp.columns()[c] for c in [1:12]] for well in row [0]]
+p300.pick_up_tip()
+    for i in source5:
+        p300.transfer(vol18,source4,destination4, new_tip='never')
+        p300.mix(5,100,destination4)
+p300.drop_tip()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
