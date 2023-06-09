@@ -46,24 +46,24 @@ def run(ctx):
     vol19= final_vol
     vol1 = vol19 * 12 * 1.1
     vol2 = vol19 * 8 * 1.1
-    vol3 = vol11 - vol7
-    vol4 = vol13 - vol8
-    vol5 = vol15 - vol9
-    vol6 = vol17 - vol10
+    vol12 = vol1 / (-1 + serial_dil_factC)
+    vol14 = vol1 / (-1 + serial_dil_factD)
+    vol16 = vol2 / (-1 + serial_dil_factA)
+    vol18 = vol2 / (-1 + serial_dil_factB)
+    vol11 = vol12 + vol1
+    vol13 = vol14 + vol1
+    vol15 = vol16 + vol2
+    vol17 = vol18 + vol2
     vol7 = vol11 / pre_dil_factC
     vol8 = vol13 / pre_dil_factD
     vol9 = vol15 / pre_dil_factA
     vol10 = vol17 / pre_dil_factB
-    vol11 = vol12 + vol1
-    vol12 = vol1 / (-1 + serial_dil_factC)
-    vol13 = vol14 + vol1
-    vol14 = vol1 / (-1 + serial_dil_factD)
-    vol15 = vol16 + vol2
-    vol16 = vol2 / (-1 + serial_dil_factA)
-    vol17 = vol18 + vol2
-    vol18 = vol2 / (-1 + serial_dil_factB)
+    vol3 = vol11 - vol7
+    vol4 = vol13 - vol8
+    vol5 = vol15 - vol9
+    vol6 = vol17 - vol10
 
-  #Procedure Step:  
+    #Procedure Step:  
     #1
     destination1 = [well for col in [vsp.columns()[c] for c in [0,11]] for well in col[1:]]
     p300.pick_up_tip()
@@ -107,7 +107,6 @@ def run(ctx):
          if pip.has_tip:
               pip.drop_tip()
 
-
     #5
     pip = p20 if vol7 <= 20 else p300
 
@@ -132,124 +131,117 @@ def run(ctx):
     pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
     pip.drop_tip()
 
-#7 thru 9 ------will need to setup predilution input variable in field.json
+    #7 thru 9 ------will need to setup predilution input variable in field.json
     p300.pick_up_tip()
     if predilution:
-        pip.transfer(vol11,vsp["A2"],vsp["A1"],new_tip='once')
+        pip.transfer(vol11,vsp["A1"],vsp["A2"],new_tip='never')
+        p300.mix(5,100,vsp["A2"])
+    else:
+        pip.transfer(vol11,compound_plate["B1"],vsp["A1"],new_tip='never')
+        p300.mix(5,100,vsp["A1"])
+    p300.drop_tip()
+
+    #Serial Dilution across row A of vsp plate slot 7
+    # might need to use zip feature to use source# & destination#
+    source3 = vsp.columns()[0][:6]
+    destination3 = vsp.columns()[0][1:7]
+    p300.pick_up_tip()
+    for s, d in zip(source3, destination3):
+        p300.transfer(vol12,s,d, new_tip='never')
+        p300.mix(5,100,d)
+    p300.drop_tip()
+        
+    #10 thru 12 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        pip.transfer(vol13,vsp["A11"],vsp["A12"],new_tip='never')
+        p300.mix(5,100,vsp["A12"])
+    else:
+        pip.transfer(vol13,compound_plate["B2"],vsp["A12"],new_tip='never')
+        p300.mix(5,100,vsp["A12"])
+    p300.drop_tip()
+
+    #Serial Dilution across row A of vsp plate 
+    # might need to use zip feature to use source# & destination#
+    source4 = vsp.columns()[11][:6]
+    destination4 = vsp.columns()[11][1:7]
+    p300.pick_up_tip()
+    for s, d in zip(source4, destination4):
+        p300.transfer(vol14,s,d, new_tip='never')
+        p300.mix(5,100,d)
+    p300.drop_tip()
+
+    #13 thru 15 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        p300.transfer(vol15,hsp["B1"],vsp["A1"],new_tip='never')
         p300.mix(5,100,vsp["A1"])
     else:
-        pip.transfer(vol11,compound_plate["B1"],vsp["A1"],new_tip='once')
-        p300.mix(5,100,vsp["A1"])
+        p300.transfer(vol15,compound_plate["A1"],hsp["A1"],new_tip='never')
+        p300.mix(5,100,hsp["A1"])
     p300.drop_tip()
 
-#Serial Dilution across row A of vsp plate slot 7
-# might need to use zip feature to use source# & destination#
-source3= [well for row in [vsp.row()[i] for i in [0:6] for well in col[0]]]
-destination3= [well for row in [vsp.row()[c] for c in [1:6]] for well in col[0]]
-p300.pick_up_tip()
-for i in source3:
-    p300.transfer(vol12,source3,destination3, new_tip='never')
-    p300.mix(5,100,destination3)
-p300.drop_tip()
-    
-#10 thru 12 ------will need to setup predilution input variable in field.json
-p300.pick_up_tip()
-if predilution:
-    pip.transfer(vol13,vsp["A11"],vsp["A12"],new_tip='once')
-    p300.mix(5,100,vsp["A12"])
-else:
-    pip.transfer(vol13,compound_plate["B2"],vsp["A12"],new_tip='once')
-    p300.mix(5,100,vsp["A12"])
-p300.drop_tip()
-
-#Serial Dilution across row A of vsp plate 
-# might need to use zip feature to use source# & destination#
-source4= [well for row in [vsp.row()[i] for i in [0:6] for well in col[11]]]
-destination4= [well for row in [vsp.row()[c] for c in [1:6]] for well in col[11]]
-p300.pick_up_tip()
-for i in source4:
-        p300.transfer(vol14,source4,destination4, new_tip='never')
-        p300.mix(5,100,destination4)
-p300.drop_tip()
-
-
-#13 thru 15 ------will need to setup predilution input variable in field.json
-p300.pick_up_tip()
-if predilution:
-    pip.transfer(vol15,hsp["B1"],vsp["A1"],new_tip='once')
-    p300.mix(5,100,hsp["A1"])
-else:
-    pip.transfer(vol15,compound_plate["A1"],hsp["A1"],new_tip='once')
-    p300.mix(5,100,hsp["A1"])
+    #Serial Dilution across row A of hsp plate
+    # might need to use zip feature to use source# & destination#
+    source5 = hsp.rows()[0][:10]
+    destination5 = hsp.rows()[0][1:11]
+    p300.pick_up_tip()
+    for s, d in zip(source5, destination5):
+        p300.transfer(vol16, s, d, new_tip='never')
+        p300.mix(5, 100, d)
     p300.drop_tip()
 
-#Serial Dilution across row A of hsp plate
-# might need to use zip feature to use source# & destination#
-source5= [well for col in [hsp.columns()[i] for i in [0:11] for well in row [0]]]
-destination5= [well for col in [hsp.columns()[c] for c in [1:12]] for well in row [0]]
-p300.pick_up_tip()
-for i in source5:
-    p300.transfer(vol16,source4,destination4, new_tip='never')
-    p300.mix(5,100,destination4)
-p300.drop_tip()
+    #16-18 ------will need to setup predilution input variable in field.json
+    p300.pick_up_tip()
+    if predilution:
+        p300.transfer(vol17, hsp["G1"], hsp["H1"], new_tip='never')
+        p300.mix(5,100,hsp["H1"])
+    else:
+        p300.transfer(vol17, compound_plate["A2"], hsp["H1"], new_tip='never')
+        p300.mix(5,100,hsp["A1"])
+        p300.drop_tip()
 
-
-#16-18 ------will need to setup predilution input variable in field.json
-p300.pick_up_tip()
-if predilution:
-    pip.transfer(vol17,hsp["B1"],vsp["A1"],new_tip='once')
-    p300.mix(5,100,hsp["A1"])
-else:
-    pip.transfer(vol17,compound_plate["A1"],hsp["A1"],new_tip='once')
-    p300.mix(5,100,hsp["A1"])
+    #Serial Dilution across row A of hsp plate
+    # might need to use zip feature to use source# & destination#
+    source6 = hsp.rows()[7][:10]
+    destination6 = hsp.rows()[7][1:11]
+    p300.pick_up_tip()
+    for s, d in zip(source6, destination6):
+            p300.transfer(vol18,s,d, new_tip='never')
+            p300.mix(5,100,d)
     p300.drop_tip()
 
-#Serial Dilution across row A of hsp plate
-# might need to use zip feature to use source# & destination#
-source6= [well for col in [hsp.columns()[i] for i in [0:11] for well in row [0]]]
-destination6= [well for col in [hsp.columns()[c] for c in [1:12]] for well in row [0]]
-p300.pick_up_tip()
-for i in source5:
-        p300.transfer(vol18,source4,destination4, new_tip='never')
-        p300.mix(5,100,destination4)
-p300.drop_tip()
-
-#19-20 ---- distribution of vol from VSP plate col1 across vdpf1 plate rows in slot 10 (vsp H1 --> vdpf1 row H , vsp G1 --> vdpf1 row G...)
-source7= [well for row in [vsp.rows()[i] for i in [7:0] for well in row [7:0] ]]
-destination7= [well for col in [vdpf1.columns()[c] for c in [0,7]] for well in row[1:]]
-
-for i,c in zip (source7,destination7):
+    #19-20 ---- distribution of vol from VSP plate col1 across vdpf1 plate rows in slot 10 (vsp H1 --> vdpf1 row H , vsp G1 --> vdpf1 row G...)
+    source7 = vsp.columns()[0]
+    destination7_sets = vdpf1.rows()
     p20.pick_up_tip()
-    p20.transfer(vol19,source7,destination7,blowout_location=('destination well'),new_tip='once')
+    for s, d_set in zip(source7, destination7_sets):
+        p20.transfer(vol19,s,d_set,blowout_location='destination well',new_tip='never')
     p20.drop_tip()
 
-#21-22--- distribution of vol from VSP plate col1 across vdpf1 plate rows in slot 11 (vsp H1 --> vdpf2 row H , vsp G1 --> vdpf2 row G...)
-source8= [well for row in [vsp.rows()[i] for i in [7:0] for well in row [7:0] ]]
-destination8= [well for row in [vdpf1.rows()[c] for c in [0,7]] for well in row[1:]]
-
-for i,c in zip (source8,destination8):
+    #21-22--- distribution of vol from VSP plate col1 across vdpf1 plate rows in slot 11 (vsp H1 --> vdpf2 row H , vsp G1 --> vdpf2 row G...)
+    source8 = vsp.columns()[11]
+    destination8_sets = vdpf2.rows()
     p20.pick_up_tip()
-    p20.transfer(vol19,source8,destination8,blowout_location=('destination well'),new_tip='once')
+    for s, d_set in zip(source8, destination8_sets):
+        p20.transfer(vol19,s,d_set,blowout_location='destination well',new_tip='never')
     p20.drop_tip()
 
-#23-24--- distribution of vol from hsp plate row A across vdpf1 plate rows in slot 4 (hsp A12 --> hdpf1 A12-H12, hsp A11 --> vdpf1 A11-H11...)
-source9= [well for col in [hsp.columns()[i] for i in [11:0] for well in col [11:0] ]]
-destination9= [well for row in [hdpf1.rows()[c] for c in [0,7]] for well in row[0:7]]
-
-for i,c in zip (source9,destination9):
+    #23-24--- distribution of vol from hsp plate row A across vdpf1 plate rows in slot 4 (hsp A12 --> hdpf1 A12-H12, hsp A11 --> vdpf1 A11-H11...)
+    source9= hsp.rows()[0]
+    destination9_sets= hdpf1.columns()
     p20.pick_up_tip()
-    p20.transfer(vol19,source9,destination9,blowout_location=('destination well'),new_tip='once')
+    for s, d_set in zip(source9, destination9_sets):
+        p20.transfer(vol19,s,d_set,blowout_location='destination well',new_tip='never')
     p20.drop_tip()
 
-#25-26--- distribution of vol from hsp plate row H across vdpf2 plate cols in slot 4 (hsp H12 --> hdpf2 H12-A12, hsp G12 --> vdpf2 A11-H11...)
-source10= [well for col in [hsp.columns()[i] for i in [11:0] for well in col [11:0] ]]
-destination10= [well for row in [hdpf1.rows()[c] for c in [0,7]] for well in row[0:7]]
-
-for i,c in zip (source10,destination10):
+    #25-26--- distribution of vol from hsp plate row H across vdpf2 plate cols in slot 4 (hsp H12 --> hdpf2 H12-A12, hsp G12 --> vdpf2 A11-H11...)
+    source10= hsp.rows()[7]
+    destination10_sets= hdpf2.columns()
     p20.pick_up_tip()
-    p20.transfer(vol19,source9,destination9,blowout_location=('destination well'),new_tip='once')
+    for s, d_set in zip(source10, destination10_sets):
+        p20.transfer(vol19,s,d_set,blowout_location='destination well',new_tip='never')
     p20.drop_tip()
-
 
 
 
