@@ -236,6 +236,10 @@ can not exceed the height of the labware.')
     def mix_high_low(well, reps, vol, z_offset_low=1.0, z_offset_high=10.0,
                      x_offset=2.0, y_offset=1.0, pip=m300,
                      switch_sides_x=True):
+
+        if vol >= pip.tip_racks[0].wells()[0].max_volume:
+            vol = pip.tip_racks[0].wells()[0].max_volume
+
         for i in range(reps):
             if switch_sides_x:
                 x_side = 1 if i % 2 == 0 else -1
