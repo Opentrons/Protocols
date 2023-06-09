@@ -131,7 +131,8 @@ def run(ctx):
     pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
     pip.drop_tip()
 
-
+#7th step
+if predilution    
 # Steps 7-12
     if vol7 <= 20:
         pip = p20
