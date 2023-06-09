@@ -232,8 +232,23 @@ for i,c in zip (source8,destination8):
     p20.transfer(vol19,source8,destination8,blowout_location=('destination well'),new_tip='once')
     p20.drop_tip()
 
-#23-24--- distribution of vol from hsp plate col1 across vdpf1 plate rows in slot 10 (vsp H1 --> vdpf1 row H , vsp G1 --> vdpf1 row G...)
+#23-24--- distribution of vol from hsp plate row A across vdpf1 plate rows in slot 4 (hsp A12 --> hdpf1 A12-H12, hsp A11 --> vdpf1 A11-H11...)
+source9= [well for col in [hsp.columns()[i] for i in [11:0] for well in col [11:0] ]]
+destination9= [well for row in [hdpf1.rows()[c] for c in [0,7]] for well in row[0:7]]
 
+for i,c in zip (source9,destination9):
+    p20.pick_up_tip()
+    p20.transfer(vol19,source9,destination9,blowout_location=('destination well'),new_tip='once')
+    p20.drop_tip()
+
+#25-26--- distribution of vol from hsp plate row H across vdpf2 plate cols in slot 4 (hsp H12 --> hdpf2 H12-A12, hsp G12 --> vdpf2 A11-H11...)
+source10= [well for col in [hsp.columns()[i] for i in [11:0] for well in col [11:0] ]]
+destination10= [well for row in [hdpf1.rows()[c] for c in [0,7]] for well in row[0:7]]
+
+for i,c in zip (source10,destination10):
+    p20.pick_up_tip()
+    p20.transfer(vol19,source9,destination9,blowout_location=('destination well'),new_tip='once')
+    p20.drop_tip()
 
 
 
