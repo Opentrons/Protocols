@@ -1,68 +1,80 @@
-# Protocol Title (should match metadata of .py file)
+# Combo IC-50 (Serial Dilution of Compounds)
+
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
+
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample Prep
+	* Serial Dilution
+
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol outlines serial dilution of compound stock. There is an optional predilution step for each compounds involved. For detailed protocol steps, please see below. Labware setup consists of NEST 12 well 15mL reservoir in slot 1, Nest 96 well 100 uL plate in slot 2,4,5,7,8,10 & 11 as well as P20 filter tips in slot 3 and P200 filter tips in slot 6.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
-
----
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
+* Opentrons 96 Filter Tip Rack 20 µL
+
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)] (https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
----
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/056f47/Screen+Shot+2023-04-24+at+3.41.25+PM.png)
 
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
 
----
+### Volume Definitions:
+VOL1= DMSO transfer volume for vertical plates (post dilution volume) 
+VOL2= DMSO transfer volume for horizontal plates (post dilution volume)
+VOL3= Compound C predilution volume DMSO (optional)
+VOL4= Compound D predilution volume DMSO (optional)
+VOL5= Compound A predilution volume DMSO (optional)
+VOL6= Compound B predilution volume DMSO (optional)
+VOL7= Compound C predilution volume compound (optional)
+VOL8= Compound D predilution volume compound (optional)
+VOL9= Compound A predilution volume compound (optional)
+VOL10= Compound B predilution volume compound (optional)
+VOL11= Compound C/D initial volume 
+VOL12= Compound C/D Serial dilution volume 
+VOL13= Compound A/B initial volume
+VOL14= Compound A/B serial dilution volume
+VOL15= Final plate volume for integra transfer 
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+
+1.	Using p300, transfer VOL1 ul from the DMSO reservoir in slot 1 into B-H 1/12 in slot 7 (Vertical stamp plate) keep tip
+2.	Using p300, transfer VOL2 uL from the DMSO reservoir in slot 1 into A2-12/H2-12 in slot 8 (Horizontal stamp plate) dispose tip
+3.	(Steps 3-6 are optional) Using p300/20, transfer VOL3/4 from the DMSO reservoir to A2/11 in slot 7 
+4.	Using p300/20, transfer VOL5/6 from the DMSO reservoir to B1/G1 in slot 8 
+5.	Using p300/20, transfer VOL7/8 from well B1/B2 slot 2 (compounds C/D) into A2/11 in slot 7, using new tips
+6.	Using p300/20, transfer VOL9/10 from well A1/A2 from slot 2 (compounds A/B) into B1/G1 in slot 8, new tips
+7.	Using p300, transfer VOL11 from well B1 slot 2 or well A2 slot 7 (if optional predilution was done) to A1 slot 7, mixing before, keep tip
+8.	Using p300, transfer VOL12 from well A1 to well B1, mix after, keep tip
+9.	Repeat from B1-C1 C1-D1 … F1-G1 d tip
+10.	Using p300, transfer VOL11 from well B2 slot 2 or well A11 slot 7 (if optional predilution was done) to A12 slot 7, mixing before, keep tip
+11.	Using p300, transfer VOL12 from well A12 to well B12, mix after, keep tip
+12.	Repeat from B12-C12 C12-D12 … F12-G12 dispose tip
+13.	Using p300, transfer VOL13 from well A1 slot 2 or well B1 slot 8 (if optional predilution was done) to A1 slot 8, mixing before, keep tip
+14.	Using p300, transfer VOL14 from well A1 to well A2, mix after, keep tip
+15.	Repeat from A2-A3 A3-A4 … A10-A11 dispose tip
+16.	Using p300, transfer VOL13 from well A2 slot 2 or well G1 slot 8 (if optional predilution was done) to H1 slot 8, mixing before, keep tip
+17.	Using p300, transfer VOL14 from well H1 to well H2, mix after, keep tip 
+18.	Repeat from H2-H3 H3-H4 … H10-H11 dispose tip
+19.	Using p20, transfer VOL15 from well H1 slot 7 to wells H1-12 slot 10, blowout after, keep tip
+20.	Repeat for rows G-A col 1
+21.	Using p20, transfer VOL15 from well H12 slot 7 to wells H1-12 slot 11, blowout after, keep tip
+22.	Repeat for rows G-A col 12
+23.	Using p20, transfer VOL15 from well A12 slot 8 to wells A12-H12 slot 4, blowout after, keep tip
+24.	Repeat for row A cols 11-1 
+25.	Using p20, transfer VOL15 from well H12 slot 8 to wells A12-H12 slot 5, blowout after, keep tip
+26.	Repeat for row H cols 11-1 
+
 
 ### Process
 1. Input your protocol parameters above.
@@ -71,10 +83,12 @@ A1,B1,4
 4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
 5. Set up your deck according to the deck map.
 6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-7. Hit 'Run'.
+7. Hit "Run".
+
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
+
 ###### Internal
-protocol-hex-code
+0aee8a
