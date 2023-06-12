@@ -1,14 +1,41 @@
 [
     {
         "type": "float",
-    "label": "Final Plate Volume",
-    "name": "sample_vol",
-    "default": 200
+    "label": "Final Plate Volume (μL)",
+    "name": "final_vol",
+    "default": 0
     },
     {
     "type": "dropDown",
-    "label": "Add pre-dilution step?",
-    "name": "pre_dilution",
+    "label": " Adding Pre-dilution step for Compound A?",
+    "name": "pre_dilA",
+    "options": [
+        {"label": "yes, add pre-dilution step", "value": true},
+        {"label": "no, do not add pre-dilution step", "value": false}
+    ]
+    },
+    {
+    "type": "dropDown",
+    "label": " Adding Pre-dilution step for Compound B?",
+    "name": "pre_dilB",
+    "options": [
+        {"label": "yes, add pre-dilution step", "value": true},
+        {"label": "no, do not add pre-dilution step", "value": false}
+    ]
+    },
+    {
+    "type": "dropDown",
+    "label": " Adding Pre-dilution step for Compound C?",
+    "name": "pre_dilC",
+    "options": [
+        {"label": "yes, add pre-dilution step", "value": true},
+        {"label": "no, do not add pre-dilution step", "value": false}
+    ]
+    },
+    {
+    "type": "dropDown",
+    "label": " Adding Pre-dilution step for Compound D?",
+    "name": "pre_dilD",
     "options": [
         {"label": "yes, add pre-dilution step", "value": true},
         {"label": "no, do not add pre-dilution step", "value": false}
@@ -18,7 +45,7 @@
         "type": "float",
     "label": "Pre-Dilution Factor A",
     "name": "pre_dil_factA",
-    "default": 200
+    "default": 0
     },
     {
         "type": "float",
@@ -28,7 +55,7 @@
     },
     {
         "type": "float",
-    "label": "Pre-Dilution Factor c",
+    "label": "Pre-Dilution Factor C",
     "name": "pre_dil_factC",
     "default": 0
     },
