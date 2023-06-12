@@ -51,7 +51,7 @@ def run(protocol):
     # run profile
     profile = [
         {'temperature': d_temp, 'hold_time_seconds': d_time},
-        {'temperature': a_temp, 'hold_time_seconds': a_temp},
+        {'temperature': a_temp, 'hold_time_seconds': a_time},
         {'temperature': e_temp, 'hold_time_seconds': e_time}
     ]
 
