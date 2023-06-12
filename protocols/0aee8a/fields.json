@@ -5,88 +5,119 @@
     "name": "final_vol",
     "default": 0
     },
+
+    {
+    "type": "dropDown",
+    "label": "P20 Single Channel Mount",
+    "name": "m20_mount",
+    "options": [
+        {"label": "Right", "value": "right"},
+        {"label": "Left", "value": "left"}
+    ]
+    },
+
+    {
+    "type": "dropDown",
+    "label": "P300 Single Channel Mount",
+    "name": "m20_mount",
+    "options": [
+        {"label": "Right", "value": "right"},
+        {"label": "Left", "value": "left"}
+    ]
+    },
     {
     "type": "dropDown",
     "label": " Adding Pre-dilution step for Compound A?",
-    "name": "pre_dilA",
+    "name": "pre_dilutionA",
     "options": [
         {"label": "yes, add pre-dilution step", "value": true},
         {"label": "no, do not add pre-dilution step", "value": false}
     ]
     },
+
     {
     "type": "dropDown",
     "label": " Adding Pre-dilution step for Compound B?",
-    "name": "pre_dilB",
+    "name": "pre_dilutionB",
     "options": [
         {"label": "yes, add pre-dilution step", "value": true},
         {"label": "no, do not add pre-dilution step", "value": false}
     ]
     },
+
     {
     "type": "dropDown",
     "label": " Adding Pre-dilution step for Compound C?",
-    "name": "pre_dilC",
+    "name": "pre_dilutionC",
     "options": [
         {"label": "yes, add pre-dilution step", "value": true},
         {"label": "no, do not add pre-dilution step", "value": false}
     ]
     },
+
     {
     "type": "dropDown",
     "label": " Adding Pre-dilution step for Compound D?",
-    "name": "pre_dilD",
+    "name": "pre_dilutionD",
     "options": [
         {"label": "yes, add pre-dilution step", "value": true},
         {"label": "no, do not add pre-dilution step", "value": false}
     ]
     },
+
     {
         "type": "float",
     "label": "Pre-Dilution Factor A",
     "name": "pre_dil_factA",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Pre-Dilution Factor B",
     "name": "pre_dil_factB",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Pre-Dilution Factor C",
     "name": "pre_dil_factC",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Pre-Dilution Factor D",
     "name": "pre_dil_factD",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Serial Dilution Factor A",
     "name": "serial_dil_factA",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Serial Dilution Factor B",
     "name": "serial_dil_factB",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Serial Dilution Factor C",
     "name": "serial_dil_factC",
     "default": 0
     },
+
     {
         "type": "float",
     "label": "Serial Dilution Factor D",
     "name": "serial_dil_factD",
     "default": 0
-    },
+    }
 ]

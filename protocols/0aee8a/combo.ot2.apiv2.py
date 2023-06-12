@@ -3,24 +3,24 @@
 #Variable input idea as follows:
 def get_values(*names):
     import json
-    _all_values = json.loads("""{"final_vol":70,"pre_dilution":true,"pre_dil_factA": 2,"pre_dil_factB": 2,"pre_dil_factC": 2,"pre_dil_factD": 2,"serial_dil_factA": 2,
-                              "serial_dil_factB": 2,"serial_dil_factC": 2,"serial_dil_factD": 2 }""")
+    _all_values = json.loads("""{"final_vol":10,"p20_mount":"left","p300_mount":"right","pre_dilutionA":true,"pre_dilutionB":true,"pre_dilutionC":true,"pre_dilutionD":true,"pre_dil_factA": 2,"pre_dil_factB": 2,
+                                "pre_dil_factC": 2,"pre_dil_factD": 2,"serial_dil_factA": 2,"serial_dil_factB": 2,"serial_dil_factC": 2,"serial_dil_factD": 2 }""")
     return[_all_values[n]for n in names]
 
-
-from opentrons import protocol_api
 metadata = {
     'protocolName': 'Combo IC',
     'author': 'Abel.Tesfaslassie@opentrons.com',
     'description': 'Sterile Workflows',
     'apiLevel': '2.11'
 }
+
+
 def run(ctx):
 
 
-    [final_vol, pre_dilution, pre_dil_factA, pre_dil_factB, pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values    
+    [final_vol, pre_dilutionA, pre_dilutionB, pre_dilutionC, pre_dilutionD, pre_dil_factA, pre_dil_factB, pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB, serial_dil_factC, serial_dil_factD]= get_values    
     
-    # Labware setup:
+    # Labware setup is as follows:
 
     #Reagent Resevoir
     dmso_res = ctx.load_labware('nest_12_reservoir_15ml', '1')
@@ -38,8 +38,8 @@ def run(ctx):
     
 
     # Pipette setup
-    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=[p20_tip_rack])
-    p300 = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=[p200_tip_rack])
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=[p20_tip_rack])
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=[p200_tip_rack])
 
     #volume Definitiions:
     vol19= final_vol
@@ -77,63 +77,81 @@ def run(ctx):
       p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
 
-    # 3 Transfering predilution volume for compound C & D
-    pip = p20 if vol3 <= 20 else p300
+    # 3 Transfering predilution DMSO volume for : 
+    # compound C
+    if pre_dilutionC: 
+        pip = p20 if vol3 <= 20 else p300
 
-    pip.pick_up_tip()
-    pip.transfer(vol3, dmso_res['A1'], vsp['A2'], new_tip='never')
-
-    pip = p20 if vol4 <= 20 else p300
-    if not pip.has_tip:
         pip.pick_up_tip()
+        pip.transfer(vol3, dmso_res['A1'], vsp['A2'], new_tip='never')
+    #compound D
+    else:
+        if pre_dilutionD: 
+            pip = p20 if vol4 <= 20 else p300
+        if not pip.has_tip:
+            pip.pick_up_tip()
 
-    pip.transfer(vol4, dmso_res['A1'], vsp['A11'], new_tip='never')
-    for pip in [p20, p300]:
-         if pip.has_tip:
-              pip.drop_tip()
+        pip.transfer(vol4, dmso_res['A1'], vsp['A11'], new_tip='never')
+        for pip in [p20, p300]:
+            if pip.has_tip:
+                pip.drop_tip()
     
-    # 4 Transfering predilution volume for compound A & B
-    pip = p20 if vol5 <=20 else p300
-    if not pip.has_tip:
+    # 4 Transfering predilution DMSO volume for:
+    # compound A 
+    if pre_dilutionA:
+        pip = p20 if vol5 <=20 else p300
+        if not pip.has_tip:
+            pip.pick_up_tip()
+            pip.transfer(vol5, dmso_res['A1'],hsp['B1'], new_tip='never')
+        else:
+    #compound B
+            if pre_dilutionB:
+                pip = p20 if vol6 <=20 else p300
+                if not pip.has_tip:
+                    pip.pick_up_tip()
+                    pip.transfer(vol6, dmso_res['A1', hsp['G1']], new_tip='never')
+                for pip in [p20, p300]:
+                        if pip.has_tip:
+                            pip.drop_tip()
+                        
+
+    #5 Transfering compound C & D volume to vertical stamp plate
+    if pre_dilutionC:
+        pip = p20 if vol7 <= 20 else p300
+
         pip.pick_up_tip()
-        pip.transfer(vol5, dmso_res['A1'],hsp['B1'], new_tip='never')
-
-    pip = p20 if vol6 <=20 else p300
-    if not pip.has_tip:
-        pip.pick_up_tip()
-        pip.transfer(vol6, dmso_res['A1', hsp['G1']], new_tip='never')
-    for pip in [p20, p300]:
-         if pip.has_tip:
-              pip.drop_tip()
-
-    #5 Transfering comound C & D volume to vertical stamp plate
-    pip = p20 if vol7 <= 20 else p300
-
-    pip.pick_up_tip()
-    pip.transfer(vol7, compound_plate['B1'], vsp['A2'], new_tip='once')
-    pip.drop_tip()
-
-    pip = p20 if vol8 <= 20 else p300
-    pip.pick_up_tip()
-    pip.transfer(vol8, dmso_res['B2'], vsp['A11'], new_tip='once')
-    pip.drop_tip()
+        pip.transfer(vol7, compound_plate['B1'], vsp['A2'], new_tip='once')
+        pip.drop_tip()
+    else:
+    
+        if pre_dilutionD:
+            pip = p20 if vol8 <= 20 else p300
+            pip.pick_up_tip()
+            pip.transfer(vol8, dmso_res['B2'], vsp['A11'], new_tip='once')
+            pip.drop_tip()
+        else:
 
     #6 Transfering compound A & B volume to horiztonal stamp plate 
-    pip = p20 if vol9 <= 20 else p300
+    if pre_dilutionA:
+        pip = p20 if vol9 <= 20 else p300
 
-    pip.pick_up_tip()
-    pip.transfer(vol9, compound_plate['A1'], hsp['B1'], new_tip='once')
-    pip.drop_tip()
+        pip.pick_up_tip()
+        pip.transfer(vol9, compound_plate['A1'], hsp['B1'], new_tip='once')
+        pip.drop_tip()
+    else:
+    
+        if pre_dilutionB:
+            pip = p20 if vol10 <= 20 else p300
+            pip.pick_up_tip()
+            pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
+            pip.drop_tip()
+        else:
 
-    pip = p20 if vol10 <= 20 else p300
-    pip.pick_up_tip()
-    pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
-    pip.drop_tip()
-
-    #7 Serial dilution of compounds C & D 
+    #7 Serial dilution of compounds C 
     p300.pick_up_tip()
-    if predilution:
-        pip.transfer(vol11,vsp["A1"],vsp["A2"],new_tip='never')
+    
+    if pre_dilutionC:
+        pip.transfer(vol11,vsp["A2"],vsp["A1"],new_tip='never')
         p300.mix(5,100,vsp["A2"])
     else:
         pip.transfer(vol11,compound_plate["B1"],vsp["A1"],new_tip='never')
@@ -152,7 +170,7 @@ def run(ctx):
         
     #10 thru 12 ------will need to setup predilution input variable in field.json
     p300.pick_up_tip()
-    if predilution:
+    if pre_dilutionD:
         pip.transfer(vol13,vsp["A11"],vsp["A12"],new_tip='never')
         p300.mix(5,100,vsp["A12"])
     else:
@@ -172,9 +190,9 @@ def run(ctx):
 
     #Serial Dilution of compound A & B
     p300.pick_up_tip()
-    if predilution:
-        p300.transfer(vol15,hsp["B1"],vsp["A1"],new_tip='never')
-        p300.mix(5,100,vsp["A1"])
+    if pre_dilutionA:
+        p300.transfer(vol15,hsp["B1"],hsp["A1"],new_tip='never')
+        p300.mix(5,100,hsp["A1"])
     else:
         p300.transfer(vol15,compound_plate["A1"],hsp["A1"],new_tip='never')
         p300.mix(5,100,hsp["A1"])
@@ -192,12 +210,12 @@ def run(ctx):
 
     #16-18 ------will need to setup predilution input variable in field.json
     p300.pick_up_tip()
-    if predilution:
+    if pre_dilutionB:
         p300.transfer(vol17, hsp["G1"], hsp["H1"], new_tip='never')
         p300.mix(5,100,hsp["H1"])
     else:
         p300.transfer(vol17, compound_plate["A2"], hsp["H1"], new_tip='never')
-        p300.mix(5,100,hsp["A1"])
+        p300.mix(5,100,hsp["H1"])
         p300.drop_tip()
 
     #Serial Dilution across row A of hsp plate
