@@ -15,9 +15,11 @@ This protocol outlines serial dilution of compound stock. There is an optional p
 
 
 ### Labware
-* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)
-* Opentrons 96 Filter Tip Rack 20 µL
+* [Opentrons 200ul Filter Tips ](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* [Opentrons 20ul Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
+* [NEST 12-Well Reservoirs 15mL ] (https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* [Nest 96-well plate 100ul pcr full skirt] (pending)
+
 
 
 ### Pipettes
@@ -26,7 +28,7 @@ This protocol outlines serial dilution of compound stock. There is an optional p
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/056f47/Screen+Shot+2023-04-24+at+3.41.25+PM.png)
+![deck](pending upload to protocol library)
 
 
 ### Volume Definitions:

@@ -28,15 +28,14 @@ def run(ctx):
     p20_tip_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')
     p200_tip_rack = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')
     #Plates
-    compound_plate = ctx.load_labware('nest_96_wellplate_100ul', '2')
-    hdpf1 = ctx.load_labware('nest_96_wellplate_100ul', '4')
-    hdpf2 = ctx.load_labware('nest_96_wellplate_100ul', '5')
-    vsp = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')
-    hsp = ctx.load_labware('nest_96_wellplate_2ml_deep', '8')
-    vdpf1 = ctx.load_labware('nest_96_wellplate_100ul', '10')
-    vdpf2 = ctx.load_labware('nest_96_wellplate_100ul', '11')
+    compound_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2')
+    hdpf1 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '4')
+    hdpf2 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5')
+    vsp = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '7')
+    hsp = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '8')
+    vdpf1 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '10')
+    vdpf2 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '11')
     
-    mix_reps = 4
 
     # Pipette setup
     p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=[p20_tip_rack])
@@ -64,21 +63,21 @@ def run(ctx):
     vol6 = vol17 - vol10
 
     #Procedure Step:  
-    #1
+    #1 Transfering DMSO to vertical stamp plate col 1 & col 12 row B-H
     destination1 = [well for col in [vsp.columns()[c] for c in [0,11]] for well in col[1:]]
     p300.pick_up_tip()
     for d in destination1:
           p300.transfer(vol1, dmso_res.well()['A1'], destination1, new_tip='never')
     p300.return_tip()
     
-    # 2
+    # 2 Transfering DMSO to horizontal stamp plate row A & H col 2-12 
     destination2 = [well for row in [hsp.rows()[c] for c in [0,7]] for well in row[1:]]
     p300.pick_up_tip()
     for d in destination2:
       p300.transfer(vol2, dmso_res.well()['A1'], destination2, new_tip='never')
     p300.drop_tip()
 
-    # 3
+    # 3 Transfering predilution volume for compound C & D
     pip = p20 if vol3 <= 20 else p300
 
     pip.pick_up_tip()
@@ -93,7 +92,7 @@ def run(ctx):
          if pip.has_tip:
               pip.drop_tip()
     
-    # 4
+    # 4 Transfering predilution volume for compound A & B
     pip = p20 if vol5 <=20 else p300
     if not pip.has_tip:
         pip.pick_up_tip()
@@ -107,7 +106,7 @@ def run(ctx):
          if pip.has_tip:
               pip.drop_tip()
 
-    #5
+    #5 Transfering comound C & D volume to vertical stamp plate
     pip = p20 if vol7 <= 20 else p300
 
     pip.pick_up_tip()
@@ -119,7 +118,7 @@ def run(ctx):
     pip.transfer(vol8, dmso_res['B2'], vsp['A11'], new_tip='once')
     pip.drop_tip()
 
-    #6
+    #6 Transfering compound A & B volume to horiztonal stamp plate 
     pip = p20 if vol9 <= 20 else p300
 
     pip.pick_up_tip()
@@ -131,7 +130,7 @@ def run(ctx):
     pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')
     pip.drop_tip()
 
-    #7 thru 9 ------will need to setup predilution input variable in field.json
+    #7 Serial dilution of compounds C & D 
     p300.pick_up_tip()
     if predilution:
         pip.transfer(vol11,vsp["A1"],vsp["A2"],new_tip='never')
@@ -171,7 +170,7 @@ def run(ctx):
         p300.mix(5,100,d)
     p300.drop_tip()
 
-    #13 thru 15 ------will need to setup predilution input variable in field.json
+    #Serial Dilution of compound A & B
     p300.pick_up_tip()
     if predilution:
         p300.transfer(vol15,hsp["B1"],vsp["A1"],new_tip='never')
@@ -219,7 +218,7 @@ def run(ctx):
         p20.transfer(vol19,s,d_set,blowout_location='destination well',new_tip='never')
     p20.drop_tip()
 
-    #21-22--- distribution of vol from VSP plate col1 across vdpf1 plate rows in slot 11 (vsp H1 --> vdpf2 row H , vsp G1 --> vdpf2 row G...)
+    #21-22--- distribution of final vol from VSP plate col1 across vdpf1 plate rows in slot 11 (vsp H1 --> vdpf2 row H , vsp G1 --> vdpf2 row G...)
     source8 = vsp.columns()[11]
     destination8_sets = vdpf2.rows()
     p20.pick_up_tip()
