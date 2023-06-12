@@ -132,7 +132,7 @@ def run(ctx):
             pip.drop_tip()
 
             # reassign pipette based on transfer volume per sample
-            [pip, vol_preairgap] = [m300, 20] if volume > 20 else [m20, 5]
+            [pip, vol_preairgap] = [m300, 10] if volume > 20 else [m20, 5]
             if not new_tip:
                 pick_up(pip, 8)
             for i, s in enumerate(final_destinations_m):
@@ -143,7 +143,7 @@ def run(ctx):
                 pip.dispense(volume, s.bottom(-2))
                 if mix_reps > 0:
                     pip.mix(mix_reps, mix_vol, s.bottom(-2))
-                pip.dispense(pip.current_volume, s.bottom(-2))
+                pip.dispense(pip.current_volume, s.bottom(3))
                 # wick(pip, s)
                 slow_withdraw(s, pip)
                 if new_tip:
@@ -280,13 +280,16 @@ temperature module before resuming.')
 
         # transfer UDI primers
         vol_udi = 2.0
+        vol_preairgap = 5.0
         for s, d in zip(udi_m, ligation_samples_m):
             pick_up(m20, 8)
+            m20.aspirate(vol_preairgap, s.top())
             m20.aspirate(vol_udi, s)
             m20.move_to(s.top(5))
             ctx.delay(seconds=10)
             m20.dispense(vol_udi, d)
-            m20.mix(10, 20, d)
+            m20.mix(10, 10, d)
+            m20.dispense(m20.current_volume, d.bottom(5))
             wick(m20, d)
             m20.drop_tip()
 

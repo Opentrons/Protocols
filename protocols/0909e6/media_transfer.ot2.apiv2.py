@@ -25,7 +25,7 @@ def run(ctx):
         tiprack_small_type = 'opentrons_96_filtertiprack_20ul'
 
     class WellH(Well):
-        def __init__(self, well, height=5, min_height=0.5,
+        def __init__(self, well, height=5, min_height=2.5,
                      comp_coeff=1.15, current_volume=0, min_vol=1000):
             super().__init__(well._impl)
             self.well = well
