@@ -458,7 +458,7 @@ final_extension_cycles,1
 final_plate_slot4,1
 final_temp,3
 final_tubes,1
-final_vol,3
+final_vol,4
 first_media_x,1
 flash,32
 flow_rate_asp,1
@@ -787,8 +787,8 @@ mntsingle,2
 module_type,1
 mother_plate_type,1
 mount,2
-mount_m20,8
-mount_m300,13
+mount_m20,9
+mount_m300,14
 mount_p1000,2
 mount_p20,11
 mount_p300,9
@@ -881,6 +881,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
+num_sample_columns,1
 num_samples,172
 num_samples_1,1
 num_samples_2,1
@@ -944,7 +945,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,126
+p20_mount,127
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -961,7 +962,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,147
+p300_mount,148
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1080,8 +1081,16 @@ poolvol,1
 post_aspiration_wait,2
 post_size_selection_volume,1
 post_user_sample_volume,1
+pre_dil_facta,1
+pre_dil_factb,1
+pre_dil_factc,1
+pre_dil_factd,1
 pre_dil_factor,1
 pre_dilution,1
+pre_dilutiona,1
+pre_dilutionb,1
+pre_dilutionc,1
+pre_dilutiond,1
 prefill,1
 prepare_mastermix,2
 prepare_standard,2
@@ -1246,6 +1255,10 @@ sep_time_elu,6
 sep_time_wash,6
 serial_boolean,1
 serial_csv,1
+serial_dil_facta,1
+serial_dil_factb,1
+serial_dil_factc,1
+serial_dil_factd,1
 set_tip_max,2
 settling_1,1
 settling_2,1
