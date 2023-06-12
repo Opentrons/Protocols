@@ -1,4 +1,4 @@
-# Combo IC-50 (Serial Dilution of Compounds)
+# DMSO and Compound Stock Solution Addition - Part 1
 
 
 ### Author
@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol outlines serial dilution of compound stock. There is an optional predilution step for each compounds involved. For detailed protocol steps, please see below. Labware setup consists of NEST 12 well 15mL reservoir in slot 1, Nest 96 well 100 uL plate in slot 2,4,5,7,8,10 & 11 as well as P20 filter tips in slot 3 and P200 filter tips in slot 6.
+This protocol serially diluted compound stock with DMSO. There is an optional predilution step in this protocol. For detailed protocol steps, please see below. Slots 6, 7, 8, 9 are nest deep well plates, and slots 2, 4, 5, 10, 11 are NEST PCR plates.
 
 
 ### Labware
@@ -21,60 +21,27 @@ This protocol outlines serial dilution of compound stock. There is an optional p
 
 
 ### Pipettes
-* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)] (https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 
 ### Deck Setup
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/056f47/Screen+Shot+2023-04-24+at+3.41.25+PM.png)
 
 
-### Variable Definitions:
-Volume Definitions:
-VOL1= DMSO transfer volume for vertical plates (post dilution volume) 
-VOL2= DMSO transfer volume for horizontal plates (post dilution volume)
-VOL3= Compound C predilution volume DMSO (optional)
-VOL4= Compound D predilution volume DMSO (optional)
-VOL5= Compound A predilution volume DMSO (optional)
-VOL6= Compound B predilution volume DMSO (optional)
-VOL7= Compound C predilution volume compound (optional)
-VOL8= Compound D predilution volume compound (optional)
-VOL9= Compound A predilution volume compound (optional)
-VOL10= Compound B predilution volume compound (optional)
-VOL11= Compound C/D initial volume 
-VOL12= Compound C/D Serial dilution volume 
-VOL13= Compound A/B initial volume
-VOL14= Compound A/B serial dilution volume
-VOL15= Final plate volume for integra transfer 
 
 ### Protocol Steps
-
-1.	Using p300, transfer VOL1 ul from the DMSO reservoir in slot 1 into B-H 1/12 in slot 7 (Vertical stamp plate) keep tip
-2.	Using p300, transfer VOL2 uL from the DMSO reservoir in slot 1 into A2-12/H2-12 in slot 8 (Horizontal stamp plate) dispose tip
-3.	(Steps 3-6 are optional) Using p300/20, transfer VOL3/4 from the DMSO reservoir to A2/11 in slot 7 
-4.	Using p300/20, transfer VOL5/6 from the DMSO reservoir to B1/G1 in slot 8 
-5.	Using p300/20, transfer VOL7/8 from well B1/B2 slot 2 (compounds C/D) into A2/11 in slot 7, using new tips
-6.	Using p300/20, transfer VOL9/10 from well A1/A2 from slot 2 (compounds A/B) into B1/G1 in slot 8, new tips
-7.	Using p300, transfer VOL11 from well B1 slot 2 or well A2 slot 7 (if optional predilution was done) to A1 slot 7, mixing before, keep tip
-8.	Using p300, transfer VOL12 from well A1 to well B1, mix after, keep tip
-9.	Repeat from B1-C1 C1-D1 … F1-G1 d tip
-10.	Using p300, transfer VOL11 from well B2 slot 2 or well A11 slot 7 (if optional predilution was done) to A12 slot 7, mixing before, keep tip
-11.	Using p300, transfer VOL12 from well A12 to well B12, mix after, keep tip
-12.	Repeat from B12-C12 C12-D12 … F12-G12 dispose tip
-13.	Using p300, transfer VOL13 from well A1 slot 2 or well B1 slot 8 (if optional predilution was done) to A1 slot 8, mixing before, keep tip
-14.	Using p300, transfer VOL14 from well A1 to well A2, mix after, keep tip
-15.	Repeat from A2-A3 A3-A4 … A10-A11 dispose tip
-16.	Using p300, transfer VOL13 from well A2 slot 2 or well G1 slot 8 (if optional predilution was done) to H1 slot 8, mixing before, keep tip
-17.	Using p300, transfer VOL14 from well H1 to well H2, mix after, keep tip 
-18.	Repeat from H2-H3 H3-H4 … H10-H11 dispose tip
-19.	Using p20, transfer VOL15 from well H1 slot 7 to wells H1-12 slot 10, blowout after, keep tip
-20.	Repeat for rows G-A col 1
-21.	Using p20, transfer VOL15 from well H12 slot 7 to wells H1-12 slot 11, blowout after, keep tip
-22.	Repeat for rows G-A col 12
-23.	Using p20, transfer VOL15 from well A12 slot 8 to wells A12-H12 slot 4, blowout after, keep tip
-24.	Repeat for row A cols 11-1 
-25.	Using p20, transfer VOL15 from well H12 slot 8 to wells A12-H12 slot 5, blowout after, keep tip
-26.	Repeat for row H cols 11-1 
+1. Transfer 2.4 uL from DMSO reservoir to columns 2-12 in Dilution Plates DMSO 1-1+2-1 , keep tips (variable step)
+2. Transfer 2.4 uL from DMSO reservoir to all wells in Dilution Plates DMSO 1-2+2-2, discard tips (variable step)
+Optional predilution step, dilute compounds in columns 1 and/or 2 with DMSO by a specified factor into columns 11/12 for a total volume of 20 uL (variable step)
+3. Transfer 7.2 uL from column 1 of Compound Stocks to column 1 or column 11 if predilution takes place of Dilution Plate DMSO 1-1, keep tips
+4. Transfer 4.8 uL from column 1 of Dilution plate DMSO 1-1 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), keep tips
+5. Transfer 4.8 uL from column 11 of Dilution plate DMSO 1-1 to column 1 of Dilution Plate DMSO 1-2, mixing after, keep tips.
+6. Transfer 4.8 uL from column 1 of Dilution plate DMSO 1-2 to column 2, mixing after. Repeat process, transferring from 2-3 3-4 4-5 etc mixing after each time, until transferring from 10-11 (skip 12), discard tips
+7. Repeat steps 4-8 for column 2/12 of compound stocks and Dilution Plate DMSO 2-1+2-2
+8. Manual tip box replacement.
+9. Transfer 2.4 uL from each column of Dilution Plate DMSO 1-1 to the same column of Media Plate 1-1, discarding tips after each transfer.
+10. Manual tip box replacement.
+11. Repeat steps 10-11 for Dilution Plates DMSO/Media Plates 1-2, 2-1, 2-2
 
 
 ### Process
@@ -92,4 +59,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-0aee8a
+04318b

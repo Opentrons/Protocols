@@ -17,36 +17,32 @@ This protocol outlines serial dilution of compound stock. There is an optional p
 ### Labware
 * [Opentrons 200ul Filter Tips ](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [Opentrons 20ul Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
-* [NEST 12-Well Reservoirs 15mL ] (https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
-* [Nest 96-well plate 100ul pcr full skirt] (pending)
-
+* [NEST 12-Well Reservoirs 15mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 
 
 ### Pipettes
 * [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons P300 Single Channel Electronic Pipette (GEN2)] (https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 
 ### Deck Setup
-![deck](pending upload to protocol library)
 
-
-### Volume Definitions:
-VOL1= DMSO transfer volume for vertical plates (post dilution volume) 
-VOL2= DMSO transfer volume for horizontal plates (post dilution volume)
-VOL3= Compound C predilution volume DMSO (optional)
-VOL4= Compound D predilution volume DMSO (optional)
-VOL5= Compound A predilution volume DMSO (optional)
-VOL6= Compound B predilution volume DMSO (optional)
-VOL7= Compound C predilution volume compound (optional)
-VOL8= Compound D predilution volume compound (optional)
-VOL9= Compound A predilution volume compound (optional)
-VOL10= Compound B predilution volume compound (optional)
-VOL11= Compound C/D initial volume 
-VOL12= Compound C/D Serial dilution volume 
-VOL13= Compound A/B initial volume
-VOL14= Compound A/B serial dilution volume
-VOL15= Final plate volume for integra transfer 
+Volume Definitions:
+* VOL1= DMSO transfer volume for vertical plates (post dilution volume) 
+* VOL2= DMSO transfer volume for horizontal plates (post dilution volume)
+* VOL3= Compound C predilution volume DMSO (optional)
+* VOL4= Compound D predilution volume DMSO (optional)
+* VOL5= Compound A predilution volume DMSO (optional)
+* VOL6= Compound B predilution volume DMSO (optional)
+* VOL7= Compound C predilution volume compound (optional)
+* VOL8= Compound D predilution volume compound (optional)
+* VOL9= Compound A predilution volume compound (optional)
+* VOL10= Compound B predilution volume compound (optional)
+* VOL11= Compound C/D initial volume 
+* VOL12= Compound C/D Serial dilution volume 
+* VOL13= Compound A/B initial volume
+* VOL14= Compound A/B serial dilution volume
+* VOL15= Final plate volume for integra transfer 
 
 ### Protocol Steps
 
