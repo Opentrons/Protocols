@@ -5,6 +5,7 @@ from types import MethodType
 from opentrons import types
 import math
 import csv
+from opentrons.protocols.api_support.types import APIVersion
 
 metadata = {
     'title': 'Protein Crystallization Screen Builder',
@@ -18,9 +19,9 @@ def run(ctx):
     [dead_vol, skip_mix_step, labware1, labware2, labware3, labware4, labware5,
      labware6, labware7, labware8, reagents_csv,
      formulation_csv] = get_values(  # noqa: F821
-        "dead_vol", "skip_mix_step", "labware1", "labware2", "labware3",
-        "labware4", "labware5", "labware6", "labware7", "labware8",
-        "reagents_csv", "formulation_csv")
+        'dead_vol', 'skip_mix_step', 'labware1', 'labware2', 'labware3',
+        'labware4', 'labware5', 'labware6', 'labware7', 'labware8',
+        'reagents_csv', 'formulation_csv')
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -30,9 +31,9 @@ def run(ctx):
      'opentrons_96_tiprack_300ul', str(slot)) for slot in [10]]
     tips1000 = [ctx.load_labware(
      'opentrons_96_tiprack_1000ul', str(slot)) for slot in [11]]
-    p300s = ctx.load_instrument("p300_single_gen2", 'left', tip_racks=tips300)
+    p300s = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
     p1000s = ctx.load_instrument(
-     "p1000_single_gen2", 'right', tip_racks=tips1000)
+     'p1000_single_gen2', 'right', tip_racks=tips1000)
 
     # labware for reagents (based on protocol parameters)
     reagent_labware = [
@@ -41,7 +42,7 @@ def run(ctx):
        labware8], [num+1 for num in range(8)]) if labware is not None]
 
     ctx.comment(
-     "reagent labware loaded for this run {}".format(
+     'reagent labware loaded for this run {}'.format(
       [labware.load_name for labware in reagent_labware]))
 
     # crystallization screening plate
@@ -52,9 +53,8 @@ def run(ctx):
         try:
             self.pick_up_tip()
         except OutOfTipsError:
-            pause_attention(
-             """Please Refill the {} Tip Boxes
-                and Empty the Tip Waste.""".format(self))
+            pause_attention('Please Refill the {} Tip Boxes \
+and Empty the Tip Waste.'.format(self))
             self.reset_tipracks()
             self.pick_up_tip()
 
@@ -110,7 +110,7 @@ def run(ctx):
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
             self.well = well
             self.min_height = min_height
             self.comp_coeff = comp_coeff
@@ -124,8 +124,8 @@ def run(ctx):
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+                raise Exception('Specified liquid volume \
+can not exceed the height of the labware.')
 
         def height_dec(self, vol):
             if self.diameter is not None:
@@ -141,7 +141,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return self.well.bottom(self.height)
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -157,9 +157,9 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return self.well.bottom(self.height)
             else:
-                return(self.well.top())
+                return self.well.top()
 
     def create_chunks(list_name, n):
         for i in range(0, len(list_name), n):
@@ -184,7 +184,7 @@ def run(ctx):
     # formulation csv input
     [first_blank_line, *formulation_csv_lines] = formulation_csv.splitlines()
     dispenses = []
-    liquids = ["H2O", "1", "2", "3", "4", "5", "6", "7", "8"]
+    liquids = ['H2O', '1', '2', '3', '4', '5', '6', '7', '8']
     lines = [*csv.reader(formulation_csv_lines)]
     for chunk in create_chunks(lines, 9):
         new = {}
@@ -201,11 +201,11 @@ def run(ctx):
         if line['Deck_Slot']:
             new = {}
             for key, value in zip(
-             ["reagent", "slot", "wells", "vols", "liq", "viscosity", "sticky"
+             ['reagent', 'slot', 'wells', 'vols', 'liq', 'viscosity', 'sticky'
               ], [
-              line["Reagent"], line["Deck_Slot"], line["Positions"].split(),
-              line["Initial Volumes"].split(), line["Liquid class"],
-              line["Viscosity"], line["Stickiness"]]):
+              line['Reagent'], line['Deck_Slot'], line['Positions'].split(),
+              line['Initial Volumes'].split(), line['Liquid class'],
+              line['Viscosity'], line['Stickiness']]):
                 new[key] = value
             reagents.append(new)
 
@@ -215,37 +215,36 @@ def run(ctx):
     source_viscosity = {}
     for reagent in reagents:
         for key, value in ctx.loaded_labwares.items():
-            if str(key) == str(reagent["slot"]):
-                source_locations[str(reagent["reagent"])] = [
-                 value.wells_by_name()[well] for well in reagent["wells"]]
-                source_volumes[str(reagent["reagent"])] = [
-                 int(volume) for volume in reagent["vols"]]
-                source_class[str(reagent["reagent"])] = reagent["liq"]
+            if str(key) == str(reagent['slot']):
+                source_locations[str(reagent['reagent'])] = [
+                 value.wells_by_name()[well] for well in reagent['wells']]
+                source_volumes[str(reagent['reagent'])] = [
+                 int(volume) for volume in reagent['vols']]
+                source_class[str(reagent['reagent'])] = reagent['liq']
                 source_viscosity[
-                 str(reagent["reagent"])] = reagent["viscosity"]
+                 str(reagent['reagent'])] = reagent['viscosity']
 
     for rgnt in source_locations.keys():
-        ctx.comment("Transferring reagent {} to output plate".format(rgnt))
+        ctx.comment('Transferring reagent {} to output plate'.format(rgnt))
         liquid_class = source_class[rgnt]
-        ctx.comment(" liquid class {}".format(liquid_class))
-        if liquid_class == "viscous":
+        ctx.comment(' liquid class {}'.format(liquid_class))
+        if liquid_class == 'viscous':
             if not source_viscosity[rgnt]:
-                raise Exception("""Viscosity in mPa*s must be provided
-                for each viscous reagent.""")
+                raise Exception('Viscosity in mPa*s must be provided \
+for each viscous reagent.')
             else:
                 viscosity = int(round(float(source_viscosity[rgnt])))
-                ctx.comment(" viscosity {}".format(viscosity))
+                ctx.comment(' viscosity {}'.format(viscosity))
                 delay_time = round(1.67*(viscosity**0.2831))
-                ctx.comment(
-                 """calculated post-aspirate and post-dispense delay
-                 of {} seconds""".format(delay_time))
+                ctx.comment('calculated post-aspirate and post-dispense \
+delay of {} seconds'.format(delay_time))
                 adjusted_rate = round(
                  (81.379*(math.e)**(-0.002*viscosity)) / 92, 1)
-                ctx.comment("""calculated aspirate and dispense flow rate
-                adjusted to {} times default rate.""".format(adjusted_rate))
+                ctx.comment('calculated aspirate and dispense flow rate \
+adjusted to {} times default rate.'.format(adjusted_rate))
                 withdraw_speed = int(round(6.4613*(viscosity**-0.318)))
-                ctx.comment("""calculated tip withdraw speed adjusted
-                to {} mm/sec.""".format(withdraw_speed))
+                ctx.comment('calculated tip withdraw speed adjusted \
+to {} mm/sec.'.format(withdraw_speed))
         else:
             delay_time = 0
             adjusted_rate = 1
@@ -274,7 +273,7 @@ def run(ctx):
                             source = next(reagent_well)
                         except StopIteration:
                             ctx.comment(
-                                "reagent {} supply is exhausted".format(rgnt))
+                                'reagent {} supply is exhausted'.format(rgnt))
                             ctx.comment('''due to insufficient reagent volume,
                             skipped transfers (except well dispenses already
                             completed and listed above) to row {}'''.format(
@@ -285,21 +284,21 @@ def run(ctx):
                                                    dead_vol*source.max_volume
                                                    )) > source.current_volume):
                         ctx.comment(
-                             "reagent {} supply is exhausted".format(rgnt))
+                             'reagent {} supply is exhausted'.format(rgnt))
                         ctx.comment('''due to insufficient reagent volume,
                         skipped transfers (except well dispenses already
                         completed and listed above) to row {}'''.format(
                              row))
                         break
                     reps = 1
-                    if liquid_class == "volatile":
+                    if liquid_class == 'volatile':
                         air_gap_vol = 15
                     else:
                         air_gap_vol = 0
                     if int(vol) + air_gap_vol > 300:
                         pip = p1000s
                         top_dispenses = True
-                        if liquid_class == "volatile":
+                        if liquid_class == 'volatile':
                             air_gap_vol = 25
                         if int(vol) + air_gap_vol > 1000:
                             reps = math.ceil(int(vol) / 1000)
@@ -312,7 +311,7 @@ def run(ctx):
                     for rep in range(reps):
                         if not pip.has_tip:
                             pip.pick_up_or_refill()
-                        if liquid_class == "volatile":
+                        if liquid_class == 'volatile':
                             pip.prewet_tips(source)
                         pip.aspirate(
                          (int(vol) / reps), source.height_dec(int(vol) / reps),
@@ -321,14 +320,14 @@ def run(ctx):
                         if withdraw_speed is not None:
                             pip.slow_tip_withdrawal(
                              withdraw_speed, source, to_surface=True)
-                        if liquid_class == "viscous":
+                        if liquid_class == 'viscous':
                             speed_arg = 3.14*source.diameter
                             r = source.diameter / 2
                             radius_arg = (r - 0.5) / r
                             pip.touch_tip(
                              radius=radius_arg, v_offset=-2, speed=speed_arg)
                             top_dispenses = False
-                        if liquid_class == "volatile":
+                        if liquid_class == 'volatile':
                             pip.air_gap(air_gap_vol)
                         dispense_location = well.height_inc(
                          int(vol) / reps, top=top_dispenses)
@@ -340,7 +339,7 @@ def run(ctx):
                             if withdraw_speed is not None:
                                 pip.slow_tip_withdrawal(
                                  withdraw_speed, well, to_surface=True)
-                            if liquid_class == "viscous":
+                            if liquid_class == 'viscous':
                                 original_value = pip.flow_rate.blow_out
                                 pip.flow_rate.blow_out = original_value / 10
                                 pip.blow_out()
@@ -350,7 +349,7 @@ def run(ctx):
                             pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
                             pip.drop_tip()
                         else:
-                            if liquid_class == "volatile":
+                            if liquid_class == 'volatile':
                                 pip.blow_out_solvent(well)
                             else:
                                 pip.blow_out()
