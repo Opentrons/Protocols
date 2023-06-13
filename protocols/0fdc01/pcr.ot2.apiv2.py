@@ -4,10 +4,12 @@ metadata = {
     'apiLevel': '2.13'
 }
 
+
 def run(protocol):
 
     # modules
     tempdeck = protocol.load_module('temperature module gen2', '1')
+    tempdeck.set_temperature(4)
 
     # labware
     reservoir = tempdeck.load_labware('nest_12_reservoir_15ml')
@@ -35,13 +37,7 @@ def run(protocol):
 
     # add mastermix with the same tip
     m300.transfer(vol_mm, mm, pcr_destinations)
-    # example loop structure: for destination in pcr_destinations:
-    for d in pcr_destinations:
-        # pcr_destinations = pcr_plate.rows()[0]
-        print(d) 
-        # m300.transfer(23, mm, pcr_destinations[:12])
+
     # add sample with fresh tips each time, and mix (2x)
     for s, d in zip(sample_sources, pcr_destinations):
-        print(s,d)
-        m20.transfer(vol_sample, s, d, mix_after=(2,10)) 
-    m20.transfer(vol_sample, sample_sources, pcr_destinations, new_tip='always', mix_after=(2,10)) 
+        m20.transfer(vol_sample, s, d, mix_after=(2, 10))
