@@ -368,8 +368,6 @@ dna_volume,5
 dna_well_plate_lname,1
 dna_well_plate_tmod,1
 do_cool_samples,1
-do_day1,1
-do_day2,1
 do_deactivate_tc,1
 do_dnase_step,1
 do_mm_resusp_pause,1
@@ -1104,6 +1102,7 @@ primer_vol,1
 primer_volume,2
 process,1
 protocol,1
+protocol_selection,1
 protocol_type,1
 prototype,1
 puncture_agar,1
