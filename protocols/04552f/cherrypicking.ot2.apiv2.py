@@ -14,28 +14,23 @@ INPUT_FILE = """
 
 def run(ctx):
 
-    [mount_p300, mount_p20] = get_values(  # noqa: F821
-        'mount_p300', 'mount_p20')
+    [mount_p300] = get_values(  # noqa: F821
+        'mount_p300')
 
     source_plates = [
         ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
                          f'original plate {i+1}')
-        for i, slot in enumerate(['1', '4'])]
+        for i, slot in enumerate(['1', '2', '3', '4'])]
     dest_plates = [
         ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
                          f'destination plate {i+1}')
-        for i, slot in enumerate(['2', '5'])]
-    tipracks_20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['3', '6', '9']]
+        for i, slot in enumerate(['5', '6'])]
     tipracks_300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['7', '8', '11']]
+        for slot in ['7', '8', '10', '11']]
     tuberack50 = ctx.load_labware(
-        'opentrons_6_tuberack_falcon_50ml_conical', '10')
+        'opentrons_6_tuberack_falcon_50ml_conical', '9')
 
-    p20 = ctx.load_instrument(
-        'p20_single_gen2', mount_p20, tip_racks=tipracks_20)
     p300 = ctx.load_instrument(
         'p300_single_gen2', mount_p300, tip_racks=tipracks_300)
 
@@ -91,7 +86,7 @@ before resuming.')
         # vol_trashing = float(line[6])
         vol_media_s = float(line[7])
         vol_media_d = float(line[8])
-        pip = p300 if vol_picking >= 20 else p20
+        pip = p300
 
         # check for media
         if i > 0 and last_source_lw != source_labware:
