@@ -237,9 +237,9 @@ can not exceed the height of the labware.')
                      x_offset=2.0, y_offset=1.0, pip=m300,
                      switch_sides_x=True):
 
-        if pip.current_volume \
-                + vol >= pip.tip_racks[0].wells()[0].max_volume - 10:
-            vol = pip.tip_racks[0].wells()[0].max_volume - 10
+        tip_ref_vol = pip.tip_racks[0].wells()[0].max_volume
+        if pip.current_volume + vol >= tip_ref_vol - 10:
+            vol = tip_ref_vol - 10
 
         for i in range(reps):
             if switch_sides_x:
