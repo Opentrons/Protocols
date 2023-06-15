@@ -239,7 +239,9 @@ can not exceed the height of the labware.')
 
         tip_ref_vol = pip.tip_racks[0].wells()[0].max_volume
         if pip.current_volume + vol >= tip_ref_vol - 10:
-            vol = tip_ref_vol - 10
+            vol_actual = tip_ref_vol - m300.current_volume
+        else:
+            vol_actual = vol
 
         for i in range(reps):
             if switch_sides_x:
@@ -247,9 +249,9 @@ can not exceed the height of the labware.')
             else:
                 x_side = 1
             y_side = 1 if (i//2) % 2 == 0 else -1
-            pip.aspirate(vol, well.bottom().move(types.Point(
+            pip.aspirate(vol_actual, well.bottom().move(types.Point(
                 x=x_side*x_offset, y=y_side*y_offset, z=z_offset_low)))
-            pip.dispense(vol, well.bottom().move(types.Point(
+            pip.dispense(vol_actual, well.bottom().move(types.Point(
                 x=x_side*x_offset, y=y_side*y_offset, z=z_offset_high)))
 
     def flow_rate(asp=92.86, disp=92.86, blow=92.86):
