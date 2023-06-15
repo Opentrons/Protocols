@@ -73,7 +73,6 @@ before resuming.')
     media_sources = []
     media_dests = []
     for i, line in enumerate(data):
-        print(line)
         source_ind = (int(line[0].split('.')[-1]) - 1) % 2
         dest_ind = (int(line[3].split('.')[-1]) - 1) % 2
 
