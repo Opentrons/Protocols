@@ -315,7 +315,7 @@ can not exceed the height of the labware.')
                 radius = col.diameter/2 if col.diameter else col.width/2
                 # bead_loc = col.bottom().move(
                 #     types.Point(x=side*radius*0.5, z=3))
-                mix_high_low(col, 10, 200, z_offset_low=3,
+                mix_high_low(col, 10, 190, z_offset_low=3,
                              x_offset=side*radius*0.4, switch_sides_x=False)
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
@@ -447,7 +447,7 @@ can not exceed the height of the labware.')
         src = xp1[idx//3]
         for _ in range(2):
             flow_rate(asp=40, disp=40)
-            mix_high_low(src, 5, 200)
+            mix_high_low(src, 5, 190)
             m300.aspirate(vol_xp1/2, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             flow_rate(disp=10)
@@ -487,7 +487,7 @@ can not exceed the height of the labware.')
                     m300.custom_pick_up()
                 if not m300.has_tip:
                     m300.custom_pick_up(t_d)
-                mix_high_low(col, 10, 200, z_offset_low=3,
+                mix_high_low(col, 10, 190, z_offset_low=3,
                              x_offset=side*radius*0.4, switch_sides_x=False)
                 ctx.delay(seconds=1)
                 m300.blow_out(col.top(-2))
