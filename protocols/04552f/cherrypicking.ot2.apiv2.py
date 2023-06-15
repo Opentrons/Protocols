@@ -14,28 +14,23 @@ INPUT_FILE = """
 
 def run(ctx):
 
-    [mount_p300, mount_p20] = get_values(  # noqa: F821
-        'mount_p300', 'mount_p20')
+    [mount_p300] = get_values(  # noqa: F821
+        'mount_p300')
 
     source_plates = [
         ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
                          f'original plate {i+1}')
-        for i, slot in enumerate(['1', '4'])]
+        for i, slot in enumerate(['1', '2', '3', '4'])]
     dest_plates = [
         ctx.load_labware('corning_384_wellplate_112ul_flat', slot,
                          f'destination plate {i+1}')
-        for i, slot in enumerate(['2', '5'])]
-    tipracks_20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['3', '6', '9']]
+        for i, slot in enumerate(['5', '6'])]
     tipracks_300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['7', '8', '11']]
+        for slot in ['7', '8', '10', '11']]
     tuberack50 = ctx.load_labware(
-        'opentrons_6_tuberack_falcon_50ml_conical', '10')
+        'opentrons_6_tuberack_falcon_50ml_conical', '9')
 
-    p20 = ctx.load_instrument(
-        'p20_single_gen2', mount_p20, tip_racks=tipracks_20)
     p300 = ctx.load_instrument(
         'p300_single_gen2', mount_p300, tip_racks=tipracks_300)
 
@@ -78,7 +73,6 @@ before resuming.')
     media_sources = []
     media_dests = []
     for i, line in enumerate(data):
-        print(line)
         source_ind = (int(line[0].split('.')[-1]) - 1) % 2
         dest_ind = (int(line[3].split('.')[-1]) - 1) % 2
 
@@ -91,10 +85,11 @@ before resuming.')
         # vol_trashing = float(line[6])
         vol_media_s = float(line[7])
         vol_media_d = float(line[8])
-        pip = p300 if vol_picking >= 20 else p20
+        pip = p300
 
         # check for media
-        if i > 0 and last_source_lw != source_labware:
+        if i > 0 and last_source_lw != source_labware \
+                and last_source_lw == source_plates[-1]:
             sources = [media_source[0] for media_source in media_sources]
             vols = [media_source[1] for media_source in media_sources]
             pick_up(p300)
@@ -104,7 +99,8 @@ before resuming.')
 finished. Load new plate if necessary.')
             media_sources = []
 
-        if i > 0 and last_dest_lw != dest_labware:
+        if i > 0 and last_dest_lw != dest_labware \
+                and last_dest_lw == dest_plates[-1]:
             dests = [media_dest[0] for media_dest in media_dests]
             vols = [media_dest[1] for media_dest in media_dests]
             if not p300.has_tip:
@@ -116,7 +112,7 @@ finished. Load new plate if necessary.')
             media_dests = []
 
         if p300.has_tip:
-            p300.drop_tip()
+            p300.return_tip()
 
         last_source_lw = source_labware
         last_dest_lw = dest_labware
@@ -140,4 +136,4 @@ finished. Load new plate if necessary.')
         vols = [well_set[1] for well_set in remaining_media_wells]
         pick_up(p300)
         p300.distribute(vols, media, wells, new_tip='never')
-        p300.drop_tip()
+        p300.return_tip()
