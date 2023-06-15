@@ -112,7 +112,7 @@ finished. Load new plate if necessary.')
             media_dests = []
 
         if p300.has_tip:
-            p300.drop_tip()
+            p300.return_tip()
 
         last_source_lw = source_labware
         last_dest_lw = dest_labware
@@ -136,4 +136,4 @@ finished. Load new plate if necessary.')
         vols = [well_set[1] for well_set in remaining_media_wells]
         pick_up(p300)
         p300.distribute(vols, media, wells, new_tip='never')
-        p300.drop_tip()
+        p300.return_tip()
