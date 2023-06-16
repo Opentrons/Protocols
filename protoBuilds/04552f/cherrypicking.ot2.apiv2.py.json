@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\n# COPY AND PASTE THE CONTENT OF YOUR .CSV BELOW\n\nINPUT_FILE = \"\"\"\n\"\"\"\n\n\ndef run(ctx):\n\n    [mount_p300, mount_p20] = get_values(  # noqa: F821\n        'mount_p300', 'mount_p20')\n\n    source_plates = [\n        ctx.load_labware('corning_384_wellplate_112ul_flat', slot,\n                         f'original plate {i+1}')\n        for i, slot in enumerate(['1', '4'])]\n    dest_plates = [\n        ctx.load_labware('corning_384_wellplate_112ul_flat', slot,\n                         f'destination plate {i+1}')\n        for i, slot in enumerate(['2', '5'])]\n    tipracks_20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['3', '6', '9']]\n    tipracks_300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['7', '8', '11']]\n    tuberack50 = ctx.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', '10')\n\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', mount_p20, tip_racks=tipracks_20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', mount_p300, tip_racks=tipracks_300)\n\n    media = tuberack50.wells()[0]\n\n    # input file\n    # jupyter_dir = '/var/lib/jupyter/notebooks'\n    # file_dir = f'{jupyter_dir}/input.csv'\n    # with open(file_dir) as f:\n    #     reader = csv.reader(f)\n    #     data = []\n    #     for i, row in enumerate(reader):\n    #         if i > 0 and row[0].strip():\n    #             data.append(row)\n\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in INPUT_FILE.splitlines()[1:]\n        if line and line.split(',')[0].strip()]\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            rack_prompt = ', '.join([rack.parent for rack in pip.tip_racks])\n            ctx.pause(f'Replace {pip} tipracks, slots {rack_prompt} \\\nbefore resuming.')\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def slow_withdraw(pip, well, delay_seconds=1.0):\n        pip.default_speed /= 10\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 10\n\n    last_source_lw = None\n    last_dest_lw = None\n    media_sources = []\n    media_dests = []\n    for i, line in enumerate(data):\n        print(line)\n        source_ind = (int(line[0].split('.')[-1]) - 1) % 2\n        dest_ind = (int(line[3].split('.')[-1]) - 1) % 2\n\n        source_labware = source_plates[source_ind]\n        source_well = source_labware.wells_by_name()[line[1]]\n        vol_picking = float(line[2])\n        dest_labware = dest_plates[dest_ind]\n        dest_well = dest_labware.wells_by_name()[line[4]]\n        vol_seeding = float(line[5])\n        # vol_trashing = float(line[6])\n        vol_media_s = float(line[7])\n        vol_media_d = float(line[8])\n        pip = p300 if vol_picking >= 20 else p20\n\n        # check for media\n        if i > 0 and last_source_lw != source_labware:\n            sources = [media_source[0] for media_source in media_sources]\n            vols = [media_source[1] for media_source in media_sources]\n            pick_up(p300)\n            p300.distribute(vols, media, [s.top() for s in sources],\n                            new_tip='never')\n            ctx.pause(f'Plate {source_plates.index(source_labware)+1} \\\nfinished. Load new plate if necessary.')\n            media_sources = []\n\n        if i > 0 and last_dest_lw != dest_labware:\n            dests = [media_dest[0] for media_dest in media_dests]\n            vols = [media_dest[1] for media_dest in media_dests]\n            if not p300.has_tip:\n                pick_up(p300)\n            p300.distribute(vols, media, [d.top(-1) for d in dests],\n                            new_tip='never')\n            ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} \\\nfinished. Load new plate if necessary.')\n            media_dests = []\n\n        if p300.has_tip:\n            p300.drop_tip()\n\n        last_source_lw = source_labware\n        last_dest_lw = dest_labware\n\n        pick_up(pip)\n        pip.mix(3, 20, source_well.bottom(1))\n        pip.aspirate(vol_picking, source_well.bottom(1))\n        slow_withdraw(pip, source_well)\n        pip.dispense(vol_seeding, dest_well)\n        slow_withdraw(pip, dest_well)\n        pip.blow_out(pip.trash_container.wells()[0])\n        pip.return_tip()\n\n        media_sources.append([source_well, vol_media_s])\n        media_dests.append([dest_well, vol_media_d])\n\n    # fill last wells if necessary\n    remaining_media_wells = media_sources + media_dests\n    if len(remaining_media_wells) > 0:\n        wells = [well_set[0] for well_set in remaining_media_wells]\n        vols = [well_set[1] for well_set in remaining_media_wells]\n        pick_up(p300)\n        p300.distribute(vols, media, wells, new_tip='never')\n        p300.drop_tip()\n",
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\n# COPY AND PASTE THE CONTENT OF YOUR .CSV BELOW\n\nINPUT_FILE = \"\"\"\n\"\"\"\n\n\ndef run(ctx):\n\n    [mount_p300] = get_values(  # noqa: F821\n        'mount_p300')\n\n    source_plates = [\n        ctx.load_labware('corning_384_wellplate_112ul_flat', slot,\n                         f'original plate {i+1}')\n        for i, slot in enumerate(['1', '2', '3', '4'])]\n    dest_plates = [\n        ctx.load_labware('corning_384_wellplate_112ul_flat', slot,\n                         f'destination plate {i+1}')\n        for i, slot in enumerate(['5', '6'])]\n    tipracks_300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['7', '8', '10', '11']]\n    tuberack50 = ctx.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', '9')\n\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', mount_p300, tip_racks=tipracks_300)\n\n    media = tuberack50.wells()[0]\n\n    # input file\n    # jupyter_dir = '/var/lib/jupyter/notebooks'\n    # file_dir = f'{jupyter_dir}/input.csv'\n    # with open(file_dir) as f:\n    #     reader = csv.reader(f)\n    #     data = []\n    #     for i, row in enumerate(reader):\n    #         if i > 0 and row[0].strip():\n    #             data.append(row)\n\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in INPUT_FILE.splitlines()[1:]\n        if line and line.split(',')[0].strip()]\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            rack_prompt = ', '.join([rack.parent for rack in pip.tip_racks])\n            ctx.pause(f'Replace {pip} tipracks, slots {rack_prompt} \\\nbefore resuming.')\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def slow_withdraw(pip, well, delay_seconds=1.0):\n        pip.default_speed /= 10\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 10\n\n    last_source_lw = None\n    last_dest_lw = None\n    media_sources = []\n    media_dests = []\n    for i, line in enumerate(data):\n        source_ind = (int(line[0].split('.')[-1]) - 1) % 2\n        dest_ind = (int(line[3].split('.')[-1]) - 1) % 2\n\n        source_labware = source_plates[source_ind]\n        source_well = source_labware.wells_by_name()[line[1]]\n        vol_picking = float(line[2])\n        dest_labware = dest_plates[dest_ind]\n        dest_well = dest_labware.wells_by_name()[line[4]]\n        vol_seeding = float(line[5])\n        # vol_trashing = float(line[6])\n        vol_media_s = float(line[7])\n        vol_media_d = float(line[8])\n        pip = p300\n\n        # check for media\n        if i > 0 and last_source_lw != source_labware \\\n                and last_source_lw == source_plates[-1]:\n            sources = [media_source[0] for media_source in media_sources]\n            vols = [media_source[1] for media_source in media_sources]\n            pick_up(p300)\n            p300.distribute(vols, media, [s.top() for s in sources],\n                            new_tip='never')\n            ctx.pause(f'Plate {source_plates.index(source_labware)+1} \\\nfinished. Load new plate if necessary.')\n            media_sources = []\n\n        if i > 0 and last_dest_lw != dest_labware \\\n                and last_dest_lw == dest_plates[-1]:\n            dests = [media_dest[0] for media_dest in media_dests]\n            vols = [media_dest[1] for media_dest in media_dests]\n            if not p300.has_tip:\n                pick_up(p300)\n            p300.distribute(vols, media, [d.top(-1) for d in dests],\n                            new_tip='never')\n            ctx.comment(f'Plate {dest_plates.index(dest_labware)+1} \\\nfinished. Load new plate if necessary.')\n            media_dests = []\n\n        if p300.has_tip:\n            p300.return_tip()\n\n        last_source_lw = source_labware\n        last_dest_lw = dest_labware\n\n        pick_up(pip)\n        pip.mix(3, 20, source_well.bottom(1))\n        pip.aspirate(vol_picking, source_well.bottom(1))\n        slow_withdraw(pip, source_well)\n        pip.dispense(vol_seeding, dest_well)\n        slow_withdraw(pip, dest_well)\n        pip.blow_out(pip.trash_container.wells()[0])\n        pip.return_tip()\n\n        media_sources.append([source_well, vol_media_s])\n        media_dests.append([dest_well, vol_media_d])\n\n    # fill last wells if necessary\n    remaining_media_wells = media_sources + media_dests\n    if len(remaining_media_wells) > 0:\n        wells = [well_set[0] for well_set in remaining_media_wells]\n        vols = [well_set[1] for well_set in remaining_media_wells]\n        pick_up(p300)\n        p300.distribute(vols, media, wells, new_tip='never')\n        p300.return_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -37,10 +37,6 @@
         {
             "mount": "left",
             "name": "p300_single_gen2"
-        },
-        {
-            "mount": "right",
-            "name": "p20_single_gen2"
         }
     ],
     "labware": [
@@ -51,34 +47,34 @@
             "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "destination plate 1 on 2",
+            "name": "original plate 2 on 2",
             "share": false,
             "slot": "2",
             "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 3",
+            "name": "original plate 3 on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "original plate 2 on 4",
+            "name": "original plate 4 on 4",
             "share": false,
             "slot": "4",
             "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "destination plate 2 on 5",
+            "name": "destination plate 1 on 5",
             "share": false,
             "slot": "5",
             "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "name": "destination plate 2 on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "corning_384_wellplate_112ul_flat"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
@@ -93,16 +89,16 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
         },
         {
-            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 10",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
