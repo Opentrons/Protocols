@@ -7,7 +7,7 @@ metadata = {
     'apiLevel': '2.14'
 }
 
-factor_overage = 1.2
+factor_overage = 1.4
 concentration_target = 0.1
 
 
@@ -42,8 +42,8 @@ def run(ctx):
 
     if not len(template_concs) == num_templates:
         ctx.pause(f'Number of templates entered ({num_templates}) \
-does not match number of concentrations entered ({len(template_concs)}). \
-Continue?')
+does not match number of concentrations entered \
+({len(template_concs)}) Continue?')
 
     mix_volumes = [
         20.0, 1.0, 35.0, 35.0, 35.0, 35.0, 20.0, 16.0, 2.5, 5.0]
@@ -95,7 +95,7 @@ Continue?')
             description='',
             display_color=colors.pop()
         )
-        well.load_liquid(temp, vol*num_rxns*1.1)
+        well.load_liquid(temp, vol*num_rxns*factor_overage)
 
     template_color = colors.pop()
     for i, (well, vol) in enumerate(template_map.items()):
@@ -115,7 +115,7 @@ Continue?')
             description='',
             display_color=colors.pop()
         )
-        well.load_liquid(temp, vol*num_rxns*1.1)
+        well.load_liquid(temp, vol*num_rxns*factor_overage)
 
     mix_tube = rack15.wells()[0]
     enzyme_mix_tube = rack2.rows()[0][-1]
@@ -182,7 +182,7 @@ Continue?')
     def wick(pip, well, side=1):
         pip.default_speed /= 5
         radius = well.diameter/2 if well.diameter else well.length/2
-        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
+        pip.move_to(well.bottom().move(Point(x=side*radius*0.5, z=3)))
         pip.default_speed *= 5
 
     def slow_withdraw(pip, well, delay_seconds=1.0):
@@ -254,8 +254,9 @@ Continue?')
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(vol/num_trans, 2)
         pip.pick_up_tip()
+        depth = 1.5 if vol_per_trans <= 10 else 3
         for n in range(num_trans):
-            pip.aspirate(vol_per_trans, template)
+            pip.aspirate(vol_per_trans, template.bottom(depth))
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
             if n == num_trans - 1:
@@ -273,8 +274,9 @@ Continue?')
             transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
+        depth = 1.5 if vol_per_trans <= 10 else 3
         for _ in range(num_trans):
-            pip.aspirate(vol_per_trans, well.bottom(1.0))
+            pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
             pip.dispense(pip.current_volume, enzyme_mix_tube.bottom(1.5))
             if i == 0:
