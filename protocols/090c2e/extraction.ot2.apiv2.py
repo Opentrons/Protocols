@@ -87,7 +87,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.load_labware(
             'opentrons_96_filtertiprack_200ul', s) for s in [5, 6, 7, 8, 9, 11]
             ]
-    all_tips = [t for rack in tips for t in rack.rows()[0]]
+    # all_tips = [t for rack in tips for t in rack.rows()[0]]
     t_start = 0
     t_end = int(num_cols)
 
@@ -285,15 +285,13 @@ can not exceed the height of the labware.')
         m300.aspirate(10, liquid_waste)
 
     def wash(srcs, msg, sup=600):
-        nonlocal t_start
-        nonlocal t_end
-
         if mag_deck.status == 'engaged':
             mag_deck.disengage()
         ctx.comment(f'Performing wash step: {msg}')
         flow_rate()
         for idx, (col, src) in enumerate(zip(mag_samps_h, srcs)):
             m300.custom_pick_up()
+
             # src = srcs[idx//3]
             for i in range(2):
                 flow_rate(asp=flow_rate_wash, disp=flow_rate_wash)
@@ -337,12 +335,10 @@ can not exceed the height of the labware.')
 
         # Discard Supernatant
         ctx.comment(f'Removing supernatant for wash: {msg}')
-        t_start += num_cols
-        t_end += num_cols
-        for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
+        for src in mag_samps_h:
             m300.custom_pick_up()
             remove_supernatant(sup, src)
-            m300.drop_tip(t_d)
+            m300.return_tip()
 
     # plate, tube rack maps
     # init_samps = samp_plate.rows()[0][:num_cols]
@@ -475,37 +471,43 @@ can not exceed the height of the labware.')
         minutes plus mixing'
         ctx.comment(incubate_msg)
 
-        start_time = time.monotonic()
         m300.flow_rate.aspirate *= 3
         m300.flow_rate.dispense *= 3
-        check_time = 8*60 if not ctx.is_simulating() else 1
+        check_time = 8*60 if not ctx.is_simulating() else 0.05
+        parking_spots = []
+        first_pickup = True
+        start_time = time.monotonic()
+
         while time.monotonic() - start_time < check_time:
-            for i, (col, t_d) in enumerate(
-                    zip(mag_samps, all_tips[t_start:t_end])):
+            for i, col in enumerate(mag_samps):
                 side = 1 if i % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(types.Point(
                     x=side*radius*0.5, z=3))
-                if _ == 0:
-                    m300.custom_pick_up()
-                if not m300.has_tip:
-                    m300.custom_pick_up(t_d)
+                if first_pickup:
+                    if not m300.has_tip:
+                        m300.custom_pick_up()
+                    parking_spots.append(m300._last_tip_picked_up_from)
+                    if i == len(mag_samps) - 1:
+                        first_pickup = False
+                else:
+                    if not m300.has_tip:
+                        m300.custom_pick_up(parking_spots[i])
+
                 mix_high_low(col, 10, 190, z_offset_low=3,
                              x_offset=side*radius*0.4, switch_sides_x=False)
                 ctx.delay(seconds=1)
                 m300.blow_out(col.top(-2))
                 m300.touch_tip()
                 if len(mag_samps) > 1:
-                    m300.drop_tip(t_d)
+                    m300.drop_tip(parking_spots[i])
                 else:
                     ctx.delay(seconds=30)
         if m300.has_tip:
-            m300.drop_tip(t_d)
+            m300.drop_tip(parking_spots[i])
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 3
 
-        t_start += num_cols
-        t_end += num_cols
     mag_deck.engage(7)
     mag_msg = f'Incubating on Mag Deck for {mag_time} minutes'
     ctx.delay(minutes=mag_time, msg=mag_msg)
@@ -513,13 +515,13 @@ can not exceed the height of the labware.')
     # Discard Supernatant
     ctx.comment('Removing supernatant')
     flow_rate(asp=40, disp=40)
-    for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
+    for src in mag_samps_h:
         m300.custom_pick_up()
         remove_supernatant(vol_removal, src)
         # m300.drop_tip()
         # m300.custom_pick_up()
         # remove_supernatant(vol_removal/2, src)
-        m300.drop_tip(t_d)
+        m300.return_tip()
 
     flow_rate()
 
@@ -531,7 +533,6 @@ can not exceed the height of the labware.')
 
     # Wash with 70% ETOH (1)
     wash(etoh1_wells, 'ETOH (first wash)')
-
     # Wash with ETOH Buffer (2)
     wash(etoh2_wells, 'ETOH (second wash)', fin_wash)
     ctx.delay(minutes=1)
@@ -621,7 +622,7 @@ Please add elution buffer at 70C to 12-well reservoir.'
     # Transfer elution to PCR plate
     if not off_deck:
         start_time = time.monotonic()
-        check_time = 8*60 if not ctx.is_simulating() else 1
+        check_time = 8*60 if not ctx.is_simulating() else 0.05
         tip_list = []
         first = True
         while time.monotonic() - start_time < check_time:
@@ -630,7 +631,8 @@ Please add elution buffer at 70C to 12-well reservoir.'
                     m300.custom_pick_up()
                     current_tip = m300._last_tip_picked_up_from
                     tip_list.append(current_tip)
-                    first = False
+                    if i == len(mag_samps_h) - 1:
+                        first = False
                 else:
                     m300.pick_up_tip(tip_list[i])
                 side = 1 if idx % 2 == 0 else -1
@@ -667,7 +669,7 @@ then resume run.')
         t_start -= 60
 
     flow_rate(asp=20)
-    for src, dest, tip in zip(mag_samps, pcr_samps, all_tips[t_start:]):
+    for src, dest in zip(mag_samps, pcr_samps):
         w = int(str(src).split(' ')[0][1:])
         if src.width is not None:
             radi = float(src.width)/4
@@ -678,7 +680,7 @@ then resume run.')
         m300.aspirate(
             elution_vol, src.bottom().move(types.Point(x=x0, y=0, z=1)))
         m300.dispense(elution_vol, dest)
-        m300.drop_tip(tip)
+        m300.return_tip()
 
     mag_deck.disengage()
     ctx.comment('Protocol complete! Please store samples at -20C or \
