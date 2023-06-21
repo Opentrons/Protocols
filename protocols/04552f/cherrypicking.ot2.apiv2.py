@@ -73,8 +73,8 @@ before resuming.')
     media_sources = []
     media_dests = []
     for i, line in enumerate(data):
-        source_ind = (int(line[0].split('.')[-1]) - 1) % 2
-        dest_ind = (int(line[3].split('.')[-1]) - 1) % 2
+        source_ind = (int(line[0].split('.')[-1]) - 1) % len(source_plates)
+        dest_ind = (int(line[3].split('.')[-1]) - 1) % len(dest_plates)
 
         source_labware = source_plates[source_ind]
         source_well = source_labware.wells_by_name()[line[1]]
