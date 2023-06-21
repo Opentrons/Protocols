@@ -4,7 +4,7 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'Capping Assay: Steps 3-6',
+    'protocolName': 'Capping Assay n=16: Steps 3-6 [NICK 6/20/2023]',
     'author': 'Nick <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
@@ -46,7 +46,7 @@ def run(ctx):
         'neptune_96_aluminumblock_200ul',
         '1', 'starting sample plate')
     magdeck = ctx.load_module('magnetic module gen2', '4')
-    magplate = magdeck.load_labware('ge_96_wellplate_500ul',
+    magplate = magdeck.load_labware('cytiva_96_wellplate_500ul',
                                     'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '7')
     heatingplate = tempdeck.load_labware(
@@ -130,9 +130,6 @@ def run(ctx):
                                     for tip in rack.wells()]
         tip_log[pip]['max'] = len(tip_log[pip]['tips'])
 
-    m300.flow_rate.aspirate /= 2
-    m300.flow_rate.dispense /= 2
-
     def slow_withdraw(pip, well, delay_seconds=2.0):
         pip.default_speed /= 16
         if delay_seconds > 0:
@@ -198,7 +195,7 @@ resuming.')
                 waste_vol = 0
             waste_vol += vol
 
-        m300.flow_rate.aspirate /= 4
+        m300.flow_rate.aspirate /= 2
         num_trans = math.ceil(vol/(200 - air_gap_vol))
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
@@ -225,7 +222,7 @@ resuming.')
                 m300.air_gap(20)
             if drop:
                 _drop(m300)
-        m300.flow_rate.aspirate *= 4
+        m300.flow_rate.aspirate *= 2
 
     def wash(vol, source, change_tips_for_samples=True, mix_reps=mix_reps,
              park=True, resuspend=True, drop=True):
@@ -261,15 +258,16 @@ resuming.')
                     m300.dispense(m300.current_volume, source.top())
                 m300.aspirate(vol_per_trans, source)
                 slow_withdraw(m300, source)
+                z_disp = 3 if n == num_trans - 1 else m.depth - 2
                 if air_gap_vol > 0:
                     m300.aspirate(air_gap_vol, source.top())
-                m300.dispense(m300.current_volume, m.top())
+                m300.dispense(m300.current_volume, m.bottom(z_disp))
                 slow_withdraw(m300, m)
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
                 for _ in range(mix_reps):
-                    m300.aspirate(mix_volume_percentage*vol, m.bottom())
+                    m300.aspirate(mix_volume_percentage*vol, m.bottom(0.5))
                     m300.dispense(mix_volume_percentage*vol,
                                   m.bottom().move(
                                     Point(x=side*radius*radial_offset, z=3)))
@@ -331,11 +329,11 @@ minutes')
             m300.dispense(vol, loc)
             slow_withdraw(m300, m)
             for _ in range(mix_reps):
-                m300.aspirate(vol*mix_volume_percentage, m.bottom())
+                m300.aspirate(vol*mix_volume_percentage, m.bottom(0.5))
                 m300.dispense(vol*mix_volume_percentage, m.bottom().move(Point(
                     x=side*radius*radial_offset, z=3)))
                 slow_withdraw(m300, m)
-            m300.aspirate(vol, m.bottom())
+            m300.aspirate(vol, m.bottom(0.5))
             slow_withdraw(m300, m)
             m300.dispense(vol, h)
             slow_withdraw(m300, h)
@@ -358,7 +356,7 @@ minutes')
             m300.aspirate(vol, h)
             slow_withdraw(m300, h)
             m300.dispense(vol, m)
-            slow_withdraw(m300, h)
+            slow_withdraw(m300, m)
             m300.blow_out(m.bottom(m.depth/2))
             _drop(m300)
 
@@ -377,7 +375,7 @@ minutes')
             slow_withdraw(m300, m)
             if air_gap_vol > 0:
                 m300.aspirate(air_gap_vol, m.top())
-            m300.dispense(m300.current_volume, e)
+            m300.dispense(m300.current_volume, e.bottom(1))
             slow_withdraw(m300, e)
             m300.drop_tip()
 
@@ -431,6 +429,7 @@ minutes')
             side = 1 if j % 2 == 0 else -1
             loc = s.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset-1))
+            m300.move_to(s.bottom(5))
             for _ in range(mix_reps):
                 m300.aspirate(sample_vol*mix_volume_percentage, loc)
                 m300.dispense(sample_vol*mix_volume_percentage,
