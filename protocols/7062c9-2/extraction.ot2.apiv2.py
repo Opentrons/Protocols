@@ -4,7 +4,7 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'Capping Assay n=16: Steps 3-6 [NICK 6/20/2023]',
+    'protocolName': 'Capping Assay: Steps 3-6',
     'author': 'Nick <protocols@opentrons.com>',
     'apiLevel': '2.13'
 }
