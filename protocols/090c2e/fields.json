@@ -3,7 +3,7 @@
       "type": "int",
       "label": "Number of Samples",
       "name": "_num_samps",
-      "default": 8
+      "default": 16
     },
     {
       "type": "dropDown",
@@ -65,8 +65,8 @@
       "label": "Perform Resuspension Off-Deck",
       "name": "_off_deck",
       "options": [
-        { "label": "Yes", "value": 1 },
-        { "label": "No", "value": 0 }
+        { "label": "No", "value": 0 },
+        { "label": "Yes", "value": 1 }
       ]
     },
     {
