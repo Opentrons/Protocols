@@ -16,6 +16,12 @@
       ]
     },
     {
+      "type": "str",
+      "label": "Wellplate type (if not listed in dropdown above)",
+      "name": "lw_deepwell_plate_open",
+      "default": ""
+    },
+    {
       "type": "dropDown",
       "label": "Pipette Mount",
       "name": "_m300_mount",

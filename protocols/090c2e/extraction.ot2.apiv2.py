@@ -32,6 +32,7 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      _m300_mount,
      lw_deepwell_plate,
+     lw_deepwell_plate_open,
      _num_samps,
      vol_xp1,
      vol_removal,
@@ -44,6 +45,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
          '_m300_mount',
          'lw_deepwell_plate',
+         'lw_deepwell_plate_open',
          '_num_samps',
          'vol_xp1',
          'vol_removal',
@@ -80,7 +82,11 @@ def run(ctx: protocol_api.ProtocolContext):
     pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 10)
     # Eluted DNA
     # samp_plate = ctx.load_labware(samp_labware, 4)
-    mag_plate = mag_deck.load_labware(lw_deepwell_plate)
+    if lw_deepwell_plate_open.strip():
+        lw_deepwell_plate_name = lw_deepwell_plate_open
+    else:
+        lw_deepwell_plate_name = lw_deepwell_plate
+    mag_plate = mag_deck.load_labware(lw_deepwell_plate_name)
 
     # load tipracks
     tips = [
