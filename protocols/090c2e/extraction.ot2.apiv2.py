@@ -104,8 +104,8 @@ def run(ctx: protocol_api.ProtocolContext):
     class WellH(Well):
         def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
-            # super().__init__(well.parent, well._core, APIVersion(2, 13))
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
+            # super().__init__(well._impl)
             self.well = well
             # specified minimum well bottom clearance
             self.min_height = min_height
@@ -324,7 +324,7 @@ can not exceed the height of the labware.')
                 # bead_loc = col.bottom().move(
                 #     types.Point(x=side*radius*0.5, z=3))
                 mix_high_low(col, 10, 190, z_offset_low=3,
-                             x_offset=side*radius*0.4, switch_sides_x=False)
+                             x_offset=side*radius*0.5, switch_sides_x=False)
                 flow_rate()
             ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
@@ -478,23 +478,22 @@ can not exceed the height of the labware.')
 
         m300.flow_rate.aspirate *= 3
         m300.flow_rate.dispense *= 3
-        check_time = 8*60 if not ctx.is_simulating() else 0.05
         parking_spots = []
-        first_pickup = True
-        start_time = time.monotonic()
+        if num_cols > 1:
+            num_mixes = math.ceil(1.5*inc_time/num_cols)
+        else:
+            num_mixes = 10
 
-        while time.monotonic() - start_time < check_time:
+        for n in range(num_mixes):
             for i, col in enumerate(mag_samps):
                 side = 1 if i % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(types.Point(
                     x=side*radius*0.5, z=3))
-                if first_pickup:
+                if n == 0:
                     if not m300.has_tip:
                         m300.custom_pick_up()
                     parking_spots.append(m300._last_tip_picked_up_from)
-                    if i == len(mag_samps) - 1:
-                        first_pickup = False
                 else:
                     if not m300.has_tip:
                         m300.custom_pick_up(parking_spots[i])
@@ -509,7 +508,7 @@ can not exceed the height of the labware.')
                 else:
                     ctx.delay(seconds=30)
         if m300.has_tip:
-            m300.drop_tip(parking_spots[i])
+            m300.return_tip()
         m300.flow_rate.aspirate /= 3
         m300.flow_rate.dispense /= 3
 
@@ -626,20 +625,20 @@ Please add elution buffer at 70C to 12-well reservoir.'
 
     # Transfer elution to PCR plate
     if not off_deck:
-        start_time = time.monotonic()
-        check_time = 8*60 if not ctx.is_simulating() else 0.05
+        if num_cols > 1:
+            num_mixes = math.ceil(1.5*inc_time/num_cols)
+        else:
+            num_mixes = 10
         tip_list = []
-        first = True
-        while time.monotonic() - start_time < check_time:
+        for n in range(num_mixes):
             for i, col in enumerate(mag_samps_h):
-                if first:
+                if n == 0:
                     m300.custom_pick_up()
                     current_tip = m300._last_tip_picked_up_from
                     tip_list.append(current_tip)
-                    if i == len(mag_samps_h) - 1:
-                        first = False
                 else:
-                    m300.pick_up_tip(tip_list[i])
+                    if not m300.has_tip:
+                        m300.pick_up_tip(tip_list[i])
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 bead_loc = col.bottom().move(
@@ -650,7 +649,13 @@ Please add elution buffer at 70C to 12-well reservoir.'
                 for _ in range(2):
                     m300.move_to(col.bottom(5))
                     m300.move_to(col.bottom(6))
-                m300.return_tip()
+                if num_cols > 1:
+                    m300.return_tip()
+                else:
+                    ctx.delay(seconds=30)
+
+        if m300.has_tip:  # if num_cols == 1
+            m300.return_tip()
     else:
         flash_lights()
         ctx.home()
