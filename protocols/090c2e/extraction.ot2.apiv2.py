@@ -1,4 +1,3 @@
-import time
 from opentrons import protocol_api
 from opentrons import types
 from opentrons.protocol_api.labware import Well
