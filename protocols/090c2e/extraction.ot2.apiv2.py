@@ -406,9 +406,6 @@ can not exceed the height of the labware.')
         for x in reagent_keys[key]:
             ctx.comment(f'load {x.current_volume} of {key} in {x}')
 
-    ctx.comment(f'load {_num_samps*100} of water in reservoir 2 \
-(slot 3) channel 9')
-
     # for x in rbb:
     #     ctx.comment(f'load {x.current_volume} in {x}')
 
