@@ -36,7 +36,8 @@ def run(ctx):
     all_test_plate_dests_m = [
         well for plate in elisa_plates for well in plate.rows()[0]]
     test_plate_dest_blocks = [
-        
+        all_test_plate_dests_s[i*48+8]
+        for block in range(8)
     ]
 
     def slow_withdraw(pip, well, delay_seconds=1.0):
