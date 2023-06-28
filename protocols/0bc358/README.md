@@ -32,18 +32,13 @@ A1,B1,4
 
 ---
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
-
 ### Labware
 * [Labware name](link to labware on shop.opentrons.com when applicable)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
+* [P300](link to pipette on shop.opentrons.com)
+* [P1000](link to pipette on shop.opentrons.com)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ### Reagents
@@ -66,9 +61,14 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. MeOH is added to the WS1 and QC1 scintillation vials in tuberack on slot 3
+2. Analytes are transferred from the source tuberacks on slot 2 to the WS1 and QC1 scintillation vials with a pause to remove analyte caps.
+3. MeOH is added to the WS2 and QC2 scintillation vials in tuberack on slot 3
+4. Analytes are transferred from the source tuberacks on slot 5 to the WS2 and QC2 scintillation vials with a pause before each analyte to remove caps.
+5. MeOH is added to the WS3 and QC3 scintillation vials in tuberack on slot 3
+6. Analytes are transferred from the source tuberacks on slot 8 to the WS3 and QC3 scintillation vials with a pause before each analyte to remove caps (note analyte vials in D3 and D4 of the source tuberack will need to be replaced between aspiration steps).
+7. MeOH is added to the WS4 and QC4 scintillation vials in tuberack on slot 3
+8. Analytes are transferred from the source tuberacks on slot 11 to the WS4 and QC4 scintillation vials with a pause before each analyte to remove caps.
 
 ### Process
 1. Input your protocol parameters above.
