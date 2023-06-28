@@ -85,7 +85,7 @@ def run(ctx):
             if dna_vol <= 0.0:
                 continue
 
-            if dna_vol <= 1.0:
+            if dna_vol < 1.0:
                 raise Exception("DNA volume found which is less than 1.0ul")
 
             else:

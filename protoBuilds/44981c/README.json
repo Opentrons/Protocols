@@ -5,7 +5,7 @@
             "Cherrypicking"
         ]
     },
-    "description": "This protocol performs cherrypicking from source to target plates as specified in an input CSV file. The protocol parses the CSV for slots to load the source and target plates. Only non-zero volume transfers are carried out for efficiency, and the user is prompted to refill tipracks if necessary.\n\nThis protocol is an update of this APIv1 protocol.\n\nYou will need:\n* P10 Single-channel electronic pipette\n* P50 Single-channel electronic pipette\n* P300 Single-channel electronic pipette\n* 10\u00b5l Pipette tips\n* 300\u00b5l Pipette tips\n* Biorad Hard-Shell 96-Well PCR Plates # HSP9601\n* Opentrons 4-in-1 Tube Rack Set",
+    "description": "This protocol performs cherrypicking from source to target plates as specified in an input CSV file. The protocol parses the CSV for slots to load the source and target plates. Only non-zero volume transfers are carried out for efficiency, and the user is prompted to refill tipracks if necessary.\n\nThis protocol is an update of this APIv1 protocol.\n\nYou will need:\n P10 Single-channel electronic pipette\n P50 Single-channel electronic pipette\n P300 Single-channel electronic pipette\n 10\u00b5l Pipette tips\n 300\u00b5l Pipette tips\n Biorad Hard-Shell 96-Well PCR Plates # HSP9601\n* Opentrons 4-in-1 Tube Rack Set",
     "internal": "44981c",
     "markdown": {
         "author": "[Opentrons](http://www.opentrons.com/)\n\n",
