@@ -16,6 +16,12 @@
       ]
     },
     {
+      "type": "str",
+      "label": "Wellplate type (if not listed in dropdown above)",
+      "name": "lw_deepwell_plate_open",
+      "default": ""
+    },
+    {
       "type": "dropDown",
       "label": "Pipette Mount",
       "name": "_m300_mount",
@@ -37,10 +43,10 @@
       "default": 700.0
     },
     {
-      "type": "int",
+      "type": "float",
       "label": "MagDeck Incubation (minutes)",
       "name": "_mag_time",
-      "default": 3
+      "default": 5.0
     },
     {
       "type": "int",
