@@ -70,6 +70,18 @@ def run(protocol: protocol_api.ProtocolContext):
     vol_airgap_p300 = 20
     vol_airgap_p1000 = 20
 
+    # MeOH before analaytes qs 4 mL
+    vol_meoh_1 = 160
+    destinations = [ws1, qc1]
+    for d in destinations:
+        p300.pick_up_tip()
+        p300.aspirate(vol_meoh_1, meoh)
+        slow_withdraw(p300, meoh)
+        p300.air_gap(vol_airgap_p300)
+        p300.dispense(p300.current_volume, d)
+        slow_withdraw(p300, d)
+        p300.drop_tip()
+    
     # WS1 and QC1
     vol_analyte_1 = 80
     sources_1 = [well for row in hplc_vial_1.rows() for well in row][:48]
@@ -85,18 +97,18 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.drop_tip()
             protocol.pause('Protocol paused to remove analyte cap')
 
-    # qs to 4 mL with MeOH
-    vol_meoh_1 = 160
-    destinations = [ws1, qc1]
-    for d in destinations:
-        p300.pick_up_tip()
-        p300.aspirate(vol_meoh_1, meoh)
-        slow_withdraw(p300, meoh)
-        p300.air_gap(vol_airgap_p300)
-        p300.dispense(p300.current_volume, d)
-        slow_withdraw(p300, d)
-        p300.drop_tip()
-
+    # MeOH before analaytes qs 4 mL
+    vol_meoh_2 = 240
+    destinations_2 = [ws2, qc2]
+    for d in destinations_2:
+        p1000.pick_up_tip()
+        p1000.aspirate(vol_meoh_2, meoh)
+        slow_withdraw(p1000, meoh)
+        p1000.air_gap(vol_airgap_p1000)
+        p1000.dispense(p1000.current_volume, d)
+        slow_withdraw(p1000, d)
+        p1000.drop_tip()
+    
     # WS2 and QC2
     vol_analyte_2 = 80.0
     sources_2 = [well for row in hplc_vial_2.rows() for well in row][:47]
@@ -112,17 +124,16 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.drop_tip()
             protocol.pause('Protocol paused to remove analyte cap')
 
-    # qs to 4 mL with MeOH
-    vol_meoh_2 = 240
-    destinations_2 = [ws2, qc2]
-    for d in destinations_2:
-        p1000.pick_up_tip()
-        p1000.aspirate(vol_meoh_2, meoh)
-        slow_withdraw(p1000, meoh)
-        p1000.air_gap(vol_airgap_p1000)
-        p1000.dispense(p1000.current_volume, d)
-        slow_withdraw(p1000, d)
-        p1000.drop_tip()
+    # MeOH before analaytes qs 4 mL
+    vol_meoh_3 = 80
+    for d in destinations_3:
+        p300.pick_up_tip()
+        p300.aspirate(vol_meoh_3, meoh)
+        slow_withdraw(p300, meoh)
+        p300.air_gap(vol_airgap_p300)
+        p300.dispense(p300.current_volume, d)
+        slow_withdraw(p300, d)
+        p300.drop_tip()
 
     # WS3 and QC3
     sources_3a = [well for row in hplc_vial_3.rows() for well in row][:29]
@@ -153,15 +164,15 @@ def run(protocol: protocol_api.ProtocolContext):
             protocol.pause('Protocol paused to remove analyte cap')
 
     # qs to 4 mL with MeOH
-    vol_meoh_3 = 80
-    for d in destinations_3:
-        p300.pick_up_tip()
-        p300.aspirate(vol_meoh_3, meoh)
-        slow_withdraw(p300, meoh)
-        p300.air_gap(vol_airgap_p300)
-        p300.dispense(p300.current_volume, d)
-        slow_withdraw(p300, d)
-        p300.drop_tip()
+    vol_meoh_4 = 640.0
+    for d in destinations_4:
+        p1000.pick_up_tip()
+        p1000.aspirate(vol_meoh_4, meoh)
+        slow_withdraw(p1000, meoh)
+        p1000.air_gap(vol_airgap_p1000)
+        p1000.dispense(p1000.current_volume, d)
+        slow_withdraw(p1000, d)
+        p1000.drop_tip()
 
     # WS4 and QC4
     sources_4a = [well for row in hplc_vial_4.rows() for well in row][:2]
@@ -190,15 +201,4 @@ def run(protocol: protocol_api.ProtocolContext):
             slow_withdraw(p1000, d)
             p1000.drop_tip()
             protocol.pause('Protocol paused to remove analyte cap')
-
-    # qs to 4 mL with MeOH
-    vol_meoh_4 = 640.0
-    for d in destinations_4:
-        p1000.pick_up_tip()
-        p1000.aspirate(vol_meoh_4, meoh)
-        slow_withdraw(p1000, meoh)
-        p1000.air_gap(vol_airgap_p1000)
-        p1000.dispense(p1000.current_volume, d)
-        slow_withdraw(p1000, d)
-        p1000.drop_tip()
 
