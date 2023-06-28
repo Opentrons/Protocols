@@ -232,6 +232,7 @@ component_2_volume,1
 component_3_volume,1
 conc_target,1
 concentration_csv,2
+concentration_template,1
 control_plate,1
 count_mix,1
 count_plates,1
@@ -871,6 +872,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
+num_rxns,1
 num_samp,68
 num_samp_p1,1
 num_samp_p2,1
@@ -888,6 +890,7 @@ num_samples_per_plate,1
 num_samps,6
 num_sets,2
 num_slides,2
+num_templates,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -1188,7 +1191,7 @@ run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
 rxn_mix_vol_p3,1
-rxn_vol,2
+rxn_vol,3
 s_csv,1
 s_mount,1
 s_pip,1
