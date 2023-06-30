@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Krishna <krishna.soma@opentrons.com>',
@@ -5,26 +7,33 @@ metadata = {
 }
 
 
-def run(protocol):
+def run(ctx):
+
+    [num_plates] = get_values(  # noqa: F821
+        'num_plates')
 
     # modules
-    tempdeck = protocol.load_module('temperature module gen2', '1')
+    tempdeck = ctx.load_module('temperature module gen2', '1')
     tempdeck.set_temperature(4)
 
     # labware
     reservoir = tempdeck.load_labware('nest_12_reservoir_15ml')
-    pcr_plate = protocol.load_labware(
-        'corning_96_wellplate_360ul_flat', '5')
-    sample_plate = protocol.load_labware(
-        'corning_96_wellplate_360ul_flat', '3', 'sample plate')
+    plate_slots = ['5', '6']
+    pcr_plates = [
+        ctx.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',
+                         slot)
+        for slot in plate_slots]
+    sample_plate = ctx.load_labware(
+        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '3',
+        'sample plate')
 
-    tiprack300 = [protocol.load_labware('opentrons_96_tiprack_300ul', '2')]
-    tiprack20 = [protocol.load_labware('opentrons_96_tiprack_20ul', '4')]
+    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]
+    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]
 
     # pipettes
-    m300 = protocol.load_instrument(
+    m300 = ctx.load_instrument(
          'p300_multi_gen2', 'left', tip_racks=tiprack300)
-    m20 = protocol.load_instrument(
+    m20 = ctx.load_instrument(
          'p20_multi_gen2', 'right', tip_racks=tiprack20)
 
     # variables
@@ -33,11 +42,48 @@ def run(protocol):
 
     mm = reservoir.wells()[0]
     sample_sources = sample_plate.rows()[0]
-    pcr_destinations = pcr_plate.rows()[0]
 
-    # add mastermix with the same tip
-    m300.transfer(vol_mm, mm, pcr_destinations)
+    def slow_withdraw(well, delay_seconds=2.0, pip=m300):
+        pip.default_speed /= 16
+        if delay_seconds > 0:
+            ctx.delay(seconds=delay_seconds)
+        pip.move_to(well.top())
+        pip.default_speed *= 16
 
-    # add sample with fresh tips each time, and mix (2x)
-    for s, d in zip(sample_sources, pcr_destinations):
-        m20.transfer(vol_sample, s, d, mix_after=(2, 10))
+    for n in range(num_plates):
+        pcr_plate = pcr_plates[n//2]
+        pcr_destinations = pcr_plate.rows()[0]
+
+        # add mastermix with the same tip
+        tip_vol_ref = m300.tip_racks[0].wells()[0].max_volume
+        num_asp = math.ceil(vol_mm*len(pcr_destinations)/tip_vol_ref)
+        max_dests_per_asp = int(math.floor(tip_vol_ref/vol_mm))
+        mm_dest_sets = [
+            pcr_destinations[i*max_dests_per_asp:(i+1)*max_dests_per_asp]
+            if i < num_asp - 1
+            else pcr_destinations[i*max_dests_per_asp:]
+            for i in range(num_asp)]
+        m300.pick_up_tip()
+        for d_set in mm_dest_sets:
+            m300.aspirate(vol_mm*len(d_set), mm.bottom(2))
+            slow_withdraw(mm)
+            for d in d_set:
+                m300.dispense(vol_mm)
+                slow_withdraw(d)
+        m300.drop_tip()
+
+        # add sample with fresh tips each time, and mix (2x)
+        for s, d in zip(sample_sources, pcr_destinations):
+            m20.pick_up_tip()
+            m20.aspirate(vol_sample, s)
+            slow_withdraw(s, pip=m20)
+            m20.dispense(vol_sample, d)
+            m20.mix(2, 10, d)
+            slow_withdraw(d, pip=m20)
+            m20.drop_tip()
+
+        m20.reset_tipracks()
+
+        if n < num_plates - 1:
+            ctx.pause(f'Replace 20ul tiprack. Refill mastermix. Replace \
+Ensure clean PCR plate on slot {pcr_plates[(n+1)//2].parent} before resuming.')

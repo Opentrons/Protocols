@@ -16,9 +16,6 @@ This is a PCR Prep protocol. The protocol begins by adding mastermix to the PCR 
 
 ### Labware
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
-* Corning 96-well PCR Plate
-* Corning 96-well Sample Plate
-
 * [Opentrons 300uL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 * [Opentrons 20µL Tips](https://shop.opentrons.com/opentrons-20-l-tips-160-racks-800-refills/)
 

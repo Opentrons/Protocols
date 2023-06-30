@@ -1,0 +1,79 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'PCR Prep',\n    'author': 'Krishna <krishna.soma@opentrons.com>',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [num_plates] = get_values(  # noqa: F821\n        'num_plates')\n\n    # modules\n    tempdeck = ctx.load_module('temperature module gen2', '1')\n    tempdeck.set_temperature(4)\n\n    # labware\n    reservoir = tempdeck.load_labware('nest_12_reservoir_15ml')\n    plate_slots = ['5', '6']\n    pcr_plates = [\n        ctx.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',\n                         slot)\n        for slot in plate_slots]\n    sample_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '3',\n        'sample plate')\n\n    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]\n    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]\n\n    # pipettes\n    m300 = ctx.load_instrument(\n         'p300_multi_gen2', 'left', tip_racks=tiprack300)\n    m20 = ctx.load_instrument(\n         'p20_multi_gen2', 'right', tip_racks=tiprack20)\n\n    # variables\n    vol_mm = 23.0\n    vol_sample = 2.0\n\n    mm = reservoir.wells()[0]\n    sample_sources = sample_plate.rows()[0]\n\n    def slow_withdraw(well, delay_seconds=2.0, pip=m300):\n        pip.default_speed /= 16\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    for n in range(num_plates):\n        pcr_plate = pcr_plates[n//2]\n        pcr_destinations = pcr_plate.rows()[0]\n\n        # add mastermix with the same tip\n        tip_vol_ref = m300.tip_racks[0].wells()[0].max_volume\n        num_asp = math.ceil(vol_mm*len(pcr_destinations)/tip_vol_ref)\n        max_dests_per_asp = int(math.floor(tip_vol_ref/vol_mm))\n        mm_dest_sets = [\n            pcr_destinations[i*max_dests_per_asp:(i+1)*max_dests_per_asp]\n            if i < num_asp - 1\n            else pcr_destinations[i*max_dests_per_asp:]\n            for i in range(num_asp)]\n        m300.pick_up_tip()\n        for d_set in mm_dest_sets:\n            m300.aspirate(vol_mm*len(d_set), mm.bottom(2))\n            slow_withdraw(mm)\n            for d in d_set:\n                m300.dispense(vol_mm)\n                slow_withdraw(d)\n        m300.drop_tip()\n\n        # add sample with fresh tips each time, and mix (2x)\n        for s, d in zip(sample_sources, pcr_destinations):\n            m20.pick_up_tip()\n            m20.aspirate(vol_sample, s)\n            slow_withdraw(s, pip=m20)\n            m20.dispense(vol_sample, d)\n            m20.mix(2, 10, d)\n            slow_withdraw(d, pip=m20)\n            m20.drop_tip()\n\n        m20.reset_tipracks()\n\n        if n < num_plates - 1:\n            ctx.pause(f'Replace 20ul tiprack. Refill mastermix. Replace \\\nEnsure clean PCR plate on slot {pcr_plates[(n+1)//2].parent} before resuming.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 4,
+            "label": "number of PCR plates to prep",
+            "name": "num_plates",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "sample plate on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Krishna <krishna.soma@opentrons.com>",
+        "protocolName": "PCR Prep"
+    },
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
+}
