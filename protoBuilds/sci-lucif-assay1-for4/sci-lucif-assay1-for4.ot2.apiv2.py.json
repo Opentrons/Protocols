@@ -1,0 +1,83 @@
+{
+    "content": "# flake8: noqa\n\nmetadata = {\n    'protocolName': 'Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 1: Cell Culture Preparation',\n    'author': 'Boren Lin, Opentrons',\n    'description': 'The protocol performs liquid handling to prepare up to four 96-well plates of mammalian cells for luciferase reporter assay.',\n    'apiLevel': '2.13'\n}\n\nPLATE_SLOT = [2, 5, 8, 11]\nTOTAL_COL = 12\n\nCELL_VOL =100\n\ndef run(ctx):\n\n    [TOTAL_PLATE, m300_mount] = get_values(  # noqa: F821\n        \"TOTAL_PLATE\", \"m300_mount\")\n\n    # labware\n    cell_stock = ctx.load_labware('nest_12_reservoir_15ml', 6, 'cell stock')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 3)\n    p300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=[tiprack])\n\n    cells_source = cell_stock.wells()[:TOTAL_PLATE]\n\n    #protocol\n\n    for x in range(TOTAL_PLATE):\n        working_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', PLATE_SLOT[x])\n        cells_all = working_plate.rows()[0][:TOTAL_COL]\n\n        ctx.comment('\\n\\n\\n~~~~~~~~TRANSFER CELLS~~~~~~~~\\n')\n        p300.pick_up_tip()\n        start = cells_source[x]\n        p300.mix(5, 250, start.bottom(z=5), rate = 0.75)\n        p300.mix(5, 250, start.bottom(z=2), rate = 0.75)\n\n        for i in range(TOTAL_COL):\n            p300.mix(2, CELL_VOL, start.bottom(z=1), rate = 0.75)\n            p300.aspirate(CELL_VOL, start.bottom(z=0.5), rate = 0.5)\n            p300.air_gap(20)\n            end = cells_all[i]\n            p300.dispense(CELL_VOL+20, end.top(z=-2), rate = 0.75)\n            p300.blow_out()\n            p300.touch_tip()\n        p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Total Number of Plates",
+            "name": "TOTAL_PLATE",
+            "options": [
+                {
+                    "label": "1",
+                    "value": 1
+                },
+                {
+                    "label": "2",
+                    "value": 2
+                },
+                {
+                    "label": "3",
+                    "value": 3
+                },
+                {
+                    "label": "4",
+                    "value": 4
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "cell stock on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Boren Lin, Opentrons",
+        "description": "The protocol performs liquid handling to prepare up to four 96-well plates of mammalian cells for luciferase reporter assay.",
+        "protocolName": "Luciferase Reporter Assay for NF-kB Activation (up to 4 plates) - Protocol 1: Cell Culture Preparation"
+    },
+    "modules": []
+}

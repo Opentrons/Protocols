@@ -12,12 +12,14 @@ metadata = {
 
 def run(ctx):
 
-    [mix_asp_rate, mix_disp_rate, dead_vol, labware_plate, labware_reservoir,
-     clearance_plate, clearance_reservoir, clearance_aspirate,
-     clearance_dispense, mix_reps, uploaded_csv] = get_values(  # noqa: F821
-        "mix_asp_rate", "mix_disp_rate", "dead_vol", "labware_plate",
-        "labware_reservoir", "clearance_plate", "clearance_reservoir",
-        "clearance_aspirate", "clearance_dispense", "mix_reps", "uploaded_csv")
+    [mix_asp_rate, mix_disp_rate, dead_vol, labware_parent, labware_child,
+     labware_reservoir, clearance_plate, clearance_reservoir,
+     clearance_aspirate, clearance_dispense, mix_reps,
+     uploaded_csv] = get_values(  # noqa: F821
+        "mix_asp_rate", "mix_disp_rate", "dead_vol", "labware_parent",
+        "labware_child", "labware_reservoir", "clearance_plate",
+        "clearance_reservoir", "clearance_aspirate", "clearance_dispense",
+        "mix_reps", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -26,10 +28,10 @@ def run(ctx):
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     plates_child = [
-     ctx.load_labware(labware_plate, slot, "Child Plate") for slot in sorted(
+     ctx.load_labware(labware_child, slot, "Child Plate") for slot in sorted(
       list(set([int(tfer['Child Plate Location']) for tfer in tfers])))]
     plates_parent = [
-     ctx.load_labware(labware_plate, slot, "Parent Plate") for slot in sorted(
+     ctx.load_labware(labware_parent, slot, "Parent Plate") for slot in sorted(
       list(set([int(tfer['Parent Plate Location']) for tfer in tfers])))]
 
     if not 1 <= len(plates_child) <= 1:
@@ -100,7 +102,7 @@ def run(ctx):
                 self.current_volume = self.current_volume - vol
             else:
                 self.current_volume = 0
-            return(self.well.bottom(self.height))
+            return self.well.bottom(self.height)
 
         def height_inc(self, vol, top=False):
             if self.diameter is not None:
@@ -116,9 +118,9 @@ def run(ctx):
                 self.height = self.depth
             self.current_volume += vol
             if top is False:
-                return(self.well.bottom(self.height))
+                return self.well.bottom(self.height)
             else:
-                return(self.well.top())
+                return self.well.top()
 
     # buffer in reservoir with vol and liquid height tracking
     reservoir = ctx.load_labware(labware_reservoir, '9', "Reservoir")

@@ -7,8 +7,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates, do_day1, do_day2, mount_p300] = get_values(  # noqa: F821
-        'num_plates', 'do_day1', 'do_day2', 'mount_p300')
+    [num_plates, protocol_selection, mount_p300] = get_values(  # noqa: F821
+        'num_plates', 'protocol_selection', 'mount_p300')
 
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '1')]
     tuberack = ctx.load_labware(
@@ -33,12 +33,12 @@ def run(ctx):
     coating_solution_liq = ctx.define_liquid(
         name='coating solution',
         description='',
-        color='B925FF'
+        display_color='B925FF'
     )
     water_liq = ctx.define_liquid(
         name='water',
         description='',
-        color='50D5FF'
+        display_color='50D5FF'
     )
 
     coating_solution.load_liquid(coating_solution_liq, volume=10000)
@@ -68,8 +68,8 @@ def run(ctx):
             pip.blow_out(destination.bottom(h_disp))
         slow_withdraw(destination)
 
-    """ DAY 1 """
-    if do_day1:
+    # DAY 1
+    if protocol_selection == 1:
         dests1 = [
             well for plate in plates384
             for row in [
@@ -79,14 +79,8 @@ def run(ctx):
         for d in dests1:
             custom_transfer(vol_coating_solution, coating_solution, d, h_asp=5)
         p300.drop_tip()
-
-    if not do_day2:
-        ctx.comment('Day 1 complete.')
-
-    """ DAY 2 """
-    if do_day2:
-        if do_day1:
-            ctx.pause('Day 1 complete.')
+    # DAY 2
+    elif protocol_selection == 2:
         sources2 = [
             well for plate in plates384
             for row in [
@@ -98,6 +92,7 @@ def run(ctx):
                             h_disp=30, vol_pre_airgap=20, blow_out=True)
         p300.drop_tip()
 
+    elif protocol_selection == 3:
         dests3 = [
             well for plate in plates384
             for row in [plate.rows_by_name()[row_name] for row_name in 'CFIL']
@@ -111,7 +106,7 @@ def run(ctx):
 
         dests4 = [
             well for plate in plates384
-            for row in [plate.rows_by_name()[row_name] for row_name in 'DHKN']
+            for row in [plate.rows_by_name()[row_name] for row_name in 'EHKN']
             for well in row[3::3]]
         p300.pick_up_tip()
         for d in dests4:
@@ -120,16 +115,17 @@ def run(ctx):
 
         ctx.delay(minutes=10)
 
-        sources5 = [
-            well for plate in plates384
-            for row in [
-                plate.rows_by_name()[row_name] for row_name in 'CEFHIKLN']
-            for well in row[1:-1:2]]
-        p300.pick_up_tip()
-        for s in sources5:
-            custom_transfer(vol_water1, s, waste, h_asp=0.2,
-                            h_disp=30, vol_pre_airgap=20, blow_out=True)
-        p300.drop_tip()
+    else:
+        # sources5 = [
+        #     well for plate in plates384
+        #     for row in [
+        #         plate.rows_by_name()[row_name] for row_name in 'CEFHIKLN']
+        #     for well in row[1:-1:2]]
+        # p300.pick_up_tip()
+        # for s in sources5:
+        #     custom_transfer(vol_water1, s, waste, h_asp=0.2,
+        #                     h_disp=30, vol_pre_airgap=20, blow_out=True)
+        # p300.drop_tip()
 
         dests6 = [
             well for plate in plates384
@@ -151,32 +147,32 @@ def run(ctx):
             custom_transfer(vol_water2, water, d, h_asp=5)
         p300.drop_tip()
 
-        sources8 = sources5
-        p300.pick_up_tip()
-        for s in sources8:
-            custom_transfer(vol_water2, s, waste, h_asp=0.2,
-                            h_disp=30, vol_pre_airgap=20, blow_out=True)
-        p300.drop_tip()
+        # sources8 = sources5
+        # p300.pick_up_tip()
+        # for s in sources8:
+        #     custom_transfer(vol_water2, s, waste, h_asp=0.2,
+        #                     h_disp=30, vol_pre_airgap=20, blow_out=True)
+        # p300.drop_tip()
 
-        dests9 = dests3
-        p300.pick_up_tip()
-        for d in dests9:
-            custom_transfer(vol_water1, water, d, h_asp=5)
-        p300.drop_tip()
+        # dests9 = dests3
+        # p300.pick_up_tip()
+        # for d in dests9:
+        #     custom_transfer(vol_water1, water, d, h_asp=5)
+        # p300.drop_tip()
 
-        ctx.delay(minutes=10)
+        # ctx.delay(minutes=10)
 
-        dests10 = dests4
-        p300.pick_up_tip()
-        for d in dests10:
-            custom_transfer(vol_water1, water, d, h_asp=5)
-        p300.drop_tip()
+        # dests10 = dests4
+        # p300.pick_up_tip()
+        # for d in dests10:
+        #     custom_transfer(vol_water1, water, d, h_asp=5)
+        # p300.drop_tip()
 
-        ctx.delay(minutes=10)
+        # ctx.delay(minutes=10)
 
-        sources11 = sources8
-        p300.pick_up_tip()
-        for s in sources11:
-            custom_transfer(vol_water2+20, s, waste, h_asp=0.2,
-                            h_disp=30, vol_pre_airgap=20, blow_out=True)
-        p300.drop_tip()
+        # sources11 = sources8
+        # p300.pick_up_tip()
+        # for s in sources11:
+        #     custom_transfer(vol_water2+20, s, waste, h_asp=0.2,
+        #                     h_disp=30, vol_pre_airgap=20, blow_out=True)
+        # p300.drop_tip()

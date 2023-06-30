@@ -1,0 +1,235 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Combo IC',\n    'author': 'Abel.Tesfaslassie@opentrons.com',\n    'description': 'Sterile Workflows',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [final_vol, p20_mount, p300_mount, pre_dilutionA, pre_dilutionB,\n     pre_dilutionC, pre_dilutionD, pre_dil_factA, pre_dil_factB,\n     pre_dil_factC, pre_dil_factD, serial_dil_factA, serial_dil_factB,\n     serial_dil_factC, serial_dil_factD] = get_values(  # noqa: F821\n        'final_vol', 'p20_mount', 'p300_mount', 'pre_dilutionA',\n        'pre_dilutionB', 'pre_dilutionC',\n        'pre_dilutionD', 'pre_dil_factA', 'pre_dil_factB',\n        'pre_dil_factC', 'pre_dil_factD', 'serial_dil_factA',\n        'serial_dil_factB', 'serial_dil_factC', 'serial_dil_factD')\n\n    # Labware setup is as follows:\n\n    # Reagent Resevoir\n    dmso_res = ctx.load_labware('nest_12_reservoir_15ml', '1')\n    # Tips\n    p20_tip_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')\n    p200_tip_rack = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')\n    # Plates\n    compound_plate = ctx.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt', '2')\n    hdpf1 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '4')\n    hdpf2 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5')\n    vsp = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '7')\n    hsp = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '8')\n    vdpf1 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '10')\n    vdpf2 = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '11')\n\n    #  Pipette setup\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=[p20_tip_rack])\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[p200_tip_rack])\n\n    # volume Definitiions:\n    vol19 = final_vol\n    vol1 = vol19 * 12 * 1.1\n    vol2 = vol19 * 8 * 1.1\n    vol12 = vol1 / (-1 + serial_dil_factC)\n    vol14 = vol1 / (-1 + serial_dil_factD)\n    vol16 = vol2 / (-1 + serial_dil_factA)\n    vol18 = vol2 / (-1 + serial_dil_factB)\n    vol11 = vol12 + vol1\n    vol13 = vol14 + vol1\n    vol15 = vol16 + vol2\n    vol17 = vol18 + vol2\n    vol7 = vol11 / pre_dil_factC\n    vol8 = vol13 / pre_dil_factD\n    vol9 = vol15 / pre_dil_factA\n    vol10 = vol17 / pre_dil_factB\n    vol3 = vol11 - vol7\n    vol4 = vol13 - vol8\n    vol5 = vol15 - vol9\n    vol6 = vol17 - vol10\n\n    # Procedure Step:\n    # 1 Transfering DMSO to vertical stamp plate col 1 & col 12 row B-H\n    destination1 = [\n        well for col in [\n            vsp.columns()[c] for c in [0, 11]]\n        for well in col[1:]]\n    p300.pick_up_tip()\n    for d in destination1:\n        p300.transfer(vol1, dmso_res.wells_by_name()['A1'], destination1,\n                      new_tip='never')\n    p300.return_tip()\n\n    # 2 Transfering DMSO to horizontal stamp plate row A & H col 2-12\n    destination2 = [\n        well for row in [\n            hsp.rows()[c] for c in [0, 7]] for well in row[1:]]\n    p300.pick_up_tip()\n    for d in destination2:\n        p300.transfer(vol2, dmso_res.wells_by_name()['A1'], destination2,\n                      new_tip='never')\n    p300.drop_tip()\n\n    # 3 Transfering predilution DMSO volume for compound C\n    if pre_dilutionC:\n        pip = p20 if vol3 <= 20 else p300\n        pip.pick_up_tip()\n        pip.transfer(vol3, dmso_res['A1'], vsp['A2'], new_tip='never')\n\n    # compound D\n    if pre_dilutionD:\n        pip = p20 if vol4 <= 20 else p300\n        if not pip.has_tip:\n            pip.pick_up_tip()\n\n        pip.transfer(vol4, dmso_res['A1'], vsp['A11'], new_tip='never')\n\n    # 4 Transfering predilution DMSO volume for compound A\n    if pre_dilutionA:\n        pip = p20 if vol5 <= 20 else p300\n        if not pip.has_tip:\n            pip.pick_up_tip()\n        pip.transfer(vol5, dmso_res['A1'], hsp['B1'], new_tip='never')\n\n    # compound B\n    if pre_dilutionB:\n        pip = p20 if vol6 <= 20 else p300\n        if not pip.has_tip:\n            pip.pick_up_tip()\n        pip.transfer(vol6, dmso_res['A1'], hsp['G1'], new_tip='never')\n\n    for pip in [p20, p300]:\n        if pip.has_tip:\n            pip.drop_tip()\n\n    # 5 Transfering compound C & D volume to vertical stamp plate\n    if pre_dilutionC:\n        pip = p20 if vol7 <= 20 else p300\n        pip.transfer(vol7, compound_plate['B1'], vsp['A2'], new_tip='once')\n\n    if pre_dilutionD:\n        pip = p20 if vol8 <= 20 else p300\n        pip.transfer(vol8, dmso_res['A1'], vsp['A11'], new_tip='once')\n\n    # 6 Transfering compound A & B volume to horiztonal stamp plate\n    if pre_dilutionA:\n        pip = p20 if vol9 <= 20 else p300\n        pip.transfer(vol9, compound_plate['A1'], hsp['B1'], new_tip='once')\n\n    if pre_dilutionB:\n        pip = p20 if vol10 <= 20 else p300\n        pip.transfer(vol10, compound_plate['A2'], hsp['G1'], new_tip='once')\n\n    # 7 Serial dilution of compounds C\n    p300.pick_up_tip()\n    source_7 = vsp[\"A2\"] if pre_dilutionC else compound_plate[\"B1\"]\n    pip.transfer(vol11, source_7, vsp[\"A1\"], new_tip='never')\n    p300.mix(5, 100, vsp[\"A1\"])\n    p300.drop_tip()\n\n    # Serial Dilution across row A of vsp plate slot 7\n    source3 = vsp.columns()[0][:6]\n    destination3 = vsp.columns()[0][1:7]\n    p300.pick_up_tip()\n    for s, d in zip(source3, destination3):\n        p300.transfer(vol12, s, d, new_tip='never')\n        p300.mix(5, 100, d)\n    p300.drop_tip()\n\n    # 10 thru 12\n    p300.pick_up_tip()\n    source_10 = vsp[\"A11\"] if pre_dilutionD else compound_plate[\"B2\"]\n    pip.transfer(vol13, source_10, vsp[\"A12\"], new_tip='never')\n    p300.mix(5, 100, vsp[\"A12\"])\n    p300.drop_tip()\n\n    # Serial Dilution across row A of vsp plate\n    source4 = vsp.columns()[11][:6]\n    destination4 = vsp.columns()[11][1:7]\n    p300.pick_up_tip()\n    for s, d in zip(source4, destination4):\n        p300.transfer(vol14, s, d, new_tip='never')\n        p300.mix(5, 100, d)\n    p300.drop_tip()\n\n    # Serial Dilution of compound A & B\n    p300.pick_up_tip()\n    source_13 = hsp[\"B1\"] if pre_dilutionA else compound_plate[\"A1\"]\n    p300.transfer(vol15, source_13, hsp[\"A1\"], new_tip='never')\n    p300.mix(5, 100, hsp[\"A1\"])\n    p300.drop_tip()\n\n    # Serial Dilution across row A of hsp plate\n    source5 = hsp.rows()[0][:10]\n    destination5 = hsp.rows()[0][1:11]\n    p300.pick_up_tip()\n    for s, d in zip(source5, destination5):\n        p300.transfer(vol16, s, d, new_tip='never')\n        p300.mix(5, 100, d)\n    p300.drop_tip()\n\n    # 16-18\n    p300.pick_up_tip()\n    source_16 = hsp[\"G1\"] if pre_dilutionB else compound_plate[\"A2\"]\n    p300.transfer(vol17, source_16, hsp[\"H1\"], new_tip='never')\n    p300.mix(5, 100, hsp[\"H1\"])\n    p300.drop_tip()\n\n    # Serial Dilution across row A of hsp plate\n    source6 = hsp.rows()[7][:10]\n    destination6 = hsp.rows()[7][1:11]\n    p300.pick_up_tip()\n    for s, d in zip(source6, destination6):\n        p300.transfer(vol18, s, d, new_tip='never')\n        p300.mix(5, 100, d)\n    p300.drop_tip()\n\n    # 19-20 ---- distribution of vol from VSP plate col1 across vdpf1\n    # plate rows in slot 10 (vsp H1 --> vdpf1 row H , vsp G1 --> vdpf1\n    # row G...)\n    source7 = vsp.columns()[0]\n    destination7_sets = vdpf1.rows()\n    p20.pick_up_tip()\n    for s, d_set in zip(source7, destination7_sets):\n        p20.transfer(vol19, s, d_set, blowout_location='destination well',\n                     new_tip='never')\n    p20.drop_tip()\n\n    # 21-22--- distribution of final vol from VSP plate col1 across vdpf1\n    # plate rows in slot 11 (vsp H1 --> vdpf2 row H , vsp G1 --> vdpf2\n    # row G...)\n    source8 = vsp.columns()[11]\n    destination8_sets = vdpf2.rows()\n    p20.pick_up_tip()\n    for s, d_set in zip(source8, destination8_sets):\n        p20.transfer(vol19, s, d_set, blowout_location='destination well',\n                     new_tip='never')\n    p20.drop_tip()\n\n    # 23-24--- distribution of vol from hsp plate row A across vdpf1 plate\n    # rows in slot 4 (hsp A12 --> hdpf1 A12-H12, hsp A11 --> vdpf1 A11-H11...)\n    source9 = hsp.rows()[0]\n    destination9_sets = hdpf1.columns()\n    p20.pick_up_tip()\n    for s, d_set in zip(source9, destination9_sets):\n        p20.transfer(vol19, s, d_set, blowout_location='destination well',\n                     new_tip='never')\n    p20.drop_tip()\n\n    # 25-26--- distribution of vol from hsp plate row H across vdpf2 plate\n    # cols in slot 4 (hsp H12 --> hdpf2 H12-A12, hsp G12 --> vdpf2 A11-H11...)\n    source10 = hsp.rows()[7]\n    destination10_sets = hdpf2.columns()\n    p20.pick_up_tip()\n    for s, d_set in zip(source10, destination10_sets):\n        p20.transfer(vol19, s, d_set, blowout_location='destination well',\n                     new_tip='never')\n    p20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 100.0,
+            "label": "Final Plate Volume (\u03bcL)",
+            "name": "final_vol",
+            "type": "float"
+        },
+        {
+            "label": "P20 Single Channel Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Single Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Adding Pre-dilution step for Compound A?",
+            "name": "pre_dilutionA",
+            "options": [
+                {
+                    "label": "yes, add pre-dilution step",
+                    "value": true
+                },
+                {
+                    "label": "no, do not add pre-dilution step",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": " Adding Pre-dilution step for Compound B?",
+            "name": "pre_dilutionB",
+            "options": [
+                {
+                    "label": "yes, add pre-dilution step",
+                    "value": true
+                },
+                {
+                    "label": "no, do not add pre-dilution step",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Adding Pre-dilution step for Compound C?",
+            "name": "pre_dilutionC",
+            "options": [
+                {
+                    "label": "yes, add pre-dilution step",
+                    "value": true
+                },
+                {
+                    "label": "no, do not add pre-dilution step",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Adding Pre-dilution step for Compound D?",
+            "name": "pre_dilutionD",
+            "options": [
+                {
+                    "label": "yes, add pre-dilution step",
+                    "value": true
+                },
+                {
+                    "label": "no, do not add pre-dilution step",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 5,
+            "label": "Pre-Dilution Factor A",
+            "name": "pre_dil_factA",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Pre-Dilution Factor B",
+            "name": "pre_dil_factB",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Pre-Dilution Factor C",
+            "name": "pre_dil_factC",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Pre-Dilution Factor D",
+            "name": "pre_dil_factD",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Serial Dilution Factor A",
+            "name": "serial_dil_factA",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Serial Dilution Factor B",
+            "name": "serial_dil_factB",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Serial Dilution Factor C",
+            "name": "serial_dil_factC",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Serial Dilution Factor D",
+            "name": "serial_dil_factD",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Abel.Tesfaslassie@opentrons.com",
+        "description": "Sterile Workflows",
+        "protocolName": "Combo IC"
+    },
+    "modules": []
+}
