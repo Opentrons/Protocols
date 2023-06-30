@@ -126,6 +126,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # MeOH before analaytes qs 4 mL
     vol_meoh_3 = 80
+    destinations_3 = [ws3, qc3]
     for d in destinations_3:
         p300.pick_up_tip()
         p300.aspirate(vol_meoh_3, meoh)
@@ -165,6 +166,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # MeOH before analaytes qs 4 mL
     vol_meoh_4 = 640.0
+    destinations_4 = [ws4, qc4]
     for d in destinations_4:
         p1000.pick_up_tip()
         p1000.aspirate(vol_meoh_4, meoh)
