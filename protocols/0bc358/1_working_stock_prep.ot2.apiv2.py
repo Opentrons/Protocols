@@ -88,7 +88,7 @@ def run(protocol: protocol_api.ProtocolContext):
     destinations = [ws1, qc1]
     for s in sources_1:
         for d in destinations:
-            protocol.pause('Protocol paused to remove analyte cap')
+            # protocol.pause('Protocol paused to remove analyte cap')
             p300.pick_up_tip()
             p300.aspirate(vol_analyte_1, s)
             slow_withdraw(p300, s)
@@ -115,7 +115,7 @@ def run(protocol: protocol_api.ProtocolContext):
     destinations_2 = [ws2, qc2]
     for s in sources_2:
         for d in destinations_2:
-            protocol.pause('Protocol paused to remove analyte cap')
+            # protocol.pause('Protocol paused to remove analyte cap')
             p300.pick_up_tip()
             p300.aspirate(vol_analyte_2, s)
             slow_withdraw(p300, s)
@@ -142,7 +142,7 @@ def run(protocol: protocol_api.ProtocolContext):
     destinations_3 = [ws3, qc3]
     for s in sources_3a:
         for d in destinations_3:
-            protocol.pause('Protocol paused to remove analyte cap')
+            # protocol.pause('Protocol paused to remove analyte cap')
             p300.pick_up_tip()
             p300.aspirate(vol_analyte_3a, s)
             slow_withdraw(p300, s)
@@ -155,7 +155,7 @@ def run(protocol: protocol_api.ProtocolContext):
     sources_3b = [well for row in hplc_vial_3.rows() for well in row][29:31]
     for s in sources_3b:
         for d in destinations_3:
-            protocol.pause('Protocol paused to remove analyte cap')
+            protocol.pause('Protocol paused to refill/replace analyte')
             p1000.pick_up_tip()
             p1000.aspirate(vol_analyte_3b, s)
             slow_withdraw(p1000, s)
@@ -182,7 +182,7 @@ def run(protocol: protocol_api.ProtocolContext):
     destinations_4 = [ws4, qc4]
     for s in sources_4a:
         for d in destinations_4:
-            protocol.pause('Protocol paused to remove analyte cap')
+            # protocol.pause('Protocol paused to remove analyte cap')
             p300.pick_up_tip()
             p300.aspirate(vol_analyte_4a, s)
             slow_withdraw(p300, s)
@@ -195,7 +195,7 @@ def run(protocol: protocol_api.ProtocolContext):
     sources_4b = [well for row in hplc_vial_4.rows() for well in row][2:10]
     for s in sources_4b:
         for d in destinations_4:
-            protocol.pause('Protocol paused to remove analyte cap')
+            # protocol.pause('Protocol paused to remove analyte cap')
             p1000.pick_up_tip()
             p1000.aspirate(vol_analyte_4b, s)
             slow_withdraw(p1000, s)
