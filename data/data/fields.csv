@@ -277,6 +277,7 @@ deadvol_plate,3
 deadvol_reservoir,4
 debug,1
 debug_mode,1
+decrease_csv,1
 deep_name,1
 deep_plate,2
 deepwell_plate_type,1
@@ -509,6 +510,7 @@ i7_volume,1
 i7_well,1
 i7row,1
 if_48,1
+inactive_csv,1
 inc_time,1
 include_bind,1
 include_buffer_a1,1
@@ -533,6 +535,7 @@ include_wash4,1
 include_wash5,1
 include_wash6,1
 include_wash_buffer,1
+increase_csv,1
 incubate_bind_time,1
 incubate_samples_with_beads,3
 incubation_delay_time,1
@@ -828,6 +831,7 @@ ngs_bead_ratio,1
 ngs_bead_ratio1,1
 ngs_bead_ratio2,1
 ngsmag,1
+no_change_csv,1
 no_cycles,2
 no_of_samps,2
 no_plates,2
@@ -1028,7 +1032,7 @@ pipette,1
 pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
-pipette_mount,17
+pipette_mount,18
 pipette_offset,1
 pipette_p20,1
 pipette_p300,1
@@ -1378,6 +1382,7 @@ supernat_2_vol,1
 supernat_3_vol,1
 t_csv,1
 t_per_block,1
+target_dna_volume,1
 tc_num_reps,1
 tc_temp,1
 te_volume,2
@@ -1440,7 +1445,7 @@ tip_start_20,2
 tip_start_col,2
 tip_start_column,4
 tip_start_samples,1
-tip_strategy,3
+tip_strategy,4
 tip_threshold,1
 tip_touch,3
 tip_track,49
@@ -1625,6 +1630,7 @@ volume_eb_in_ul,2
 volume_final_elution_in_ul,2
 volume_of_beads,2
 volume_of_beads_in_ul,2
+volume_of_each_mutant_to_transfer,1
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,7
