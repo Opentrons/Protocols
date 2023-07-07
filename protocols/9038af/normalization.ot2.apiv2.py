@@ -16,17 +16,19 @@ genomic DNA using the Nanopore Rapid Barcoding Kit 96.''',
 
 def run(ctx):
 
-    [input_csv, p20_mount, p300_mount, source_type,
+    [input_csv, target_dna_volume, p20_mount, p300_mount, source_type,
         dest_type] = get_values(  # noqa: F821
-        'input_csv', 'p20_mount', 'p300_mount',
+        'input_csv', 'target_dna_volume', 'p20_mount', 'p300_mount',
         'source_type', 'dest_type')
 
     # labware
     tempdeck = ctx.load_module('temperature module gen2', '1')
     destination_plate = tempdeck.load_labware(dest_type, 'normalization plate')
-    sample_rack = ctx.load_labware(source_type, '2', 'genomic dna')
+    sample_racks = [
+        ctx.load_labware(source_type, slot, 'genomic dna')
+        for slot in ['2', '5']]
     tube_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '5')
+        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '8')
     water = tube_rack.wells()[0]
     barcodes_plate = ctx.load_labware(
         'opentrons_96_aluminumblock_biorad_wellplate_200ul', '4')
@@ -74,18 +76,23 @@ def run(ctx):
     barcodes = barcodes_plate.wells()[:len(data)]
 
     target_mass = 50    # ng
-    target_vol = 9      # uL
+
+    all_templates = [
+        well
+        for rack in sample_racks
+        for well in rack.wells()
+    ]
 
     # perform normalization
     for i, line in enumerate(data):
         conc = float(line[0])
-        transfer_vol = target_mass/conc
-        s = sample_rack.wells()[i]
+        transfer_vol = max(target_dna_volume, target_mass/conc)
+        s = all_templates[i]
         d = destination_plate.wells()[i]
 
         # pre-transfer diluent
         pick_up(p20)
-        water_vol = target_vol - transfer_vol
+        water_vol = target_dna_volume - transfer_vol
         if water_vol > 0:
             p20.aspirate(water_vol, water)
             slow_withdraw(p20, water)
@@ -125,7 +132,7 @@ def run(ctx):
     # Pool all barcoded samples in 1.5 mL tube, note total vol
     pool = tube_rack.wells()[2]
     pick_up(p300)
-    pool_vol = 10
+    pool_vol = target_dna_volume + 1
     tip_ref_vol_300 = p300.tip_racks[0].wells()[0].max_volume
     for r in reactions:
         # move to pool tube if you can't aspirate more
@@ -143,7 +150,7 @@ def run(ctx):
     bead_mix_reps = 10
     bead_mix_vol = 150
     num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_300)
-    vol_per_asp = round(bead_transfer_vol/num_asp, 2)
+    vol_per_asp = round(bead_transfer_vol/num_asp, 1)
     pick_up(p300)
     p300.mix(bead_mix_reps, bead_mix_vol, beads)
     for _ in range(num_asp):
