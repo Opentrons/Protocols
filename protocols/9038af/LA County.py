@@ -101,17 +101,17 @@ def run(ctx):
         p20.drop_tip()
 
     # Temperature Control
-    temp_mod.set_temperature(celsius=30)
-    temp_mod.status  # 'holding at target'
+    tempdeck.set_temperature(celsius=30)
+    tempdeck.status  # 'holding at target'
     ctx.delay(minutes=2)             # delay for 2 minutes
-    temp_mod.set_temperature(celsius=80)
-    temp_mod.status  # 'holding at target'
+    tempdeck.set_temperature(celsius=80)
+    tempdeck.status  # 'holding at target'
     ctx.delay(minutes=2)             # delay for 2 minutes
-    temp_mod.set_temperature(celsius=4)
-    temp_mod.status  # 'holding at target'
+    tempdeck.set_temperature(celsius=4)
+    tempdeck.status  # 'holding at target'
     ctx.delay(minutes=2)             # delay for 2 minutes
-    temp_mod.deactivate()
-    temp_mod.status  # 'idle'
+    tempdeck.deactivate()
+    tempdeck.status  # 'idle'
 
     # Pool all barcoded samplpes in 1.5 mL tube, note total vol
     pool = tube_rack.wells()[2]
