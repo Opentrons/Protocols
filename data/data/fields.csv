@@ -307,7 +307,7 @@ dest_plate_type,1
 dest_slot,1
 dest_start_col,3
 dest_temp_mod_lname,1
-dest_type,5
+dest_type,6
 dest_well_plate_tmod,1
 destdilvol,1
 destination_plate_lname,1
@@ -554,7 +554,7 @@ init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,18
+input_csv,19
 input_file,10
 input_file2,6
 input_labware,1
@@ -944,7 +944,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,127
+p20_mount,128
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -961,7 +961,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,148
+p300_mount,149
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1304,7 +1304,7 @@ source_lw,1
 source_plate,2
 source_plate_type,1
 source_start_col,1
-source_type,7
+source_type,8
 sp,2
 sp_type,2
 spike_in,1

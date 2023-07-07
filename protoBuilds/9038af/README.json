@@ -1,0 +1,36 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Library Prep": [
+            "Sequencing"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol automates steps 3-10 of the Oxford Nanopore Rapid Barcoding Kit SQK-RBK110.96. Choose between 16-32 samples per run (> 24 samples requires two 4-in-1 tube racks)",
+    "internal": "9038af",
+    "labware": "\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\nOpentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap\nOpentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Library Prep\n\t* Sequencing\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9038af/deck.png)\n\n\n",
+        "description": "This protocol automates steps 3-10 of the Oxford Nanopore Rapid Barcoding Kit [SQK-RBK110.96](file:///Users/parrishpayne/Downloads/rapid-barcoding-kit-96-sqk-rbk110-96-RBK_9126_v110_revO_24Mar2021-gridion%20(3).pdf). Choose between 16-32 samples per run (> 24 samples requires two 4-in-1 tube racks)\n\n\n",
+        "internal": "9038af\n",
+        "labware": "* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n",
+        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Transfer 50 ng genomic DNA per sample. Adjust the volume to 9 \u03bcl with nuclease-free water. Mix by pipetting.\n2. Transfer 1 \u00b5L of the Rapid Barcodes to each sample. Mix by pipetting\n3. Incubate the plate at 30\u00b0C for 2 minutes and then at 80\u00b0C for 2 minutes. Then cool the plate to 4\u00b0C on the temperature module.\n4. Pool all barcoded samples, noting the total volume.\n5. Resuspend the AMPure XP Beads (AXP, or SPRI) by vortexing.\n6. To the entire pooled barcoded sample from Step 4, add an equal volume of resuspended AMPure XP Beads (AXP, or SPRI).\n7. Mix by pipetting for 5 minutes at room temperature.\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9038af/reagents.png)\n\n\n",
+        "title": "Oxford Nanopore Rapid Barcoding with Normalization "
+    },
+    "modules": [
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nTransfer 50 ng genomic DNA per sample. Adjust the volume to 9 \u03bcl with nuclease-free water. Mix by pipetting.\nTransfer 1 \u00b5L of the Rapid Barcodes to each sample. Mix by pipetting\nIncubate the plate at 30\u00b0C for 2 minutes and then at 80\u00b0C for 2 minutes. Then cool the plate to 4\u00b0C on the temperature module.\nPool all barcoded samples, noting the total volume.\nResuspend the AMPure XP Beads (AXP, or SPRI) by vortexing.\nTo the entire pooled barcoded sample from Step 4, add an equal volume of resuspended AMPure XP Beads (AXP, or SPRI).\nMix by pipetting for 5 minutes at room temperature.\n",
+    "reagent-setup": "",
+    "title": "Oxford Nanopore Rapid Barcoding with Normalization "
+}
