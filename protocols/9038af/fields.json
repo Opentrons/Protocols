@@ -16,17 +16,17 @@
         "label": "P20 single-channel pipette mount",
         "name": "p20_mount",
         "options": [
-          {"label": "left", "value": "left"},
-          {"label": "right", "value": "right"}
+          {"label": "right", "value": "right"},
+          {"label": "left", "value": "left"}
         ]
     },
     {
         "type": "dropDown",
-        "label": "P300 single-channel pipette mount",
-        "name": "p300_mount",
+        "label": "P1000 single-channel pipette mount",
+        "name": "p1000_mount",
         "options": [
-          {"label": "right", "value": "right"},
-          {"label": "left", "value": "left"}
+          {"label": "left", "value": "left"},
+          {"label": "right", "value": "right"}
         ]
     },
     {
