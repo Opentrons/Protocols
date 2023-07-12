@@ -86,7 +86,7 @@ def run(ctx):
     # perform normalization
     for i, line in enumerate(data):
         conc = float(line[0])
-        transfer_vol = max(target_dna_volume, target_mass/conc)
+        transfer_vol = min(target_dna_volume, target_mass/conc)
         s = all_templates[i]
         d = destination_plate.wells()[i]
 
@@ -125,7 +125,6 @@ def run(ctx):
     ctx.delay(minutes=2)             # delay for 2 minutes
     tempdeck.set_temperature(celsius=4)
     tempdeck.status  # 'holding at target 4°C'
-    ctx.delay(minutes=2)             # delay for 2 minutes
     tempdeck.deactivate()
     tempdeck.status  # 'idle'
 
@@ -146,9 +145,9 @@ def run(ctx):
     p20.drop_tip()
 
     # Resuspend beads, add equal vol to pooled barcoded samples
-    bead_transfer_vol = len(data)*10
+    bead_transfer_vol = len(data)*(target_dna_volume+1)
     bead_mix_reps = 10
-    bead_mix_vol = 150
+    bead_mix_vol = 300
     num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_1000)
     vol_per_asp = round(bead_transfer_vol/num_asp, 1)
     pick_up(p1000)
