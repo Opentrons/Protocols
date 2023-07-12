@@ -22,13 +22,13 @@ def run(ctx):
         'source_type', 'dest_type')
 
     # labware
-    tempdeck = ctx.load_module('temperature module gen2', '4')
-    destination_plate = tempdeck.load_labware(dest_type, 'normalization plate')
+    # tempdeck = ctx.load_module('temperature module gen2', '4')
+    destination_plate = ctx.load_labware(dest_type, '4', 'normalization plate')
     sample_racks = [
         ctx.load_labware(source_type, slot, 'genomic dna')
         for slot in ['2', '5']]
     tube_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '8')
+        'opentrons_24_tuberack_2000ul', '8')
     water = tube_rack.wells()[0]
     barcodes_plate = ctx.load_labware(
         'biorad_96_wellplate_200ul_pcr', '1')
@@ -116,17 +116,9 @@ def run(ctx):
         p20.blow_out(r.top(-2))
         p20.drop_tip()
 
-    # Temperature Control
-    tempdeck.set_temperature(celsius=30)
-    tempdeck.status  # 'holding at target 30°C'
-    ctx.delay(minutes=2)             # delay for 2 minutes
-    tempdeck.set_temperature(celsius=80)
-    tempdeck.status  # 'holding at target 80°C'
-    ctx.delay(minutes=2)             # delay for 2 minutes
-    tempdeck.set_temperature(celsius=4)
-    tempdeck.status  # 'holding at target 4°C'
-    tempdeck.deactivate()
-    tempdeck.status  # 'idle'
+    # Temperature Control to be performed on external thermocycler
+    ctx.pause('Seal plate (slot 4). Incubate at 30°C for 2 minutes, then at 80°C for 2 minutes. \
+        Briefly put the plate on ice to cool.')
 
     # Pool all barcoded samples in 1.5 mL tube, note total vol
     pool = tube_rack.wells()[2]
@@ -147,7 +139,8 @@ def run(ctx):
     # Resuspend beads, add equal vol to pooled barcoded samples
     bead_transfer_vol = len(data)*(target_dna_volume+1)
     bead_mix_reps = 10
-    bead_mix_vol = 300
+    bead_mix_vol = bead_transfer_vol*0.9
+    tip_ref_vol_1000 = 1000
     num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_1000)
     vol_per_asp = round(bead_transfer_vol/num_asp, 1)
     pick_up(p1000)
@@ -159,6 +152,11 @@ def run(ctx):
         slow_withdraw(p1000, pool)
 
     # Mix for 5 min at room temp
-    p1000.mix(bead_mix_reps, bead_mix_vol, pool)
+    num_mix = 10
+    pool_mix_vol = min(bead_transfer_vol*1.5, 900)
+    for _ in range(num_mix):
+        p1000.aspirate(pool_mix_vol, pool.bottom(5))
+        p1000.dispense(pool_mix_vol, pool.bottom(15))
+        ctx.delay(seconds=30)
     slow_withdraw(p1000, pool)
     p1000.drop_tip()
