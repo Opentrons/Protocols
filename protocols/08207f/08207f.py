@@ -1,4 +1,3 @@
-08207f
 from opentrons import protocol_api
 
 metadata = {
