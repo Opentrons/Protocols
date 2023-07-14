@@ -73,7 +73,14 @@ def run(ctx):
 
  ####### PP to edit below
 
+Library Norm 1 Well, Internal ID, External ID, nM, Norm Amount (nM), Volume Required (µl), Sample Volume (µl), Dilutent Volume (µl)
 
 
-
-   
+csv_data = csv_raw.splitlines()[1:] # Discard the blank first line.
+csv_reader = csv.DictReader(csv_data) 
+for csv_row in csv_reader:
+    source_well = csv_row['source_well']
+    # destination_well = csv_row['destination_well']
+    sample_volume = float(csv_row['sample_volume'])
+    diluent_volume = float(csv_row['diluent_volume'])
+ 
