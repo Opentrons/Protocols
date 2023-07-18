@@ -887,7 +887,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,172
+num_samples,173
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1541,6 +1541,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 type_matrix,1
+type_molecule,1
 type_pip,2
 type_pipette_small,1
 type_tc,1

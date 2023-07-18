@@ -1,8 +1,24 @@
 [
     {
+        "type": "int",
+        "label": "number of samples (1-24)",
+        "name": "num_samples",
+        "default": 3
+    },
+    {
         "type": "textFile",
         "label": "cherrypicking input list",
         "name": "cp_list",
         "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil"
+    },
+    {
+        "type": "dropDown",
+        "label": "molecule type",
+        "name": "type_molecule",
+        "options": [
+            { "label": "101", "value": "101"},
+            { "label": "401", "value": "401"},
+            { "label": "pDNA", "value": "pDNA"}
+        ]
     }
 ]

@@ -3,54 +3,35 @@ from opentrons import protocol_api
 from opentrons.types import Point
 
 metadata = {
-    'apiLevel': '2.13',
+    'apiLevel': '2.14',
     'protocolName': 'Custom Dilution and PCR',
     'author': 'Nick Diehl <ndiehl@opentrons.com>'
 }
 
-DO_THERMOCYCLER = True
+DO_THERMOCYCLER = False
+DO_FIRST_DILUTION = True
+
+# 101 - 1 enzymatic reaction (no second rxn mix)
+# 401 - exactly like this
+# pDNA - only second enzymatic rxn
+# (10ul sample neat into column 3 with 90ul rxn mix)
 
 
 def run(ctx):
 
-    [cp_list] = get_values(  # noqa: F821
-        'cp_list')
+    [num_samples, cp_list, type_molecule] = get_values(  # noqa: F821
+        'num_samples', 'cp_list', 'type_molecule')
 
-#     cp_list = """A4,tc
-# B4,tc
-# C1,dil
-# D1,dil
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# A3,tc
-# B1,dil
-# H12,dil
-# """
+    # [num_samples, cp_list, type_molecule] = [24, cp_list_ex, 'pDNA']
 
     # parse
     data = [
         [val.strip().upper() for val in line.split(',')]
         for line in cp_list.splitlines()
         if line and line.split(',')[0].strip()]
-    num_samples = len(data)
 
     num_cols = math.ceil(num_samples/8)
-    tc = ctx.load_module('thermocycler module gen2')
+    tc = ctx.load_module('thermocyclerModuleV2')
     tc.open_lid()
     tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr')
     tipracks300 = [
@@ -59,11 +40,13 @@ def run(ctx):
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['6', '9']]
-    dil_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '5')
+    dil_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr',
+                                 '5', 'dilution plate')
     res = ctx.load_labware('nest_12_reservoir_15ml', '2')
     tuberack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '4')
-    mm_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1')
+        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')
+    mm_plate = ctx.load_labware('biorad_96_aluminumblock_250ul', '1',
+                                'mastermix plate')
 
     m300 = ctx.load_instrument(
         'p300_multi_gen2', 'left', tip_racks=tipracks300)
@@ -71,10 +54,46 @@ def run(ctx):
         'p20_single_gen2', 'right', tip_racks=tipracks20)
 
     samples = tuberack.wells()[:num_samples]
-    mm = res.wells()[0]
-    rxn_mix_1 = res.wells()[1]
-    rxn_mix_2 = res.wells()[2]
-    diluent = res.wells()[3:5]
+    rxn_mix_1 = res.wells()[0]
+    rxn_mix_2 = res.wells()[1]
+    diluent = res.wells()[2:4]
+    mm = res.wells()[4]
+
+    # define liquids
+    rxn_mix_1_liq = ctx.define_liquid(
+        name="DNAse",
+        description="DNAse",
+        display_color="#00FF00",
+    )
+    rxn_mix_2_liq = ctx.define_liquid(
+        name="PK",
+        description="PK",
+        display_color="#0000FF",
+    )
+    diluent_liq = ctx.define_liquid(
+        name="dilution buffer",
+        description="dilution buffer",
+        display_color="#FF0000",
+    )
+    mastermix_liq = ctx.define_liquid(
+        name="mastermix",
+        description="mastermix",
+        display_color="#FBFF00",
+    )
+    sample_liq = ctx.define_liquid(
+        name="sample",
+        description="sample",
+        display_color="#F300FF",
+    )
+
+    # load liquids
+    [s.load_liquid(sample_liq, volume=200) for s in samples]
+    if not type_molecule == 'pDNA':
+        rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8)
+    if not type_molecule == '101':
+        rxn_mix_2.load_liquid(rxn_mix_2_liq, volume=50*num_cols*8)
+    mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4)
+    [d.load_liquid(diluent_liq, volume=13500) for d in diluent]
 
     def pick_up(pip):
         try:
@@ -84,7 +103,7 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
-    vol_max_dil = 0.95*diluent[0].max_volume
+    vol_max_dil = 0.85*diluent[0].max_volume
     vol_current = 0
     dil_tracker = iter(diluent)
     dil_current = next(dil_tracker)
@@ -141,13 +160,14 @@ def run(ctx):
         p20.aspirate(20, s.bottom(0.5))
         slow_withdraw(p20, s)
         p20.dispense(20, d.top(-5))
-        p20.mix(5, 20, d.bottom(d.depth/2))
+        # p20.mix(5, 20, d.bottom(d.depth/2))
         slow_withdraw(p20, d)
         p20.drop_tip()
 
     # add to mix
     for s, d in zip(first_dil_dests_m, rxn_mix_1_dests):
         pick_up(m300)
+        m300.mix(5, 100, s.bottom(s.depth/2))
         m300.aspirate(20, s.bottom(5))
         slow_withdraw(m300, s)
         m300.dispense(20, d.bottom(2))
@@ -202,7 +222,7 @@ def run(ctx):
     # perform dilutions
     for i, dil_set in enumerate(dil_sets_all):
         sources = [rxn_mix_1_dests[i]] + dil_set[:len(dil_sets_all[0])-1]
-        dests = dil_set[1:]
+        dests = dil_set
         if not m300.has_tip:
             pick_up(m300)
         for s, d in zip(sources, dests):
@@ -240,18 +260,5 @@ def run(ctx):
             p20.aspirate(5.5, s.bottom(5))
             slow_withdraw(p20, s)
             p20.dispense(5.5, d.bottom(2))
-            p20.mix(5, 10, d.bottom(2))
             slow_withdraw(p20, d)
             p20.drop_tip()
-
-    tc.close_lid()
-    if DO_THERMOCYCLER:
-        tc.set_block_temperature(95, hold_time_minutes=10)
-        profile = [
-            {'temperature': 95, 'hold_time_seconds': 30},
-            {'temperature': 60, 'hold_time_seconds': 100}
-        ]
-        tc.execute_profile(steps=profile, repetitions=40, block_max_volume=22)
-        tc.set_block_temperature(98, hold_time_minutes=10)
-        tc.set_block_temperature(4)
-    tc.open_lid()
