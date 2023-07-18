@@ -11,7 +11,19 @@
 
 
 ## Description
-This protocol performs a custom dilution and PCR protocol on the Opentrons Thermocycler GEN2 Module.
+This protocol performs a custom dilution and PCR protocol on the Opentrons Thermocycler GEN2 Module. The number of samples will be automatically calculated from the input cherrypicking .csv list, which should be formatted as the following example:
+
+```
+A4,tc
+B4,tc
+C1,dil
+D1,dil
+B1,dil
+H12,dil
+
+```
+
+Note that the first value of each line should specify the well location, and the second value should specify whether to pick from the thermocycler plate or the dilution plate.
 
 
 ### Modules
