@@ -99,6 +99,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_well,1
 barcode_well_start,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
@@ -885,7 +886,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,172
+num_samples,173
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -929,7 +930,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,35
+p1000_mount,36
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -965,7 +966,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,149
+p300_mount,148
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1144,6 +1145,7 @@ reagent_labware,3
 reagent_scan,5
 reagent_slot_scan,2
 reagent_transfer_vol,2
+reagent_type,1
 reagents_csv,1
 reduced_speed_limit,1
 relative_height,1
