@@ -68,17 +68,17 @@ def run(ctx):
             m300.aspirate(vol_mm*len(d_set), mm.bottom(2))
             slow_withdraw(mm)
             for d in d_set:
-                m300.dispense(vol_mm)
+                m300.dispense(vol_mm, d.bottom(-2))
                 slow_withdraw(d)
         m300.drop_tip()
 
         # add sample with fresh tips each time, and mix (2x)
         for s, d in zip(sample_sources, pcr_destinations):
             m20.pick_up_tip()
-            m20.aspirate(vol_sample, s)
+            m20.aspirate(vol_sample, s.bottom(-2))
             slow_withdraw(s, pip=m20)
-            m20.dispense(vol_sample, d)
-            m20.mix(2, 10, d)
+            m20.dispense(vol_sample, d.bottom(-2))
+            m20.mix(2, 10, d.bottom(-1))
             slow_withdraw(d, pip=m20)
             m20.drop_tip()
 
