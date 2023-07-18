@@ -1,8 +1,8 @@
 [
     {
-        "type": "int",
-        "label": "number of samples",
-        "name": "num_samples",
-        "default": 16
+        "type": "textFile",
+        "label": "cherrypicking input list",
+        "name": "cp_list",
+        "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil"
     }
 ]

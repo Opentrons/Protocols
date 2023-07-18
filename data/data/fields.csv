@@ -243,6 +243,7 @@ count_samples_rowa,1
 count_samples_rowb,1
 count_samples_rowc,1
 count_samples_rowd,1
+cp_list,1
 csv,6
 csv1_buff,1
 csv1_samp,1
@@ -886,7 +887,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,173
+num_samples,172
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1

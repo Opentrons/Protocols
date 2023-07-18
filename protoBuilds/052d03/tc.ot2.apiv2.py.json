@@ -1,30 +1,30 @@
 {
-    "content": "import math\nfrom opentrons import protocol_api\nfrom opentrons.types import Point, Mount\n\nmetadata = {\n    'apiLevel': '2.13',\n    'protocolName': 'Novartis Timing'\n}\n\nDO_THERMOCYCLER = True\n\n\ndef run(ctx):\n    num_samples = 20\n    cp_list = [\n        f'{letter}{num}'\n        for num in [3, 6, 9]\n        for letter in 'ABCDEFGH'\n    ]\n\n    num_cols = math.ceil(num_samples/8)\n    tc = ctx.load_module('thermocycler')\n    tc.open_lid()\n    tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    tipracks300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['3']]\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['6']]\n    dil_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5')\n    res = ctx.load_labware('nest_12_reservoir_15ml', '2')\n    tuberack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4')\n    mm_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')\n\n    m300 = ctx.load_instrument(\n        'p300_multi_gen2', 'right', tip_racks=tipracks300)\n    p20 = ctx.load_instrument(\n        'p20_multi_gen2', 'left', tip_racks=tipracks20)\n\n    samples = tuberack.wells()[:num_samples]\n    mm = res.wells()[0]\n    rxn_mix_1 = res.wells()[1]\n    rxn_mix_2 = res.wells()[2]\n    diluent = res.wells()[3]\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    tips_single = tipracks20[-1].wells()\n    default_current = 0.6\n\n    # offset tip pickup\n    def pick_up_single(pip=p20):\n        mount = Mount.LEFT if pip.mount == 'left' else Mount.RIGHT\n        ctx._hw_manager.hardware._attached_instruments[\n            mount].update_config_item(\n                'pick_up_current', default_current/8)\n        tip = tips_single.pop()\n        pip.pick_up_tip(tip)\n        ctx._hw_manager.hardware._attached_instruments[\n            mount].update_config_item(\n                'pick_up_current', default_current)\n\n    def wick(pip, well, side=1):\n        if well.diameter:\n            radius = well.diameter/2\n        else:\n            radius = well.width/2\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well, delay=1.0):\n        pip.default_speed /= 16\n        ctx.delay(seconds=delay)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # mm\n    mm_dests = [\n        well\n        for i in range(num_cols)\n        for well in mm_plate.columns()[i*4]]\n    pick_up(p20)\n    for d in mm_dests:\n        p20.aspirate(16.5, mm)\n        slow_withdraw(p20, mm)\n        p20.dispense(16.5, d.bottom(1))\n        slow_withdraw(p20, d)\n    p20.drop_tip()\n\n    # first dilution\n    first_dil_dests_m = [tc_plate.rows()[0][i*4] for i in range(num_cols)]\n    pick_up(m300)\n    for d in first_dil_dests_m:\n        m300.aspirate(180, diluent)\n        slow_withdraw(m300, diluent)\n        m300.dispense(180, d.bottom(5))\n        slow_withdraw(m300, d)\n    m300.drop_tip()\n\n    rxn_mix_1_dests = [tc_plate.rows()[0][i*4+1] for i in range(num_cols)]\n    pick_up(m300)\n    for d in rxn_mix_1_dests:\n        m300.aspirate(30, rxn_mix_1)\n        slow_withdraw(m300, rxn_mix_1)\n        m300.dispense(30, d.bottom(2))\n        slow_withdraw(m300, d)\n    m300.drop_tip()\n\n    # transfer sample\n    first_dil_cols = [tc_plate.columns()[i*4] for i in range(num_cols)]\n    first_dil_dests_s = [\n        well for col in first_dil_cols for well in col][:num_samples]\n    for s, d in zip(samples, first_dil_dests_s):\n        pick_up(m300)\n        m300.aspirate(20, s.bottom(0.5))\n        slow_withdraw(m300, s)\n        m300.dispense(20, d.top(-5))\n        m300.mix(5, 100, d.bottom(d.depth/2))\n        slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    # add to mix\n    for s, d in zip(first_dil_dests_m, rxn_mix_1_dests):\n        pick_up(m300)\n        m300.aspirate(20, s.bottom(5))\n        slow_withdraw(m300, s)\n        m300.dispense(20, d.bottom(2))\n        m300.mix(5, 20, d.bottom(d.depth/2))\n        slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    if DO_THERMOCYCLER:\n        tc.close_lid()\n        tc.set_block_temperature(37, hold_time_minutes=30)\n        tc.open_lid()\n\n    # rxn mix 2\n    for d in rxn_mix_1_dests:\n        pick_up(m300)\n        m300.aspirate(50, rxn_mix_2)\n        slow_withdraw(m300, rxn_mix_2)\n        m300.dispense(50, d.bottom(2))\n        m300.mix(5, 20, d.bottom(d.depth/2))\n        slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    if DO_THERMOCYCLER:\n        tc.close_lid()\n        tc.set_block_temperature(55, hold_time_minutes=30)\n        tc.set_block_temperature(95, hold_time_minutes=15)\n        tc.set_block_temperature(4)\n        tc.open_lid()\n\n    dil_sets_tc = [\n        tc_plate.rows()[0][i*4+2:i*4+4] for i in range(3)\n    ]\n    dil_sets_dil = [\n        dil_plate.rows()[0][i*3:i*3+3] for i in range(3)\n    ]\n    dil_sets_all = []\n    for set_t, set_d in zip(dil_sets_tc, dil_sets_dil):\n        dil_set = set_t + set_d\n        dil_sets_all.append(dil_set)\n\n    # add diluent to all\n    pick_up(m300)\n    for d_set in dil_sets_all:\n        for d in d_set:\n            m300.aspirate(180, diluent)\n            slow_withdraw(m300, diluent)\n            m300.dispense(180, d.bottom(5))\n            slow_withdraw(m300, d)\n\n    # perform dilutions\n    for i, dil_set in enumerate(dil_sets_all):\n        sources = [rxn_mix_1_dests[i]] + dil_set[:len(dil_sets_all)-1]\n        dests = dil_set[1:]\n        if not m300.has_tip:\n            pick_up(m300)\n        for s, d in zip(sources, dests):\n            m300.aspirate(20, s.bottom(5))\n            slow_withdraw(m300, s)\n            m300.dispense(20, d.bottom(d.depth/2))\n            m300.mix(5, 50, d.bottom(d.depth/2))\n            slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    cp_sources = [dil_plate.wells_by_name()[well] for well in cp_list]\n    cp_dests = [\n        well for col in mm_plate.columns()[::4]\n        for well in col]\n    for s, d in zip(cp_sources, cp_dests):\n        pick_up(p20)\n        p20.aspirate(5.5, s.bottom(5))\n        slow_withdraw(p20, s)\n        p20.dispense(5.5, d.bottom(2))\n        p20.mix(5, 10, d.bottom(2))\n        slow_withdraw(p20, d)\n        p20.drop_tip()\n\n    if DO_THERMOCYCLER:\n        tc.close_lid()\n        tc.set_block_temperature(95, hold_time_minutes=10)\n        profile = [\n            {'temperature': 95, 'hold_time_seconds': 30},\n            {'temperature': 60, 'hold_time_seconds': 100}\n        ]\n        tc.execute_profile(steps=profile, repetitions=40, block_max_volume=22)\n        tc.set_block_temperature(98, hold_time_minutes=10)\n        tc.set_block_temperature(4)\n        tc.open_lid()\n",
+    "content": "import math\nfrom opentrons import protocol_api\nfrom opentrons.types import Point\n\nmetadata = {\n    'apiLevel': '2.13',\n    'protocolName': 'Custom Dilution and PCR',\n    'author': 'Nick Diehl <ndiehl@opentrons.com>'\n}\n\nDO_THERMOCYCLER = True\n\n\ndef run(ctx):\n\n    [cp_list] = get_values(  # noqa: F821\n        'cp_list')\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in cp_list.splitlines()\n        if line and line.split(',')[0].strip()]\n    num_samples = len(data)\n\n    num_cols = math.ceil(num_samples/8)\n    tc = ctx.load_module('thermocycler module gen2')\n    tc.open_lid()\n    tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr')\n    tipracks300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['3']]\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['6', '9']]\n    dil_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '5')\n    res = ctx.load_labware('nest_12_reservoir_15ml', '2')\n    tuberack = ctx.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '4')\n    mm_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1')\n\n    m300 = ctx.load_instrument(\n        'p300_multi_gen2', 'left', tip_racks=tipracks300)\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', 'right', tip_racks=tipracks20)\n\n    samples = tuberack.wells()[:num_samples]\n    mm = res.wells()[0]\n    rxn_mix_1 = res.wells()[1]\n    rxn_mix_2 = res.wells()[2]\n    diluent = res.wells()[3:5]\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause('Replace the tips')\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    vol_max_dil = 0.95*diluent[0].max_volume\n    vol_current = 0\n    dil_tracker = iter(diluent)\n    dil_current = next(dil_tracker)\n\n    def track_dilution(vol):\n        nonlocal vol_current\n        nonlocal dil_current\n        if vol + vol_current > vol_max_dil:\n            vol_current = 0\n            dil_current = next(dil_tracker)\n        vol_current += vol\n        return dil_current\n\n    def wick(pip, well, side=1):\n        if well.diameter:\n            radius = well.diameter/2\n        else:\n            radius = well.width/2\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well, delay=2.0):\n        pip.default_speed /= 16\n        ctx.delay(seconds=delay)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # first dilution\n    first_dil_dests_m = [tc_plate.rows()[0][i*4] for i in range(num_cols)]\n    pick_up(m300)\n    vol_dil = 180\n    for d in first_dil_dests_m:\n        source = track_dilution(vol_dil)\n        m300.aspirate(vol_dil, source)\n        slow_withdraw(m300, source)\n        m300.dispense(vol_dil, d.bottom(5))\n        slow_withdraw(m300, d)\n    m300.drop_tip()\n\n    rxn_mix_1_dests = [tc_plate.rows()[0][i*4+1] for i in range(num_cols)]\n    pick_up(m300)\n    for d in rxn_mix_1_dests:\n        m300.aspirate(30, rxn_mix_1)\n        slow_withdraw(m300, rxn_mix_1)\n        m300.dispense(30, d.bottom(2))\n        slow_withdraw(m300, d)\n    m300.drop_tip()\n\n    # transfer sample\n    first_dil_cols = [tc_plate.columns()[i*4] for i in range(num_cols)]\n    first_dil_dests_s = [\n        well for col in first_dil_cols for well in col][:num_samples]\n    for s, d in zip(samples, first_dil_dests_s):\n        pick_up(p20)\n        p20.aspirate(20, s.bottom(0.5))\n        slow_withdraw(p20, s)\n        p20.dispense(20, d.top(-5))\n        p20.mix(5, 20, d.bottom(d.depth/2))\n        slow_withdraw(p20, d)\n        p20.drop_tip()\n\n    # add to mix\n    for s, d in zip(first_dil_dests_m, rxn_mix_1_dests):\n        pick_up(m300)\n        m300.aspirate(20, s.bottom(5))\n        slow_withdraw(m300, s)\n        m300.dispense(20, d.bottom(2))\n        m300.mix(5, 20, d.bottom(d.depth/2))\n        slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    tc.close_lid()\n    if DO_THERMOCYCLER:\n        tc.set_block_temperature(37, hold_time_minutes=30)\n    tc.open_lid()\n\n    # rxn mix 2\n    for d in rxn_mix_1_dests:\n        pick_up(m300)\n        m300.aspirate(50, rxn_mix_2)\n        slow_withdraw(m300, rxn_mix_2)\n        m300.dispense(50, d.bottom(2))\n        m300.mix(5, 20, d.bottom(d.depth/2))\n        slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    tc.close_lid()\n    if DO_THERMOCYCLER:\n        tc.set_block_temperature(55, hold_time_minutes=30)\n        tc.set_block_temperature(95, hold_time_minutes=15)\n        tc.set_block_temperature(4)\n    tc.open_lid()\n\n    dil_sets_tc = [\n        tc_plate.rows()[0][i*4+2:i*4+4] for i in range(num_cols)\n    ]\n    dil_sets_dil = [\n        dil_plate.rows()[0][i*4:i*4+4] for i in range(num_cols)\n    ]\n    dil_sets_all = []\n    for set_t, set_d in zip(dil_sets_tc, dil_sets_dil):\n        dil_set = set_t + set_d\n        dil_sets_all.append(dil_set)\n\n    # add diluent to all\n    pick_up(m300)\n    vol_dil = 180\n    for d_set in dil_sets_all:\n        for d in d_set:\n            source = track_dilution(vol_dil)\n            m300.aspirate(vol_dil, source)\n            slow_withdraw(m300, source)\n            m300.dispense(vol_dil, d.bottom(5))\n            slow_withdraw(m300, d)\n\n    # perform dilutions\n    for i, dil_set in enumerate(dil_sets_all):\n        sources = [rxn_mix_1_dests[i]] + dil_set[:len(dil_sets_all[0])-1]\n        dests = dil_set[1:]\n        if not m300.has_tip:\n            pick_up(m300)\n        for s, d in zip(sources, dests):\n            m300.aspirate(20, s.bottom(5))\n            slow_withdraw(m300, s)\n            m300.dispense(20, d.bottom(d.depth/2))\n            m300.mix(5, 50, d.bottom(d.depth/2))\n            slow_withdraw(m300, d)\n        m300.drop_tip()\n\n    # mm\n    mm_dest_sets = [\n        mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]\n        for i in range(num_samples)]\n    pick_up(p20)\n    for d_set in mm_dest_sets:\n        for d in d_set:\n            p20.aspirate(16.5, mm)\n            slow_withdraw(p20, mm)\n            p20.dispense(16.5, d.bottom(1))\n            slow_withdraw(p20, d)\n    p20.drop_tip()\n\n    # cherrypick\n    cp_lw_map = {\n        'T': tc_plate,\n        'D': dil_plate\n    }\n    cp_sources = [\n        cp_lw_map[line[1][0]].wells_by_name()[line[0]]\n        for line in data]\n    for s, d_set in zip(cp_sources, mm_dest_sets):\n        for d in d_set:\n            pick_up(p20)\n            p20.aspirate(5.5, s.bottom(5))\n            slow_withdraw(p20, s)\n            p20.dispense(5.5, d.bottom(2))\n            p20.mix(5, 10, d.bottom(2))\n            slow_withdraw(p20, d)\n            p20.drop_tip()\n\n    tc.close_lid()\n    if DO_THERMOCYCLER:\n        tc.set_block_temperature(95, hold_time_minutes=10)\n        profile = [\n            {'temperature': 95, 'hold_time_seconds': 30},\n            {'temperature': 60, 'hold_time_seconds': 100}\n        ]\n        tc.execute_profile(steps=profile, repetitions=40, block_max_volume=22)\n        tc.set_block_temperature(98, hold_time_minutes=10)\n        tc.set_block_temperature(4)\n    tc.open_lid()\n",
     "custom_labware_defs": [],
     "fields": [
         {
-            "default": 16,
-            "label": "number of samples",
-            "name": "num_samples",
-            "type": "int"
+            "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil",
+            "label": "cherrypicking input list",
+            "name": "cp_list",
+            "type": "textFile"
         }
     ],
     "instruments": [
         {
             "mount": "left",
-            "name": "p20_multi_gen2"
+            "name": "p300_multi_gen2"
         },
         {
             "mount": "right",
-            "name": "p300_multi_gen2"
+            "name": "p20_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 1",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 1",
             "share": false,
             "slot": "1",
-            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
             "name": "NEST 12 Well Reservoir 15 mL on 2",
@@ -39,16 +39,16 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 4",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
         },
         {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 5",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 5",
             "share": false,
             "slot": "5",
-            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
             "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
@@ -57,10 +57,16 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Thermocycler Module on 7",
             "share": false,
             "slot": "7",
-            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -71,14 +77,15 @@
     ],
     "metadata": {
         "apiLevel": "2.13",
-        "protocolName": "Novartis Timing"
+        "author": "Nick Diehl <ndiehl@opentrons.com>",
+        "protocolName": "Custom Dilution and PCR"
     },
     "modules": [
         {
-            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Thermocycler Module on 7",
             "share": false,
             "slot": "7",
-            "type": "thermocycler"
+            "type": "thermocyclerModuleV2"
         }
     ]
 }
