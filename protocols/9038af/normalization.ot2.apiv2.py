@@ -17,9 +17,9 @@ genomic DNA using the Nanopore Rapid Barcoding Kit 96.''',
 def run(ctx):
 
     [input_csv, target_dna_volume, p20_mount, p1000_mount, source_type,
-        dest_type] = get_values(  # noqa: F821
+        dest_type, reagent_type] = get_values(  # noqa: F821
         'input_csv', 'target_dna_volume', 'p20_mount', 'p1000_mount',
-        'source_type', 'dest_type')
+        'source_type', 'dest_type', 'reagent_type')
 
     # labware
     # tempdeck = ctx.load_module('temperature module gen2', '4')
@@ -28,14 +28,15 @@ def run(ctx):
         ctx.load_labware(source_type, slot, 'genomic dna')
         for slot in ['2', '5']]
     tube_rack = ctx.load_labware(
-        'opentrons_24_tuberack_2000ul', '8')
+        reagent_type, '8')
     water = tube_rack.wells()[0]
     barcodes_plate = ctx.load_labware(
         'biorad_96_wellplate_200ul_pcr', '1')
     beads = tube_rack.wells()[1]
 
     tiprack20 = [
-        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot, '20ul tiprack')
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
+                         '20ul tiprack')
         for slot in ['3']]
     tiprack1000 = [
         ctx.load_labware(
@@ -76,7 +77,6 @@ def run(ctx):
     barcodes = barcodes_plate.wells()[:len(data)]
 
     target_mass = 50    # ng
-    
     all_templates = [
         well
         for rack in sample_racks
@@ -117,8 +117,8 @@ def run(ctx):
         p20.drop_tip()
 
     # Temperature Control to be performed on external thermocycler
-    ctx.pause('Seal plate (slot 4). Incubate at 30°C for 2 minutes, then at 80°C for 2 minutes. \
-        Briefly put the plate on ice to cool.')
+    ctx.pause('Seal plate (slot 4). Incubate at 30°C for 2 minutes, then at \
+80°C for 2 minutes. Briefly put the plate on ice to cool.')
 
     # Pool all barcoded samples in 1.5 mL tube, note total vol
     pool = tube_rack.wells()[2]

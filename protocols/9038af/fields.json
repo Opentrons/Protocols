@@ -47,6 +47,15 @@
     },
     {
       "type": "dropDown",
+      "label": "reagent labware",
+      "name": "reagent_type",
+      "options": [
+        {"label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"},
+        {"label": "Opentrons 24 Tube Rack with Custom 2ml Tubes", "value": "opentrons_24_tuberack_2000ul"}
+      ]
+  },
+  {
+      "type": "dropDown",
       "label": "Starting well in Barcode plate",
       "name": "barcode_well",
       "options": [
