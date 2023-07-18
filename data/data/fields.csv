@@ -99,6 +99,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_well,1
 barcode_well_start,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
@@ -557,7 +558,7 @@ init_vol_dil,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,19
+input_csv,20
 input_file,10
 input_file2,6
 input_labware,1
@@ -929,7 +930,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,35
+p1000_mount,37
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -948,7 +949,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,128
+p20_mount,129
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -965,7 +966,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,149
+p300_mount,148
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
