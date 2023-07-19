@@ -325,7 +325,7 @@ can not exceed the height of the labware.')
                 mix_high_low(col, 10, 190, z_offset_low=3,
                              x_offset=side*radius*0.5, switch_sides_x=False)
                 flow_rate()
-            ctx.delay(seconds=5)
+                ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.blow_out()
             m300.touch_tip(speed=40)
