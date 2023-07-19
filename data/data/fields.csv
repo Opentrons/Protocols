@@ -1544,6 +1544,7 @@ type_matrix,1
 type_molecule,1
 type_pip,2
 type_pipette_small,1
+type_sample_rack,1
 type_tc,1
 udi_start_col,1
 uploaded_csv,18
