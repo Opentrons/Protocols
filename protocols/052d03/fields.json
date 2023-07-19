@@ -1,9 +1,9 @@
 [
     {
         "type": "int",
-        "label": "number of samples (1-24)",
+        "label": "number of samples (1-23, excluding PC)",
         "name": "num_samples",
-        "default": 3
+        "default": 21
     },
     {
         "type": "textFile",

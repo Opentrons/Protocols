@@ -30,8 +30,8 @@ def run(ctx):
         for line in cp_list.splitlines()
         if line and line.split(',')[0].strip()]
 
-    num_cols = math.ceil(num_samples/8)
-    tc = ctx.load_module('thermocyclerModuleV2')
+    num_cols = math.ceil((num_samples+1)/8)
+    tc = ctx.load_module('thermocycler')
     tc.open_lid()
     tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr')
     tipracks300 = [
@@ -54,46 +54,53 @@ def run(ctx):
         'p20_single_gen2', 'right', tip_racks=tipracks20)
 
     samples = tuberack.wells()[:num_samples]
+    pc = tuberack.wells()[num_samples]
     rxn_mix_1 = res.wells()[0]
     rxn_mix_2 = res.wells()[1]
     diluent = res.wells()[2:4]
     mm = res.wells()[4]
 
-    # define liquids
-    rxn_mix_1_liq = ctx.define_liquid(
-        name="DNAse",
-        description="DNAse",
-        display_color="#00FF00",
-    )
-    rxn_mix_2_liq = ctx.define_liquid(
-        name="PK",
-        description="PK",
-        display_color="#0000FF",
-    )
-    diluent_liq = ctx.define_liquid(
-        name="dilution buffer",
-        description="dilution buffer",
-        display_color="#FF0000",
-    )
-    mastermix_liq = ctx.define_liquid(
-        name="mastermix",
-        description="mastermix",
-        display_color="#FBFF00",
-    )
-    sample_liq = ctx.define_liquid(
-        name="sample",
-        description="sample",
-        display_color="#F300FF",
-    )
+    # # define liquids
+    # rxn_mix_1_liq = ctx.define_liquid(
+    #     name="DNAse",
+    #     description="DNAse",
+    #     display_color="#00FF00",
+    # )
+    # rxn_mix_2_liq = ctx.define_liquid(
+    #     name="PK",
+    #     description="PK",
+    #     display_color="#0000FF",
+    # )
+    # diluent_liq = ctx.define_liquid(
+    #     name="dilution buffer",
+    #     description="dilution buffer",
+    #     display_color="#FF0000",
+    # )
+    # mastermix_liq = ctx.define_liquid(
+    #     name="mastermix",
+    #     description="mastermix",
+    #     display_color="#FBFF00",
+    # )
+    # sample_liq = ctx.define_liquid(
+    #     name="sample",
+    #     description="sample, NTC, and DAC",
+    #     display_color="#F300FF",
+    # )
+    # pc_liq = ctx.define_liquid(
+    #     name="positive control",
+    #     description="positive control",
+    #     display_color="#050F5D",
+    # )
 
-    # load liquids
-    [s.load_liquid(sample_liq, volume=200) for s in samples]
-    if not type_molecule == 'pDNA':
-        rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8)
-    if not type_molecule == '101':
-        rxn_mix_2.load_liquid(rxn_mix_2_liq, volume=50*num_cols*8)
-    mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4)
-    [d.load_liquid(diluent_liq, volume=13500) for d in diluent]
+    # # load liquids
+    # [s.load_liquid(sample_liq, volume=200) for s in samples]
+    # pc.load_liquid(pc_liq, volume=200)
+    # if not type_molecule == 'pDNA':
+    #     rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8)
+    # if not type_molecule == '101':
+    #     rxn_mix_2.load_liquid(rxn_mix_2_liq, volume=50*num_cols*8)
+    # mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4)
+    # [d.load_liquid(diluent_liq, volume=13500) for d in diluent]
 
     def pick_up(pip):
         try:
@@ -236,7 +243,7 @@ def run(ctx):
     # mm
     mm_dest_sets = [
         mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]
-        for i in range(num_samples)]
+        for i in range(len(data))]
     pick_up(p20)
     for d_set in mm_dest_sets:
         for d in d_set:
@@ -245,6 +252,31 @@ def run(ctx):
             p20.dispense(16.5, d.bottom(1))
             slow_withdraw(p20, d)
     p20.drop_tip()
+
+    # dilute positive control
+    pc_dil_set = dil_sets_all[-1]
+    pc_column_indices = [
+        dil_plate.rows()[0].index(col)
+        for col in pc_dil_set[2:4]]
+    pc_dil_wells = [
+        dil_plate.columns()[index][-1]
+        for index in pc_column_indices]
+    pc_dil_sources = [pc, pc_dil_wells[0]]
+    pc_mm_dest_set = mm_dest_sets.pop(2)
+    pick_up(p20)
+    for s, d in zip(pc_dil_sources, pc_dil_wells):
+        p20.aspirate(20, s)
+        slow_withdraw(p20, s)
+        p20.dispense(20, d.bottom(d.depth/2))
+        p20.mix(5, 20, d.bottom(d.depth/2))
+    for d in pc_mm_dest_set:
+        if not p20.has_tip:
+            pick_up(p20)
+        p20.aspirate(5.5, pc_dil_wells[-1].bottom(5))
+        slow_withdraw(p20, pc_dil_wells[-1])
+        p20.dispense(5.5, d.bottom(2))
+        slow_withdraw(p20, d)
+        p20.drop_tip()
 
     # cherrypick
     cp_lw_map = {
