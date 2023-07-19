@@ -243,6 +243,7 @@ count_samples_rowa,1
 count_samples_rowb,1
 count_samples_rowc,1
 count_samples_rowd,1
+cp_list,1
 csv,6
 csv1_buff,1
 csv1_samp,1
@@ -313,7 +314,6 @@ dest_type,6
 dest_well_plate_tmod,1
 destdilvol,1
 destination_plate_lname,1
-destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
 digestion_temp,1
@@ -681,11 +681,15 @@ loc_tween,1
 lw_checkit,1
 lw_deepwell_plate,3
 lw_deepwell_plate_open,1
+lw_dest_plate,1
+lw_dest_plate_open,1
 lw_dmso,1
 lw_hplc,1
 lw_media,1
 lw_refill,1
 lw_source,1
+lw_source_plate,1
+lw_source_plate_open,1
 lw_tiprack300,1
 lw_tuberack,1
 lwaste,1
@@ -694,7 +698,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,77
-m300_mount,102
+m300_mount,103
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -866,7 +870,7 @@ num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,33
+num_plates,34
 num_pool_sources,1
 num_pools,1
 num_primers,3
@@ -1071,7 +1075,7 @@ plate_map_4_csv,1
 plate_name,1
 plate_scan,4
 plate_scan2,4
-plate_type,11
+plate_type,12
 plates,1
 pool_columns,1
 pool_location,1
@@ -1308,7 +1312,6 @@ source_format,1
 source_labware,2
 source_lw,1
 source_plate,2
-source_plate_type,1
 source_start_col,1
 source_type,8
 sp,2
@@ -1540,8 +1543,10 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 type_matrix,1
+type_molecule,1
 type_pip,2
 type_pipette_small,1
+type_sample_rack,1
 type_tc,1
 udi_start_col,1
 uploaded_csv,18

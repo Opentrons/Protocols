@@ -1,4 +1,4 @@
-# Dilution and Amplification
+# SARS-COV2 (VSV) Neutralization Assay
 
 
 ### Author
@@ -6,42 +6,41 @@
 
 
 ## Categories
-* PCR
-	* PCR
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol performs a custom dilution and PCR protocol on the Opentrons Thermocycler GEN2 Module. The number of samples will be automatically calculated from the input cherrypicking .csv list, which should be formatted as the following example **excluding the positive control**:
-
-```
-A4,tc
-B4,tc
-C1,dil
-D1,dil
-B1,dil
-H12,dil
-
-```
-
-Note that the first value of each line should specify the well location, and the second value should specify whether to pick from the thermocycler plate or the dilution plate.
-
-
-### Modules
-* [Opentrons Thermocycler Module](https://shop.opentrons.com/thermocycler-module-1/)
+This protocol performs the SARS-COV2 (VSV) Neutralization Assay on the OT-2. The user may select how many source-destination plate pairs (1-3) for this protocol, as well as select labware. The protocol will pause if the tips are depleted, prompting the user to refill tips. 
 
 
 ### Labware
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
+* Falcon 96 Well Plate 200 µL
+* [Corning 96 Well Plate 360 µL Flat #3650](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)
+* [Agilent 1 Well Reservoir 290 mL #201252-100](https://www.agilent.com/store/en_US/Prod-201252-100/201252-100)
 * [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
 * [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
-* [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 
 ### Pipettes
 * [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
-* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
+
+### Deck Setup
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/076f67/deck.png)
+
+
+
+### Protocol Steps
+1. Serum added
+2. Individual serum added
+3. Serially dilute down source plates
+4. Add virus to plates
+5. Incubate plates
+6. Discard media
+7. Transfer media from source plate to destination plate
+8. Incubate plates
+9. Dispense overlay in plates
 
 ### Process
 1. Input your protocol parameters above.
@@ -58,4 +57,4 @@ If you have any questions about this protocol, please contact the Protocol Devel
 
 
 ###### Internal
-052d03
+076f67

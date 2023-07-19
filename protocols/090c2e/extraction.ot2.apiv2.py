@@ -103,8 +103,10 @@ def run(ctx: protocol_api.ProtocolContext):
     class WellH(Well):
         def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
-            super().__init__(well.parent, well._core, APIVersion(2, 13))
-            # super().__init__(well._impl)
+            try:
+                super().__init__(well.parent, well._core, APIVersion(2, 13))
+            except AttributeError:
+                super().__init__(well._impl)
             self.well = well
             # specified minimum well bottom clearance
             self.min_height = min_height
@@ -273,7 +275,7 @@ can not exceed the height of the labware.')
 
     def remove_supernatant(vol, src):
         w = int(str(src).split(' ')[0][1:])
-        if src.width is not None:
+        if src.width:
             radi = float(src.width)/4
         else:
             radi = float(src.diameter)/4
@@ -317,7 +319,7 @@ can not exceed the height of the labware.')
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(140, col)
             if not off_deck:
-                flow_rate(asp=150, disp=150)
+                flow_rate(asp=flow_rate_wash, disp=flow_rate_wash)
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 # bead_loc = col.bottom().move(
@@ -325,7 +327,7 @@ can not exceed the height of the labware.')
                 mix_high_low(col, 10, 190, z_offset_low=3,
                              x_offset=side*radius*0.5, switch_sides_x=False)
                 flow_rate()
-            ctx.delay(seconds=5)
+                ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.blow_out()
             m300.touch_tip(speed=40)
@@ -680,10 +682,10 @@ then resume run.')
     flow_rate(asp=20)
     for src, dest in zip(mag_samps, pcr_samps):
         w = int(str(src).split(' ')[0][1:])
-        if src.width is not None:
+        if src.width:
             radi = float(src.width)/4
         else:
-            float(src.diameter)/4
+            radi = float(src.diameter)/4
         x0 = radi if w % 2 == 0 else -radi
         m300.custom_pick_up()
         m300.aspirate(

@@ -8,7 +8,7 @@
   {
     "type": "dropDown",
     "label": "Source Plate Type",
-    "name": "source_plate_type",
+    "name": "lw_source_plate",
     "options": [
       {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
       {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
@@ -22,9 +22,15 @@
     ]
   },
   {
+    "type": "str",
+    "label": "Source plate type (if not listed in dropdown above)",
+    "name": "lw_source_plate_open",
+    "default": ""
+  },
+  {
     "type": "dropDown",
     "label": "Destination Plate Type",
-    "name": "destination_plate_type",
+    "name": "lw_dest_plate",
     "options": [
       {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
       {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
@@ -36,6 +42,12 @@
       {"label": "Greiner Bio-One 96-well 392 µL Flat", "value": "greinerbioone_96_wellplate_392ul_flat"},
       {"label": "PerkinElmer PhenoPlate 96-well 300 µL flat", "value": "perkinelmer_phenoplate_96_wellplate_300ul_circular_flat"}
     ]
+  },
+  {
+    "type": "str",
+    "label": "Destination plate type (if not listed in dropdown above)",
+    "name": "lw_dest_plate_open",
+    "default": ""
   },
   {
     "type": "dropDown",

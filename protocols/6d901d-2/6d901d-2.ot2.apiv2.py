@@ -1,5 +1,4 @@
 from opentrons import protocol_api
-from opentrons.protocol_api.contexts import InstrumentContext
 from opentrons.protocol_api.labware import OutOfTipsError
 
 
@@ -16,8 +15,10 @@ metadata = {
 def run(ctx: protocol_api.ProtocolContext):
 
     [transfer_csv,
-     source_plate_type,
-     destination_plate_type,
+     lw_source_plate,
+     lw_source_plate_open,
+     lw_dest_plate,
+     lw_dest_plate_open,
      res_type,
      pipette_type,
      pipette_mount,
@@ -26,8 +27,10 @@ def run(ctx: protocol_api.ProtocolContext):
      starting_tiprack_slot,
      starting_tip_well] = get_values(  # noqa: F821
      "transfer_csv",
-     "source_plate_type",
-     "destination_plate_type",
+     "lw_source_plate",
+     "lw_source_plate_open",
+     "lw_dest_plate",
+     "lw_dest_plate_open",
      "res_type",
      "pipette_type",
      "pipette_mount",
@@ -54,10 +57,19 @@ def run(ctx: protocol_api.ProtocolContext):
                      for line in transfer_csv.splitlines()
                      if line.split(',')[0].strip()][1:]
 
+    if lw_source_plate_open.strip():
+        lw_source_plate_name = lw_source_plate_open
+    else:
+        lw_source_plate_name = lw_source_plate
+    if lw_dest_plate_open.strip():
+        lw_dest_plate_name = lw_dest_plate_open
+    else:
+        lw_dest_plate_name = lw_dest_plate
+
     # Load labware
     #  Plate to cherrypick from
-    source_plate = ctx.load_labware(source_plate_type, '7')
-    dest_plate = ctx.load_labware(destination_plate_type, '8')
+    source_plate = ctx.load_labware(lw_source_plate_name, '7')
+    dest_plate = ctx.load_labware(lw_dest_plate_name, '8')
     # This reservoir is unused, but present
     if res_type != "none":
         ctx.load_labware(res_type, '9')
@@ -110,7 +122,7 @@ def run(ctx: protocol_api.ProtocolContext):
         if is_break:
             break
 
-    def pick_up(pipette: InstrumentContext):
+    def pick_up(pipette):
         """`pick_up()` will pause the ctx when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
         reset, the ctx will start picking up tips from the first tip
