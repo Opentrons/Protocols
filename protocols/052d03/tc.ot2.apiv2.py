@@ -279,9 +279,10 @@ def run(ctx):
     pick_up(p20)
     for d_set in mm_dest_sets:
         for d in d_set:
+            p20.aspirate(2, mm.top())  # pre-airgap
             p20.aspirate(16.5, mm)
             slow_withdraw(p20, mm)
-            p20.dispense(16.5, d.bottom(1))
+            p20.dispense(p20.current_volume, d.bottom(1))
             slow_withdraw(p20, d)
     p20.drop_tip()
 
@@ -291,9 +292,10 @@ def run(ctx):
     for d in pc_mm_dest_set:
         if not p20.has_tip:
             pick_up(p20)
+        p20.aspirate(2, mm.top())  # pre-airgap
         p20.aspirate(5.5, pc.bottom(0.5))
         slow_withdraw(p20, pc)
-        p20.dispense(5.5, d.bottom(2))
+        p20.dispense(p20.current_volume, d.bottom(2))
         slow_withdraw(p20, d)
         p20.drop_tip()
 
@@ -308,9 +310,10 @@ def run(ctx):
     for s, d_set in zip(cp_sources, mm_dest_sets):
         for d in d_set:
             pick_up(p20)
+            p20.aspirate(2, s.top())  # pre-airgap
             p20.aspirate(5.5, s.bottom(5))
             slow_withdraw(p20, s)
-            p20.dispense(5.5, d.bottom(2))
+            p20.dispense(p20.current_volume, d.bottom(2))
             slow_withdraw(p20, d)
             p20.drop_tip()
 
@@ -324,7 +327,7 @@ def run(ctx):
         mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]
         for i in range(num_mm_dest_sets, num_mm_dest_sets+remaining_rows)]
     vol_blank = 22.0
-    tip_ref_vol = p20.tip_racks[0].wells()[0].max_volume
+    tip_ref_vol = p20.tip_racks[0].wells()[0].max_volume - 2.0  # vol preairgap
     num_trans = math.ceil(vol_blank/tip_ref_vol)
     vol_per_trans = round(vol_blank/num_trans, 2)
     pick_up(p20)
@@ -332,9 +335,10 @@ def run(ctx):
         for d in dest_set:
             for _ in range(num_trans):
                 source = track_dilution(vol_per_trans)
+                p20.aspirate(2, source.top())  # pre-airgap
                 p20.aspirate(vol_per_trans, source)
                 slow_withdraw(p20, source)
-                p20.dispense(vol_per_trans, d.bottom(2))
+                p20.dispense(p20.current_volume, d.bottom(2))
                 slow_withdraw(p20, d)
     p20.drop_tip()
 
