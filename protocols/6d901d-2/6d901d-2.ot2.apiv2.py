@@ -1,5 +1,4 @@
 from opentrons import protocol_api
-from opentrons.protocol_api.contexts import InstrumentContext
 from opentrons.protocol_api.labware import OutOfTipsError
 
 
@@ -123,7 +122,7 @@ def run(ctx: protocol_api.ProtocolContext):
         if is_break:
             break
 
-    def pick_up(pipette: InstrumentContext):
+    def pick_up(pipette):
         """`pick_up()` will pause the ctx when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
         reset, the ctx will start picking up tips from the first tip
