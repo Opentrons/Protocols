@@ -317,7 +317,7 @@ can not exceed the height of the labware.')
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(140, col)
             if not off_deck:
-                flow_rate(asp=150, disp=150)
+                flow_rate(asp=flow_rate_wash, disp=flow_rate_wash)
                 side = 1 if idx % 2 == 0 else -1
                 radius = col.diameter/2 if col.diameter else col.width/2
                 # bead_loc = col.bottom().move(
