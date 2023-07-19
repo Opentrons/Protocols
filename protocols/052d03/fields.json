@@ -3,13 +3,13 @@
         "type": "int",
         "label": "number of samples (1-23, excluding PC)",
         "name": "num_samples",
-        "default": 21
+        "default": 4
     },
     {
         "type": "textFile",
         "label": "cherrypicking input list",
         "name": "cp_list",
-        "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil\nA3,tc\nB1,dil\nH12,dil"
+        "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil"
     },
     {
         "type": "dropDown",

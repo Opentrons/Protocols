@@ -30,7 +30,7 @@ def run(ctx):
         for line in cp_list.splitlines()
         if line and line.split(',')[0].strip()]
 
-    num_cols = math.ceil((num_samples+1)/8)
+    num_cols = math.ceil((num_samples)/8)
     tc = ctx.load_module('thermocyclerModuleV2')
     tc.open_lid()
     tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr')
@@ -92,12 +92,12 @@ def run(ctx):
     )
     pc_liq = ctx.define_liquid(
         name='positive control',
-        description='positive control',
+        description='diluted 1:100',
         display_color='#050F5D',
     )
 
     # load liquids
-    [s.load_liquid(sample_liq, volume=200) for s in samples]
+    [s.load_liquid(sample_liq, volume=200/num_samples) for s in samples]
     pc.load_liquid(pc_liq, volume=200)
     if not type_molecule == 'pDNA':
         rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8)
@@ -274,7 +274,7 @@ def run(ctx):
     # mm
     mm_dest_sets = [
         mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]
-        for i in range(len(data))]
+        for i in range(len(data)+1)]
     pick_up(p20)
     for d_set in mm_dest_sets:
         for d in d_set:
@@ -284,27 +284,14 @@ def run(ctx):
             slow_withdraw(p20, d)
     p20.drop_tip()
 
-    # dilute positive control
-    pc_dil_set = dil_sets_all[-1]
-    pc_column_indices = [
-        dil_plate.rows()[0].index(col)
-        for col in pc_dil_set[2:4]]
-    pc_dil_wells = [
-        dil_plate.columns()[index][-1]
-        for index in pc_column_indices]
-    pc_dil_sources = [pc, pc_dil_wells[0]]
+    # add diluted positive control
     pc_mm_dest_set = mm_dest_sets.pop(2)
     pick_up(p20)
-    for s, d in zip(pc_dil_sources, pc_dil_wells):
-        p20.aspirate(20, s)
-        slow_withdraw(p20, s)
-        p20.dispense(20, d.bottom(d.depth/2))
-        p20.mix(5, 20, d.bottom(d.depth/2))
     for d in pc_mm_dest_set:
         if not p20.has_tip:
             pick_up(p20)
-        p20.aspirate(5.5, pc_dil_wells[-1].bottom(5))
-        slow_withdraw(p20, pc_dil_wells[-1])
+        p20.aspirate(5.5, pc.bottom(0.5))
+        slow_withdraw(p20, pc)
         p20.dispense(5.5, d.bottom(2))
         slow_withdraw(p20, d)
         p20.drop_tip()
@@ -325,3 +312,27 @@ def run(ctx):
             p20.dispense(5.5, d.bottom(2))
             slow_withdraw(p20, d)
             p20.drop_tip()
+
+    # fill remaining columns if necessary
+    num_mm_dest_sets = len(data) + 1  # including PC
+    if num_mm_dest_sets % 8 == 0:
+        remaining_rows = 0
+    else:
+        remaining_rows = 8 - num_mm_dest_sets % 8
+    mm_dest_sets_blank = [
+        mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]
+        for i in range(num_mm_dest_sets, num_mm_dest_sets+remaining_rows)]
+    vol_blank = 22.0
+    tip_ref_vol = p20.tip_racks[0].wells()[0].max_volume
+    num_trans = math.ceil(vol_blank/tip_ref_vol)
+    vol_per_trans = round(vol_blank/num_trans, 2)
+    pick_up(p20)
+    for dest_set in mm_dest_sets_blank:
+        for d in dest_set:
+            for _ in range(num_trans):
+                source = track_dilution(vol_per_trans)
+                p20.aspirate(vol_per_trans, source)
+                slow_withdraw(p20, source)
+                p20.dispense(vol_per_trans, d.bottom(2))
+                slow_withdraw(p20, d)
+    p20.drop_tip()
