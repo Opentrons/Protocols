@@ -10,11 +10,6 @@ metadata = {
 
 DO_THERMOCYCLER = True
 
-# 101 - 1 enzymatic reaction (no second rxn mix)
-# 401 - exactly like this
-# pDNA - only second enzymatic rxn
-#    (10ul sample neat into column 3 with 90ul rxn mix)
-
 
 def run(ctx):
 
@@ -56,8 +51,8 @@ def run(ctx):
     pc = tuberack.wells()[num_samples]
     rxn_mix_1 = res.wells()[0]
     rxn_mix_2 = res.wells()[1]
-    diluent = res.wells()[2:4]
-    mm = res.wells()[4]
+    diluent = res.wells()[2:5]
+    mm = res.wells()[5]
 
     if type_molecule == '401':
         vol_rxn_mix_2 = 50.0
@@ -100,11 +95,12 @@ def run(ctx):
     [s.load_liquid(sample_liq, volume=200/num_samples) for s in samples]
     pc.load_liquid(pc_liq, volume=200)
     if not type_molecule == 'pDNA':
-        rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8)
+        rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8*1.1+2000)
     if not type_molecule == '101':
-        rxn_mix_2.load_liquid(rxn_mix_2_liq, volume=vol_rxn_mix_2*num_cols*8)
-    mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4)
-    [d.load_liquid(diluent_liq, volume=13500) for d in diluent]
+        rxn_mix_2.load_liquid(
+            rxn_mix_2_liq, volume=vol_rxn_mix_2*num_cols*8*1.1+2000)
+    mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4*1.1+2000)
+    [d.load_liquid(diluent_liq, volume=13500) for d in diluent[:num_cols]]
 
     def pick_up(pip):
         try:
@@ -114,7 +110,7 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
-    vol_max_dil = 0.85*diluent[0].max_volume
+    vol_max_dil = 0.8*diluent[0].max_volume
     vol_current = 0
     dil_tracker = iter(diluent)
     dil_current = next(dil_tracker)
@@ -167,13 +163,16 @@ def run(ctx):
         first_dil_cols = [tc_plate.columns()[i*4] for i in range(num_cols)]
         first_dil_dests_s = [
             well for col in first_dil_cols for well in col][:num_samples]
-        for s, d in zip(samples, first_dil_dests_s):
+        for i, (s, d) in enumerate(zip(samples, first_dil_dests_s)):
             pick_up(p20)
             p20.aspirate(20, s.bottom(0.5))
             slow_withdraw(p20, s)
-            p20.dispense(20, d.top(-5))
+            p20.dispense(20, d.bottom(d.depth/2))
             # p20.mix(5, 20, d.bottom(d.depth/2))
             slow_withdraw(p20, d)
+            if i % 8 == 0:  # row A
+                p20.move_to(d.top(2))
+                p20.move_to(d.top().move(Point(y=-5, z=2)))
             p20.drop_tip()
 
         # add to mix
@@ -183,12 +182,13 @@ def run(ctx):
             m300.aspirate(20, s.bottom(5))
             slow_withdraw(m300, s)
             m300.dispense(20, d.bottom(2))
-            m300.mix(5, 20, d.bottom(d.depth/2))
+            m300.mix(5, 20, d.bottom(2))
             slow_withdraw(m300, d)
             m300.drop_tip()
 
         tc.close_lid()
         if DO_THERMOCYCLER:
+            tc.set_lid_temperature(105)
             tc.set_block_temperature(37, hold_time_minutes=30)
         tc.open_lid()
 
@@ -224,7 +224,7 @@ def run(ctx):
                 m300.aspirate(50, rxn_mix_2)
                 slow_withdraw(m300, rxn_mix_2)
                 m300.dispense(50, d.bottom(2))
-                m300.mix(5, 20, d.bottom(d.depth/2))
+                m300.mix(5, 20, d.bottom(2), rate=0.5)
                 slow_withdraw(m300, d)
                 m300.drop_tip()
 
@@ -234,6 +234,7 @@ def run(ctx):
             tc.set_block_temperature(95, hold_time_minutes=15)
             tc.set_block_temperature(4)
         tc.open_lid()
+        tc.deactivate_lid()
 
     dil_sets_tc = [
         tc_plate.rows()[0][i*4+2:i*4+4] for i in range(num_cols)
@@ -336,3 +337,5 @@ def run(ctx):
                 p20.dispense(vol_per_trans, d.bottom(2))
                 slow_withdraw(p20, d)
     p20.drop_tip()
+
+    tc.deactivate_block()

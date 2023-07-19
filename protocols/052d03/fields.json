@@ -9,7 +9,7 @@
         "type": "textFile",
         "label": "cherrypicking input list",
         "name": "cp_list",
-        "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil"
+        "default": "A4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\n"
     },
     {
         "type": "dropDown",
