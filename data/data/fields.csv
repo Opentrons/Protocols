@@ -314,7 +314,6 @@ dest_type,6
 dest_well_plate_tmod,1
 destdilvol,1
 destination_plate_lname,1
-destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
 digestion_temp,1
@@ -682,11 +681,15 @@ loc_tween,1
 lw_checkit,1
 lw_deepwell_plate,3
 lw_deepwell_plate_open,1
+lw_dest_plate,1
+lw_dest_plate_open,1
 lw_dmso,1
 lw_hplc,1
 lw_media,1
 lw_refill,1
 lw_source,1
+lw_source_plate,1
+lw_source_plate_open,1
 lw_tiprack300,1
 lw_tuberack,1
 lwaste,1
@@ -1309,7 +1312,6 @@ source_format,1
 source_labware,2
 source_lw,1
 source_plate,2
-source_plate_type,1
 source_start_col,1
 source_type,8
 sp,2
