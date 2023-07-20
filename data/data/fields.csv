@@ -555,6 +555,7 @@ init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,2
+init_vol_sds,1
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
@@ -1340,6 +1341,8 @@ start_col,2
 start_column,1
 start_index_tip,1
 start_tip,1
+start_tip_p20,1
+start_tip_p300,1
 start_urea_vol,1
 starting_buffer_volume,1
 starting_conc,2
