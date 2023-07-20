@@ -297,7 +297,8 @@ can not exceed the height of the labware.')
         ctx.comment(f'Performing wash step: {msg}')
         flow_rate()
         for idx, (col, src) in enumerate(zip(mag_samps_h, srcs)):
-            m300.custom_pick_up()
+            if not m300.has_tip:
+                m300.custom_pick_up()
 
             # src = srcs[idx//3]
             for i in range(2):
@@ -329,9 +330,14 @@ can not exceed the height of the labware.')
                 flow_rate()
                 ctx.delay(seconds=5)
                 m300.slow_tip_withdrawal(10, col, to_surface=True)
-            m300.blow_out()
-            m300.touch_tip(speed=40)
-            m300.aspirate(10, col.top())
+                m300.blow_out()
+                m300.touch_tip(speed=40)
+                m300.aspirate(10, col.top())
+                m300.drop_tip()
+            else:
+                m300.blow_out()
+
+        if m300.has_tip:
             m300.drop_tip()
 
         if off_deck:
