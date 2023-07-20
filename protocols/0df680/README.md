@@ -29,6 +29,8 @@ n9,CL-1418976,5,biorad_96_wellplate_200ul_pcr,6,C07,1,biorad_96_wellplate_200ul_
 ...
 ```
 
+You can also access a template ***[here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0df680/ex.csv)***.
+
 
 ### Labware
 * [Opentrons 96 Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
