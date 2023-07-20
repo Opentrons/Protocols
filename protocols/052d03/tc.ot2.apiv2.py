@@ -292,7 +292,7 @@ def run(ctx):
     for d in pc_mm_dest_set:
         if not p20.has_tip:
             pick_up(p20)
-        p20.aspirate(2, mm.top())  # pre-airgap
+        p20.aspirate(2, pc.top())  # pre-airgap
         p20.aspirate(5.5, pc.bottom(0.5))
         slow_withdraw(p20, pc)
         p20.dispense(p20.current_volume, d.bottom(2))
