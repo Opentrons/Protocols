@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nblue: PCR2 buffer  \npink: samples  \ngreen: indexes\n\n\n",
-    "description": "Links:\n Part 1\n\n Part 2\n\n Part 3\n\n Part 4\n\n* Part 5\nThis custom indexing protocol is part 2/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.\n",
+    "description": "Links:\n* Part 1\n\n* Part 2\n\n* Part 3\n\n* Part 4\n\n* Part 5\nThis custom indexing protocol is part 2/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.\n",
     "internal": "17d210",
     "labware": "\nAbgene Midi 96 Well Plate 800 \u00b5L\nAmplifyt 96 Well Plate 200 \u00b5L\nOpentrons 20\u00b5l and 300\u00b5l Tipracks\n",
     "markdown": {
