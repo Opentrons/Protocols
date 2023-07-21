@@ -9,8 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates] = get_values(  # noqa: F821
-        'num_plates')
+    [num_plates, reps_mix] = get_values(  # noqa: F821
+        'num_plates', 'reps_mix')
 
     # modules
     tempdeck = ctx.load_module('temperature module gen2', '1')
@@ -27,8 +27,8 @@ def run(ctx):
         'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '3',
         'sample plate')
 
-    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]
-    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]
+    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
+    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
 
     # pipettes
     m300 = ctx.load_instrument(
@@ -40,10 +40,10 @@ def run(ctx):
     vol_mm = 23.0
     vol_sample = 2.0
 
-    mm = reservoir.wells()[0]
+    mm = reservoir.wells()[:num_plates]
     sample_sources = sample_plate.rows()[0]
 
-    def slow_withdraw(well, delay_seconds=2.0, pip=m300):
+    def slow_withdraw(well, delay_seconds=1.0, pip=m300):
         pip.default_speed /= 16
         if delay_seconds > 0:
             ctx.delay(seconds=delay_seconds)
@@ -65,8 +65,8 @@ def run(ctx):
             for i in range(num_asp)]
         m300.pick_up_tip()
         for d_set in mm_dest_sets:
-            m300.aspirate(vol_mm*len(d_set), mm.bottom(2))
-            slow_withdraw(mm)
+            m300.aspirate(vol_mm*len(d_set), mm[n//2].bottom(2))
+            slow_withdraw(mm[n//2])
             for d in d_set:
                 m300.dispense(vol_mm, d.bottom(-2))
                 slow_withdraw(d)
@@ -78,12 +78,12 @@ def run(ctx):
             m20.aspirate(vol_sample, s.bottom(-2))
             slow_withdraw(s, pip=m20)
             m20.dispense(vol_sample, d.bottom(-2))
-            m20.mix(2, 10, d.bottom(-1))
+            m20.mix(reps_mix, 10, d.bottom(-1))
             slow_withdraw(d, pip=m20)
             m20.drop_tip()
 
         m20.reset_tipracks()
 
         if n < num_plates - 1:
-            ctx.pause(f'Replace 20ul tiprack. Refill mastermix. Replace \
+            ctx.pause(f'Replace 20ul tiprack. Refill mastermix. \
 Ensure clean PCR plate on slot {pcr_plates[(n+1)//2].parent} before resuming.')
