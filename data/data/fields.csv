@@ -546,6 +546,7 @@ index_start_col,2
 index_start_column,1
 index_vol,2
 indexing_plate_loadname,1
+init_samp_vol,1
 init_temp,2
 init_time,2
 init_vol,3
@@ -555,11 +556,11 @@ init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,2
-init_vol_sds,1
+init_vol_sds,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,19
+input_csv,20
 input_file,10
 input_file2,6
 input_labware,1
@@ -954,7 +955,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,128
+p20_mount,129
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -971,7 +972,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,148
+p300_mount,149
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1341,8 +1342,8 @@ start_col,2
 start_column,1
 start_index_tip,1
 start_tip,1
-start_tip_p20,1
-start_tip_p300,1
+start_tip_p20,2
+start_tip_p300,2
 start_urea_vol,1
 starting_buffer_volume,1
 starting_conc,2

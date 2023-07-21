@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "\n* green: wash buffer\n* blue: waste (empty)\n* pink: elution buffer\n* purple: samples in catcher plate\n",
+    "deck-setup": "\n green: wash buffer\n blue: waste (empty)\n pink: elution buffer\n purple: samples in catcher plate\n",
     "description": "Links:\n\n\nPart 1\n\n\nPart 2\n\n\nPart 3\n\n\nThis protocol performs part 1/3 of a custom CYP Induction PCR prep.\n",
     "internal": "60d861",
     "labware": "\nLabware name\nNick is working on auto-filling these sections from the protocol (3/28/2021)\n",

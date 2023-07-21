@@ -5,7 +5,7 @@
             "Oxford Nanopore 16S Barcoding Kit"
         ]
     },
-    "deck-setup": "\n* blue: water\n* pink: longamp taq\n* purple: barcodes\n* green: starting samples\n* orange: EtOH\n",
+    "deck-setup": "\n blue: water\n pink: longamp taq\n purple: barcodes\n green: starting samples\n* orange: EtOH\n",
     "description": "This protocol performs a semi-automated solution for the Oxford Nanopore 16S Barcoding NGS Prep\n",
     "internal": "277a3d",
     "labware": "\nOpentrons 4-in-1 Tube Rack Set with 4x6 insert for 1.5ml Eppendorf tubes\nApplied Biosystems MicroAmp\u2122 Optical 96-Well Reaction Plate #N8010560 seated in MicroAmp\u2122 Splash-Free 96-Well Base #4312063\nOpentrons 20\u00b5L Filter Tips\nOpentrons 200\u00b5L Filter Tips\n",
