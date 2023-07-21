@@ -11,11 +11,11 @@
 
 
 ## Description
-This protocol is part 1 of a series for the VIB UGENT protocol. [This protocol performs steps 1-19 of this detailed protocol description.](https://s3.amazonaws.com/pf-user-files-01/u-4256/uploads/2023-01-31/ok13urr/VIB-UGENT_Customized_protocol_S-trap_steps.xlsx)
+This protocol is part 1 of a series for the VIB UGENT protocol. [This protocol performs steps 1-19 of this detailed protocol description.](https://s3.amazonaws.com/pf-user-files-01/u-4256/uploads/2023-01-31/ok13urr/VIB-UGENT_Customized_protocol_S-trap_steps.xlsx). The protocol will automatically pause if it runs out of tips. 
 
 
 ### Labware
-* Greiner_UV-star 96 Well Plate 392 µL #655801
+* Greiner_UV-star 96 Well Plate 392 µL
 * 3DPrint 96 Tube Rack with Nippon 0.2 mL #U0014
 * Costar 96 Well Plate 330 µL #Corning - 3779
 * Agilent 96 Well Plate 500 µL #5042-1385
@@ -32,7 +32,7 @@ This protocol is part 1 of a series for the VIB UGENT protocol. [This protocol p
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517/Screen+Shot+2023-03-07+at+11.40.28+AM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517/Screen+Shot+2023-07-20+at+11.22.34+AM.png)
 
 
 
