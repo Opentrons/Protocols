@@ -4,5 +4,11 @@
         "label": "number of PCR plates to prep",
         "name": "num_plates",
         "default": 4
+    },
+    {
+        "type": "int",
+        "label": "mixing repetitions",
+        "name": "reps_mix",
+        "default": 3
     }
 ]
