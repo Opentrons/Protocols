@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "The following example shows a setup for 8 samples and 2 primers. Note that samples can continue across the plate, and primers can continue down and then across the tuberack.\n green in reagent reservoir: BigDye + water mix\n pink in primer rack: primer 1\n* orange in primer rack: primer 2\n\n",
+    "deck-setup": "The following example shows a setup for 8 samples and 2 primers. Note that samples can continue across the plate, and primers can continue down and then across the tuberack.\n* green in reagent reservoir: BigDye + water mix\n* pink in primer rack: primer 1\n* orange in primer rack: primer 2\n\n",
     "description": "This protocol performs a custom PCR prep by transferring samples, primers, BigDye, and water to a clean PCR plate. New tips are used for each transfer, both to avoid contamination and to accurately dispense small volumes (1-6\u00b5l). See below for deck and reagent setups.\nNote that the product of the number of samples multiplied by the number of primers cannot exceed 96, or an exception will be thrown.\nAn example of the transfer scheme is shown in the following schematic:\n\n",
     "internal": "69cf81",
     "labware": "\nThermoFisher MicroAmp\u2122 Optical 96-Well Reaction Plate with Barcode #4306737\nNEST 15 Reservoir 12ml\nOpentrons 24 Tube Rack with NEST 1.5 mL Snapcap (or equivalent)\nOpentrons 20\u00b5l Tipracks or Rainin 20\u00b5l Tipracks\n",

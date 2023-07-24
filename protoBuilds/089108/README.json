@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol performs the 96-well Plasmid ezFilter Miniprep Kit. For a detailed list of protocol steps, please see below.\nExplanation of complex parameters below:\n Number of plates: Specify whether using 1 (slot 2 alone) or two (slots 2 and 5) plates for this run.\n Number of Samples Plate 1 & 2: Select the number of samples per plate. If the number of plates variable = 1 above, then the number of samples for plate 2 will be ignored.\n* P300 Mount: Specify which mount (left or right) to host the P300 Multi-Channel Pipette\n",
+    "description": "This protocol performs the 96-well Plasmid ezFilter Miniprep Kit. For a detailed list of protocol steps, please see below.\nExplanation of complex parameters below:\n* Number of plates: Specify whether using 1 (slot 2 alone) or two (slots 2 and 5) plates for this run.\n* Number of Samples Plate 1 & 2: Select the number of samples per plate. If the number of plates variable = 1 above, then the number of samples for plate 2 will be ignored.\n* P300 Mount: Specify which mount (left or right) to host the P300 Multi-Channel Pipette\n",
     "internal": "089108",
     "labware": "\nNEST 1 Well Reservoir\nOpentrons 300ul Tips\nNEST 1 Well Reservoir\nUSA Scientific 96 Deepwell Plate 2.4mL\nCustom 96 plates\n",
     "markdown": {
