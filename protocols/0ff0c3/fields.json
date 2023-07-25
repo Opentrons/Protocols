@@ -1,6 +1,6 @@
 [
     {
-      "type": "textFile",
+      "type": "float",
       "label": "Number of Samples",
       "name": "num_samp",
       "default": "96"
