@@ -1608,7 +1608,7 @@ vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
 vol_mix,2
-vol_mm,2
+vol_mm,3
 vol_mobile_phase,1
 vol_mq,1
 vol_neutralization_buffer,1
@@ -1619,7 +1619,7 @@ vol_pma_ca,1
 vol_reagent,1
 vol_refill,1
 vol_removal,1
-vol_sample,7
+vol_sample,8
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1
