@@ -16,10 +16,9 @@ def run(ctx):
     plate = ctx.load_labware('abgene_96_wellplate_2200ul', '4')
     tubeblock = ctx.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '5')
-    triton = ctx.load_labware('eppendorf_7_reservoir_30000ul',
-                              '8', 'triton (channel 1)').wells()[0]
-    triglyceride = ctx.load_labware('eppendorf_7_reservoir_100000ul',
-                                    '9', 'triton (channel 1)').wells()[0]
+    reservoir = ctx.load_labware(
+        'eppendorf_7_reservoir_30000ul', '8',
+        'triton (channel 1) and triglyceride (channel 1)')
     tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '2')]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '3')]
     tiprack20_s = ctx.load_labware('opentrons_96_tiprack_20ul', '10')
@@ -31,6 +30,9 @@ def run(ctx):
                                tip_racks=tipracks300)
 
     # reagents
+    triton = reservoir.rows()[0][0]
+    triglyceride = reservoir.rows()[0][1]
+    offset_triglyceride = -41
     standards = tubeblock.wells()[:5]
     standards_dests_sets = [
         row[:3] for row in plate.rows()[1:6]]
@@ -97,7 +99,8 @@ def run(ctx):
     vol_triglyceride = 300.0
     for d in triglyceride_dests:
         m300.pick_up_tip()
-        m300.aspirate(vol_triglyceride, triglyceride.bottom(5))
+        m300.aspirate(
+            vol_triglyceride, triglyceride.bottom(5-offset_triglyceride))
         slow_withdraw(m300, triglyceride)
         m300.dispense(vol_triglyceride, d.bottom(5))
         slow_withdraw(m300, d)
