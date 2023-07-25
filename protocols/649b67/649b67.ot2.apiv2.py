@@ -131,6 +131,7 @@ def read_var(input: str, var_type: str) -> Union[str, int, float]:
         return ''
 
     if var_type == "int":
+
         try:
             return int(input)
         except ValueError:
@@ -235,7 +236,7 @@ def run(ctx: protocol_api.ProtocolContext):
     csv_list = []
     # Remove any empty lines in the CSV.
     for i, row in enumerate(csv_rows):
-        if row == '':
+        if not row or not row.split(',')[0].strip():
             del csv_rows[i]
         else:
             csv_list.append(row.split(','))

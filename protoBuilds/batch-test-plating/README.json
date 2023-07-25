@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "This is a flexible protocol that helps you to prepare the PCR plate for a batch test of 12 samples and 2 No Template Controls, with the previous adition of the Master Mix\nThe protocol is broken down into 3 main parts:\n Mix dispensing\n Samples Dispensing\n* NTC dispensing\n",
+    "description": "This is a flexible protocol that helps you to prepare the PCR plate for a batch test of 12 samples and 2 No Template Controls, with the previous adition of the Master Mix\nThe protocol is broken down into 3 main parts:\n* Mix dispensing\n* Samples Dispensing\n* NTC dispensing\n",
     "internal": "batch-test-plating",
     "labware": "\nnest_96_wellplate_100ul_pcr_full_skirt\nopentrons_96_filtertiprack_20ul\nopentrons_24_tuberack_generic_2ml_screwcap\n",
     "markdown": {
