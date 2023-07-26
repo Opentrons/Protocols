@@ -20,14 +20,14 @@ def run(ctx):
 
     # p50 multi and tips
     tips20 = [ctx.load_labware("opentrons_96_tiprack_20ul", '4')]
-    p20m = [ctx.load_instrument(
-        "p20_multi_gen2", 'right', tip_racks=tips20)]
+    p20m = ctx.load_instrument(
+        "p20_multi_gen2", 'right', tip_racks=tips20)
 
     # Elution plate 1 on slot 6
-    elution_plate1 = [ctx.load_labware("thermo_96_wellplate_200ul", '6')]
+    elution_plate1 = ctx.load_labware("thermo_96_wellplate_200ul", '6')
 
     # Elution plate 2 on slot 8
-    elution_plate2 = [ctx.load_labware("thermo_96_wellplate_200ul", '8')]
+    elution_plate2 = ctx.load_labware("thermo_96_wellplate_200ul", '8')
 
     # to distribute and blow out with control over location within the well
     def create_chunks(list_name, n):
