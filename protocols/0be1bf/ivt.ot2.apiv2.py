@@ -204,15 +204,23 @@ Continue?')
         pip.move_to(well.top())
         pip.default_speed *= 10
 
+    vol_pre_airgap_p300 = 20.0
+    vol_pre_airgap_p20 = 2.0
+
     # initial mix
     for i, (well, transfer_vol) in enumerate(mix_map.items()):
-        pip = p300 if transfer_vol > 20 else p20
+        if transfer_vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
         num_trans = math.ceil(
-            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
+            transfer_vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         for n in range(num_trans):
             depth = 1.5 if transfer_vol <= 10 else 3
+            pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
             if n < num_trans - 1:
@@ -222,19 +230,28 @@ Continue?')
                 slow_withdraw(pip, mix_tube)
             slow_withdraw(pip, mix_tube)
         if i == len(mix_map.items()) - 1:
-            pip.mix(5, pip.max_volume*0.8, mix_tube)
+            if not pip == p300:
+                pip.drop_tip()
+                p300.pick_up_tip()
+            p300.mix(5, pip.max_volume*0.8, mix_tube, rate=0.5)
             slow_withdraw(pip, mix_tube)
         pip.drop_tip()
 
     # water addition
     for vol_water, d in zip(vols_water,
                             aliquot_rack.wells()[:len(template_volumes)]):
-        pip = p300 if vol_water >= 20 else p20
-        num_trans = math.ceil(vol_water/pip.tip_racks[0].wells()[0].max_volume)
+        if vol_water > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+        num_trans = math.ceil(
+            vol_water/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(vol_water/num_trans, 2)
         if not pip.has_tip:
             pip.pick_up_tip()
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, water.top())
             pip.aspirate(vol_per_trans, water)
             slow_withdraw(pip, water)
             pip.dispense(pip.current_volume, d.bottom(2))
@@ -245,12 +262,18 @@ Continue?')
 
     # mix addition
     vol_mix = sum(mix_volumes)/(num_rxns*factor_overage)
-    pip = p300 if vol_mix >= 20 else p20
-    num_trans = math.ceil(vol_mix/pip.tip_racks[0].wells()[0].max_volume)
+    if vol_mix > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+    num_trans = math.ceil(
+        vol_mix/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_mix/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, mix_tube.top())
             pip.aspirate(vol_per_trans, mix_tube)
             slow_withdraw(pip, mix_tube)
             pip.dispense(pip.current_volume, d.bottom(2))
@@ -261,12 +284,19 @@ Continue?')
     for (template, vol), d in zip(
             template_map.items(),
             aliquot_rack.wells()[:len(template_volumes)]):
-        pip = p300 if vol >= 20 else p20
+        if vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+        num_trans = math.ceil(
+            vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(vol/num_trans, 2)
         pip.pick_up_tip()
         depth = 1.5 if vol_per_trans <= 10 else 3
         for n in range(num_trans):
+            pip.aspirate(vol_pre_airgap, template.top())
             pip.aspirate(vol_per_trans, template.bottom(depth))
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
@@ -279,13 +309,18 @@ Continue?')
 
     # enzyme mix
     for i, (well, transfer_vol) in enumerate(enzyme_map.items()):
-        pip = p300 if transfer_vol > 20 else p20
+        if transfer_vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
         num_trans = math.ceil(
-            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
+            transfer_vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         depth = 1.5 if vol_per_trans <= 10 else 3
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
             pip.dispense(pip.current_volume, enzyme_mix_tube.bottom(1.5))
@@ -299,9 +334,13 @@ Continue?')
 
     # enzyme mix addition
     vol_enzyme_mix = sum(enzyme_volumes)/(num_rxns*factor_overage)
-    pip = p300 if vol_enzyme_mix >= 20 else p20
+    if vol_enzyme_mix > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
     num_trans = math.ceil(
-        vol_enzyme_mix/pip.tip_racks[0].wells()[0].max_volume)
+        vol_enzyme_mix/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_enzyme_mix/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()
@@ -329,10 +368,13 @@ Continue?')
     ctx.pause('INCUBATION')
 
     # LiCl and H2O
-    pip = p300 if vol_licl_h2o >= 20 else p20
-    vol_pre_airgap = 20.0
+    if vol_licl_h2o > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
     num_trans = math.ceil(
-        vol_licl_h2o/(pip.tip_racks[0].wells()[0].max_volume - vol_pre_airgap))
+        vol_licl_h2o/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_licl_h2o/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()
