@@ -3,12 +3,9 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample Prep
+	* Pooling
 
 ## Description
 This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
@@ -26,7 +23,6 @@ Results of the Opentrons Science team's internal testing of this protocol on the
 ![results](link_to_results.png)
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
 * `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
 ```
 source,dest,vol
@@ -36,10 +32,7 @@ A1,B1,4
 ---
 
 ### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) - Not used in protocol but loaded so module can remain on the deck
 
 ### Labware
 * [Labware name](link to labware on shop.opentrons.com when applicable)
@@ -49,18 +42,12 @@ A1,B1,4
 * [Pipette name](link to pipette on shop.opentrons.com)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
 * Reservoir 1: slot 5
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
 * Reservoir 2: slot 2  
@@ -69,9 +56,8 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Use a single channel pipettor and a new tip each time, transfer 2-35 uL from the 96 well PCR plate to a single 2 mL snap tube
+2. Repeat across the entire plate according to the .csv file
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +72,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+0dda91
