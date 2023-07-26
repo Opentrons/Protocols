@@ -17,50 +17,27 @@ def run(ctx):
 
 
     input_csv = """
-    Sample Location,Qubits,Volume (ul) for ng: 70,,,,,,,,,,,
-A1,3.5,35.0,,,,,,,,,,,
-A2,15,4.7,,,,,,,,,,,
-A3,20,3.5,,,,,,,,,,,
+    Sample Location,Qubits,Volume (ul) for ng: 70,Sample Destination,,,,,,,,,,,
+A1,3.5,35.0,A1,,,,,,,,,,,
+A2,15,4.7,A2,,,,,,,,,,,
+A3,20,3.5,A2,,,,,,,,,,,
+A4,20,10,A1,,,,,,,,,,,
 """
 
     p20_mount = 'right'
 
     # labware
+    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+            for slot in [1,4]]
 
-    mag_mod = ctx.load_module('magnetic module gen2', 6)   # not used during protocol
-    pcr_plates = [ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', slot)
-            for slot in [2, 5, 8]]
+    pcr_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 2)
 
     tube_rack = ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 3)
 
-    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-            for slot in [1]]
+    mag_mod = ctx.load_module('magnetic module gen2', 6)   # not used during protocol
 
     # pipettes
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
-
-    # Helper Functions
-    def pick_up(pip):
-        """Function that can be used instead of .pick_up_tip() that will pause
-        robot when robot runs out of tips, prompting user to replace tips
-        before resuming"""
-        try:
-            pip.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            pip.home()
-            ctx.pause("Replace the tips")
-            pip.reset_tipracks()
-            pip.pick_up_tip()
-
-    def slow_withdraw(pip, well, delay_seconds=2.0):
-        pip.default_speed /= 16
-        if delay_seconds > 0:
-            ctx.delay(seconds=delay_seconds)
-        pip.move_to(well.top())
-        pip.default_speed *= 16
-
-    # mapping
-    pool_well = tube_rack.wells()[0]
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tips)
 
     # parse
     all_rows = [
@@ -70,26 +47,25 @@ A3,20,3.5,,,,,,,,,,,
 
     all_samples = [
         well
-        for plate in pcr_plates
-        for well in plate.wells()
+        for well in pcr_plate.wells()
         ]
 
     for row, source in zip(all_rows, all_samples):
 
         volume = float(row[2])
-
-        p20.pick_up_tip()
+        dest = (row[3])
 
         if volume > 20:
             num_transfers = math.ceil(volume/p20.max_volume)
             transfer_vol = volume/num_transfers
             for _ in range(num_transfers):
 
+                p20.pick_up_tip()
                 p20.aspirate(transfer_vol, source)
-                p20.dispense(transfer_vol, pool_well)
-
+                p20.dispense(transfer_vol, tube_rack.wells_by_name()[dest])
+                p20.drop_tip()
         else:
+            p20.pick_up_tip()
             p20.aspirate(volume, source)
-            p20.dispense(volume, pool_well)
-
-        p20.drop_tip()
+            p20.dispense(volume, tube_rack.wells_by_name()[dest])
+            p20.drop_tip()
