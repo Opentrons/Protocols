@@ -7,15 +7,21 @@ metadata = {
     'apiLevel': '2.14'
 }
 
-factor_overage = 1.4
-concentration_target = 0.1
-
 
 def run(ctx):
 
-    [num_rxns, rxn_vol, num_templates,
-     concentration_template] = get_values(  # noqa: F821
-        'num_rxns', 'rxn_vol', 'num_templates', 'concentration_template')
+    [input_csv] = get_values(  # noqa: F821
+        'input_csv')
+
+    # parse data
+    data = [
+        [val.strip() for val in line.split(',')]
+        for line in input_csv.splitlines()
+    ]
+    rxn_vol = float(data[9][5])
+    num_rxns = int(data[10][5])
+    total_vol_with_overage = float(data[11][5])
+    factor_overage = total_vol_with_overage/(rxn_vol*num_rxns)
 
     # labware
     rack1 = ctx.load_labware(
@@ -33,20 +39,19 @@ def run(ctx):
     tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '1')]
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]
 
-    template_concs = [
-        float(conc)
-        for conc in concentration_template.split(',') if conc.strip()]
-    template_volumes = [
-        round(rxn_vol*concentration_target/conc, 2)
-        for conc in template_concs]
-
-    if not len(template_concs) == num_templates:
-        ctx.pause(f'Number of templates entered ({num_templates}) \
-does not match number of concentrations entered \
-({len(template_concs)}) Continue?')
+    template_volumes = []
+    for line in data[31:]:
+        if not line[0] or 'rxn' in line[0].lower():  # look for templates end
+            break
+        template_volumes.append(float(line[6]))
+    if not len(template_volumes) == num_rxns:
+        ctx.pause(f'Number of templates entered ({num_rxns}) \
+does not match number of concentrations entered \n({len(template_volumes)}) \
+Continue?')
 
     mix_volumes = [
-        20.0, 1.0, 35.0, 35.0, 35.0, 35.0, 20.0, 16.0, 2.5, 5.0]
+        float(line[5]) for line in data[14:24]
+    ]
     mix_map = {
         well: vol
         for well, vol in zip(rack1.wells()[:len(mix_volumes)], mix_volumes)
@@ -57,7 +62,8 @@ does not match number of concentrations entered \
         for well, vol in zip(rack2.wells()[:len(template_volumes)],
                              template_volumes)
     }
-    enzyme_volumes = [10, 25]
+    enzyme_volumes = [
+        float(line[5]) for line in data[25:27]]
     enzyme_map = {
         well: vol
         for well, vol in zip(
@@ -125,7 +131,13 @@ does not match number of concentrations entered \
     water = reservoir.wells()[0]
     licl_h2o = reservoir.wells()[1]
 
-    [vol_dn, vol_cac] = [40, 25]
+    # find vols DN and CaC
+    vol_dn = vol_cac = None
+    for line in data[45:]:  # start looking lower
+        if line[0].lower().strip() == 'dn':
+            vol_dn = float(line[5])
+        if line[0].lower().strip() == 'cac':
+            vol_cac = float(line[5])
 
     mix_tube_liq = ctx.define_liquid(
             name='mix tube',
@@ -193,8 +205,7 @@ does not match number of concentrations entered \
         pip.default_speed *= 10
 
     # initial mix
-    for i, (well, vol) in enumerate(mix_map.items()):
-        transfer_vol = vol*num_rxns*factor_overage
+    for i, (well, transfer_vol) in enumerate(mix_map.items()):
         pip = p300 if transfer_vol > 20 else p20
         num_trans = math.ceil(
             transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
@@ -233,7 +244,7 @@ does not match number of concentrations entered \
             pip.drop_tip()
 
     # mix addition
-    vol_mix = sum(mix_volumes)
+    vol_mix = sum(mix_volumes)/(num_rxns*factor_overage)
     pip = p300 if vol_mix >= 20 else p20
     num_trans = math.ceil(vol_mix/pip.tip_racks[0].wells()[0].max_volume)
     vol_per_trans = round(vol_mix/num_trans, 2)
@@ -267,8 +278,7 @@ does not match number of concentrations entered \
     ctx.pause('Place enzymes in tuberack.')
 
     # enzyme mix
-    for i, (well, vol) in enumerate(enzyme_map.items()):
-        transfer_vol = vol*num_rxns*factor_overage
+    for i, (well, transfer_vol) in enumerate(enzyme_map.items()):
         pip = p300 if transfer_vol > 20 else p20
         num_trans = math.ceil(
             transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
@@ -288,7 +298,7 @@ does not match number of concentrations entered \
         pip.drop_tip()
 
     # enzyme mix addition
-    vol_enzyme_mix = sum(enzyme_volumes)
+    vol_enzyme_mix = sum(enzyme_volumes)/(num_rxns*factor_overage)
     pip = p300 if vol_enzyme_mix >= 20 else p20
     num_trans = math.ceil(
         vol_enzyme_mix/pip.tip_racks[0].wells()[0].max_volume)
