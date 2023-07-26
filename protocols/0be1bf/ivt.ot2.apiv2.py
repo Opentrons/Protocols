@@ -44,10 +44,9 @@ def run(ctx):
         if not line[0] or 'rxn' in line[0].lower():  # look for templates end
             break
         template_volumes.append(float(line[6]))
-    if not len(template_volumes) == num_rxns:
-        ctx.pause(f'Number of templates entered ({num_rxns}) \
-does not match number of concentrations entered \n({len(template_volumes)}) \
-Continue?')
+    num_temp = len(template_volumes)
+    if not num_temp == num_rxns:
+        ctx.pause(f'# templates {num_temp} != # rxns {num_rxns}. Continue?')
 
     mix_volumes = [
         float(line[5]) for line in data[14:24]
@@ -235,7 +234,7 @@ Continue?')
                 p300.pick_up_tip()
             p300.mix(5, pip.max_volume*0.8, mix_tube, rate=0.5)
             slow_withdraw(pip, mix_tube)
-        pip.drop_tip()
+        [pip.drop_tip() for pip in [p300, p20] if pip.has_tip]
 
     # water addition
     for vol_water, d in zip(vols_water,
