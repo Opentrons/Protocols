@@ -25,10 +25,10 @@ def run(ctx):
 
     # labware
     rack1 = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
         '4', 'component rack 1')
     rack2 = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
         '7', 'component rack 2')
     rack15 = ctx.load_labware(
         'opentrons_15_tuberack_5000ul', '8', 'mix tube')
@@ -301,7 +301,7 @@ Continue?')
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
             if n == num_trans - 1:
-                pip.mix(5, pip.max_volume*0.8, d.bottom(2))
+                pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=0.5)
             slow_withdraw(pip, d)
         pip.drop_tip()
 
@@ -328,7 +328,8 @@ Continue?')
                 wick(pip, enzyme_mix_tube)
             slow_withdraw(pip, enzyme_mix_tube)
         if i == len(enzyme_map.items()) - 1:
-            pip.mix(5, pip.max_volume*0.8, enzyme_mix_tube)
+            pip.mix(5, sum(enzyme_volumes)*0.8,
+                    enzyme_mix_tube.bottom(2), rate=0.5)
             slow_withdraw(pip, enzyme_mix_tube)
         pip.drop_tip()
 
@@ -345,11 +346,15 @@ Continue?')
     for d in rxns:
         pip.pick_up_tip()
         for _ in range(num_trans):
-            pip.aspirate(vol_per_trans, enzyme_mix_tube)
+            pip.aspirate(vol_per_trans, enzyme_mix_tube.bottom(1.5))
             slow_withdraw(pip, enzyme_mix_tube)
             pip.dispense(pip.current_volume, d.bottom(2))
             slow_withdraw(pip, d)
-        pip.mix(5, pip.max_volume*0.8, d)
+        pip.mix(
+            5,
+            pip.tip_racks[0].wells()[0].max_volume*0.8,
+            d.bottom(2),
+            rate=0.5)
         pip.drop_tip()
 
     ctx.pause('INCUBATION')
@@ -361,7 +366,8 @@ Continue?')
             pip.pick_up_tip()
             pip.aspirate(vol, reagent)
             slow_withdraw(pip, reagent)
-            pip.dispense(vol, d)
+            pip.dispense(vol, d.bottom(3))
+            pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=5)
             slow_withdraw(pip, d)
             pip.drop_tip()
 
