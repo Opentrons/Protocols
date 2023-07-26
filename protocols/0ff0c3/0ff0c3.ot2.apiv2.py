@@ -11,11 +11,11 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p300_mount] = get_values(  # noqa: F821
-        "num_samp", "p300_mount")
+    # [num_samp, p300_mount, p1000_mount] = get_values(  # noqa: F821
+    #     "num_samp", "p300_mount", "p1000_mount")
 
-    # num_samp = 96
-    # m300_mount = 'left'
+    num_samp = 8
+    m300_mount = 'left'
 
     if not 1 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
@@ -25,12 +25,12 @@ def run(ctx):
     mag_mod = ctx.load_module('magnetic module gen2', 6)
     mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')
     dest_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 3)
-    reag_res = ctx.load_labware('nest_12_reservoir_15ml', 1)
-    wash_buff_res = ctx.load_labware('nest_1_reservoir_195ml', 2)
-    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 4)
+    reag_res = ctx.load_labware('nest_12_reservoir_15ml', 8)
+    wash_buff_res = ctx.load_labware('nest_1_reservoir_195ml', 5)
+    waste_res = ctx.load_labware('nest_1_reservoir_195ml', 2)
 
-    tips = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-            for slot in [7, 8, 9, 10, 11]]
+    tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+            for slot in [1, 4, 7, 10, 11]]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips)
@@ -46,7 +46,7 @@ def run(ctx):
             pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
             pip.home()
-            ctx.pause("Replace the tips")
+            ctx.pause("Replace the tip racks and empty the waste bin")
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -66,13 +66,13 @@ def run(ctx):
     num_cols = math.ceil(num_samp/8)
     samples = mag_plate.rows()[0][:num_cols]
     wash_buff = wash_buff_res.wells()[0]
-    elution_buff = reag_res.wells()[5]
+    elution_buff = reag_res.wells()[0]  # A1 of wash buff res
     trash = waste_res.wells()[0].top()  # A1 of waste res
     destination = dest_plate.rows()[0][:num_cols]
 
     # protocol
     ctx.comment('\n----------MIXING LYSATES, BIND & BEADS-----------\n\n')
-    mix_vol = 300
+    mix_vol = 200
     num_mix = 15
     for col in samples:
         pick_up(m300)
@@ -83,7 +83,7 @@ def run(ctx):
 
         slow_tip_withdrawal(m300, col)
         m300.drop_tip()
-    
+
     ctx.comment('\n-------------INCUBATION ON MAGNET---------------\n\n')
     mag_mod.engage(height_from_base=4.0)
     ctx.delay(minutes=10)
@@ -93,29 +93,39 @@ def run(ctx):
     for col in samples:
         pick_up(m300)
 
-        num_transfers = math.ceil(sup_vol/m300.max_volume)
+        tip_ref_vol = m300.tip_racks[0].wells()[0].max_volume
+        num_transfers = math.ceil(sup_vol/tip_ref_vol)
         transfer_vol = sup_vol/num_transfers
 
         for i in range(num_transfers):
-            m300.aspirate(transfer_vol, col, rate=0.1)
+            m300.aspirate(transfer_vol, col.bottom(0.4), rate=0.1)
             # m300.aspirate(20, col.bottom(0.4), rate=0.1)
             slow_tip_withdrawal(m300, col)
             m300.dispense(transfer_vol, trash)
+            m300.blow_out()
 
         m300.drop_tip()
 
     mag_mod.disengage()
 
+    ctx.pause("Empty liquid waste Reservoir")
+
     ctx.comment('\n---------------WASH STEP----------------\n\n')
+    
+    wash_vol = 500
+    num_buff_transfers = math.ceil(wash_vol/tip_ref_vol)
+    buff_transfer_vol = wash_vol/num_buff_transfers
+    
     for i in range(3):
         for col in samples:
             pick_up(m300)
 
-            for i in range(2):
-                m300.aspirate(250, wash_buff)
-                m300.dispense(250, col.top())
+            for i in range(num_buff_transfers):
+                m300.aspirate(buff_transfer_vol, wash_buff)
+                m300.dispense(buff_transfer_vol, col.top())
+                m300.blow_out()
 
-            m300.mix(5, 300, col)
+            m300.mix(5, 200, col)
             m300.drop_tip()
 
         mag_mod.engage(height_from_base=4.0)
@@ -124,10 +134,11 @@ def run(ctx):
         for col in samples:
             pick_up(m300)
 
-            for i in range(2):
-                m300.aspirate(250, col, rate=0.1)
+            for i in range(num_buff_transfers):
+                m300.aspirate(buff_transfer_vol, col.bottom(0.4), rate=0.1)
                 slow_tip_withdrawal(m300, col)
-                m300.dispense(250, trash)
+                m300.dispense(buff_transfer_vol, trash)
+                m300.blow_out()
 
             m300.drop_tip()
 
@@ -144,7 +155,7 @@ def run(ctx):
         pick_up(m300)
         m300.aspirate(50, elution_buff)
         m300.dispense(50, col)
-        m300.mix(15, 300, col)
+        m300.mix(15, 50, col)
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=4.0)
@@ -152,7 +163,7 @@ def run(ctx):
 
     for s, d in zip(samples, destination):
         pick_up(m300)
-        m300.aspirate(50, s, rate=0.1)
+        m300.aspirate(50, s.bottom(0.4), rate=0.1)
         m300.dispense(50, d)
         m300.drop_tip()
 
