@@ -233,7 +233,6 @@ component_2_volume,1
 component_3_volume,1
 conc_target,1
 concentration_csv,2
-concentration_template,1
 control_plate,1
 count_mix,1
 count_plates,1
@@ -561,7 +560,7 @@ init_vol_sds,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,21
+input_csv,22
 input_file,10
 input_file2,6
 input_labware,1
@@ -884,7 +883,6 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_rxns,1
 num_samp,68
 num_samp_p1,1
 num_samp_p2,1
@@ -902,7 +900,6 @@ num_samples_per_plate,1
 num_samps,6
 num_sets,2
 num_slides,2
-num_templates,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -1204,7 +1201,7 @@ run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
 rxn_mix_vol_p3,1
-rxn_vol,3
+rxn_vol,2
 s_csv,1
 s_mount,1
 s_pip,1
@@ -1608,7 +1605,7 @@ vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
 vol_mix,2
-vol_mm,2
+vol_mm,3
 vol_mobile_phase,1
 vol_mq,1
 vol_neutralization_buffer,1
@@ -1619,7 +1616,7 @@ vol_pma_ca,1
 vol_reagent,1
 vol_refill,1
 vol_removal,1
-vol_sample,7
+vol_sample,8
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1

@@ -7,22 +7,28 @@ metadata = {
     'apiLevel': '2.14'
 }
 
-factor_overage = 1.4
-concentration_target = 0.1
-
 
 def run(ctx):
 
-    [num_rxns, rxn_vol, num_templates,
-     concentration_template] = get_values(  # noqa: F821
-        'num_rxns', 'rxn_vol', 'num_templates', 'concentration_template')
+    [input_csv] = get_values(  # noqa: F821
+        'input_csv')
+
+    # parse data
+    data = [
+        [val.strip() for val in line.split(',')]
+        for line in input_csv.splitlines()
+    ]
+    rxn_vol = float(data[9][5])
+    num_rxns = int(data[10][5])
+    total_vol_with_overage = float(data[11][5])
+    factor_overage = total_vol_with_overage/(rxn_vol*num_rxns)
 
     # labware
     rack1 = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
         '4', 'component rack 1')
     rack2 = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
         '7', 'component rack 2')
     rack15 = ctx.load_labware(
         'opentrons_15_tuberack_5000ul', '8', 'mix tube')
@@ -33,20 +39,18 @@ def run(ctx):
     tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '1')]
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '2')]
 
-    template_concs = [
-        float(conc)
-        for conc in concentration_template.split(',') if conc.strip()]
-    template_volumes = [
-        round(rxn_vol*concentration_target/conc, 2)
-        for conc in template_concs]
-
-    if not len(template_concs) == num_templates:
-        ctx.pause(f'Number of templates entered ({num_templates}) \
-does not match number of concentrations entered \
-({len(template_concs)}) Continue?')
+    template_volumes = []
+    for line in data[31:]:
+        if not line[0] or 'rxn' in line[0].lower():  # look for templates end
+            break
+        template_volumes.append(float(line[6]))
+    num_temp = len(template_volumes)
+    if not num_temp == num_rxns:
+        ctx.pause(f'# templates {num_temp} != # rxns {num_rxns}. Continue?')
 
     mix_volumes = [
-        20.0, 1.0, 35.0, 35.0, 35.0, 35.0, 20.0, 16.0, 2.5, 5.0]
+        float(line[5]) for line in data[14:24]
+    ]
     mix_map = {
         well: vol
         for well, vol in zip(rack1.wells()[:len(mix_volumes)], mix_volumes)
@@ -57,7 +61,8 @@ does not match number of concentrations entered \
         for well, vol in zip(rack2.wells()[:len(template_volumes)],
                              template_volumes)
     }
-    enzyme_volumes = [10, 25]
+    enzyme_volumes = [
+        float(line[5]) for line in data[25:27]]
     enzyme_map = {
         well: vol
         for well, vol in zip(
@@ -125,7 +130,13 @@ does not match number of concentrations entered \
     water = reservoir.wells()[0]
     licl_h2o = reservoir.wells()[1]
 
-    [vol_dn, vol_cac] = [40, 25]
+    # find vols DN and CaC
+    vol_dn = vol_cac = None
+    for line in data[45:]:  # start looking lower
+        if line[0].lower().strip() == 'dn':
+            vol_dn = float(line[5])
+        if line[0].lower().strip() == 'cac':
+            vol_cac = float(line[5])
 
     mix_tube_liq = ctx.define_liquid(
             name='mix tube',
@@ -192,16 +203,23 @@ does not match number of concentrations entered \
         pip.move_to(well.top())
         pip.default_speed *= 10
 
+    vol_pre_airgap_p300 = 20.0
+    vol_pre_airgap_p20 = 2.0
+
     # initial mix
-    for i, (well, vol) in enumerate(mix_map.items()):
-        transfer_vol = vol*num_rxns*factor_overage
-        pip = p300 if transfer_vol > 20 else p20
+    for i, (well, transfer_vol) in enumerate(mix_map.items()):
+        if transfer_vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
         num_trans = math.ceil(
-            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
+            transfer_vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         for n in range(num_trans):
             depth = 1.5 if transfer_vol <= 10 else 3
+            pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
             if n < num_trans - 1:
@@ -211,19 +229,28 @@ does not match number of concentrations entered \
                 slow_withdraw(pip, mix_tube)
             slow_withdraw(pip, mix_tube)
         if i == len(mix_map.items()) - 1:
-            pip.mix(5, pip.max_volume*0.8, mix_tube)
+            if not pip == p300:
+                pip.drop_tip()
+                p300.pick_up_tip()
+            p300.mix(5, pip.max_volume*0.8, mix_tube, rate=0.5)
             slow_withdraw(pip, mix_tube)
-        pip.drop_tip()
+        [pip.drop_tip() for pip in [p300, p20] if pip.has_tip]
 
     # water addition
     for vol_water, d in zip(vols_water,
                             aliquot_rack.wells()[:len(template_volumes)]):
-        pip = p300 if vol_water >= 20 else p20
-        num_trans = math.ceil(vol_water/pip.tip_racks[0].wells()[0].max_volume)
+        if vol_water > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+        num_trans = math.ceil(
+            vol_water/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(vol_water/num_trans, 2)
         if not pip.has_tip:
             pip.pick_up_tip()
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, water.top())
             pip.aspirate(vol_per_trans, water)
             slow_withdraw(pip, water)
             pip.dispense(pip.current_volume, d.bottom(2))
@@ -233,13 +260,19 @@ does not match number of concentrations entered \
             pip.drop_tip()
 
     # mix addition
-    vol_mix = sum(mix_volumes)
-    pip = p300 if vol_mix >= 20 else p20
-    num_trans = math.ceil(vol_mix/pip.tip_racks[0].wells()[0].max_volume)
+    vol_mix = sum(mix_volumes)/(num_rxns*factor_overage)
+    if vol_mix > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+    num_trans = math.ceil(
+        vol_mix/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_mix/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, mix_tube.top())
             pip.aspirate(vol_per_trans, mix_tube)
             slow_withdraw(pip, mix_tube)
             pip.dispense(pip.current_volume, d.bottom(2))
@@ -250,32 +283,43 @@ does not match number of concentrations entered \
     for (template, vol), d in zip(
             template_map.items(),
             aliquot_rack.wells()[:len(template_volumes)]):
-        pip = p300 if vol >= 20 else p20
+        if vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
+        num_trans = math.ceil(
+            vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(vol/num_trans, 2)
         pip.pick_up_tip()
         depth = 1.5 if vol_per_trans <= 10 else 3
         for n in range(num_trans):
+            pip.aspirate(vol_pre_airgap, template.top())
             pip.aspirate(vol_per_trans, template.bottom(depth))
             slow_withdraw(pip, template)
             pip.dispense(pip.current_volume, d.bottom(2))
             if n == num_trans - 1:
-                pip.mix(5, pip.max_volume*0.8, d.bottom(2))
+                pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=0.5)
             slow_withdraw(pip, d)
         pip.drop_tip()
 
     ctx.pause('Place enzymes in tuberack.')
 
     # enzyme mix
-    for i, (well, vol) in enumerate(enzyme_map.items()):
-        transfer_vol = vol*num_rxns*factor_overage
-        pip = p300 if transfer_vol > 20 else p20
+    for i, (well, transfer_vol) in enumerate(enzyme_map.items()):
+        if transfer_vol > 20:
+            pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+        else:
+            pip, vol_pre_airgap = p20, vol_pre_airgap_p20
         num_trans = math.ceil(
-            transfer_vol/pip.tip_racks[0].wells()[0].max_volume)
+            transfer_vol/(
+                pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         depth = 1.5 if vol_per_trans <= 10 else 3
         for _ in range(num_trans):
+            pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
             pip.dispense(pip.current_volume, enzyme_mix_tube.bottom(1.5))
@@ -283,24 +327,33 @@ does not match number of concentrations entered \
                 wick(pip, enzyme_mix_tube)
             slow_withdraw(pip, enzyme_mix_tube)
         if i == len(enzyme_map.items()) - 1:
-            pip.mix(5, pip.max_volume*0.8, enzyme_mix_tube)
+            pip.mix(5, sum(enzyme_volumes)*0.8,
+                    enzyme_mix_tube.bottom(2), rate=0.5)
             slow_withdraw(pip, enzyme_mix_tube)
         pip.drop_tip()
 
     # enzyme mix addition
-    vol_enzyme_mix = sum(enzyme_volumes)
-    pip = p300 if vol_enzyme_mix >= 20 else p20
+    vol_enzyme_mix = sum(enzyme_volumes)/(num_rxns*factor_overage)
+    if vol_enzyme_mix > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
     num_trans = math.ceil(
-        vol_enzyme_mix/pip.tip_racks[0].wells()[0].max_volume)
+        vol_enzyme_mix/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_enzyme_mix/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()
         for _ in range(num_trans):
-            pip.aspirate(vol_per_trans, enzyme_mix_tube)
+            pip.aspirate(vol_per_trans, enzyme_mix_tube.bottom(1.5))
             slow_withdraw(pip, enzyme_mix_tube)
             pip.dispense(pip.current_volume, d.bottom(2))
             slow_withdraw(pip, d)
-        pip.mix(5, pip.max_volume*0.8, d)
+        pip.mix(
+            5,
+            pip.tip_racks[0].wells()[0].max_volume*0.8,
+            d.bottom(2),
+            rate=0.5)
         pip.drop_tip()
 
     ctx.pause('INCUBATION')
@@ -312,17 +365,21 @@ does not match number of concentrations entered \
             pip.pick_up_tip()
             pip.aspirate(vol, reagent)
             slow_withdraw(pip, reagent)
-            pip.dispense(vol, d)
+            pip.dispense(vol, d.bottom(3))
+            pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=5)
             slow_withdraw(pip, d)
             pip.drop_tip()
 
     ctx.pause('INCUBATION')
 
     # LiCl and H2O
-    pip = p300 if vol_licl_h2o >= 20 else p20
-    vol_pre_airgap = 20.0
+    if vol_licl_h2o > 20:
+        pip, vol_pre_airgap = p300, vol_pre_airgap_p300
+    else:
+        pip, vol_pre_airgap = p20, vol_pre_airgap_p20
     num_trans = math.ceil(
-        vol_licl_h2o/(pip.tip_racks[0].wells()[0].max_volume - vol_pre_airgap))
+        vol_licl_h2o/(
+            pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
     vol_per_trans = round(vol_licl_h2o/num_trans, 2)
     for d in rxns:
         pip.pick_up_tip()

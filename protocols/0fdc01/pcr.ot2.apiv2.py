@@ -9,8 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates, reps_mix] = get_values(  # noqa: F821
-        'num_plates', 'reps_mix')
+    [num_plates, reps_mix, vol_mm, vol_sample] = get_values(  # noqa: F821
+        'num_plates', 'reps_mix', 'vol_mm', 'vol_sample')
 
     # modules
     tempdeck = ctx.load_module('temperature module gen2', '1')
@@ -37,9 +37,6 @@ def run(ctx):
          'p20_multi_gen2', 'right', tip_racks=tiprack20)
 
     # variables
-    vol_mm = 23.0
-    vol_sample = 2.0
-
     mm = reservoir.wells()[:num_plates]
     sample_sources = sample_plate.rows()[0]
 
