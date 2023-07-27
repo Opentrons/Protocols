@@ -3,7 +3,7 @@ from opentrons import protocol_api
 from opentrons import types
 
 metadata = {
-    'protocolName': 'CleanPlex NGS library preparation',
+    'protocolName': 'CleanPlex NGS Library Preparation',
     'author': 'Songnian Liu <Songnian.liu@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
