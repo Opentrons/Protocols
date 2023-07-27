@@ -19,15 +19,15 @@ def run(ctx):
     tip_max = 50
 
     # p50 multi and tips
-    tips300 = [ctx.load_labware("opentrons_96_tiprack_300ul", '4')]
-    p50m = ctx.load_instrument(
-        "p50_multi", 'left', tip_racks=tips300)
+    tips20 = [ctx.load_labware("opentrons_96_tiprack_20ul", '4')]
+    p20m = ctx.load_instrument(
+        "p20_multi_gen2", 'right', tip_racks=tips20)
 
-    # 96 deep well plate on slot 8
-    deep_well_plate = ctx.load_labware("nest_96_wellplate_2ml_deep", '8')
+    # Elution plate 1 on slot 6
+    elution_plate1 = ctx.load_labware("thermo_96_wellplate_200ul", '6')
 
-    # aspir8 reservoir in slot 2
-    reservoir = ctx.load_labware("aspir8_1_reservoir_taped", '2')
+    # Elution plate 2 on slot 8
+    elution_plate2 = ctx.load_labware("thermo_96_wellplate_200ul", '8')
 
     # to distribute and blow out with control over location within the well
     def create_chunks(list_name, n):
@@ -38,14 +38,15 @@ def run(ctx):
         for chunk in create_chunks(dest.columns()[
          :num_cols], math.floor((max_asp - disposal) / dist_vol)):
             if disposal > 0:
-                p50m.aspirate(disposal, source)
-            p50m.aspirate(dist_vol*len(chunk), source)
+                p20m.aspirate(disposal, source)
+            p20m.aspirate(dist_vol*len(chunk), source)
             for column in chunk:
-                p50m.dispense(dist_vol, column[0].bottom(clearance_dispense))
-            p50m.blow_out(source.move(types.Point(x=0, y=0, z=0)))
+                p20m.dispense(dist_vol, column[0].bottom(clearance_dispense))
+            p20m.blow_out(source.move(types.Point(x=0, y=0, z=0)))
 
-    # distribute 10 ul Prot K, blow out to bottom of reservoir, repeat
-    p50m.pick_up_tip()
-    repeat_dispense(10, reservoir.wells_by_name()[
-     'A1'].bottom(clearance_aspirate), deep_well_plate, disposal=5)
-    p50m.drop_tip()
+    # distribute 4 uL Prot K, blow out to bottom of reservoir, and repeat
+    p20m.pick_up_tip()
+    repeat_dispense(4, elution_plate1.wells_by_name()[
+        'A1'].bottom(clearance_aspirate), elution_plate2, disposal=3,
+        max_asp=15)
+    p20m.drop_tip()
