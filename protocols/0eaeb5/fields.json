@@ -65,7 +65,7 @@
   {
     "type": "float",
     "label": "Bead mix aspirate/dispense rate",
-    "name": "bead_mix_rate",
+    "name": "beads_mix_rate",
     "default": 1.2
   },
 
