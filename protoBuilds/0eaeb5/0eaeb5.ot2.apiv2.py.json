@@ -1,0 +1,254 @@
+{
+    "content": "import math\nfrom opentrons import protocol_api\nfrom opentrons import types\n\nmetadata = {\n    'protocolName': 'CleanPlex NGS Library Preparation',\n    'author': 'Songnian Liu <Songnian.liu@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [num_samples, DRYRUN, TEST_MODE_BEADS, water_rate,\n     buffer_mmx_primer_rate, sample_rate, beads_rate,\n     ethanol_rate, beads_mix_reps, beads_mix_rate, magdeck_engage_height,\n     ethnaol_dis_zoffset, incubation_time, beads_engaging_time, airdry_time,\n     ethanol_wash_time, p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"num_samples\", \"DRYRUN\", \"TEST_MODE_BEADS\",\n        \"water_rate\",\n         \"buffer_mmx_primer_rate\", \"sample_rate\", \"beads_rate\",\n         \"ethanol_rate\", \"beads_mix_reps\", \"beads_mix_rate\",\n         \"magdeck_engage_height\",\n         \"ethnaol_dis_zoffset\", \"incubation_time\", \"beads_engaging_time\",\n         \"airdry_time\",\n         \"ethanol_wash_time\", \"p20_mount\", \"p300_mount\")\n\n    # DO NOT TOUCH BELOW\n    sample_cols = math.ceil(num_samples/8)\n    if sample_cols > 12:\n        raise ValueError('Not enough wells for specified number of samples')\n\n    # modules & tips\n    mag_mod = ctx.load_module('magnetic module gen2', '1')\n    mag_mod.disengage()\n    temp_mod = ctx.load_module('temperature module gen2', '3')\n    temp_mod.set_temperature(celsius=4)\n    # tips\n    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n              for slot in ['4', '7', '6']]\n    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n               for slot in ['9', '8', '5']]\n    # pipettes\n    p20m = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips20)\n    p300m = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                                tip_racks=tips300)\n    # #customized functions\n\n    def pause_attention(msg):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=1)\n        ctx.set_rail_lights(True)\n        ctx.delay(seconds=1)\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=1)\n        ctx.set_rail_lights(True)\n        ctx.delay(seconds=1)\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=1)\n        ctx.set_rail_lights(True)\n        ctx.pause(msg)\n\n    def pick_up(pipette):\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pause_attention(msg='\\n\\nReplace empty tipracks before resuming.')\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    # def replace_labware(slot_number, new_labware, name):\n    #     del ctx.deck[str(slot_number)]\n    #     return ctx.load_labware(new_labware, str(slot_number), name)\n\n    def aspirate_with_delay(pipette, volume, src,\n                            asp_rate, asp_delay_seconds):\n        pipette.aspirate(volume, src, rate=asp_rate)\n        if asp_delay_seconds > 0:\n            ctx.delay(seconds=asp_delay_seconds)\n\n    def dispense_with_delay(pipette, volume, dest,\n                            dis_rate, dis_delay_seconds):\n        pipette.dispense(volume, dest, rate=dis_rate)\n        if dis_delay_seconds > 0:\n            ctx.delay(seconds=dis_delay_seconds)\n\n    def mix(pipette, volume, mix_loc, mix_rep, mix_rate):\n        for _ in range(mix_rep):\n            aspirate_with_delay(pipette, volume, mix_loc, mix_rate, 0)\n            dispense_with_delay(pipette, volume, mix_loc, mix_rate, 0)\n\n    def slow_tip_withdrawal(pipette, well, to_center=False):\n        if pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            pipette.move_to(well.top(-3))\n        else:\n            pipette.move_to(well.center())\n        ctx.max_speeds[axis] = None\n\n    def beads_mix(pipette, volume, mix_loc, mix_rep,\n                  z_low, z_high,\n                  asp_rate, dis_rate, blowout=True):\n        for _ in range(mix_rep):\n            aspirate_with_delay(pipette, volume, mix_loc.bottom(z_low),\n                                asp_rate, 0)\n            dispense_with_delay(pipette, volume, mix_loc.bottom(z_high),\n                                dis_rate, 0)\n        if blowout:\n            pipette.flow_rate.blow_out /= 5\n            pipette.blow_out(mix_loc.bottom(z_high+1))\n            pipette.flow_rate.blow_out *= 5  # blowout 1st for beads_mix\n            slow_tip_withdrawal(pipette, mix_loc, to_center=False)\n\n    def transfer_combo(pipette, volume, src, dest,\n                       asp_rate, dis_rate,\n                       delay_mode=False,\n                       asp_zoffset=1, dis_zoffset=1, blowout_zoffset=-2,\n                       prewet=False, slow_withdrawl_asp=False,\n                       postmix=False, postmix_vol=0,\n                       postmix_rep=0, postmix_rate=0,\n                       slow_withdrawl_dis=False, blowout_mode=False):\n        if prewet:\n            # if 0.8 * volume <= 2:\n            #     premix_vol = 2\n            # elif 0.8 * volume <= 200:\n            premix_vol = round((0.8 * volume), 1)\n            # else:\n            #     premix_vol = 200\n            mix(pipette, premix_vol, src.bottom(asp_zoffset+1),\n                mix_rep=1, mix_rate=0.8)\n        aspirate_with_delay(pipette, volume, src.bottom(asp_zoffset),\n                            asp_rate, asp_delay_seconds=1 if delay_mode else 0)\n        if slow_withdrawl_asp:\n            slow_tip_withdrawal(pipette, src, to_center=False)\n        dispense_with_delay(pipette, volume, dest.bottom(dis_zoffset),\n                            dis_rate, dis_delay_seconds=1 if delay_mode else 0)\n        if postmix:\n            mix(pipette, postmix_vol, dest.bottom(dis_zoffset+1),\n                postmix_rep, postmix_rate)\n        if slow_withdrawl_dis:\n            slow_tip_withdrawal(pipette, dest, to_center=False)\n        if blowout_mode == 'default':\n            pipette.flow_rate.blow_out /= 2\n            pipette.blow_out(dest.top(blowout_zoffset))\n            pipette.flow_rate.blow_out *= 2\n        elif blowout_mode == 'viscous':\n            pipette.flow_rate.blow_out /= 5\n            pipette.blow_out(dest.top(blowout_zoffset))\n            pipette.flow_rate.blow_out *= 5\n\n    def incubation_airdry(time):\n        if TEST_MODE_BEADS is False:\n            ctx.delay(minutes=time)\n        else:\n            ctx.delay(seconds=time)\n\n    def mag_engage(height, minutes):\n        mag_mod.engage(height_from_base=height)\n        if TEST_MODE_BEADS is False:\n            ctx.delay(minutes=minutes)\n        else:\n            ctx.delay(seconds=minutes)\n\n    xloc_index = 0\n\n    def tip_disposal(pipette):\n        nonlocal xloc_index\n        xloc = [30, 0, -30]\n        if DRYRUN or TEST_MODE_BEADS:\n            pipette.return_tip()\n        elif pipette.has_tip:\n            drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(\n                types.Point(x=xloc[xloc_index]))\n            pipette.drop_tip(drop_loc)\n            xloc_index = (xloc_index + 1) % len(xloc)\n\n    def add_reagent(pipette, reagent_well, dest, reagent_volume,\n                    liq_class=False, mix_vol_sum=None):\n        ctx.comment(f'--- Sample location: {str(dest)}')\n        if liq_class == 'water_or_emptywell':\n            transfer_combo(pipette, reagent_volume, reagent_well, dest,\n                           asp_rate=water_rate, dis_rate=water_rate,\n                           delay_mode=False,\n                           asp_zoffset=2, dis_zoffset=1, blowout_zoffset=-2,\n                           prewet=False, slow_withdrawl_asp=False,\n                           postmix=False, postmix_vol=0,\n                           postmix_rep=0, postmix_rate=0,\n                           slow_withdrawl_dis=False, blowout_mode='default')\n        elif liq_class == 'buffer_mmx_primer':\n            # delay and prewet to avoid bubbles\n            # slow withdrawl both true for asp and dis\n            # postmix for buffer_mmx_primer is true\n            transfer_combo(pipette, reagent_volume, reagent_well, dest,\n                           asp_rate=buffer_mmx_primer_rate,\n                           dis_rate=buffer_mmx_primer_rate,\n                           delay_mode=True,\n                           asp_zoffset=1, dis_zoffset=1, blowout_zoffset=-2,\n                           prewet=True, slow_withdrawl_asp=True,\n                           postmix=True, postmix_vol=0.8*mix_vol_sum,\n                           postmix_rep=3, postmix_rate=1,\n                           slow_withdrawl_dis=True, blowout_mode='viscous')\n        elif liq_class == 'sample':\n            # sample transfer usually does not require postmix\n            # parameter can be used for elution\n            transfer_combo(pipette, reagent_volume, reagent_well, dest,\n                           asp_rate=sample_rate,\n                           dis_rate=sample_rate,\n                           delay_mode=False,\n                           asp_zoffset=1, dis_zoffset=1, blowout_zoffset=-2,\n                           prewet=False, slow_withdrawl_asp=False,\n                           postmix=False, postmix_vol=0,\n                           postmix_rep=0, postmix_rate=0,\n                           slow_withdrawl_dis=True, blowout_mode='viscous')\n        elif liq_class == 'bead':\n            # use beads_mix to substitube prewet/postmix and blowout\n            transfer_combo(pipette, reagent_volume, reagent_well, dest,\n                           asp_rate=beads_rate,\n                           dis_rate=beads_mix_rate,\n                           delay_mode=True,\n                           asp_zoffset=1, dis_zoffset=1, blowout_zoffset=0,\n                           prewet=False, slow_withdrawl_asp=True,\n                           postmix=False, postmix_vol=0,\n                           postmix_rep=0, postmix_rate=0,\n                           slow_withdrawl_dis=False, blowout_mode=False)\n\n    def removal_liquids(liquid_volume, mag_sources, dest_list, mode=False):\n        if mode == 'supernantant':\n            ctx. comment('\\n--------------Removing Supernatant-------------')\n            for i, (mag_well, dest) in enumerate(zip(mag_sources, dest_list)):\n                side = -1 if i % 2 == 0 else 1\n                pick_up(p300m)\n                p300m.aspirate(liquid_volume, mag_well.bottom().move(\n                    types.Point(x=side, y=0, z=1)),\n                    rate=0.1)\n                p300m.aspirate(10, mag_well.bottom().move(\n                    types.Point(x=0.5*side, y=0, z=0.7)),\n                    rate=0.1)\n                p300m.aspirate(10, mag_well.bottom().move(\n                    types.Point(x=0.5*side, y=0, z=0.4)),\n                    rate=0.1)\n                p300m.dispense((liquid_volume+20), dest)\n                p300m.blow_out()\n                tip_disposal(p300m)\n                ctx. comment('\\n--------')\n        if mode == 'elution':\n            ctx. comment('\\n------------------Removing Elution---------------')\n            p20m.flow_rate.blow_out /= 2\n            for i, (mag_well, dest) in enumerate(zip(mag_sources, dest_list)):\n                side = -1 if i % 2 == 0 else 1\n                pick_up(p20m)\n                p20m.aspirate(liquid_volume, mag_well.bottom().move(\n                    types.Point(x=side, y=0, z=1)),\n                    rate=0.5)\n                p20m.aspirate(2, mag_well.bottom().move(\n                    types.Point(x=0.5*side, y=0, z=0.7)),\n                    rate=0.5)\n                p20m.aspirate(2, mag_well.bottom().move(\n                    types.Point(x=0.5*side, y=0, z=0.4)),\n                    rate=0.5)\n                p20m.dispense((liquid_volume+4), dest)\n                p20m.blow_out()\n                tip_disposal(p20m)\n                ctx. comment('\\n--------')\n            p20m.flow_rate.blow_out *= 2\n\n    def ethanol_wash_airdry(wash_volume, wash_list, wash_reps):\n        for _ in range(wash_reps):\n            ctx. comment('\\n------------------adding ethanol-----------------')\n            pick_up(p300m)\n            for i, wash_well in enumerate(wash_list):\n                side = -1 if i % 2 == 0 else 1\n                p300m.aspirate(wash_volume, ethanol.bottom(2),\n                               rate=ethanol_rate)\n                p300m.dispense(wash_volume, wash_well.top().move(\n                    types.Point(x=side, y=0, z=ethnaol_dis_zoffset)),\n                               rate=ethanol_rate)\n                p300m.blow_out()\n            tip_disposal(p300m)\n            incubation_airdry(ethanol_wash_time)\n            ctx. comment('\\n------------------removing ethanol--------------')\n            removal_liquids(wash_volume,\n                            mag_sources=wash_list,\n                            dest_list=trash,\n                            mode='supernantant')\n        ctx. comment('\\n------------------Airdry-----------------')\n        incubation_airdry(airdry_time)\n\n    # labwares\n    mag_plate = mag_mod.load_labware(\n        'biorad_96_wellplate_200ul_pcr', 'mag_plate')\n    reagent_plate = temp_mod.load_labware(\n        'biorad_96_wellplate_200ul_pcr', 'reagent_plate')\n    sample_plate = ctx.load_labware(\n        'biorad_96_wellplate_200ul_pcr', '2', 'sample_plate')\n    # index_plate = ctx.load_labware(\n    # 'biorad_96_wellplate_200ul_pcr', '5', 'index_plate')\n    reagent_res = ctx.load_labware(\n        'nest_12_reservoir_15ml', '10', 'reagent_reservoir')\n    trash_res = ctx.load_labware(\n        'nest_12_reservoir_15ml', '11', 'trash_reservoir')\n    # reagent for deck layout 1\n    water = reagent_res.wells()[0]                # A1 :water\n    TE = reagent_res.wells()[1]                   # A2 \uff1aTE\n    beads = reagent_res.wells()[2]                # A3 : beads\n    ethanol = reagent_res.wells()[3]              # A4 : ethanol\n    trash = trash_res.wells()[::-1]           # collect all beads trash\n    mPCR_mix_5x = reagent_plate.rows()[0][0]      # Column1 A1\n    mPCR_primers = reagent_plate.rows()[0][1]     # Column2 A2\n    stop = reagent_plate.rows()[0][2]             # Column3 A3\n    digest_mmx = reagent_plate.rows()[0][3]       # Column4 A4\n    second_PCR_mmx = reagent_plate.rows()[0][4]   # Column5 A5\n    index_primers = reagent_plate.rows()[0][5]    # reserved position A6\n    # # Plate mapping on the modules\n    sample_list = sample_plate.rows()[0][:sample_cols]\n    mag_sample_list = mag_plate.rows()[0][:sample_cols]\n    # Protocl starts here\n    pause_attention(msg='''Set up for CleanPlex NGS library preparation:\\\n    1. Double check all labwares/modules/reagents are loaded correctly\\\n    2. Please set up a timer\\\n    3. Remember to be back to transfer the 96-well plate for mPCR reaction''')\n    ctx. comment('\\n------------Multiplex PCR (mPCR) Reaction--------------')\n    ctx. comment('\\n-------------1A.1: adding 6 ul of water-----------')\n    pick_up(p20m)\n    for well in sample_list:\n        add_reagent(p20m, water, well, reagent_volume=6,\n                    liq_class='water_or_emptywell')\n    tip_disposal(p20m)\n    ctx.comment('\\n')\n\n    ctx. comment('\\n----------1A.1: adding 2 ul of mPCR mix--------------')\n    for well in sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, mPCR_mix_5x, well, reagent_volume=2,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=8)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n---------------1A.1: adding 2 ul of mPCR primers-------')\n    for well in sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, mPCR_primers, well, reagent_volume=2,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=10)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    pause_attention(msg='''1. mPCR reaction pre is compelte\\\n    2. Transfer the sample plate from deck slot 2 to thermocycler\\\n    3. Set up a timer\\\n    4. Please refill the 20ul filter tipracks and dump the trash bin\\\n    5. Transfer sample plate to the magnetic module after\n    reaction&centrifugation''')\n    p20m.reset_tipracks()\n\n    ctx. comment('\\n------------------Post-mPCR Purification-----------------')\n    ctx. comment('\\n------------------1A.4: adding 2 ul of STOP solution-----')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, stop, well, reagent_volume=2,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=12)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n----------------1B.1: adding 10 ul of TE-----------------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, TE, well, reagent_volume=10,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=20)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n---------------1B.2: adding 29 ul of beads-----------')\n    for well in mag_sample_list:\n        pick_up(p300m)\n        beads_mix(p300m, 100, beads, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate,\n                  blowout=False)\n        add_reagent(p300m, beads, well, reagent_volume=29, liq_class='bead')\n        beads_mix(p300m, 40, well, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate)\n        tip_disposal(p300m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n---1B.3: 5 minutes incubation for DNA binding------')\n    incubation_airdry(time=incubation_time)\n\n    ctx. comment('\\n------------------1B.4: Magnet Engage-----------------')\n    mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n\n    ctx. comment('\\n--------1B.5: Remove supernantant---------------------')\n    removal_liquids(liquid_volume=51,\n                    mag_sources=mag_sample_list,\n                    dest_list=trash,\n                    mode='supernantant')\n\n    ctx. comment('\\n--------1B.6 + 1B.7: Ethanol wash x2 + airdry------')\n    ethanol_wash_airdry(\n        wash_volume=180, wash_list=mag_sample_list, wash_reps=2)\n    mag_mod.disengage()\n    p20m.reset_tipracks()\n\n    ctx. comment('\\n--------------1B.9: adding 10 ul of TE------------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, TE, well, reagent_volume=10,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=10)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    # ctx. comment('\\n-----1B.9: 5 minutes incubation for DNA binding------')\n    # incubation_airdry(time=incubation_time)\n\n    # ctx. comment('\\n------------------1B.9: Magnet Engage-----------------')\n    # mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n    #\n\n    # ctx. comment('\\n--------1B.9: Remove Elution---------------------')\n    # removal_liquids(liquid_volume=10,\n    #                 mag_sources=mag_sample_list,\n    #                 dest_list=sample_list,\n    #                 mode='elution')\n    # mag_mod.disengage()\n\n    ctx. comment('\\n----------------Digestion Reaction-----------------')\n    ctx. comment('\\n--------------2A.1: adding 10 ul of digestion_mmx-------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, digest_mmx, well, reagent_volume=10,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=20)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    pause_attention(msg='''1. Ready for 37C digestion for 10 min\\\n    2. Transfer the sample plate from the magnetic module to thermocycler\\\n    3. Set up a timer\\\n    4. Please refill both filter tipracks and dump the trash bin\\\n    5. Move the sample plate to the magnetic module after\n    digestion&centrifugation''')\n    p20m.reset_tipracks()\n    p300m.reset_tipracks()\n\n    ctx. comment('\\n-------------2A.4: adding 2 ul of STOP solution----------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, stop, well, reagent_volume=2,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=22)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n----------2B.1: adding 29 ul of beads-------------')\n    for well in mag_sample_list:\n        pick_up(p300m)\n        beads_mix(p300m, 100, beads, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate,\n                  blowout=False)\n        add_reagent(p300m, beads, well, reagent_volume=29, liq_class='bead')\n        beads_mix(p300m, 40, well, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate)\n        tip_disposal(p300m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n---------2B.2: 5 minutes incubation for DNA binding----')\n    incubation_airdry(time=incubation_time)\n\n    ctx. comment('\\n------------------2B.3: Magnet Engage-----------------')\n    mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n\n    ctx. comment('\\n--------2B.3: Remove supernantant---------------------')\n    removal_liquids(liquid_volume=51,\n                    mag_sources=mag_sample_list,\n                    dest_list=trash,\n                    mode='supernantant')\n\n    ctx. comment('\\n--------2B.5 + 2B.6: Ethanol wash x2 + airdry------')\n    ethanol_wash_airdry(\n        wash_volume=180, wash_list=mag_sample_list, wash_reps=2)\n    mag_mod.disengage()\n\n    p20m.reset_tipracks()\n    ctx. comment('\\n--------------2B.8: adding 10 ul of TE------------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, TE, well, reagent_volume=10,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=10)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    # ctx. comment('\\n-----2B.8: 5 minutes incubation for DNA binding------')\n    # incubation_airdry(time=incubation_time)\n\n    # ctx. comment('\\n------------------2B.8: Magnet Engage-----------------')\n    # mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n\n    # ctx. comment('\\n--------2B.8: Remove Elution---------------------')\n    # removal_liquids(liquid_volume=10,\n    #                 mag_sources=mag_sample_list,\n    #                 dest_list=sample_list,\n    #                 mode='elution')\n    # mag_mod.disengage()\n\n    ctx. comment('\\n----------------Second PCR Reaction-----------------')\n    ctx. comment('\\n--------------3A.1: adding 26 ul of second_PCR_mmx-------')\n    for well in mag_sample_list:\n        pick_up(p300m)\n        add_reagent(p300m, second_PCR_mmx, well, reagent_volume=26,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=36)\n        tip_disposal(p300m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n------------3A.1: adding 4 ul of index primers---')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, index_primers, well, reagent_volume=4,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=20)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    pause_attention(msg='1. Ready for second PCR reaction\\\n    2. Transfer the sample plate from the magnetic module to thermocycler\\\n    3. Set up a min timer\\\n    4. Refill both 20ul and 200ul filter tipracks and dump the trash bin\\\n    5. Move the sample plate from TC to the magnetic module after PCR')\n    p20m.reset_tipracks()\n    p300m.reset_tipracks()\n\n    ctx. comment('\\n-------------3A.4: adding 2 ul of STOP solution----------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, stop, well, reagent_volume=2,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=22)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n----------3B.1: adding 40 ul of beads-------------')\n    for well in mag_sample_list:\n        pick_up(p300m)\n        beads_mix(p300m, 100, beads, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate,\n                  blowout=False)\n        add_reagent(p300m, beads, well, reagent_volume=40, liq_class='bead')\n        beads_mix(p300m, 48, well, mix_rep=beads_mix_reps,\n                  z_low=1, z_high=5,\n                  asp_rate=beads_mix_rate, dis_rate=beads_mix_rate)\n        tip_disposal(p300m)\n        ctx.comment('\\n')\n\n    ctx. comment('\\n---------3B.2: 5 minutes incubation for DNA binding----')\n    incubation_airdry(time=incubation_time)\n\n    ctx. comment('\\n------------------3B.3: Magnet Engage-----------------')\n    mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n\n    ctx. comment('\\n--------3B.3: Remove supernantant---------------------')\n    removal_liquids(liquid_volume=62,\n                    mag_sources=mag_sample_list,\n                    dest_list=trash,\n                    mode='supernantant')\n\n    ctx. comment('\\n--------3B.5 + 3B.6: Ethanol wash x2 + airdry------')\n    ethanol_wash_airdry(\n        wash_volume=180, wash_list=mag_sample_list, wash_reps=2)\n    mag_mod.disengage()\n\n    p20m.reset_tipracks()\n    ctx. comment('\\n--------------3B.8: adding 10 ul of TE------------')\n    for well in mag_sample_list:\n        pick_up(p20m)\n        add_reagent(p20m, TE, well, reagent_volume=10,\n                    liq_class='buffer_mmx_primer', mix_vol_sum=10)\n        tip_disposal(p20m)\n        ctx.comment('\\n')\n\n    # ctx. comment('\\n-----3B.8: 5 minutes incubation for DNA binding------')\n    # incubation_airdry(time=incubation_time)\n\n    # ctx. comment('\\n------------------3B.8: Magnet Engage-----------------')\n    # mag_engage(height=magdeck_engage_height, minutes=beads_engaging_time)\n\n    # ctx. comment('\\n--------3B.8: Remove Elution---------------------')\n    # removal_liquids(liquid_volume=10,\n    #                 mag_sources=mag_sample_list,\n    #                 dest_list=sample_list,\n    #                 mode='elution')\n    # mag_mod.disengage()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Samples",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "label": "Dry run?",
+            "name": "DRYRUN",
+            "options": [
+                {
+                    "label": "NO (live run)",
+                    "value": false
+                },
+                {
+                    "label": "YES (test run)",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Test mode beads?",
+            "name": "TEST_MODE_BEADS",
+            "options": [
+                {
+                    "label": "NO (live run)",
+                    "value": false
+                },
+                {
+                    "label": "YES (test run)",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Water aspirate/dispense flow rate",
+            "name": "water_rate",
+            "type": "float"
+        },
+        {
+            "default": 0.8,
+            "label": "Buffer mastermix primer aspirate/dispense rate",
+            "name": "buffer_mmx_primer_rate",
+            "type": "float"
+        },
+        {
+            "default": 0.6,
+            "label": "Sample aspirate/dispense rate",
+            "name": "sample_rate",
+            "type": "float"
+        },
+        {
+            "default": 0.5,
+            "label": "Beads aspirate/dispense rate",
+            "name": "beads_rate",
+            "type": "float"
+        },
+        {
+            "default": 0.8,
+            "label": "Ethanol aspirate/dispense rate",
+            "name": "ethanol_rate",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Bead mix repetitions",
+            "name": "beads_mix_reps",
+            "type": "int"
+        },
+        {
+            "default": 1.2,
+            "label": "Bead mix aspirate/dispense rate",
+            "name": "beads_mix_rate",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Magnetic deck engage height",
+            "name": "magdeck_engage_height",
+            "type": "int"
+        },
+        {
+            "default": -2,
+            "label": "Ethanol dispense z offset",
+            "name": "ethnaol_dis_zoffset",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Incubation Time (minutes)",
+            "name": "incubation_time",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Beads Engaging Time (minutes)",
+            "name": "beads_engaging_time",
+            "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "Beads Air Dry Time (minutes)",
+            "name": "airdry_time",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Ethanol Wash Time (minutes)",
+            "name": "ethanol_wash_time",
+            "type": "int"
+        },
+        {
+            "label": "P20 Multi-Channel Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "mag_plate on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "sample_plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reagent_plate on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "reagent_reservoir on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "trash_reservoir on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.13",
+        "author": "Songnian Liu <Songnian.liu@opentrons.com>",
+        "protocolName": "CleanPlex NGS Library Preparation",
+        "source": "Custom Protocol Request"
+    },
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw mag_plate on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw reagent_plate on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
+}
