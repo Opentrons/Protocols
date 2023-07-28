@@ -64,6 +64,7 @@ air_gap,1
 air_gap_bool,1
 air_gap_vol,3
 air_gap_volume,1
+airdry_time,1
 airgap,1
 aliquot_vol,1
 am_bic_volume,1
@@ -126,6 +127,10 @@ bead_vol,9
 bead_vol1,1
 bead_vol2,1
 bead_volume,1
+beads_engaging_time,1
+beads_mix_rate,1
+beads_mix_reps,1
+beads_rate,1
 beads_vol,1
 beads_vol_1,1
 beads_vol_2,1
@@ -139,6 +144,7 @@ blowout_height,1
 blowout_rate,1
 blowout_vertical_offset,1
 box_count,1
+buffer_mmx_primer_rate,1
 buffer_vol,1
 cap_count,1
 cd4_dil,1
@@ -385,7 +391,7 @@ dry_on_temperature_module,1
 dry_time,23
 drying_time,2
 drying_time_in_minutes,2
-dryrun,6
+dryrun,7
 ds_520,1
 ds_540,1
 ds_570,1
@@ -428,8 +434,11 @@ enz_mx_volume,1
 enz_mx_well,1
 enzyme_vol,1
 ep_type,1
+ethanol_rate,1
 ethanol_res_loadname,1
+ethanol_wash_time,1
 ethanol_wash_vol,1
+ethnaol_dis_zoffset,1
 etoh_inc,1
 etoh_volume,2
 etoh_well,2
@@ -540,7 +549,7 @@ incubate_bind_time,1
 incubate_samples_with_beads,3
 incubation_delay_time,1
 incubation_temperature,1
-incubation_time,5
+incubation_time,6
 index_start_col,2
 index_start_column,1
 index_vol,2
@@ -715,6 +724,7 @@ mag_mod_lname,1
 mag_model,1
 mag_plate,2
 mag_time,1
+magdeck_engage_height,1
 magdeck_gen,2
 magmod,2
 magplate_offset,1
@@ -953,7 +963,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,130
+p20_mount,131
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -970,7 +980,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,150
+p300_mount,151
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1235,6 +1245,7 @@ sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
 sample_quant_csv,2
+sample_rate,1
 sample_rows,1
 sample_size,1
 sample_slots,1
@@ -1425,6 +1436,7 @@ tempgen,1
 template_vol,1
 test_method,1
 test_mode,1
+test_mode_beads,1
 test_plates,1
 tfa_540,1
 tfer_vol,1
@@ -1652,6 +1664,7 @@ wash_buf_vol,1
 wash_scheme,1
 waste,2
 waste_water_mode,1
+water_rate,1
 water_res_vol,1
 water_vol,2
 water_volume,2
