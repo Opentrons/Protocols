@@ -18,7 +18,7 @@ def run(ctx):
 
     input_csv = """
     Sample Location,Qubits,Volume (ul) for ng: 70,Sample Destination,,,,,,,,,,,
-A1,3.5,35.0,A1,,,,,,,,,,,
+A1,3.5,20.0,A1,,,,,,,,,,,
 A2,15,4.7,A2,,,,,,,,,,,
 A3,20,3.5,A2,,,,,,,,,,,
 A4,20,10,A1,,,,,,,,,,,
