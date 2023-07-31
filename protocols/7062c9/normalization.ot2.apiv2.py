@@ -37,8 +37,6 @@ def run(ctx):
         mount].update_config_item(
             'pick_up_current', 0.1)
 
-    p300.flow_rate.dispense /= 5
-
     # reagents
     water = tuberack.wells()[0]
     buffer = tuberack.wells()[1]
@@ -81,12 +79,7 @@ def run(ctx):
 
     output_wells = final_plate.wells()[:16] + final_plate.wells()[95:79:-1]
 
-    p20.flow_rate.aspirate /= 2
-    p300.flow_rate.aspirate /= 2
-    p20.flow_rate.dispense /= 2
-    p300.flow_rate.dispense /= 2
-
-    # prealocate water,
+    # prealocate water
     for i, line in enumerate(data):
         water_vol = float(line[2])
         pip = p20 if water_vol <= 20 else p300
@@ -96,9 +89,9 @@ def run(ctx):
                 pip.pick_up_tip()
             else:
                 pickup_p300('single')
-        pip.aspirate(water_vol, water)
+        pip.aspirate(water_vol, water.bottom(1))
         slow_withdraw(pip, water)
-        pip.dispense(water_vol, dest_well)
+        pip.dispense(water_vol, dest_well.bottom(1))
         slow_withdraw(pip, dest_well)
     drop_all_tips()
 
@@ -112,9 +105,9 @@ def run(ctx):
                 pip.pick_up_tip()
             else:
                 pickup_p300('single')
-        pip.aspirate(buffer_vol, buffer)
+        pip.aspirate(buffer_vol, buffer.bottom(1))
         slow_withdraw(pip, buffer)
-        pip.dispense(buffer_vol, dest_well)
+        pip.dispense(buffer_vol, dest_well.bottom(1))
         slow_withdraw(pip, dest_well)
     drop_all_tips()
 
@@ -131,9 +124,9 @@ def run(ctx):
                 pip.pick_up_tip()
             else:
                 pickup_p300('single')
-        pip.aspirate(probe_vol, probe)
+        pip.aspirate(probe_vol, probe.bottom(1))
         slow_withdraw(pip, probe)
-        pip.dispense(probe_vol, dest_well)
+        pip.dispense(probe_vol, dest_well.bottom(1))
         slow_withdraw(pip, dest_well)
     drop_all_tips()
 
@@ -153,10 +146,10 @@ def run(ctx):
             pip.pick_up_tip()
         else:
             pickup_p300('single')
-        pip.aspirate(sample_vol, sample_well)
+        pip.aspirate(sample_vol, sample_well.bottom(1))
         slow_withdraw(pip, sample_well)
-        pip.dispense(sample_vol, dest_well)
-        pip.mix(3, mix_vol, dest_well)
+        pip.dispense(sample_vol, dest_well.bottom(1))
+        pip.mix(3, mix_vol, dest_well.bottom(1))
         slow_withdraw(pip, dest_well)
         drop_all_tips()
 
@@ -166,9 +159,9 @@ def run(ctx):
     for i, line in enumerate(data):
         dest_well = output_wells[i]
         p20.pick_up_tip()
-        p20.aspirate(5, protease)
+        p20.aspirate(5, protease.bottom(1))
         slow_withdraw(p20, protease)
-        p20.dispense(5, dest_well),
-        p20.mix(3, 20, dest_well)
+        p20.dispense(5, dest_well.bottom(1))
+        p20.mix(3, 20, dest_well.bottom(1))
         slow_withdraw(p20, dest_well)
         p20.drop_tip()

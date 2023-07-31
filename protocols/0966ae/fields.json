@@ -7,20 +7,13 @@
     },
     {
         "type": "dropDown",
-        "label": "perform day 1 steps",
-        "name": "do_day1",
+        "label": "protocol selection",
+        "name": "protocol_selection",
         "options": [
-            { "label": "yes", "value": true },
-            { "label": "no", "value": false }
-        ]
-    },
-    {
-        "type": "dropDown",
-        "label": "perform day 2 steps",
-        "name": "do_day2",
-        "options": [
-            { "label": "yes", "value": true },
-            { "label": "no", "value": false }
+            { "label": "protocol 1", "value": 1 },
+            { "label": "protocol 2", "value": 2 },
+            { "label": "protocol 3", "value": 3 },
+            { "label": "protocol 4", "value": 4 }
         ]
     },
     {

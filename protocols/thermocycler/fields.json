@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "Thermocycler Generation",
+    "name": "type_tc",
+    "options": [
+      { "label": "GEN1", "value": "thermocycler" },
+      { "label": "GEN2", "value": "thermocyclerModuleV2" }
+    ]
+  },
+  {
     "type": "int",
     "label": "Sample Volume per Well",
     "name": "well_vol",

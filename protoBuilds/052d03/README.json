@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR"
+        ]
+    },
+    "description": "This protocol performs a custom dilution and PCR protocol on the Opentrons Thermocycler GEN2 Module. The number of samples will be automatically calculated from the input cherrypicking .csv list, which should be formatted as the following example excluding the positive control:\n```\nA4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\n```\nNote that the first value of each line should specify the well location, and the second value should specify whether to pick from the thermocycler plate or the dilution plate.",
+    "internal": "052d03",
+    "labware": "\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* PCR\n\t* PCR\n\n\n",
+        "description": "This protocol performs a custom dilution and PCR protocol on the Opentrons Thermocycler GEN2 Module. The number of samples will be automatically calculated from the input cherrypicking .csv list, which should be formatted as the following example **excluding the positive control**:\n\n```\nA4,tc\nB4,tc\nC1,dil\nD1,dil\nB1,dil\nH12,dil\n\n```\n\nNote that the first value of each line should specify the well location, and the second value should specify whether to pick from the thermocycler plate or the dilution plate.\n\n\n",
+        "internal": "052d03\n",
+        "labware": "* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
+        "modules": "* [Opentrons Thermocycler Module](https://shop.opentrons.com/thermocycler-module-1/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "title": "Dilution and Amplification"
+    },
+    "modules": [
+        "Opentrons Thermocycler Module"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "Dilution and Amplification"
+}
