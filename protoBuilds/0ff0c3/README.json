@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification": [
+            "Nucleic Acid Purification"
+        ]
+    },
+    "deck-setup": "\n\n",
+    "description": "This is a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system\nThe protocol is broken down into 3 main parts:\n* Pipette mixing of lysates, binding buffer and magnetic beads\n* Bead washing 3x using magnetic module\n* Final elution to PCR plate\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (slot 3). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n",
+    "internal": "0ff0c3",
+    "labware": "\nOT-2 Filter Tips, 200\u00b5L\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nNEST 1-Well Reservoir, 195 mL\n\nOpentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n\t* Nucleic Acid Purification\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ff0c3/deck.png)\n![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ff0c3/liquids.png)\n\n\n---\n\n",
+        "description": "This is a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system\n\nThe protocol is broken down into 3 main parts:\n* Pipette mixing of lysates, binding buffer and magnetic beads\n* Bead washing 3x using magnetic module\n* Final elution to PCR plate\n\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (slot 3). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n\n---\n\n",
+        "internal": "0ff0c3\n",
+        "labware": "* [OT-2 Filter Tips, 200\u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n* [NEST 1-Well Reservoir, 195 mL](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)\n* \n* [Opentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/tough-0.2-ml-96-well-pcr-plate-full-skirt/)\n\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 GEN2 8-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Mix lysate, bind, and magnetic beads with pipetting for approx. 10 min in a 2 mL block\n2. Apply magnet for 10 min \n3. Remove supernatant from each sample well and discard in liquid waste reservoir. \n4. Transfer 500 uL of wash buffer from a 195 mL reservoir to each sample well in the 2 mL block\n5. Mix with pipetting in each sample well\n6. Apply magnet for 5 min\n7. Remove 500 uL of wash buffer from each sample well and discard in the liquid waste reservoir.\n8. Repeat steps 4-7 for a total of 3 washes\n9. Air dry beads for 5 min\n10. Transfer 50 uL of elution buffer from a 12-column reservoir to each sample well in the 2 mL block \n11. Mix beads with pipetting for 5 min\n12. Apply magnet for 2 min\n13. Transfer the 50 uL elution buffer containing DNA to a 96 well skirted PCR plate\n\n",
+        "title": "Protocol Title "
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 GEN2 8-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nMix lysate, bind, and magnetic beads with pipetting for approx. 10 min in a 2 mL block\nApply magnet for 10 min \nRemove supernatant from each sample well and discard in liquid waste reservoir. \nTransfer 500 uL of wash buffer from a 195 mL reservoir to each sample well in the 2 mL block\nMix with pipetting in each sample well\nApply magnet for 5 min\nRemove 500 uL of wash buffer from each sample well and discard in the liquid waste reservoir.\nRepeat steps 4-7 for a total of 3 washes\nAir dry beads for 5 min\nTransfer 50 uL of elution buffer from a 12-column reservoir to each sample well in the 2 mL block \nMix beads with pipetting for 5 min\nApply magnet for 2 min\nTransfer the 50 uL elution buffer containing DNA to a 96 well skirted PCR plate\n",
+    "title": "Protocol Title "
+}
