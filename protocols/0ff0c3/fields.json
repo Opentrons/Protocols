@@ -1,9 +1,9 @@
 [
     {
-      "type": "float",
+      "type": "int",
       "label": "Number of Samples",
       "name": "num_samp",
-      "default": "96"
+      "default": 96
     },
     {
         "type": "dropDown",

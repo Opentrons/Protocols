@@ -11,20 +11,18 @@ metadata = {
 
 def run(ctx):
 
-    # [num_samp, p300_mount] = get_values(  # noqa: F821
-    #     "num_samp", "p300_mount")
-
-    num_samp = 8
-    m300_mount = 'left'
+    [num_samp, m300_mount] = get_values(  # noqa: F821
+        "num_samp", "m300_mount")
 
     if not 1 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
 
     # labware
-
     mag_mod = ctx.load_module('magnetic module gen2', 6)
     mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')
-    dest_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 3)
+    dest_plate = ctx.load_labware(
+        'biorad_96_wellplate_200ul_pcr', 3)
+
     reag_res = ctx.load_labware('nest_12_reservoir_15ml', 8)
     wash_buff_res = ctx.load_labware('nest_1_reservoir_195ml', 5)
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', 2)
@@ -76,7 +74,7 @@ def run(ctx):
     num_mix = 15
     for col in samples:
         pick_up(m300)
-        
+
         for i in range(num_mix):
             m300.aspirate(mix_vol, col.bottom(5))
             m300.dispense(mix_vol, col.bottom(10))
@@ -89,7 +87,7 @@ def run(ctx):
     ctx.delay(minutes=10)
 
     ctx.comment('\n----------------REMOVING SUPER------------------\n\n')
-    sup_vol = 1820   #as per Parker during onsite
+    sup_vol = 1820   # as per Parker during onsite
     for col in samples:
         pick_up(m300)
 
@@ -111,11 +109,11 @@ def run(ctx):
     ctx.pause("Empty liquid waste Reservoir")
 
     ctx.comment('\n---------------WASH STEP----------------\n\n')
-    
+
     wash_vol = 500
     num_buff_transfers = math.ceil(wash_vol/tip_ref_vol)
     buff_transfer_vol = wash_vol/num_buff_transfers
-    
+
     for i in range(3):
         for col in samples:
             pick_up(m300)
@@ -143,7 +141,6 @@ def run(ctx):
             m300.drop_tip()
 
         mag_mod.disengage()
-
 
     ctx.comment('\n----------------AIR DRY BEADS------------------\n\n')
     ctx.delay(minutes=5)
