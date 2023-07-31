@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Pooling"
+        ]
+    },
+    "deck-setup": "\n\n",
+    "description": "This protocol uses a .csv file to pool a calculated volume of each sample from a PCR plate into one or more 1.5 mL snapcap tube(s).  \nExplanation of complex parameters below:\n* input .csv file: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:\nSample Location,Qubits,Volume (ul) for ng: 70,Sample Destination,,,,,,,,,,,\nA1,3.5,20.0,A1,,,,,,,,,,,\nA2,15,4.7,A2,,,,,,,,,,,\n",
+    "internal": "0dda91",
+    "labware": "\nOT-2 Filter Tips, 20\u00b5L\nOpentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt\n4-in-1 Tube Rack Set\nFisherbrand 2.0 mL Microcentrifuge Tubes with Locking Snap Cap\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Pooling\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/deck.png)\n![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/liquids.png)\n\n---\n\n",
+        "description": "This protocol uses a .csv file to pool a calculated volume of each sample from a PCR plate into one or more 1.5 mL snapcap tube(s).  \n\nExplanation of complex parameters below:\n* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:\n```\n Sample Location,Qubits,Volume (ul) for ng: 70,Sample Destination,,,,,,,,,,,\nA1,3.5,20.0,A1,,,,,,,,,,,\nA2,15,4.7,A2,,,,,,,,,,,\n```\n\n---\n\n",
+        "internal": "0dda91\n",
+        "labware": "* [OT-2 Filter Tips, 20\u00b5L](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n* [Opentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/tips-and-labware/)\n* [4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/)\n* [Fisherbrand 2.0 mL Microcentrifuge Tubes with Locking Snap Cap](https://www.fishersci.com/shop/products/microcentrifuge-tubes-locking-snap-cap/14666313)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) - Not used in protocol but loaded so module can remain on the deck\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Transfer 2-35 uL from the 96 well PCR plate to a 2 mL snap tube\n2. Repeat across the entire plate according to the .csv file\n\n",
+        "title": "Protocol Title (should match metadata of .py file)"
+    },
+    "modules": [
+        "Magnetic Module (GEN2) - Not used in protocol but loaded so module can remain on the deck"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 GEN2 Single Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nTransfer 2-35 uL from the 96 well PCR plate to a 2 mL snap tube\nRepeat across the entire plate according to the .csv file\n",
+    "title": "Protocol Title (should match metadata of .py file)"
+}
