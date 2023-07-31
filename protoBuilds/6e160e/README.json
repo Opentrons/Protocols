@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nSamples are layed out between plates in the following manner:\n\n",
-    "description": "This protocol preps a 384 well plate on the temperature module with reaction mix and sample. Reaction mix is held in well one of a 12 well reservoir on the temperature module. Both temperature modules are held at 4C. The protocol uses a multi-channel to fill full plates, and a single channel to fill the last unfilled plate. Samples and reaction mix are filled by row, skipping columns.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples for this run.\n P20 Mounts: Specify which mount (left or right) for each the P20 Single-Channel and P20 Multi-Channel pipettes.\n",
+    "description": "This protocol preps a 384 well plate on the temperature module with reaction mix and sample. Reaction mix is held in well one of a 12 well reservoir on the temperature module. Both temperature modules are held at 4C. The protocol uses a multi-channel to fill full plates, and a single channel to fill the last unfilled plate. Samples and reaction mix are filled by row, skipping columns.\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples for this run.\n* P20 Mounts: Specify which mount (left or right) for each the P20 Single-Channel and P20 Multi-Channel pipettes.\n",
     "internal": "6e160e",
     "labware": "\nCorning 384 Well Plate 112 \u00b5L Flat\nOpentrons 20\u00b5L Filter Tips\nBio-Rad 96 Well Plate 200 \u00b5L PCR\nNEST 12-Well Reservoirs, 15 mL\n",
     "markdown": {

@@ -98,12 +98,12 @@ def run(ctx):
     def wick(pip, well, side=1):
         pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))
 
-    def slow_withdraw(pip, well):
-        ctx.max_speeds['A'] = 25
-        ctx.max_speeds['Z'] = 25
+    def slow_withdraw(pip, well, seconds=2.0):
+        pip.default_speed = 25
+        if seconds > 0:
+            ctx.delay(seconds=seconds)
         pip.move_to(well.top())
-        del ctx.max_speeds['A']
-        del ctx.max_speeds['Z']
+        pip.default_speed
 
     def pick_up(pip, spot=None):
         if spot:
