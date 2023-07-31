@@ -31,11 +31,6 @@ def run(ctx):
     vol_elution = 11.0
     z_offset = 3.0
     radial_offset_fraction = 0.3  # fraction of radius
-    engage_height = 8.5
-
-    # tuning parameters
-    ctx.max_speeds['X'] = 200
-    ctx.max_speeds['Y'] = 200
 
     # modules
     magdeck = ctx.load_module('magnetic module gen2', '4')
@@ -66,26 +61,28 @@ def run(ctx):
     mag_samples = mag_plate.rows()[0][:num_cols]
     elution_samples = elution_plate.rows()[0][:num_cols]
     beads = reservoir.rows()[0][0]
-    etoh = reservoir.rows()[0][:(math.ceil(num_cols/6))]
+    etoh = reservoir.rows()[0][1:1+(math.ceil(num_cols/6))]
     elution_buffer = [reservoir.rows()[0][3]]
     liquid_trash = [ctx.loaded_labwares[12].wells()[0].top()]*num_cols
 
     # define liquids
     try:
         beads_liq = ctx.define_liquid(
-            name='Beads', description='ampure beads', display_color='B925FF')
+            name='Beads', description='ampure beads', display_color='#B925FF')
         etoh_liq = ctx.define_liquid(
             name='EtOH', description='ethanol for washing',
-            display_color='FFD600')
+            display_color='#FFD600')
         elution_buffer_liq = ctx.define_liquid(
             name='TE Buffer', description='low TE buffer for elution',
-            display_color='9DFFD8')
+            display_color='#9DFFD8')
         beads.load_liquid(
             liquid=beads_liq, volume=vol_beads*num_samples+2000)
-        etoh.load_liquid(
+        [well.load_liquid(
             liquid=etoh_liq, volume=vol_wash*num_samples/len(etoh)+2000)
-        elution_buffer.load_liquid(
+         for well in etoh]
+        [well.load_liquid(
             liquid=elution_buffer_liq, volume=vol_elution*num_samples+2000)
+         for well in elution_buffer]
     except AttributeError:
         pass
 
@@ -134,13 +131,11 @@ resuming.\n\n\n\n")
                 else:
                     pick_up(pip)
             pip.move_to(s.top())
-            ctx.max_speeds['A'] = 25
-            ctx.max_speeds['Z'] = 25
+            pip.default_speed /= 16
             side = 0
             pip.aspirate(vol, s.bottom().move(Point(x=side, z=z_asp)))
             pip.move_to(s.top())
-            del ctx.max_speeds['A']
-            del ctx.max_speeds['Z']
+            pip.default_speed *= 16
             pip.dispense(vol, d)
             if TEST_MODE_DROP:
                 pip.return_tip()
@@ -215,7 +210,7 @@ resuming.\n\n\n\n")
                       msg=f'Incubating off MagDeck for \
 {time_incubation} minutes.')
         if do_discard_supernatant:
-            magdeck.engage(engage_height)
+            magdeck.engage()
             if not TEST_MODE_BEADS:
                 ctx.delay(minutes=time_settling, msg=f'Incubating on \
 MagDeck for {time_settling} minutes.')
