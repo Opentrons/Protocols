@@ -7,34 +7,30 @@ metadata = {
     'apiLevel': '2.13'
 }
 
-    # Step 1: Use a single channel pipettor and a new tip each time, transfer 2-35 uL from the 96 well PCR plate to a single 2 mL snap tube
-    # Step 2: Repeat across the entire plate according to the .csv file
+# Step 1: Use a single channel pipettor and a new tip each time, transfer
+# 2-35 uL from the 96 well PCR plate to a single 2 mL snap tube
+# Step 2: Repeat across the entire plate according to the .csv file
+
 
 def run(ctx):
 
-    # [input_csv, p20_mount] = get_values(  # noqa: F821
-    #     'input_csv', 'p20_mount')
-
-
-    input_csv = """
-    Sample Location,Qubits,Volume (ul) for ng: 70,Sample Destination,,,,,,,,,,,
-A1,3.5,20.0,A1,,,,,,,,,,,
-A2,15,4.7,A2,,,,,,,,,,,
-A3,20,3.5,A2,,,,,,,,,,,
-A4,20,10,A1,,,,,,,,,,,
-"""
+    [input_csv, p20_mount] = get_values(  # noqa: F821
+        'input_csv', 'p20_mount')
 
     p20_mount = 'right'
 
     # labware
     tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-            for slot in [1,4]]
+            for slot in [1, 4]]
 
-    pcr_plate = ctx.load_labware('armadillo_96_wellplate_200ul_pcr_full_skirt', 2)
+    pcr_plate = ctx.load_labware(
+        'biorad_96_wellplate_200ul_pcr', 2)
 
-    tube_rack = ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 3)
+    tube_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 3)
 
-    mag_mod = ctx.load_module('magnetic module gen2', 6)   # not used during protocol
+    mag_mod = ctx.load_module('magnetic module gen2', 6)   # not used
+    mag_mod.disengage()
 
     # pipettes
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tips)

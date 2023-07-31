@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Pooling"
+        ]
+    },
+    "deck-setup": "\n\n",
+    "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\nExample: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:\n* binding buffer addition to samples\n* bead wash 3x using magnetic module\n* final elution to chilled PCR plate\nSubsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.\nExample: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\nResults of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:\n\nExplanation of complex parameters below:\n* input .csv file: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:\nsource,dest,vol\nA1,B1,4\n",
+    "internal": "0dda91",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Pooling\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/deck.png)\n![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/liquids.png)\n\n---\n\n",
+        "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\n\nExample: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:\n* binding buffer addition to samples\n* bead wash 3x using magnetic module\n* final elution to chilled PCR plate\n\nSubsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.\n\nExample: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n\nResults of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  \n![results](link_to_results.png)\n\nExplanation of complex parameters below:\n* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:\n```\nsource,dest,vol\nA1,B1,4\n```\n\n---\n\n",
+        "internal": "0dda91\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) - Not used in protocol but loaded so module can remain on the deck\n\n---\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Use a single channel pipettor and a new tip each time, transfer 2-35 uL from the 96 well PCR plate to a single 2 mL snap tube\n2. Repeat across the entire plate according to the .csv file\n\n",
+        "title": "Protocol Title (should match metadata of .py file)"
+    },
+    "modules": [
+        "Magnetic Module (GEN2) - Not used in protocol but loaded so module can remain on the deck"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nUse a single channel pipettor and a new tip each time, transfer 2-35 uL from the 96 well PCR plate to a single 2 mL snap tube\nRepeat across the entire plate according to the .csv file\n",
+    "title": "Protocol Title (should match metadata of .py file)"
+}

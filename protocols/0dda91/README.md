@@ -23,6 +23,7 @@ A2,15,4.7,A2,,,,,,,,,,,
 ### Modules
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) - Not used in protocol but loaded so module can remain on the deck
 
+<<<<<<< HEAD
 ### Labware
 * [OT-2 Filter Tips, 20µL](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 * [Opentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/tips-and-labware/)
@@ -32,16 +33,13 @@ A2,15,4.7,A2,,,,,,,,,,,
 ### Pipettes
 * [P20 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
+=======
+>>>>>>> 682746be0 (review)
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-
-### Reagent Setup
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/deck.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0dda91/liquids.png)
 
 ---
 
