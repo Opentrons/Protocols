@@ -9,7 +9,7 @@ Nucleic Acid Purification
 	* Nucleic Acid Purification
 
 ## Description
-This ia a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system
+This is a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system
 
 The protocol is broken down into 3 main parts:
 * Pipette mixing of lysates, binding buffer and magnetic beads
@@ -37,15 +37,11 @@ For sample traceability and consistency, samples are mapped directly from the ma
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ff0c3/deck.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0ff0c3/deck.png)
+
 
 ---
 
@@ -77,4 +73,4 @@ For sample traceability and consistency, samples are mapped directly from the ma
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+0ff0c3
