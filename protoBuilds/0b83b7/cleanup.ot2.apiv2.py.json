@@ -1,0 +1,91 @@
+{
+    "content": "from opentrons import protocol_api\nfrom opentrons.types import Point\nimport math\n\nmetadata = {\n    'protocolName': 'Paragon Cleanup',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.14'\n}\n\nTEST_MODE_BEADS = False\nTEST_MODE_BIND_INCUBATE = False\nTEST_MODE_TEMP = False\nTEST_MODE_DROP = False\n\n\ndef run(ctx):\n\n    [num_samples, vol_beads] = get_values(  # noqa: F821\n        'num_samples', 'vol_beads')\n\n    if TEST_MODE_BEADS:\n        mixreps = 1\n    else:\n        mixreps = 10\n    time_settling_minutes_wash = 0.5\n    time_settling_minutes_elution = 5\n    vol_initial = 30.0\n    vol_beads = 66.0\n    vol_wash = 200.0\n    vol_elution = 11.0\n    z_offset = 3.0\n    radial_offset_fraction = 0.3  # fraction of radius\n\n    # modules\n    magdeck = ctx.load_module('magnetic module gen2', '4')\n    magdeck.disengage()\n\n    # labware\n    elution_plate = ctx.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'elution plate')\n    mag_plate = magdeck.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt', 'TAG1 plate')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2',\n                                 'reagent reservoir')\n    tips20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['5']]\n    tips200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['3', '6', '9']]\n\n    # load P300M pipette\n    m20 = ctx.load_instrument(\n        'p20_multi_gen2', 'right', tip_racks=tips20)\n    m300 = ctx.load_instrument(\n         'p300_multi_gen2', 'left', tip_racks=tips200)\n\n    # reagents and variables\n    num_cols = math.ceil(num_samples/8)\n    mag_samples = mag_plate.rows()[0][:num_cols]\n    elution_samples = elution_plate.rows()[0][:num_cols]\n    beads = reservoir.rows()[0][0]\n    etoh = reservoir.rows()[0][1:1+(math.ceil(num_cols/6))]\n    elution_buffer = [reservoir.rows()[0][3]]\n    liquid_trash = [ctx.loaded_labwares[12].wells()[0].top()]*num_cols\n\n    # define liquids\n    try:\n        beads_liq = ctx.define_liquid(\n            name='Beads', description='ampure beads', display_color='#B925FF')\n        etoh_liq = ctx.define_liquid(\n            name='EtOH', description='ethanol for washing',\n            display_color='#FFD600')\n        elution_buffer_liq = ctx.define_liquid(\n            name='TE Buffer', description='low TE buffer for elution',\n            display_color='#9DFFD8')\n        beads.load_liquid(\n            liquid=beads_liq, volume=vol_beads*num_samples+2000)\n        [well.load_liquid(\n            liquid=etoh_liq, volume=vol_wash*num_samples/len(etoh)+2000)\n         for well in etoh]\n        [well.load_liquid(\n            liquid=elution_buffer_liq, volume=vol_elution*num_samples+2000)\n         for well in elution_buffer]\n    except AttributeError:\n        pass\n\n    ref_well = mag_plate.wells()[0]\n    if ref_well.width:\n        radius = ref_well.width/2\n    else:\n        radius = ref_well.diameter/2\n\n    def wick(pip, well, side=1):\n        pip.move_to(well.bottom().move(Point(x=side*radius*0.7, z=3)))\n\n    def slow_withdraw(pip, well, seconds=2.0):\n        pip.default_speed = 25\n        if seconds > 0:\n            ctx.delay(seconds=seconds)\n        pip.move_to(well.top())\n        pip.default_speed\n\n    def pick_up(pip, spot=None):\n        if spot:\n            pip.pick_up_tip(spot)\n        else:\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                ctx.pause(\"\\n\\n\\n\\nReplace 200ul filtertipracks before \\\nresuming.\\n\\n\\n\\n\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n    parked_tips = {m300: [], m20: []}\n\n    def remove_supernatant(vol,\n                           pip=None,\n                           z_asp=0.2,\n                           park=True,\n                           destinations=liquid_trash):\n        nonlocal parked_tips\n        if not pip:\n            pip = m300 if vol >= 20 else m20\n        for i, (s, d) in enumerate(zip(mag_samples, liquid_trash)):\n            if not pip.has_tip:\n                if park:\n                    pick_up(pip, parked_tips[pip][i])\n                else:\n                    pick_up(pip)\n            pip.move_to(s.top())\n            pip.default_speed /= 16\n            side = 0\n            pip.aspirate(vol, s.bottom().move(Point(x=side, z=z_asp)))\n            pip.move_to(s.top())\n            pip.default_speed *= 16\n            pip.dispense(vol, d)\n            if TEST_MODE_DROP:\n                pip.return_tip()\n            else:\n                pip.drop_tip()\n        parked_tips[pip] = []\n\n    def resuspend(pip, location, vol, reps=mixreps,\n                  samples=mag_samples, x_mix_fraction=radial_offset_fraction,\n                  z_mix=z_offset, dispense_height_rel=2.0):\n        pip.flow_rate.aspirate *= 4\n        pip.flow_rate.dispense *= 4\n        side_x = 1 if samples.index(location) % 2 == 0 else -1\n        pip.move_to(location.center())\n        for r_ind in range(reps):\n            bead_loc = location.bottom().move(\n                Point(x=side_x*radius*radial_offset_fraction,\n                      z=z_mix))\n            pip.aspirate(vol, bead_loc)\n            pip.dispense(vol, bead_loc.move(Point(z=dispense_height_rel)))\n        pip.flow_rate.aspirate /= 4\n        pip.flow_rate.dispense /= 4\n\n    def wash(pip, vol, reagent, time_incubation=0,\n             time_settling=0, premix=False,\n             do_discard_supernatant=True, do_resuspend=False,\n             vol_supernatant=0, park=True, z_resuspension=z_offset,\n             supernatant_destinations=liquid_trash):\n        nonlocal parked_tips\n\n        columns_per_channel = 12//len(reagent)\n        num_transfers = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)\n        vol_per_transfer = round(vol/num_transfers, 2)\n\n        last_source = None\n\n        for i, well in enumerate(mag_samples):\n            source = reagent[i//columns_per_channel]\n            pick_up(pip)\n            if park:\n                parked_tips[pip].append(pip._last_tip_picked_up_from)\n            if premix and last_source != source:\n                pip.flow_rate.aspirate *= 4\n                pip.flow_rate.dispense *= 4\n                for _ in range(5):\n                    pip.aspirate(200, source.bottom(0.5))\n                    pip.dispense(200, source.bottom(5))\n                pip.flow_rate.aspirate /= 4\n                pip.flow_rate.dispense /= 4\n            last_source = source\n            for _ in range(num_transfers):\n                pip.aspirate(vol_per_transfer, source)\n                slow_withdraw(pip, source)\n                pip.dispense(vol_per_transfer, well.top())\n            if do_resuspend:\n                resuspend(pip, well, vol*0.8)\n            else:\n                if mixreps > 0:\n                    pip.flow_rate.aspirate *= 4\n                    pip.flow_rate.dispense *= 4\n                    pip.mix(mixreps, vol*0.8, well.bottom(2))\n                    pip.flow_rate.aspirate /= 4\n                    pip.flow_rate.dispense /= 4\n            pip.air_gap(20)\n            if park or TEST_MODE_DROP:\n                pip.return_tip()\n            else:\n                pip.drop_tip()\n\n        if not TEST_MODE_BIND_INCUBATE:\n            ctx.delay(minutes=time_incubation,\n                      msg=f'Incubating off MagDeck for \\\n{time_incubation} minutes.')\n        if do_discard_supernatant:\n            magdeck.engage()\n            if not TEST_MODE_BEADS:\n                ctx.delay(minutes=time_settling, msg=f'Incubating on \\\nMagDeck for {time_settling} minutes.')\n\n            remove_supernatant(\n                vol_supernatant,\n                pip=pip,\n                destinations=supernatant_destinations)\n            magdeck.disengage()\n\n    pick_up(m300)\n    # premix beads and transfer to plate\n    for _ in range(mixreps):\n        m300.aspirate(200, beads.bottom(1))\n        m300.dispense(200, beads.bottom(10))\n    for d in mag_samples:\n        if not m300.has_tip:\n            pick_up(m300)\n        m300.aspirate(vol_beads, beads.bottom(0.5))\n        slow_withdraw(m300, beads)\n        m300.dispense(m300.current_volume, d.bottom(2))\n        m300.mix(mixreps, (vol_beads+vol_initial)*0.8, d.bottom(2))\n        slow_withdraw(m300, d)\n        m300.return_tip()\n        parked_tips[m300].append(m300._last_tip_picked_up_from)\n\n    magdeck.engage()\n    ctx.delay(minutes=10)\n\n    # remove initial supernatant\n    remove_supernatant(vol_initial+vol_beads)\n\n    # wash\n    wash(m300, vol_wash, etoh, time_incubation=0,\n         time_settling=time_settling_minutes_wash,\n         premix=False, do_discard_supernatant=True, do_resuspend=True,\n         vol_supernatant=vol_wash)\n    wash(m300, vol_wash, etoh, time_incubation=0,\n         time_settling=time_settling_minutes_wash,\n         premix=False, do_discard_supernatant=False, do_resuspend=True,\n         vol_supernatant=vol_wash, park=False)\n\n    # air dry\n    ctx.delay(minutes=5, msg='Air Drying')\n\n    # transfer final elution\n    wash(m20, vol_elution, elution_buffer, time_incubation=5.0,\n         time_settling=time_settling_minutes_elution, vol_supernatant=10.0,\n         do_discard_supernatant=True, supernatant_destinations=elution_samples)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 16,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "default": 66.0,
+            "label": "volume of beads (in ul)",
+            "name": "vol_beads",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "elution plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "reagent reservoir on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "TAG1 plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.14",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Paragon Cleanup"
+    },
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw TAG1 plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
+}

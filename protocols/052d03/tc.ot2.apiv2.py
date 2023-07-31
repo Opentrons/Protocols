@@ -262,15 +262,15 @@ def run(ctx):
     for i, dil_set in enumerate(dil_sets_all):
         sources = [rxn_mix_1_dests[i]] + dil_set[:len(dil_sets_all[0])-1]
         dests = dil_set
-        if not m300.has_tip:
-            pick_up(m300)
         for s, d in zip(sources, dests):
+            if not m300.has_tip:
+                pick_up(m300)
             m300.aspirate(20, s.bottom(5))
             slow_withdraw(m300, s)
             m300.dispense(20, d.bottom(d.depth/2))
             m300.mix(5, 50, d.bottom(d.depth/2))
             slow_withdraw(m300, d)
-        m300.drop_tip()
+            m300.drop_tip()
 
     # mm
     mm_dest_sets = [

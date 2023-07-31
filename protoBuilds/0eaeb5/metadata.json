@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "6bc986_part_6.ot2.apiv2.py"
+            "0eaeb5.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/6bc986-part-6",
-    "slug": "6bc986-part-6",
+    "path": "protocols/0eaeb5",
+    "slug": "0eaeb5",
     "status": "ok"
 }
