@@ -11,8 +11,8 @@ metadata = {
 
 def run(ctx):
 
-    # [num_samp, p300_mount, p1000_mount] = get_values(  # noqa: F821
-    #     "num_samp", "p300_mount", "p1000_mount")
+    # [num_samp, p300_mount] = get_values(  # noqa: F821
+    #     "num_samp", "p300_mount")
 
     num_samp = 8
     m300_mount = 'left'

@@ -1,252 +1,80 @@
-# Opentrons Protocol Library
-
-This is where Opentrons protocols are stored for everyone to use.
-
-The `master` branch populates http://protocols.opentrons.com/, our Protocol Library. Please let us know if you would like to contribute your protocols, or just submit a pull request. We would love to add your Opentrons protocols to the Library!
-
-All the best,
-
-Will Canine
-Co-Founder, Opentrons
-will@opentrons.com
-
-# Contributing
-
-## `develop` staging branch
-
-The `develop` branch populates the staging version of the Opentrons Protocol Library at http://develop.protocols.opentrons.com/. Pull requests should be made to `develop` to be staged, and we will merge the changes into `master` as a second step.
-
-# Formatting protocols
-
-Every protocol needs its own folder. In that folder, there needs to be:
-
-- A single `README.md` readme file
-- A single `.py` [Opentrons protocol](http://docs.opentrons.com) file
-- Optional "dot files" (see below)
-
-## README file format
-
-Every protocol should have a README file in its folder, with the file name `README.md`. It is a [Markdown](https://daringfireball.net/projects/markdown/syntax) file, with a specific format. See `template/README.md` for an example.
-
-## "Dot files"
-
-"Dot files" are files inside a protocol folder which start with a dot (`.`).
-
-These files are usually blank text files. They have special names that indicate specific properties for that protocol:
-
-- `.feature` - The protocol will be listed under "Featured Protocols" on the website.
-- `.ignore` - The protocol will not be shown on the Opentrons Protocol Library, even if you search for it.
-- `.notests` - The protocol will not be tested by continuous integration. This is intended only for ignored protocols.
-- `.embedded` - This is for "embedded apps" that generate a protocol and are designed to be shown in the Protocol Library in an iframe. This file should not be blank, it should contain a URL to the web app that will be embedded in the iframe.
-- `.hide-from-search` - do not show this protocol in any search results. The protocol page should only be accessible from direct URL.
-
-# Writing Custom Protocols
-
-## NOTE
-
-Custom protocols is an early-stage feature, under active development. They are subject to change.
-
-## Part 1: Set up basic protocol
-
-In the Protocol APIv2 `def run(context):` function, use `context` to load your pipettes, labware, and modules. Proceed with the protocol steps.
-
-For some protocols, you might want "number of destination plates" to be a variable. However, the deck map on the website is currently not dynamic - it will only show containers loaded at the top of the file. For this reason, you should load all the containers you might need in the first lines of the `run` function body, and then only use what you need during the actual execution.
-
-**PLEASE NOTE!** The convention for APIv2 protocol file names is `protocols/{NAME}/{NAME}.ot2.apiv2.py`. The "{NAME}" should match the name of the folder in protocols. Eg in the folder `protocols/my_cool_protocol/` the Python file should be called `my_cool_protocol.ot2.apiv2.py`.
-
-## Part 2: Set your customizable arguments
-
-To make a protocol customizable, write a `fields.json` file and save it in the protocol folder, as a sibling of the `.ot2.apiv2.py` file. Eg `protocols/my_cool_protocol/fields.json`.
-
-The information in the `fields.json` file will be used to create input forms on the Protocol Library website page for your protocol, which get passed into the protocol.
-
-The `fields.json` file should be an array of field objects. Here's an example:
-
-```json
-[
-  {
-    "type": "float",
-    "label": "Master Mix Volume (uL)",
-    "name": "master_mix_volume",
-    "default": 20
-  },
-  {
-    "type": "int",
-    "label": "Integer example",
-    "name": "integer_example",
-    "default": 10
-  },
-  {
-    "type": "dropDown",
-    "label": "Example Dropdown",
-    "name": "example_dropdown",
-    "options": [
-      { "label": "Something here", "value": "aaa" },
-      { "label": "Other thing", "value": "bbb" }
-    ]
-  },
-  {
-    "type": "textFile",
-    "label": "Example file",
-    "name": "example_file",
-    "default": "1,2,3"
-  }
-]
-```
-
-### Get values in the Python protocol with `get_values`
-
-To allow you to get the parametric values inside the protocol, a function `def get_values(*names)` will be injected into the Python protocol when a user downloads the protocol from the site. It returns an **array** of values for each of the field names you give it as arguments.
-
-```py
-import opentrons
-
-def run(context):
-    [example_dropdown, integer_example, float_example, example_file] = get_values(  # noqa: F821
-        'example_dropdown', 'integer_example', 'float_example', 'example_file')
-
-    # ... do stuff with those values
-```
-
-#### Linting error?
-
-You should expect to get a linting error: `[F821] undefined name 'get_values'`. That's OK, because the special `get_values` fn will be injected into the
-protocol at download time.
-
-To avoid this linting error from failing the build in CI, make sure to add `# noqa: F821` inline with all calls to `get_values`
-
-### `name`
-
-This field is used as an ID for accessing a field. If you have a field with `"name": example_field"` in `fields.json`, in the Python protocol you use that same name to get the value `get_values('example_field')`
-
-Each field must have a unique `name`, otherwise unexpected behavior may occur.
-
-### `type`
-
-The `type` field specifies what kind of input field you want. The options are `float`, `int`, `str`, `dropDown`, or `textFile`.
-
-### `label`
-
-This is the human-readable label shown on the website describing what the user should enter in the field.
-
-### `float` & `int` type
-
-An `int` will not allow floating-point values to be entered from the website. A `float` will allow any number of decimal places.
-
-```js
-// float example:
-{
-    "type": "float",
-    "label": "Master Mix Volume (uL)",
-    "name": "master_mix_volume",
-    "default": 20
-}
-
-// int example:
-{
-    "type": "int",
-    "label": "Integer example",
-    "name": "integer_example",
-    "default": 10
-}
-```
-
-### `str` type
-
-A field that lets users type in arbitrary text, read into the Python protocol as a string. Useful for things like entering a single well eg `"B2"`.
-
-```json
-{
-  "type": "str",
-  "label": "Example String",
-  "name": "example_string",
-  "default": "blah"
-}
-```
-
-### `dropDown` type
-
-A `dropDown` will make a dropdown (aka `select`) UI widget.
-
-Describe the `options` that are available in the dropdown by specifying the `label` (the text that the user sees) and the `value` (the text that `get_values('example_dropdown')` uses)
-
-```json
-{
-  "type": "dropDown",
-  "label": "Example Dropdown",
-  "name": "example_dropdown",
-  "options": [
-    { "label": "Something here", "value": "aaa" },
-    { "label": "Other thing", "value": "bbb" }
-  ]
-}
-```
-
-If the user selects "Other thing", `[x] = get_values('example_dropdown')` will give you `x === "bbb"`.
-
-Note that unlike other field types, `dropDown` has no `default`. Instead, it will always default to the first option.
-
-### `textFile` type
-
-This creates a file upload widget.
-
-It's important for PL that you specify a working `default` value so that the protocol can be simulated using that default value.
-
-```json
-{
-  "type": "textFile",
-  "label": "Example file",
-  "name": "example_file",
-  "default": "1,2,3"
-}
-```
-
-##### Common Use Case: CSV file upload
-
-Here's a useful function for working with CSV files. Remember, the file will just be read as a string. It's up
-to your protocol to parse that string into a useful data format.
-
-```python
-def well_csv_to_list(csv_string):
-    """
-    Takes a csv string and flattens it to a list, re-ordering to match
-    Opentrons API well order convention (A1, B1, C1, ..., A2, B2, B2, ...).
-
-    The orientation of the CSV cells should match the "landscape" orientation
-    of plates on the OT-2: well A1 should be on the top left cell. Example:
-
-    A1, B1, C1, ...
-    A2, B2, C2, ...
-    A3, B3, C3, ...
-
-    Returns a list: [A1, B1, C1, ..., A2, B2, C3, ...]
-    where each CSV cell is a string in the list.
-    """
-    return [
-        well for row in csv_string.split('\n') if row
-        for well in row.split(',') if well]
-
-def run(context):
-    [example_file] = get_values('example_file')
-    # pass the file contents string into this utility fn
-    well_list = well_csv_to_list(example_file)
-```
-
-### Validation? Nope
-
-Basic validation exists for `int` and `float` types, though it's possible to get the string `'NaN'`.
-
-Field/form validation, such as setting min and max values, is not currently supported.
-
-If any validation is necessary, add it in the protocol itself, eg:
-
-```python
-def run(context):
-    [some_field, other_field] = get_values(  # noqa: F821
-        'some_fields', 'other_field')
-    assert some_field > 0
-    assert other_field + some_field <= 96
-    # et cetera
-
-    # ... do stuff here ...
-```
+# Protocol Title 
+Nucleic Acid Purification
+
+### Author
+[Opentrons](https://opentrons.com/)
+
+## Categories
+* Nucleic Acid Extraction & Purification
+	* Nucleic Acid Purification
+
+## Description
+This ia a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system
+
+The protocol is broken down into 3 main parts:
+* Pipette mixing of lysates, binding buffer and magnetic beads
+* Bead washing 3x using magnetic module
+* Final elution to PCR plate
+
+For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (slot 3). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+
+---
+
+### Modules
+* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+
+### Labware
+* [OT-2 Filter Tips, 200µL](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
+* [NEST 1-Well Reservoir, 195 mL](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* 
+* [Opentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/tough-0.2-ml-96-well-pcr-plate-full-skirt/)
+
+
+### Pipettes
+* [P300 GEN2 8-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)
+
+---
+
+### Deck Setup
+* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+
+### Reagent Setup
+* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
+* Reservoir 1: slot 5
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
+* Reservoir 2: slot 2  
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+
+---
+
+### Protocol Steps
+1. Mix lysate, bind, and magnetic beads with pipetting for approx. 10 min in a 2 mL block
+2. Apply magnet for 10 min 
+3. Remove supernatant from each sample well and discard in liquid waste reservoir. 
+4. Transfer 500 uL of wash buffer from a 195 mL reservoir to each sample well in the 2 mL block
+5. Mix with pipetting in each sample well
+6. Apply magnet for 5 min
+7. Remove 500 uL of wash buffer from each sample well and discard in the liquid waste reservoir.
+8. Repeat steps 4-7 for a total of 3 washes
+9. Air dry beads for 5 min
+10. Transfer 50 uL of elution buffer from a 12-column reservoir to each sample well in the 2 mL block 
+11. Mix beads with pipetting for 5 min
+12. Apply magnet for 2 min
+13. Transfer the 50 uL elution buffer containing DNA to a 96 well skirted PCR plate
+
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
+
+### Additional Notes
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
+
+###### Internal
+protocol-hex-code
