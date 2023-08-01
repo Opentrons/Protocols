@@ -1,42 +1,29 @@
 [
   {
-    "type": "textFile",
-    "label": ".CSV File",
-    "name": "csv",
-    "default": "Slot No,Position,Sample ID,Volume,Slot No,Tube number,Sample ID\n3,A1,Blank Matrix,200,2,A1,Blk"
-  },
-  {
-    "type": "int",
-    "label": "Transfer Volume Effector Cell",
-    "name": "vol_effector_cell",
-    "default": 40
+    "type": "float",
+    "label": "DMSO Dilution Factor",
+    "name": "dmso_dil_factor",
+    "default": 1.5
   },
   {
     "type": "dropDown",
-    "label": "Pre-mix before aspirating in 96 well plate?",
-    "name": "pre_mix",
+    "label": "Add pre-dilution step?",
+    "name": "pre_dilution",
     "options": [
-      {"label": "Yes, pre-mix", "value": true},
-      {"label": "No, do not pre-mix", "value": false}
+      {"label": "Yes, add pre dilution step", "value": true},
+      {"label": "No, do not add pre dilution step", "value": false}
     ]
   },
   {
-    "type": "int",
-    "label": "Pre-mix repetitions",
-    "name": "premix_reps",
-    "default": 3
-  },
-
-  {
     "type": "float",
-    "label": "Pre-mix Rate",
-    "name": "mix_rate",
-    "default": 1
+    "label": "If pre dilution step, pre-dilution factor",
+    "name": "pre_dil_factor",
+    "default": 2
   },
   {
     "type": "dropDown",
-    "label": "P300 Multi-Channel Mount",
-    "name": "m300_mount",
+    "label": "P20 Multi-Channel Mount",
+    "name": "m20_mount",
     "options": [
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
