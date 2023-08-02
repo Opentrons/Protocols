@@ -18,7 +18,12 @@
       {"label": "Falcon Plate", "value": "falcon_96_wellplate_200ul"}
     ]
   },
-
+  {
+  "type": "int",
+  "label": "Serum volume",
+  "name": "serum_vol",
+  "default": 72
+  },
   {
     "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
