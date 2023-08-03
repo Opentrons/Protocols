@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "\nReagents:\n green: mastermix\n blue: samples\n pink: positive control\n purple: molecular grade water\n",
+    "deck-setup": "\nReagents:\n* green: mastermix\n* blue: samples\n* pink: positive control\n* purple: molecular grade water\n",
     "description": "This protocol performs a custom PCR Prep from strip tubes seated in a custom cooling rack into a 384-well plate for up to 16 samples. The transfer scheme is follows:\n\n",
     "internal": "13ac78",
     "labware": "\nNEST PCR 8-Strip Tubes 0.2ml #403022 seated in SSbio IsoFreeze PCR Rack #5650-T4\nThermoFisher MicroAmp\u2122 Optical 384-Well Reaction Plate #4343370\nOpentrons 20uL Filter Tips\n",
