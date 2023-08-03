@@ -17,7 +17,6 @@ Explanation of complex parameters below:
 * `Number of cDNA`: Specify the number of cDNA tubes that will be loaded onto the tube rack.
 * `Number of mastermix tubes`: Specify the number of mastermix tubes that will be added to the cDNA.
 * `cDNA/mastermix volume`: Specify the volume of both the cDNA and mastermix. Note, the mastermix volume will be calculated from this volume (total 20ul).
-* `Reset Tipracks?`: The OT-2 will track tips from run to run of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular run, the user will be prompted to replace all tip racks. The user will also have the option to "Reset Tip Racks" in the customized parameters section. Reset tip racks to pick up from A1 of the first tip rack of any one protocol.
 * `P20 Mount`: Specify the mount (left or right) for the P20 single channel pipette.
 
 ---
