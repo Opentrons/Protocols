@@ -11,7 +11,7 @@
 This protocol preps a 384 well plate for up to 8 cDNA samples in triplicates. The protocol can be broken down into 2 main parts:
 
 * cDNA is added in triplicates down the column onto the plate.
-* Mastermix is added to the cDNA
+* Mastermix is added to the cDNA.
 
 Explanation of complex parameters below:
 * `Number of cDNA`: Specify the number of cDNA tubes that will be loaded onto the tube rack.
