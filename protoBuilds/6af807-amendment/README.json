@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\nNote: Mastermixes and cDNA tubes should be placed on their respective tube racks by column. Please look at the deck layout below for a full run (8 genes and 16 mastermixes).\n\n\n",
+    "description": "This protocol preps a 384 well plate for up to 8 cDNA samples in triplicates. The protocol can be broken down into 2 main parts:\n\ncDNA is added in triplicates down the column onto the plate.\nMastermix is added to the cDNA\n\nExplanation of complex parameters below:\n Number of cDNA: Specify the number of cDNA tubes that will be loaded onto the tube rack.\n Number of mastermix tubes: Specify the number of mastermix tubes that will be added to the cDNA.\n cDNA/mastermix volume: Specify the volume of both the cDNA and mastermix. Note, the mastermix volume will be calculated from this volume (total 20ul).\n Reset Tipracks?: The OT-2 will track tips from run to run of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular run, the user will be prompted to replace all tip racks. The user will also have the option to \"Reset Tip Racks\" in the customized parameters section. Reset tip racks to pick up from A1 of the first tip rack of any one protocol.\n* P20 Mount: Specify the mount (left or right) for the P20 single channel pipette.\n",
+    "internal": "6af807",
+    "labware": "\nThermofisher 384 well plate\nOpentrons 24 tube rack with 1.5mL Eppendorf tubes\nOpentrons 20ul Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "* Note: Mastermixes and cDNA tubes should be placed on their respective tube racks by column. Please look at the deck layout below for a full run (8 genes and 16 mastermixes).\n\n\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6af807/Screen+Shot+2023-08-03+at+2.05.09+PM.png)\n\n\n---\n\n",
+        "description": "This protocol preps a 384 well plate for up to 8 cDNA samples in triplicates. The protocol can be broken down into 2 main parts:\n\n* cDNA is added in triplicates down the column onto the plate.\n* Mastermix is added to the cDNA\n\nExplanation of complex parameters below:\n* `Number of cDNA`: Specify the number of cDNA tubes that will be loaded onto the tube rack.\n* `Number of mastermix tubes`: Specify the number of mastermix tubes that will be added to the cDNA.\n* `cDNA/mastermix volume`: Specify the volume of both the cDNA and mastermix. Note, the mastermix volume will be calculated from this volume (total 20ul).\n* `Reset Tipracks?`: The OT-2 will track tips from run to run of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular run, the user will be prompted to replace all tip racks. The user will also have the option to \"Reset Tip Racks\" in the customized parameters section. Reset tip racks to pick up from A1 of the first tip rack of any one protocol.\n* `P20 Mount`: Specify the mount (left or right) for the P20 single channel pipette.\n\n---\n\n",
+        "internal": "6af807\n",
+        "labware": "* [Thermofisher 384 well plate](https://www.thermofisher.com/order/catalog/product/4309849#/4309849)\n* [Opentrons 24 tube rack with 1.5mL Eppendorf tubes](opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap)\n* [Opentrons 20ul Tips](opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Single Channel Pipette](https://opentrons.com/pipettes/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. cDNA is transferred in triplicates down a column up to the number of columns as specified in number of mastermixes.\n2. Mastermixes are added to each column up to each populated row.\n\n",
+        "title": "384 Well Plate PCR Plate with Triplicates"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Single Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\ncDNA is transferred in triplicates down a column up to the number of columns as specified in number of mastermixes.\nMastermixes are added to each column up to each populated row.\n",
+    "title": "384 Well Plate PCR Plate with Triplicates"
+}

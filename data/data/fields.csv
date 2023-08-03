@@ -152,7 +152,7 @@ cd8_dil,1
 cdna_col_num1,1
 cdna_col_num2,1
 cdna_down_column,1
-cdna_vol,1
+cdna_vol,2
 cellht,1
 cellsmedia,1
 change_standard_tip,1
@@ -569,7 +569,7 @@ init_vol_sds,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,22
+input_csv,23
 input_file,10
 input_file2,6
 input_labware,1
@@ -874,10 +874,10 @@ num_curves,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
-num_gene,1
+num_gene,2
 num_lw,1
 num_mag_beads_tubes,1
-num_mastermix,3
+num_mastermix,4
 num_mixes,1
 num_mm,2
 num_of_dilutions,2
@@ -893,7 +893,6 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_rxns,1
 num_samp,69
 num_samp_p1,1
 num_samp_p2,1
@@ -964,7 +963,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,131
+p20_mount,133
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1181,7 +1180,7 @@ reservoir_loc,1
 reservoir_slot,1
 reservoir_type,5
 reset_counter,1
-reset_tipracks,6
+reset_tipracks,7
 resettips,1
 resv_well_edge_offset,1
 return_tips,1
@@ -1281,6 +1280,7 @@ serial_dil_facta,1
 serial_dil_factb,1
 serial_dil_factc,1
 serial_dil_factd,1
+serum_vol,1
 set_tip_max,2
 settling_1,1
 settling_2,1
