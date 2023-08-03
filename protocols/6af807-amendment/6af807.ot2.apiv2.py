@@ -1,6 +1,4 @@
 """Protocol."""
-import os
-import csv
 
 
 metadata = {
@@ -14,11 +12,10 @@ metadata = {
 def run(ctx):
     """Protocol."""
     [num_gene, num_mastermix,
-        cdna_vol,
-        reset_tipracks, p20_mount] = get_values(  # noqa: F821
+        cdna_vol, p20_mount] = get_values(  # noqa: F821
         "num_gene", "num_mastermix",
         "cdna_vol",
-            "reset_tipracks", "p20_mount")
+            "p20_mount")
 
     mmx_vol = 20-cdna_vol
 
@@ -26,30 +23,6 @@ def run(ctx):
         raise Exception("Enter a number of mastermixes between 1-16")
     if not 1 <= num_gene <= 8:
         raise Exception("Enter a number of cDNA 1-8")
-
-    # Tip tracking between runs
-    if not ctx.is_simulating():
-        file_path = '/data/csv/tiptracking.csv'
-        file_dir = os.path.dirname(file_path)
-        # check for file directory
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-        # check for file; if not there, create initial tip count tracking
-        if not os.path.isfile(file_path):
-            with open(file_path, 'w') as outfile:
-                outfile.write("0, 0\n")
-
-    tip_count_list = []
-    if ctx.is_simulating():
-        tip_count_list = [0]
-    elif reset_tipracks:
-        tip_count_list = [0]
-    else:
-        with open(file_path) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-            tip_count_list = next(csv_reader)
-
-    tip_counter = int(tip_count_list[0])
 
     # load labware
     plate = ctx.load_labware('100ul_384_wellplate_100ul', '1')
