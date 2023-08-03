@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This is a custom protocol that automates certain steps of the Omega Mag-Bind Bacterial DNA 96 Kit on the OT-2 robot. This kit allows rapid isolation of genomic DNA from bacterial samples.\nExplanation of complex parameters below:\n* Number of Samples: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).\n* P300 Single GEN2 Pipette Mount Position: The position of the pipette, either left or right.\n* P1000 Single GEN2 Pipette Mount Position: The position of the pipette, either left or right.\n* Magnetic Module Engage Height: The height the magnets will raise on the magnetic module.\n",
+    "description": "This is a custom protocol that automates certain steps of the Omega Mag-Bind Bacterial DNA 96 Kit on the OT-2 robot. This kit allows rapid isolation of genomic DNA from bacterial samples.\nExplanation of complex parameters below:\n Number of Samples: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).\n P300 Single GEN2 Pipette Mount Position: The position of the pipette, either left or right.\n P1000 Single GEN2 Pipette Mount Position: The position of the pipette, either left or right.\n Magnetic Module Engage Height: The height the magnets will raise on the magnetic module.\n",
     "internal": "2a370c",
     "labware": "\nOpentrons Filter Tips\nPlateOne\u00ae Deep 96-Well 2 mL Polypropylene Plate\n",
     "markdown": {

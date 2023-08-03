@@ -1,7 +1,7 @@
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'corning_96_wellplate_360ul_flat',
+    'protocolName': 'SARS-COV2 (VSV) Neutralization Assay',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates, plate_type, m300_mount] = get_values(  # noqa: F821
-        "num_plates", "plate_type", "m300_mount")
+    [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
+        "num_plates", "plate_type", "serum_vol", "m300_mount")
 
     # labware
     serum_res = ctx.load_labware('agilent_1_reservoir_290ml', 7)
@@ -48,7 +48,7 @@ def run(ctx):
 
     # mapping
     virus = virus_res.wells()[0]
-    overlay = virus_res.wells()[1]
+    overlay = virus_res.wells()[1:4][:num_plates]
     serum = serum_res.wells()[0]
     trash = virus_res.wells()[11]
 
@@ -65,13 +65,14 @@ def run(ctx):
     ctx.comment('\n\n')
 
     for plate in source_plates:
-        m300.aspirate(72, serum)
-        m300.dispense(72, plate.rows()[0][0])
+        m300.aspirate(serum_vol, serum)
+        m300.dispense(serum_vol, plate.rows()[0][0])
 
     m300.drop_tip()
     ctx.comment('\n\n')
 
-    ctx.pause('Please add 8ul of media and 8ul of sample to column 1')
+    ctx.pause(f'''Please add {80-serum_vol}ul of media and 8ul
+                  of sample to column 1''')
 
     ctx.comment('\n---------------SERIALLY DILUTING----------------\n\n')
     for plate in source_plates:
@@ -98,18 +99,13 @@ def run(ctx):
 
     ctx.pause('Place plate in incubator at 37C for one hour')
 
-    ctx.comment('\n---------------DISCARDING MEDIA----------------\n\n')
-    pick_up()
-    for plate in source_plates:
-        for col in plate.rows()[0][:8]:
-            m300.aspirate(80, col, rate=0.1)
-            m300.dispense(80, trash)
-    m300.drop_tip()
+    ctx.comment('\n------DISCARDING MEDIA & TRANSFER TO NEW PLATE-------\n\n')
 
-    ctx.comment('\n------------TRANSFERRING TO NEW PLATE-------------\n\n')
     for s_plate, d_plate in zip(source_plates, dest_plates):
         for s, d in zip(s_plate.rows()[0][:8], d_plate.rows()[0][:8]):
             pick_up()
+            m300.aspirate(100, d, rate=0.1)
+            m300.dispense(100, trash)
             m300.aspirate(60, s)
             m300.dispense(60, d)
             m300.drop_tip()
@@ -117,10 +113,10 @@ def run(ctx):
     ctx.pause('Place plate in incubator at 37C for one hour')
 
     ctx.comment('\n------------TRANSFERRING OVERLAY-------------\n\n')
-    for plate in dest_plates:
+    for res_well, plate in zip(overlay, dest_plates):
         for col in plate.rows()[0][:8]:
             pick_up()
-            m300.aspirate(140, overlay, rate=0.2)
+            m300.aspirate(140, res_well, rate=0.2)
             ctx.delay(seconds=1)
             slow_tip_withdrawal(m300, col)
             m300.dispense(140, col, rate=0.2)
