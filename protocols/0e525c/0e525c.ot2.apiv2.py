@@ -1,11 +1,14 @@
+from opentrons import protocol_api
+
 metadata = {
-    'protocolName': 'droplet digital PCR',
+    'protocolName': 'droplet digital PCR Prep',
     'author': 'Parrish Payne <parrish.payne@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
 }
 
-    # Step 1 Transfer 180 uL from custom labware (Biorad semi-skirted 96-well Plate held in a ELISA PLATE) from source plate 1 col 1 to dest plate 1 col 1, col 2 to col 2 and so on up to col 7 of dest plate 1
+    # Step 1 Transfer 180 uL from custom labware (Biorad semi-skirted 96-well Plate held in a ELISA PLATE) 
+        # from source plate 1 col 1 to dest plate 1 col 1, col 2 to col 2 and so on up to col 7 of dest plate 1
     # Step 2 transfer 160 uL from Source 1 col 8 to destination plate 1 col 8
     # Step 3 transfer 20 uL from col 9 of source plate 1 to col 1 of destination plate 1, mix 20 times (step 4)
     # Step 5 transfer 20 uL from col 1 to col 2 of dest plate 1, mix 20 times drop tips
@@ -23,25 +26,40 @@ metadata = {
 
 def run(ctx):
 
+    # [m300_mount, m20_mount] = get_values(  # noqa: F821
+    #     'm300_mount', 'm20_mount')
+    
+    m300_mount = 'right'
+    m20_mount = 'left'
+    
     # labware
-
-    tips1 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-            for slot in [1, 4]
-    tips2 = ctx.load_labware('opentrons_96_filtertiprack_20ul', 7)
-    dest_plate_1 = ctx.load_labware('custom labware Biorad semi-skirted 96-well plate held in a ELISA plate', 3)  
-    dest_plate_2 = ctx.load_labware('custom labware Biorad semi-skirted 96-well plate held in a ELISA plate', 6)
-    source_plate = ctx.load_labware('custom labware Biorad semi-skirted 96-well plate held in a ELISA plate', 5)
+    tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+        for slot in [1, 4]]
+    tips20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', 7)
+    dest_plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3)  
+        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
+    dest_plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 6)
+        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
+    source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 5)
+        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
 
    
     # pipettes
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips1)
-    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips2)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips200)
+
+    # m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
 
     # reagents
-    dpbs = source_plate.rows()[0][:8]
-    article = source_plate.rows()[8]
-    mas_mix = source_plate.rows()[10]
-    water = source_plate.rows()[11]
+    dpbs = [
+        well for column in source_plate.columns()[:8] for well in column][:8]  # col. 1-8
+    article = source_plate.columns()[8]  # col. 9
+    mas_mix = source_plate.columns()[10]  # col. 11
+    water =  source_plate.columns()[11]  # col. 12
+        
+    dpbs_destinations = [
+        well for column in dest_plate_1.columns()[:8] for well in column][:8]  # col. 1-8
+
+    art_destinations = dest_plate_1.columns()[0]
 
     # Helper Functions
     def pick_up(pip):
@@ -64,19 +82,19 @@ def run(ctx):
         pip.default_speed *= 16
 
     # step 1
-    for s, d in zip(source_plate, dest_plate_1)[:7]:
+    for i, d in zip(dpbs, dpbs_destinations):
         pick_up(m300)
-        m300.aspirate(180, dpbs.bottom(1.0))
-        m300.dispense(180, dest_plate_1.bottom(2))
+        m300.aspirate(180, i.bottom(1.0))
+        m300.dispense(180, d.bottom(2))
         m300.drop_tip()
         
-    # # step 2
-    # pick_up(m300)
-    # m300.aspirate(160, dpbs.bottom(1.0))[7]
-    # m300.dispense(160, dest_plate_1.bottom(2))[7]
-    # m300.drop_tip()
+    # step 2
+    pick_up(m300)
+    m300.aspirate(160, source_plate.rows()[7])
+    m300.dispense(160, dest_plate_1.rows()[7])
+    m300.drop_tip()
 
-    # # step 3 & 4
+    # step 3 & 4
     # pick_up(m300)
     # m300.aspirate(20, article.bottom(1.0))
     # m300.dispense(20, dest_plate_1.bottom(2))[0]
@@ -84,7 +102,7 @@ def run(ctx):
     # m300.drop_tip()
 
     # # step 5 serial dilution
-    # for row in dest_plate_1()[:7]
+    # for column in dest_plate_1()[:7]:
     #     pick_up(m300)
     #     m300.aspirate(20)[0:6]
     #     m300.dispense(20)[1:7]
@@ -108,7 +126,7 @@ def run(ctx):
     # m20.drop_tip()
 
     # # step 9, 10, 11 
-    # For s, d in zip(dest_plate_1, dest_plate_2): 
+    # For s, d in zip(dest_plate_1, dest_plate_2):
     #     pick_up(m20)
     #     m20.aspirate(5, s)[5:7]
     #     m20.dispense(5, d)[:2]
@@ -122,7 +140,3 @@ def run(ctx):
     #     m20.dispense(5, dest_plate_2)[3:5]
     #     slow_withdraw(m20)
     #     m20.drop_tip()
-
-
-
-
