@@ -183,8 +183,8 @@ def run(ctx):
         pass
 
     vols_water = [
-        rxn_vol - (sum(mix_volumes)/factor_overage +
-                   sum(enzyme_volumes)/factor_overage +
+        rxn_vol - (sum(mix_volumes)/num_rxns/factor_overage +
+                   sum(enzyme_volumes)/num_rxns/factor_overage +
                    template_vol)
         for template_vol in template_volumes]
     vol_licl_h2o = (rxn_vol + sum([vol_dn, vol_cac])/factor_overage)*2
