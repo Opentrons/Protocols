@@ -93,34 +93,37 @@ def run(ctx):
         '#ee06d2',
         '#9ffd59']
 
-    for letter, (well, vol) in zip('ABCDEFGHIJ', mix_map.items()):
+    try:
+        for letter, (well, vol) in zip('ABCDEFGHIJ', mix_map.items()):
 
-        temp = ctx.define_liquid(
-            name=letter,
-            description='',
-            display_color=colors.pop()
-        )
-        well.load_liquid(temp, vol*num_rxns*factor_overage)
+            temp = ctx.define_liquid(
+                name=letter,
+                description='',
+                display_color=colors.pop()
+            )
+            well.load_liquid(temp, vol)
 
-    template_color = colors.pop()
-    for i, (well, vol) in enumerate(template_map.items()):
+        template_color = colors.pop()
+        for i, (well, vol) in enumerate(template_map.items()):
 
-        temp = ctx.define_liquid(
-            name=f'DNA template {i+1}',
-            description='',
-            display_color=template_color
-        )
-        well.load_liquid(temp, vol*factor_overage)
+            temp = ctx.define_liquid(
+                name=f'DNA template {i+1}',
+                description='',
+                display_color=template_color
+            )
+            well.load_liquid(temp, vol*factor_overage)
 
-    for letter, (well, vol) in zip(
-            ['P (1:100 dilution)', 'TP'], enzyme_map.items()):
+        for letter, (well, vol) in zip(
+                ['P (1:100 dilution)', 'TP'], enzyme_map.items()):
 
-        temp = ctx.define_liquid(
-            name=letter,
-            description='',
-            display_color=colors.pop()
-        )
-        well.load_liquid(temp, vol*num_rxns*factor_overage)
+            temp = ctx.define_liquid(
+                name=letter,
+                description='',
+                display_color=colors.pop()
+            )
+            well.load_liquid(temp, vol)
+    except AttributeError:
+        pass
 
     mix_tube = rack15.wells()[0]
     enzyme_mix_tube = rack2.rows()[0][-1]
@@ -138,51 +141,59 @@ def run(ctx):
         if line[0].lower().strip() == 'cac':
             vol_cac = float(line[5])
 
-    mix_tube_liq = ctx.define_liquid(
-            name='mix tube',
-            description='non-enzyme mix components',
-            display_color=colors.pop()
-    )
-    enzyme_mix_tube_liq = ctx.define_liquid(
-            name='enzyme mix tube',
-            description='enzyme mix components',
-            display_color=colors.pop()
-    )
-    water_liq = ctx.define_liquid(
-            name='water',
+    try:
+        mix_tube_liq = ctx.define_liquid(
+                name='mix tube',
+                description='non-enzyme mix components',
+                display_color=colors.pop()
+        )
+        enzyme_mix_tube_liq = ctx.define_liquid(
+                name='enzyme mix tube',
+                description='enzyme mix components',
+                display_color=colors.pop()
+        )
+        water_liq = ctx.define_liquid(
+                name='water',
+                description='',
+                display_color=colors.pop()
+        )
+        licl_h2o_liq = ctx.define_liquid(
+                name='LiCl + H2O',
+                description='1:1 ratio of LiCl and H2O',
+                display_color=colors.pop()
+        )
+
+        mix_tube.load_liquid(mix_tube_liq, 0)
+        enzyme_mix_tube.load_liquid(enzyme_mix_tube_liq, 0)
+
+        dn_liq = ctx.define_liquid(
+            name='DN',
             description='',
             display_color=colors.pop()
-    )
-    licl_h2o_liq = ctx.define_liquid(
-            name='LiCl + H2O',
-            description='1:1 ratio of LiCl and H2O',
+        )
+        dn.load_liquid(dn_liq, vol_dn)
+
+        cac_liq = ctx.define_liquid(
+            name='CaC',
+            description='',
             display_color=colors.pop()
-    )
-
-    mix_tube.load_liquid(mix_tube_liq, 0)
-    enzyme_mix_tube.load_liquid(enzyme_mix_tube_liq, 0)
-
-    dn_liq = ctx.define_liquid(
-        name='DN',
-        description='',
-        display_color=colors.pop()
-    )
-    dn.load_liquid(dn_liq, vol_dn)
-
-    cac_liq = ctx.define_liquid(
-        name='CaC',
-        description='',
-        display_color=colors.pop()
-    )
-    cac.load_liquid(cac_liq, vol_cac)
+        )
+        cac.load_liquid(cac_liq, vol_cac)
+    except AttributeError:
+        pass
 
     vols_water = [
-        rxn_vol - (sum(mix_volumes) + sum(enzyme_volumes) + template_vol)
+        rxn_vol - (sum(mix_volumes)/num_rxns/factor_overage +
+                   sum(enzyme_volumes)/num_rxns/factor_overage +
+                   template_vol)
         for template_vol in template_volumes]
-    vol_licl_h2o = (rxn_vol + sum([vol_dn, vol_cac]))*2
+    vol_licl_h2o = (rxn_vol + sum([vol_dn, vol_cac])/factor_overage)*2
 
-    water.load_liquid(water_liq, sum(vols_water))
-    licl_h2o.load_liquid(licl_h2o_liq, vol_licl_h2o)
+    try:
+        water.load_liquid(water_liq, sum(vols_water))
+        licl_h2o.load_liquid(licl_h2o_liq, vol_licl_h2o)
+    except AttributeError:
+        pass
 
     # pipettes
     p300 = ctx.load_instrument(
@@ -218,7 +229,7 @@ def run(ctx):
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
         for n in range(num_trans):
-            depth = 1.5 if transfer_vol <= 10 else 3
+            depth = 0.5 if transfer_vol <= 10 else 3
             pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
             slow_withdraw(pip, well)
@@ -293,14 +304,14 @@ def run(ctx):
         num_trans = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_trans = round(vol/num_trans, 2)
         pip.pick_up_tip()
-        depth = 1.5 if vol_per_trans <= 10 else 3
+        depth = 0.5 if vol_per_trans <= 10 else 3
         for n in range(num_trans):
             pip.aspirate(vol_pre_airgap, template.top())
             pip.aspirate(vol_per_trans, template.bottom(depth))
             slow_withdraw(pip, template)
-            pip.dispense(pip.current_volume, d.bottom(2))
+            pip.dispense(pip.current_volume, d.bottom(3))
             if n == num_trans - 1:
-                pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=0.5)
+                pip.mix(5, pip.max_volume*0.8, d.bottom(3), rate=0.5)
             slow_withdraw(pip, d)
         pip.drop_tip()
 
@@ -317,7 +328,7 @@ def run(ctx):
                 pip.tip_racks[0].wells()[0].max_volume-vol_pre_airgap))
         vol_per_trans = round(transfer_vol/num_trans, 2)
         pip.pick_up_tip()
-        depth = 1.5 if vol_per_trans <= 10 else 3
+        depth = 0.5 if vol_per_trans <= 10 else 3
         for _ in range(num_trans):
             pip.aspirate(vol_pre_airgap, well.top())
             pip.aspirate(vol_per_trans, well.bottom(depth))
