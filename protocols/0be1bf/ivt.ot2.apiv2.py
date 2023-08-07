@@ -309,9 +309,9 @@ def run(ctx):
             pip.aspirate(vol_pre_airgap, template.top())
             pip.aspirate(vol_per_trans, template.bottom(depth))
             slow_withdraw(pip, template)
-            pip.dispense(pip.current_volume, d.bottom(2))
+            pip.dispense(pip.current_volume, d.bottom(3))
             if n == num_trans - 1:
-                pip.mix(5, pip.max_volume*0.8, d.bottom(2), rate=0.5)
+                pip.mix(5, pip.max_volume*0.8, d.bottom(3), rate=0.5)
             slow_withdraw(pip, d)
         pip.drop_tip()
 
