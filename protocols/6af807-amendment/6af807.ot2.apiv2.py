@@ -79,18 +79,19 @@ def run(ctx):
             for well in small_chunk:
                 p20.aspirate(cdna_vol, tube)
                 # p20.air_gap(airgap)
-                p20.dispense(cdna_vol+airgap, well)
+                p20.dispense(cdna_vol, well)
                 # p20.blow_out()
         p20.drop_tip()
         ctx.comment('\n\n')
     ctx.comment('\n\n\n\n\n\n\n')
 
+    airgap = 1
     for row, tube in zip(plate.rows()[:num_mastermix], mastermix.wells()):
         for well in row[:num_gene*3]:
             p20.pick_up_tip()
             p20.aspirate(mmx_vol, tube, rate=0.5)
-            p20.dispense(mmx_vol, well, rate=0.5)
+            p20.air_gap(airgap)
+            p20.dispense(mmx_vol+airgap, well, rate=0.5)
             p20.blow_out(well.top())
-            p20.touch_tip()
             p20.drop_tip()
         ctx.comment('\n')
