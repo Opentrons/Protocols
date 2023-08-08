@@ -10,13 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    # [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
-    #     "num_plates", "plate_type", "serum_vol", "m300_mount")
-
-    num_plates = 3
-    plate_type = 'corning_96_wellplate_360ul_flat'
-    serum_vol = 70
-    m300_mount = 'left'
+    [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
+        "num_plates", "plate_type", "serum_vol", "m300_mount")
 
     # labware
     serum_res = ctx.load_labware('agilent_1_reservoir_290ml', 7)
