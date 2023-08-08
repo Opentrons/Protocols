@@ -35,31 +35,26 @@ def run(ctx):
     # labware
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in [1, 4]]
-    tips20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', 7)
-    dest_plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3)  
+    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 7)]
+    dest_plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3, 'Prep Plate')  
         # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-    dest_plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 6)
+    dest_plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 6, 'Final Plate')
         # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-    source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 5)
+    source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 5, 'Reagent Plate')
         # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
 
    
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips200)
-
-    # m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
 
     # reagents
-    dpbs = [
-        well for column in source_plate.columns()[:8] for well in column][:8]  # col. 1-8
-    article = source_plate.columns()[8]  # col. 9
-    mas_mix = source_plate.columns()[10]  # col. 11
-    water =  source_plate.columns()[11]  # col. 12
-        
-    dpbs_destinations = [
-        well for column in dest_plate_1.columns()[:8] for well in column][:8]  # col. 1-8
-
-    art_destinations = dest_plate_1.columns()[0]
+    dpbs = source_plate.rows()[0][:8]   # col. 1-8
+    article = source_plate.rows()[0][8]  # col. 9
+    mas_mix = source_plate.rows()[0][10]  # col. 11
+    water = source_plate.rows()[0][11]  # col. 12  
+    dpbs_destinations = dest_plate_1.rows()[0][:8]  # col. 1-8
+    art_destinations = dest_plate_1.rows()[0][0]
 
     # Helper Functions
     def pick_up(pip):
@@ -90,53 +85,59 @@ def run(ctx):
         
     # step 2
     pick_up(m300)
-    m300.aspirate(160, source_plate.rows()[7])
-    m300.dispense(160, dest_plate_1.rows()[7])
+    m300.aspirate(160, source_plate.rows()[0][7].bottom(1))
+    m300.dispense(160, dest_plate_1.rows()[0][7].bottom(2))
     m300.drop_tip()
 
     # step 3 & 4
-    # pick_up(m300)
-    # m300.aspirate(20, article.bottom(1.0))
-    # m300.dispense(20, dest_plate_1.bottom(2))[0]
-    # m300.mix(20, 200)
-    # m300.drop_tip()
+    pick_up(m20)
+    m20.aspirate(20, article.bottom(1.0))
+    slow_withdraw(m20)
+    m20.dispense(20, dest_plate_1.rows()[0][0].bottom(2.0))
+    m20.mix(20, 200)
+    slow_withdraw(m20)
+    m20.drop_tip()
 
-    # # step 5 serial dilution
-    # for column in dest_plate_1()[:7]:
-    #     pick_up(m300)
-    #     m300.aspirate(20)[0:6]
-    #     m300.dispense(20)[1:7]
-    #     m300.mix(20, 200)
-    #     m300.drop_tip()
+    # step 5 serial dilution
+    for s, d in zip(dest_plate_1.rows()[0][:6], dest_plate_1.rows()[0][1:7]):
+        pick_up(m20)
+        m20.aspirate(20, s.bottom(1.0))
+        m20.dispense(20, d.bottom(2.0))
+        m20.mix(20, 200)
+        slow_withdraw(m20, d)
+        m20.drop_tip()
+        m20.drop_tip()
 
-    # # step 6 & 7
-    # pick_up(m300)
-    # m300.aspirate(40, dest_plate_1)[5]
-    # m300.dispense(40, dest_plate_1)[7]
-    # m300.mix(20, 200)
-    # m300.drop_tip()
+    # step 6 & 7
+    pick_up(m300)
+    m300.aspirate(40, dest_plate_1.rows()[0][5]) # col 6
+    slow_withdraw(m300, dest_plate_1.rows()[0][5])
+    m300.dispense(40, dest_plate_1.rows()[0][7]) # col 8
+    slow_withdraw(m300, dest_plate_1.rows()[0][7])
+    m300.mix(20, 200)
+    m300.drop_tip()
 
-    # # step 8 transfer 20 uL of mas_mix into col 1-5 of dest plate 2
-    # pick_up(m20) 
-    # For i in range (5):
-    #     m20.aspirate(20, mas_mix)
-    #     slow_withdraw(m20)
-    #     m20.dispense(20, dest_plate_2)[:5]
-    #     slow_withdraw(m20)
-    # m20.drop_tip()
+    # step 8 transfer 20 uL of mas_mix into col 1-5 of dest plate 2
+    pick_up(m20)
+    for d in dest_plate_2.rows()[0][:5]:
+        m20.aspirate(20, mas_mix)
+        slow_withdraw(m20, mas_mix)
+        m20.dispense(20, d.bottom(2))
+        slow_withdraw(m20, d)
+    m20.drop_tip()
 
-    # # step 9, 10, 11 
-    # For s, d in zip(dest_plate_1, dest_plate_2):
-    #     pick_up(m20)
-    #     m20.aspirate(5, s)[5:7]
-    #     m20.dispense(5, d)[:2]
-    #     slow_withdraw(m20)
-    #     m20.drop_tip()
+    # step 9, 10, 11 
+    for s, d in zip(dest_plate_1.rows()[0][5:8], dest_plate_2.rows()[0][:3]):
+        pick_up(m20)
+        m20.aspirate(5, s)
+        m20.dispense(5, d)
+        slow_withdraw(m20, d)
+        m20.drop_tip()
 
-    #  # step 12
-    #  for i in range(2):
-    #     pick_up(m20)
-    #     m20.aspirate(5, water)
-    #     m20.dispense(5, dest_plate_2)[3:5]
-    #     slow_withdraw(m20)
-    #     m20.drop_tip()
+     # step 12
+     for d in dest_plate_2.rows()[0][3:5]:
+        pick_up(m20)
+        m20.aspirate(5, water)
+        m20.dispense(5, d.bottom(2))
+        slow_withdraw(m20, d)
+        m20.drop_tip()
