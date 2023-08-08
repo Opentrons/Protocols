@@ -5,6 +5,7 @@ metadata = {
     'author': 'Parrish Payne <parrish.payne@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
+}
 
 def run(ctx):
 
@@ -25,7 +26,6 @@ def run(ctx):
         # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
     source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 5, 'Reagent Plate')
         # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-
    
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips200)
@@ -37,7 +37,6 @@ def run(ctx):
     mas_mix = source_plate.rows()[0][10]  # col. 11
     water = source_plate.rows()[0][11]  # col. 12  
     dpbs_destinations = dest_plate_1.rows()[0][:8]  # col. 1-8
-    # art_destinations = dest_plate_1.rows()[0][0]
 
     # Helper Functions
     def pick_up(pip):
