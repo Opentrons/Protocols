@@ -54,7 +54,7 @@ def run(ctx):
     mas_mix = source_plate.rows()[0][10]  # col. 11
     water = source_plate.rows()[0][11]  # col. 12  
     dpbs_destinations = dest_plate_1.rows()[0][:8]  # col. 1-8
-    art_destinations = dest_plate_1.rows()[0][0]
+    # art_destinations = dest_plate_1.rows()[0][0]
 
     # Helper Functions
     def pick_up(pip):
@@ -92,10 +92,10 @@ def run(ctx):
     # step 3 & 4
     pick_up(m20)
     m20.aspirate(20, article.bottom(1.0))
-    slow_withdraw(m20)
+    slow_withdraw(m20, article)
     m20.dispense(20, dest_plate_1.rows()[0][0].bottom(2.0))
-    m20.mix(20, 200)
-    slow_withdraw(m20)
+    m20.mix(20, 20)
+    slow_withdraw(m20, dest_plate_1.rows()[0][0])
     m20.drop_tip()
 
     # step 5 serial dilution
@@ -103,9 +103,8 @@ def run(ctx):
         pick_up(m20)
         m20.aspirate(20, s.bottom(1.0))
         m20.dispense(20, d.bottom(2.0))
-        m20.mix(20, 200)
+        m20.mix(20, 20)
         slow_withdraw(m20, d)
-        m20.drop_tip()
         m20.drop_tip()
 
     # step 6 & 7
@@ -114,7 +113,7 @@ def run(ctx):
     slow_withdraw(m300, dest_plate_1.rows()[0][5])
     m300.dispense(40, dest_plate_1.rows()[0][7]) # col 8
     slow_withdraw(m300, dest_plate_1.rows()[0][7])
-    m300.mix(20, 200)
+    m300.mix(20, 180)
     m300.drop_tip()
 
     # step 8 transfer 20 uL of mas_mix into col 1-5 of dest plate 2
@@ -135,7 +134,7 @@ def run(ctx):
         m20.drop_tip()
 
      # step 12
-     for d in dest_plate_2.rows()[0][3:5]:
+    for d in dest_plate_2.rows()[0][3:5]:
         pick_up(m20)
         m20.aspirate(5, water)
         m20.dispense(5, d.bottom(2))
