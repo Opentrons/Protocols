@@ -10,8 +10,13 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
-        "num_plates", "plate_type", "serum_vol", "m300_mount")
+    # [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
+    #     "num_plates", "plate_type", "serum_vol", "m300_mount")
+
+    num_plates = 3
+    plate_type = 'corning_96_wellplate_360ul_flat'
+    serum_vol = 70
+    m300_mount = 'left'
 
     # labware
     serum_res = ctx.load_labware('agilent_1_reservoir_290ml', 7)
@@ -71,7 +76,7 @@ def run(ctx):
     m300.drop_tip()
     ctx.comment('\n\n')
 
-    ctx.pause(f'''Please add {80-serum_vol}ul of media and 8ul
+    ctx.pause(f'''Please add {80-serum_vol}ul of media and appropriate amount
                   of sample to column 1''')
 
     ctx.comment('\n---------------SERIALLY DILUTING----------------\n\n')
@@ -95,6 +100,8 @@ def run(ctx):
         for col in plate.rows()[0][:7]:
             m300.aspirate(40, virus)
             m300.dispense(40, col.top())
+            ctx.delay(seconds=2)
+            m300.blow_out(col.top())
     m300.drop_tip()
 
     ctx.pause('Place plate in incubator at 37C for one hour')
