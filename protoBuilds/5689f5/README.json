@@ -5,7 +5,7 @@
             "Clean Up"
         ]
     },
-    "deck-setup": "\n* green on magnetic plate (slot 4): starting samples\n* blue on reagent plate (slot 2, column 1): DNA binding buffer\n* pink on reagent plate (slot 2, column 2): Ampure beads\n* orange on reagent plate (slot 2, column 3): elution buffer\n* purple on reagent reservoir (slot 5, column 1): 80% ethanol\n* dark blue on reagent reservoir (slot 5, column 12): waste (loaded empty)",
+    "deck-setup": "\n green on magnetic plate (slot 4): starting samples\n blue on reagent plate (slot 2, column 1): DNA binding buffer\n pink on reagent plate (slot 2, column 2): Ampure beads\n orange on reagent plate (slot 2, column 3): elution buffer\n purple on reagent reservoir (slot 5, column 1): 80% ethanol\n dark blue on reagent reservoir (slot 5, column 12): waste (loaded empty)",
     "description": "This protocol performs an NGS clean up protocol for up to 96 samples. The user is prompted to manually centrifuge the plate and replace on the magnetic module after 2x ethanol washes.",
     "internal": "5689f5",
     "labware": "\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
