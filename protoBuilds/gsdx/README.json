@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Screening"
+        ]
+    },
+    "description": "This protocol runs the BACGene protocol for up to 96 target samples for listeria and/or salmonella pathogens. Upon upload to the Opentrons App, the user will be prompted with the volumes and positions of all labware and liquids on the OT-2 deck. Lysis buffer will automatically be prepped with enzyme addition when needed before distribution to the lysis buffer plate.",
+    "internal": "gsdx",
+    "labware": "\nBIOPlastics BV 96 Aluminum Block 200 \u00b5L #K58001-B58009\nOpentrons x Gold Standard 17 Tube Rack\nGoldStandardDx 96 Tip Rack 200 \u00b5L\nBIOPlastics BV 96 Aluminum Block 100 \u00b5L #B59001-1\nKingFisher 96 Tube Rack with GoldStandard 1.1 mL #10536617\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Screening\n\n\n",
+        "description": "This protocol runs the BACGene protocol for up to 96 target samples for listeria and/or salmonella pathogens. Upon upload to the Opentrons App, the user will be prompted with the volumes and positions of all labware and liquids on the OT-2 deck. Lysis buffer will automatically be prepped with enzyme addition when needed before distribution to the lysis buffer plate.\n\n\n",
+        "internal": "gsdx\n",
+        "labware": "* BIOPlastics BV 96 Aluminum Block 200 \u00b5L #K58001-B58009\n* Opentrons x Gold Standard 17 Tube Rack\n* GoldStandardDx 96 Tip Rack 200 \u00b5L\n* BIOPlastics BV 96 Aluminum Block 100 \u00b5L #B59001-1\n* KingFisher 96 Tube Rack with GoldStandard 1.1 mL #10536617\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "title": "BACGene"
+    },
+    "modules": [
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "BACGene"
+}

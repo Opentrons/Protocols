@@ -906,7 +906,11 @@ num_samples_1,1
 num_samples_2,1
 num_samples_3,1
 num_samples_4,1
+num_samples_listeria,1
+num_samples_listeria_remaining,1
 num_samples_per_plate,1
+num_samples_salmonella,1
+num_samples_salmonella_remaining,1
 num_samps,6
 num_sets,2
 num_slides,2
@@ -1216,6 +1220,7 @@ s_csv,1
 s_mount,1
 s_pip,1
 s_vol,2
+salmonella_meat,1
 same_tip,1
 samp_and_lys_rep,1
 samp_asp_height,1
@@ -1245,7 +1250,11 @@ sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
 sample_quant_csv,2
+<<<<<<< Updated upstream
 sample_rate,1
+=======
+sample_rack_type,1
+>>>>>>> Stashed changes
 sample_rows,1
 sample_size,1
 sample_slots,1
