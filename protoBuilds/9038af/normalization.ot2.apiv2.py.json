@@ -1,39 +1,45 @@
 {
-    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'apiLevel': '2.13',\n    'protocolName': 'Oxford Nanopore Rapid Barcoding with Normalization ',\n    'description': '''This protocol carries out rapid barcoding of \\\ngenomic DNA using the Nanopore Rapid Barcoding Kit 96.''',\n    'author': 'parrish.payne@opentrons.com'\n}\n\n# Oxford Nanopore Rapid Barcoding Kit (SQK-RBK110.96)\n# Automate steps 3-9 of the kit instructions.\n# 16-32 samples per run (> 24 samples requires two 4-in-1 tube racks)\n\n\ndef run(ctx):\n\n    [input_csv, p20_mount, p300_mount, source_type,\n        dest_type] = get_values(  # noqa: F821\n        'input_csv', 'p20_mount', 'p300_mount',\n        'source_type', 'dest_type')\n\n    # labware\n    tempdeck = ctx.load_module('temperature module gen2', '1')\n    destination_plate = tempdeck.load_labware(dest_type, 'normalization plate')\n    sample_rack = ctx.load_labware(source_type, '2', 'genomic dna')\n    tube_rack = ctx.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '5')\n    water = tube_rack.wells()[0]\n    barcodes_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_biorad_wellplate_200ul', '4')\n    beads = tube_rack.wells()[1]\n\n    tiprack20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')\n        for slot in ['3']]\n    tiprack300 = [\n        ctx.load_labware(\n            'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')\n        for slot in ['6']]\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # Helper Functions\n    def pick_up(pip):\n        \"\"\"Function that can be used instead of .pick_up_tip() that will pause\n        robot when robot runs out of tips, prompting user to replace tips\n        before resuming\"\"\"\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in input_csv.splitlines()[1:]\n        if line and line.split(',')[0]]\n    barcodes = barcodes_plate.wells()[:len(data)]\n\n    target_mass = 50    # ng\n    target_vol = 9      # uL\n\n    # perform normalization\n    for i, line in enumerate(data):\n        conc = float(line[0])\n        transfer_vol = target_mass/conc\n        s = sample_rack.wells()[i]\n        d = destination_plate.wells()[i]\n\n        # pre-transfer diluent\n        pick_up(p20)\n        water_vol = target_vol - transfer_vol\n        if water_vol > 0:\n            p20.aspirate(water_vol, water)\n            slow_withdraw(p20, water)\n        p20.aspirate(transfer_vol, s)\n        slow_withdraw(p20, s)\n        p20.dispense(p20.current_volume, d)\n        slow_withdraw(p20, d)\n        p20.drop_tip()\n\n    # Add 1 uL of Rapid Barcodes (RB01-96, one for each sample)\n    num_mix = 5\n    mix_vol = 7\n    reactions = destination_plate.wells()[:len(data)]\n    for b, r in zip(barcodes, reactions):\n        pick_up(p20)\n        p20.aspirate(1, b.bottom(1))\n        slow_withdraw(p300, b)\n        p20.dispense(1, r.bottom(1))\n        p20.mix(num_mix, mix_vol, r.bottom(2))\n        slow_withdraw(p300, r)\n        p20.blow_out(r.top(-2))\n        p20.drop_tip()\n\n    # Temperature Control\n    tempdeck.set_temperature(celsius=30)\n    tempdeck.status  # 'holding at target'\n    ctx.delay(minutes=2)             # delay for 2 minutes\n    tempdeck.set_temperature(celsius=80)\n    tempdeck.status  # 'holding at target'\n    ctx.delay(minutes=2)             # delay for 2 minutes\n    tempdeck.set_temperature(celsius=4)\n    tempdeck.status  # 'holding at target'\n    ctx.delay(minutes=2)             # delay for 2 minutes\n    tempdeck.deactivate()\n    tempdeck.status  # 'idle'\n\n    # Pool all barcoded samples in 1.5 mL tube, note total vol\n    pool = tube_rack.wells()[2]\n    pick_up(p300)\n    pool_vol = 10\n    tip_ref_vol_300 = p300.tip_racks[0].wells()[0].max_volume\n    for r in reactions:\n        # move to pool tube if you can't aspirate more\n        if p300.current_volume + pool_vol > tip_ref_vol_300:\n            p300.dispense(p300.current_volume, pool.bottom(2))\n            slow_withdraw(p300, pool)\n        p300.aspirate(pool_vol, r.bottom(0.5))\n        slow_withdraw(p300, r)\n    p300.dispense(p300.current_volume, pool.bottom(2))\n    slow_withdraw(p300, pool)\n    p300.drop_tip()\n\n    # Resuspend beads, add equal vol to pooled barcoded samples\n    bead_transfer_vol = len(data)*10\n    bead_mix_reps = 10\n    bead_mix_vol = 150\n    num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_300)\n    vol_per_asp = round(bead_transfer_vol/num_asp, 2)\n    pick_up(p300)\n    p300.mix(bead_mix_reps, bead_mix_vol, beads)\n    for _ in range(num_asp):\n        p300.aspirate(vol_per_asp, beads.bottom(2))\n        slow_withdraw(p300, beads)\n        p300.dispense(vol_per_asp, pool.bottom(2))\n        slow_withdraw(p300, pool)\n\n    # Mix for 5 min at room temp\n    p300.mix(bead_mix_reps, bead_mix_vol, pool)\n    slow_withdraw(p300, pool)\n    p300.drop_tip()\n",
+    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'apiLevel': '2.13',\n    'protocolName': 'Oxford Nanopore Rapid Barcoding with Normalization ',\n    'description': '''This protocol carries out rapid barcoding of \\\ngenomic DNA using the Nanopore Rapid Barcoding Kit 96.''',\n    'author': 'parrish.payne@opentrons.com'\n}\n\n# Oxford Nanopore Rapid Barcoding Kit (SQK-RBK110.96)\n# Automate steps 3-9 of the kit instructions.\n# 16-32 samples per run (> 24 samples requires two 4-in-1 tube racks)\n\n\ndef run(ctx):\n\n    [input_csv, target_dna_volume, p20_mount, p1000_mount, source_type,\n        dest_type, reagent_type] = get_values(  # noqa: F821\n        'input_csv', 'target_dna_volume', 'p20_mount', 'p1000_mount',\n        'source_type', 'dest_type', 'reagent_type')\n\n    # labware\n    # tempdeck = ctx.load_module('temperature module gen2', '4')\n    destination_plate = ctx.load_labware(dest_type, '4', 'normalization plate')\n    sample_racks = [\n        ctx.load_labware(source_type, slot, 'genomic dna')\n        for slot in ['2', '5']]\n    tube_rack = ctx.load_labware(\n        reagent_type, '8')\n    water = tube_rack.wells()[0]\n    barcodes_plate = ctx.load_labware(\n        'biorad_96_wellplate_200ul_pcr', '1')\n    beads = tube_rack.wells()[1]\n\n    tiprack20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '20ul tiprack')\n        for slot in ['3']]\n    tiprack1000 = [\n        ctx.load_labware(\n            'opentrons_96_filtertiprack_1000ul', slot, '1000ul tiprack')\n        for slot in ['6']]\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p1000 = ctx.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tiprack1000)\n\n    # Helper Functions\n    def pick_up(pip):\n        \"\"\"Function that can be used instead of .pick_up_tip() that will pause\n        robot when robot runs out of tips, prompting user to replace tips\n        before resuming\"\"\"\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in input_csv.splitlines()[1:]\n        if line and line.split(',')[0]]\n    barcodes = barcodes_plate.wells()[:len(data)]\n\n    target_mass = 50    # ng\n    all_templates = [\n        well\n        for rack in sample_racks\n        for well in rack.wells()\n    ]\n\n    # perform normalization\n    for i, line in enumerate(data):\n        conc = float(line[0])\n        transfer_vol = min(target_dna_volume, target_mass/conc)\n        s = all_templates[i]\n        d = destination_plate.wells()[i]\n\n        # pre-transfer diluent\n        pick_up(p20)\n        water_vol = target_dna_volume - transfer_vol\n        if water_vol > 0:\n            p20.aspirate(water_vol, water)\n            slow_withdraw(p20, water)\n        p20.aspirate(transfer_vol, s)\n        slow_withdraw(p20, s)\n        p20.dispense(p20.current_volume, d)\n        slow_withdraw(p20, d)\n        p20.drop_tip()\n\n    # Add 1 uL of Rapid Barcodes (RB01-96, one for each sample)\n    num_mix = 5\n    mix_vol = 7\n    reactions = destination_plate.wells()[:len(data)]\n    for b, r in zip(barcodes, reactions):\n        pick_up(p20)\n        p20.aspirate(1, b.bottom(1))\n        slow_withdraw(p20, b)\n        p20.dispense(1, r.bottom(1))\n        p20.mix(num_mix, mix_vol, r.bottom(2))\n        slow_withdraw(p20, r)\n        p20.blow_out(r.top(-2))\n        p20.drop_tip()\n\n    # Temperature Control to be performed on external thermocycler\n    ctx.pause('Seal plate (slot 4). Incubate at 30\u00b0C for 2 minutes, then at \\\n80\u00b0C for 2 minutes. Briefly put the plate on ice to cool.')\n\n    # Pool all barcoded samples in 1.5 mL tube, note total vol\n    pool = tube_rack.wells()[2]\n    pick_up(p20)\n    pool_vol = target_dna_volume + 1\n    tip_ref_vol_20 = p20.tip_racks[0].wells()[0].max_volume\n    for r in reactions:\n        # move to pool tube if you can't aspirate more\n        if p20.current_volume + pool_vol > tip_ref_vol_20:\n            p20.dispense(p20.current_volume, pool.bottom(2))\n            slow_withdraw(p20, pool)\n        p20.aspirate(pool_vol, r.bottom(0.5))\n        slow_withdraw(p20, r)\n    p20.dispense(p20.current_volume, pool.bottom(2))\n    slow_withdraw(p20, pool)\n    p20.drop_tip()\n\n    # Resuspend beads, add equal vol to pooled barcoded samples\n    bead_transfer_vol = len(data)*(target_dna_volume+1)\n    bead_mix_reps = 10\n    bead_mix_vol = bead_transfer_vol*0.9\n    tip_ref_vol_1000 = 1000\n    num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_1000)\n    vol_per_asp = round(bead_transfer_vol/num_asp, 1)\n    pick_up(p1000)\n    p1000.mix(bead_mix_reps, bead_mix_vol, beads)\n    for _ in range(num_asp):\n        p1000.aspirate(vol_per_asp, beads.bottom(2))\n        slow_withdraw(p1000, beads)\n        p1000.dispense(vol_per_asp, pool.bottom(2))\n        slow_withdraw(p1000, pool)\n\n    # Mix for 5 min at room temp\n    num_mix = 10\n    pool_mix_vol = min(bead_transfer_vol*1.5, 900)\n    for _ in range(num_mix):\n        p1000.aspirate(pool_mix_vol, pool.bottom(5))\n        p1000.dispense(pool_mix_vol, pool.bottom(15))\n        ctx.delay(seconds=30)\n    slow_withdraw(p1000, pool)\n    p1000.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
             "default": "concentration (in ng/ul)\n10\n8\n11\n",
             "label": "concentration .csv file",
             "name": "input_csv",
-            "type": "int"
+            "type": "textFile"
+        },
+        {
+            "default": 9.0,
+            "label": "target DNA volume (in ul)",
+            "name": "target_dna_volume",
+            "type": "float"
         },
         {
             "label": "P20 single-channel pipette mount",
             "name": "p20_mount",
             "options": [
                 {
-                    "label": "left",
-                    "value": "left"
-                },
-                {
                     "label": "right",
                     "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
                 }
             ],
             "type": "dropDown"
         },
         {
-            "label": "P300 single-channel pipette mount",
-            "name": "p300_mount",
+            "label": "P1000 single-channel pipette mount",
+            "name": "p1000_mount",
             "options": [
-                {
-                    "label": "right",
-                    "value": "right"
-                },
                 {
                     "label": "left",
                     "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
                 }
             ],
             "type": "dropDown"
@@ -54,8 +60,34 @@
             "name": "dest_type",
             "options": [
                 {
-                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
-                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                    "label": "Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "reagent labware",
+            "name": "reagent_type",
+            "options": [
+                {
+                    "label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap",
+                    "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Custom 2ml Tubes",
+                    "value": "opentrons_24_tuberack_2000ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Starting well in Barcode plate",
+            "name": "barcode_well",
+            "options": [
+                {
+                    "label": "96 Rapid Barcodes Plate",
+                    "value": "biorad_96_wellplate_200ul_pcr"
                 }
             ],
             "type": "dropDown"
@@ -64,19 +96,19 @@
     "instruments": [
         {
             "mount": "left",
-            "name": "p20_single_gen2"
+            "name": "p1000_single_gen2"
         },
         {
             "mount": "right",
-            "name": "p300_single_gen2"
+            "name": "p20_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "normalization plate on Temperature Module GEN2 on 1",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
             "name": "genomic dna on 2",
@@ -88,25 +120,31 @@
             "name": "20ul tiprack on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on 4",
+            "name": "normalization plate on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+            "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
-            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap on 5",
+            "name": "genomic dna on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
-            "name": "200ul tiprack on 6",
+            "name": "1000ul tiprack on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_96_filtertiprack_200ul"
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -121,12 +159,5 @@
         "description": "This protocol carries out rapid barcoding of genomic DNA using the Nanopore Rapid Barcoding Kit 96.",
         "protocolName": "Oxford Nanopore Rapid Barcoding with Normalization "
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw normalization plate on Temperature Module GEN2 on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

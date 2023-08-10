@@ -15,37 +15,43 @@
     ]
   },
   {
+    "type": "float",
+    "label": "dilution volume (in ul)",
+    "name": "vol_dilution",
+    "default": 500.0
+  },
+  {
     "type": "int",
     "label": "mix repetitions of dilution",
     "name": "mixreps_dilution",
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "source 50ml tube aspiration height (in mm above bottom)",
     "name": "height_source",
     "default": 5.0
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "dilution 15ml tube low mix height (in mm above bottom)",
     "name": "height_intermediate_low",
     "default": 5.0
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "dilution 15ml tube middle mix height (in mm above bottom)",
     "name": "height_intermediate_middle",
     "default": 30.0
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "dilution 15ml tube high mix height (in mm above bottom)",
     "name": "height_intermediate_high",
     "default": 60.0
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "final HPLC tube dispense height (in mm above bottom)",
     "name": "height_final",
     "default": 5.0

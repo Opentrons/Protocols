@@ -28,7 +28,7 @@ def run(ctx):
 
     # instrument setup
     p1000 = ctx.load_instrument(
-        'p1000_single_gen2',
+        'p1000_single',
         mount='left',
         tip_racks=[tiprack_1000])
     p300 = ctx.load_instrument(

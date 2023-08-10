@@ -16,35 +16,38 @@ genomic DNA using the Nanopore Rapid Barcoding Kit 96.''',
 
 def run(ctx):
 
-    [input_csv, p20_mount, p300_mount, source_type,
-        dest_type] = get_values(  # noqa: F821
-        'input_csv', 'p20_mount', 'p300_mount',
-        'source_type', 'dest_type')
+    [input_csv, target_dna_volume, p20_mount, p1000_mount, source_type,
+        dest_type, reagent_type] = get_values(  # noqa: F821
+        'input_csv', 'target_dna_volume', 'p20_mount', 'p1000_mount',
+        'source_type', 'dest_type', 'reagent_type')
 
     # labware
-    tempdeck = ctx.load_module('temperature module gen2', '1')
-    destination_plate = tempdeck.load_labware(dest_type, 'normalization plate')
-    sample_rack = ctx.load_labware(source_type, '2', 'genomic dna')
+    # tempdeck = ctx.load_module('temperature module gen2', '4')
+    destination_plate = ctx.load_labware(dest_type, '4', 'normalization plate')
+    sample_racks = [
+        ctx.load_labware(source_type, slot, 'genomic dna')
+        for slot in ['2', '5']]
     tube_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '5')
+        reagent_type, '8')
     water = tube_rack.wells()[0]
     barcodes_plate = ctx.load_labware(
-        'opentrons_96_aluminumblock_biorad_wellplate_200ul', '4')
+        'biorad_96_wellplate_200ul_pcr', '1')
     beads = tube_rack.wells()[1]
 
     tiprack20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
+                         '20ul tiprack')
         for slot in ['3']]
-    tiprack300 = [
+    tiprack1000 = [
         ctx.load_labware(
-            'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')
+            'opentrons_96_filtertiprack_1000ul', slot, '1000ul tiprack')
         for slot in ['6']]
 
     # pipettes
     p20 = ctx.load_instrument(
         'p20_single_gen2', p20_mount, tip_racks=tiprack20)
-    p300 = ctx.load_instrument(
-        'p300_single_gen2', p300_mount, tip_racks=tiprack300)
+    p1000 = ctx.load_instrument(
+        'p1000_single_gen2', p1000_mount, tip_racks=tiprack1000)
 
     # Helper Functions
     def pick_up(pip):
@@ -74,18 +77,22 @@ def run(ctx):
     barcodes = barcodes_plate.wells()[:len(data)]
 
     target_mass = 50    # ng
-    target_vol = 9      # uL
+    all_templates = [
+        well
+        for rack in sample_racks
+        for well in rack.wells()
+    ]
 
     # perform normalization
     for i, line in enumerate(data):
         conc = float(line[0])
-        transfer_vol = target_mass/conc
-        s = sample_rack.wells()[i]
+        transfer_vol = min(target_dna_volume, target_mass/conc)
+        s = all_templates[i]
         d = destination_plate.wells()[i]
 
         # pre-transfer diluent
         pick_up(p20)
-        water_vol = target_vol - transfer_vol
+        water_vol = target_dna_volume - transfer_vol
         if water_vol > 0:
             p20.aspirate(water_vol, water)
             slow_withdraw(p20, water)
@@ -102,57 +109,54 @@ def run(ctx):
     for b, r in zip(barcodes, reactions):
         pick_up(p20)
         p20.aspirate(1, b.bottom(1))
-        slow_withdraw(p300, b)
+        slow_withdraw(p20, b)
         p20.dispense(1, r.bottom(1))
         p20.mix(num_mix, mix_vol, r.bottom(2))
-        slow_withdraw(p300, r)
+        slow_withdraw(p20, r)
         p20.blow_out(r.top(-2))
         p20.drop_tip()
 
-    # Temperature Control
-    tempdeck.set_temperature(celsius=30)
-    tempdeck.status  # 'holding at target'
-    ctx.delay(minutes=2)             # delay for 2 minutes
-    tempdeck.set_temperature(celsius=80)
-    tempdeck.status  # 'holding at target'
-    ctx.delay(minutes=2)             # delay for 2 minutes
-    tempdeck.set_temperature(celsius=4)
-    tempdeck.status  # 'holding at target'
-    ctx.delay(minutes=2)             # delay for 2 minutes
-    tempdeck.deactivate()
-    tempdeck.status  # 'idle'
+    # Temperature Control to be performed on external thermocycler
+    ctx.pause('Seal plate (slot 4). Incubate at 30°C for 2 minutes, then at \
+80°C for 2 minutes. Briefly put the plate on ice to cool.')
 
     # Pool all barcoded samples in 1.5 mL tube, note total vol
     pool = tube_rack.wells()[2]
-    pick_up(p300)
-    pool_vol = 10
-    tip_ref_vol_300 = p300.tip_racks[0].wells()[0].max_volume
+    pick_up(p20)
+    pool_vol = target_dna_volume + 1
+    tip_ref_vol_20 = p20.tip_racks[0].wells()[0].max_volume
     for r in reactions:
         # move to pool tube if you can't aspirate more
-        if p300.current_volume + pool_vol > tip_ref_vol_300:
-            p300.dispense(p300.current_volume, pool.bottom(2))
-            slow_withdraw(p300, pool)
-        p300.aspirate(pool_vol, r.bottom(0.5))
-        slow_withdraw(p300, r)
-    p300.dispense(p300.current_volume, pool.bottom(2))
-    slow_withdraw(p300, pool)
-    p300.drop_tip()
+        if p20.current_volume + pool_vol > tip_ref_vol_20:
+            p20.dispense(p20.current_volume, pool.bottom(2))
+            slow_withdraw(p20, pool)
+        p20.aspirate(pool_vol, r.bottom(0.5))
+        slow_withdraw(p20, r)
+    p20.dispense(p20.current_volume, pool.bottom(2))
+    slow_withdraw(p20, pool)
+    p20.drop_tip()
 
     # Resuspend beads, add equal vol to pooled barcoded samples
-    bead_transfer_vol = len(data)*10
+    bead_transfer_vol = len(data)*(target_dna_volume+1)
     bead_mix_reps = 10
-    bead_mix_vol = 150
-    num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_300)
-    vol_per_asp = round(bead_transfer_vol/num_asp, 2)
-    pick_up(p300)
-    p300.mix(bead_mix_reps, bead_mix_vol, beads)
+    bead_mix_vol = bead_transfer_vol*0.9
+    tip_ref_vol_1000 = 1000
+    num_asp = math.ceil(bead_transfer_vol/tip_ref_vol_1000)
+    vol_per_asp = round(bead_transfer_vol/num_asp, 1)
+    pick_up(p1000)
+    p1000.mix(bead_mix_reps, bead_mix_vol, beads)
     for _ in range(num_asp):
-        p300.aspirate(vol_per_asp, beads.bottom(2))
-        slow_withdraw(p300, beads)
-        p300.dispense(vol_per_asp, pool.bottom(2))
-        slow_withdraw(p300, pool)
+        p1000.aspirate(vol_per_asp, beads.bottom(2))
+        slow_withdraw(p1000, beads)
+        p1000.dispense(vol_per_asp, pool.bottom(2))
+        slow_withdraw(p1000, pool)
 
     # Mix for 5 min at room temp
-    p300.mix(bead_mix_reps, bead_mix_vol, pool)
-    slow_withdraw(p300, pool)
-    p300.drop_tip()
+    num_mix = 10
+    pool_mix_vol = min(bead_transfer_vol*1.5, 900)
+    for _ in range(num_mix):
+        p1000.aspirate(pool_mix_vol, pool.bottom(5))
+        p1000.dispense(pool_mix_vol, pool.bottom(15))
+        ctx.delay(seconds=30)
+    slow_withdraw(p1000, pool)
+    p1000.drop_tip()

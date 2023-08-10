@@ -64,6 +64,7 @@ air_gap,1
 air_gap_bool,1
 air_gap_vol,3
 air_gap_volume,1
+airdry_time,1
 airgap,1
 aliquot_vol,1
 am_bic_volume,1
@@ -99,6 +100,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_well,1
 barcode_well_start,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
@@ -125,6 +127,10 @@ bead_vol,9
 bead_vol1,1
 bead_vol2,1
 bead_volume,1
+beads_engaging_time,1
+beads_mix_rate,1
+beads_mix_reps,1
+beads_rate,1
 beads_vol,1
 beads_vol_1,1
 beads_vol_2,1
@@ -138,6 +144,7 @@ blowout_height,1
 blowout_rate,1
 blowout_vertical_offset,1
 box_count,1
+buffer_mmx_primer_rate,1
 buffer_vol,1
 cap_count,1
 cd4_dil,1
@@ -145,7 +152,7 @@ cd8_dil,1
 cdna_col_num1,1
 cdna_col_num2,1
 cdna_down_column,1
-cdna_vol,1
+cdna_vol,2
 cellht,1
 cellsmedia,1
 change_standard_tip,1
@@ -232,7 +239,6 @@ component_2_volume,1
 component_3_volume,1
 conc_target,1
 concentration_csv,2
-concentration_template,1
 control_plate,1
 count_mix,1
 count_plates,1
@@ -242,6 +248,7 @@ count_samples_rowa,1
 count_samples_rowb,1
 count_samples_rowc,1
 count_samples_rowd,1
+cp_list,1
 csv,6
 csv1_buff,1
 csv1_samp,1
@@ -312,7 +319,6 @@ dest_type,6
 dest_well_plate_tmod,1
 destdilvol,1
 destination_plate_lname,1
-destination_plate_type,1
 destination_well_plate_lname,1
 digest_duration,1
 digestion_temp,1
@@ -385,7 +391,7 @@ dry_on_temperature_module,1
 dry_time,23
 drying_time,2
 drying_time_in_minutes,2
-dryrun,6
+dryrun,7
 ds_520,1
 ds_540,1
 ds_570,1
@@ -428,8 +434,11 @@ enz_mx_volume,1
 enz_mx_well,1
 enzyme_vol,1
 ep_type,1
+ethanol_rate,1
 ethanol_res_loadname,1
+ethanol_wash_time,1
 ethanol_wash_vol,1
+ethnaol_dis_zoffset,1
 etoh_inc,1
 etoh_volume,2
 etoh_well,2
@@ -540,24 +549,27 @@ incubate_bind_time,1
 incubate_samples_with_beads,3
 incubation_delay_time,1
 incubation_temperature,1
-incubation_time,5
+incubation_time,6
 index_start_col,2
 index_start_column,1
 index_vol,2
 indexing_plate_loadname,1
+init_samp_vol,1
 init_temp,2
 init_time,2
 init_vol,3
 init_vol_bca,1
 init_vol_bsa,1
+init_vol_buff,1
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,2
+init_vol_sds,2
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,19
+input_csv,23
 input_file,10
 input_file2,6
 input_labware,1
@@ -680,11 +692,15 @@ loc_tween,1
 lw_checkit,1
 lw_deepwell_plate,3
 lw_deepwell_plate_open,1
+lw_dest_plate,1
+lw_dest_plate_open,1
 lw_dmso,1
 lw_hplc,1
 lw_media,1
 lw_refill,1
 lw_source,1
+lw_source_plate,1
+lw_source_plate_open,1
 lw_tiprack300,1
 lw_tuberack,1
 lwaste,1
@@ -693,7 +709,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,78
-m300_mount,103
+m300_mount,104
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -708,6 +724,7 @@ mag_mod_lname,1
 mag_model,1
 mag_plate,2
 mag_time,1
+magdeck_engage_height,1
 magdeck_gen,2
 magmod,2
 magplate_offset,1
@@ -857,15 +874,15 @@ num_curves,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
-num_gene,1
+num_gene,2
 num_lw,1
 num_mag_beads_tubes,1
-num_mastermix,3
+num_mastermix,4
 num_mixes,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,33
+num_plates,34
 num_pool_sources,1
 num_pools,1
 num_primers,3
@@ -876,8 +893,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_rxns,1
-num_samp,68
+num_samp,69
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -885,7 +901,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,172
+num_samples,176
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -894,7 +910,6 @@ num_samples_per_plate,1
 num_samps,6
 num_sets,2
 num_slides,2
-num_templates,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -929,7 +944,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,35
+p1000_mount,36
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -948,7 +963,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,128
+p20_mount,133
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -965,7 +980,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,149
+p300_mount,151
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1070,7 +1085,7 @@ plate_map_4_csv,1
 plate_name,1
 plate_scan,4
 plate_scan2,4
-plate_type,11
+plate_type,12
 plates,1
 pool_columns,1
 pool_location,1
@@ -1144,12 +1159,13 @@ reagent_labware,3
 reagent_scan,5
 reagent_slot_scan,2
 reagent_transfer_vol,2
+reagent_type,1
 reagents_csv,1
 reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
 replenish_tips_manually,1
-reps_mix,1
+reps_mix,2
 res,2
 res12_type,1
 res1_type,1
@@ -1164,7 +1180,7 @@ reservoir_loc,1
 reservoir_slot,1
 reservoir_type,5
 reset_counter,1
-reset_tipracks,6
+reset_tipracks,7
 resettips,1
 resv_well_edge_offset,1
 return_tips,1
@@ -1195,7 +1211,7 @@ run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
 rxn_mix_vol_p3,1
-rxn_vol,3
+rxn_vol,2
 s_csv,1
 s_mount,1
 s_pip,1
@@ -1229,6 +1245,7 @@ sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
 sample_quant_csv,2
+sample_rate,1
 sample_rows,1
 sample_size,1
 sample_slots,1
@@ -1263,6 +1280,7 @@ serial_dil_facta,1
 serial_dil_factb,1
 serial_dil_factc,1
 serial_dil_factd,1
+serum_vol,1
 set_tip_max,2
 settling_1,1
 settling_2,1
@@ -1306,7 +1324,6 @@ source_format,1
 source_labware,2
 source_lw,1
 source_plate,2
-source_plate_type,1
 source_start_col,1
 source_type,8
 sp,2
@@ -1335,6 +1352,8 @@ start_col,2
 start_column,1
 start_index_tip,1
 start_tip,1
+start_tip_p20,2
+start_tip_p300,2
 start_urea_vol,1
 starting_buffer_volume,1
 starting_conc,2
@@ -1382,6 +1401,7 @@ supernat_2_vol,1
 supernat_3_vol,1
 t_csv,1
 t_per_block,1
+target_dna_volume,1
 tc_num_reps,1
 tc_temp,1
 te_volume,2
@@ -1417,6 +1437,7 @@ tempgen,1
 template_vol,1
 test_method,1
 test_mode,1
+test_mode_beads,1
 test_plates,1
 tfa_540,1
 tfer_vol,1
@@ -1537,8 +1558,10 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 type_matrix,1
+type_molecule,1
 type_pip,2
 type_pipette_small,1
+type_sample_rack,1
 type_tc,1
 udi_start_col,1
 uploaded_csv,18
@@ -1568,6 +1591,7 @@ vol_a_to_b,1
 vol_aliqout,1
 vol_aliquot,1
 vol_ampure_beads,1
+vol_beads,1
 vol_bulb,1
 vol_c_to_d,1
 vol_cd154,1
@@ -1578,6 +1602,7 @@ vol_deaddeepwell,1
 vol_deadreservoir,1
 vol_dil_to_d,1
 vol_dil_to_e,1
+vol_dilution,1
 vol_dispense,1
 vol_dispensed,1
 vol_dna,2
@@ -1595,7 +1620,7 @@ vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
 vol_mix,2
-vol_mm,2
+vol_mm,3
 vol_mobile_phase,1
 vol_mq,1
 vol_neutralization_buffer,1
@@ -1606,7 +1631,7 @@ vol_pma_ca,1
 vol_reagent,1
 vol_refill,1
 vol_removal,1
-vol_sample,7
+vol_sample,8
 vol_sample_redissolved,1
 vol_sirna,1
 vol_source_bb_per_well,1
@@ -1641,6 +1666,7 @@ wash_buf_vol,1
 wash_scheme,1
 waste,2
 waste_water_mode,1
+water_rate,1
 water_res_vol,1
 water_vol,2
 water_volume,2

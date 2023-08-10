@@ -10,12 +10,13 @@ metadata = {
 
 def run(ctx):
 
-    [num_extracts, lw_hplc, mixreps_dilution, height_source,
+    [num_extracts, lw_hplc, vol_dilution, mixreps_dilution, height_source,
      height_intermediate_low, height_intermediate_middle,
      height_intermediate_high, height_final] = get_values(  # noqa: F821
-        'num_extracts', 'lw_hplc', 'mixreps_dilution', 'height_source',
-        'height_intermediate_low', 'height_intermediate_middle',
-        'height_intermediate_high', 'height_final')
+        'num_extracts', 'lw_hplc', 'vol_dilution', 'mixreps_dilution',
+        'height_source', 'height_intermediate_low',
+        'height_intermediate_middle', 'height_intermediate_high',
+        'height_final')
 
     tuberacks_50 = [
         ctx.load_labware('bd_24_tuberack_50ml_green', slot, '50ml tubes')

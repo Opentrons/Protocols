@@ -30,6 +30,24 @@
     "default": 40
   },
   {
+    "type": "int",
+    "label": "Initial Volume of SDS in 50mL Tube (in mL)",
+    "name": "init_vol_sds",
+    "default": 40
+  },
+  {
+    "type": "int",
+    "label": "Starting tip of P20 pipette (by column)",
+    "name": "start_tip_p20",
+    "default": 1
+  },
+  {
+    "type": "int",
+    "label": "Starting tip of P300 pipette (by column)",
+    "name": "start_tip_p300",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
