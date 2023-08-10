@@ -7,35 +7,37 @@ metadata = {
     'apiLevel': '2.13'
 }
 
+
 def run(ctx):
 
-    # [m300_mount, m20_mount] = get_values(  # noqa: F821
-    #     'm300_mount', 'm20_mount')
-    
-    m300_mount = 'right'
-    m20_mount = 'left'
-    
+    [m300_mount, m20_mount] = get_values(  # noqa: F821
+        'm300_mount', 'm20_mount')
+
     # labware
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in [1]]
+               for slot in [1]]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in [4, 7]]
-    dest_plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3, 'Prep Plate')  
-        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-    dest_plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 6, 'Final Plate')
-        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-    source_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 5, 'Reagent Plate')
-        # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
-   
+              for slot in [4, 7]]
+    dest_plate_1 = ctx.load_labware(
+        'biorad_96_wellplate_200ul_pcr', 3, 'Prep Plate')
+    # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
+    dest_plate_2 = ctx.load_labware(
+        'biorad_96_wellplate_200ul_pcr', 6, 'Final Plate')
+    # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
+    source_plate = ctx.load_labware(
+        'biorad_96_wellplate_200ul_pcr', 5, 'Reagent Plate')
+    # custom labware Biorad semi-skirted 96-well plate held in a ELISA plate
+
     # pipettes
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tips200)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tips200)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
 
     # reagents
     dpbs = source_plate.rows()[0][:8]   # col. 1-8
     article = source_plate.rows()[0][8]  # col. 9
     mas_mix = source_plate.rows()[0][10]  # col. 11
-    water = source_plate.rows()[0][11]  # col. 12  
+    water = source_plate.rows()[0][11]  # col. 12
     dpbs_destinations = dest_plate_1.rows()[0][:8]  # col. 1-8
 
     # Helper Functions
@@ -64,7 +66,7 @@ def run(ctx):
         m300.aspirate(180, i.bottom(1.0))
         m300.dispense(180, d.bottom(2))
         m300.drop_tip()
-        
+
     # step 2
     pick_up(m300)
     m300.aspirate(160, source_plate.rows()[0][7].bottom(1))
@@ -91,9 +93,9 @@ def run(ctx):
 
     # step 6 & 7
     pick_up(m300)
-    m300.aspirate(40, dest_plate_1.rows()[0][5]) # col 6
+    m300.aspirate(40, dest_plate_1.rows()[0][5])  # col 6
     slow_withdraw(m300, dest_plate_1.rows()[0][5])
-    m300.dispense(40, dest_plate_1.rows()[0][7]) # col 8
+    m300.dispense(40, dest_plate_1.rows()[0][7])  # col 8
     m300.mix(20, 180)
     slow_withdraw(m300, dest_plate_1.rows()[0][7])
     m300.drop_tip()
@@ -107,7 +109,7 @@ def run(ctx):
         slow_withdraw(m20, d)
     m20.drop_tip()
 
-    # step 9, 10, 11 
+    # step 9, 10, 11
     for s, d in zip(dest_plate_1.rows()[0][5:8], dest_plate_2.rows()[0][:3]):
         pick_up(m20)
         m20.aspirate(5, s)
@@ -115,7 +117,7 @@ def run(ctx):
         slow_withdraw(m20, d)
         m20.drop_tip()
 
-     # step 12
+    # step 12
     for d in dest_plate_2.rows()[0][3:5]:
         pick_up(m20)
         m20.aspirate(5, water)

@@ -27,8 +27,9 @@ This protocol performs a custom ddPCR prep in semi-skirted PCR plates using an a
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/deck.png)
+![liquids](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/liquids+map.png)
+![legend](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/liquids+legend.png)
 
 ### Reagent Setup
 * Custom labware (Biorad 96-well semi-skirted PCR plate with deck adapter) - Deck Slot 5
