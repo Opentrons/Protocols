@@ -31,7 +31,7 @@ def run(ctx):
         mount='left',
         tip_racks=[tiprack_m300])
     p300 = ctx.load_instrument(
-        'p300_single_gen2',
+        'p300_single',
         mount='right',
         tip_racks=tipracks_300)
 

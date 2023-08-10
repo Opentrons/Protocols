@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n\n",
+    "description": "This protocol performs a custom ddPCR prep in semi-skirted PCR plates using an adapter to fit into the deck slots.\n",
+    "internal": "0e525c",
+    "labware": "\nOT-2 Filter Tips, 200\u00b5L (999-00081)\nOT-2 Filter Tips, 20\u00b5L (999-00099)\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/deck.png)\n![liquids](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/liquids+map.png)\n![legend](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0e525c/liquids+legend.png)\n\n",
+        "description": "This protocol performs a custom ddPCR prep in semi-skirted PCR plates using an adapter to fit into the deck slots.\n\n---\n",
+        "internal": "0e525c",
+        "labware": "* [OT-2 Filter Tips, 200\u00b5L (999-00081)](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n* [OT-2 Filter Tips, 20\u00b5L (999-00099)](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 GEN2 8-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [P20 GEN2 8-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Transfer 180 uL of DPBS into columns 1-7 of dest plate 1\n2. Transfer 160 uL DPBS into column 8 of dest plate 1\n3. Transfer 20 uL of Test Article into column 1 of dest plate 1, mix 20 times\n4. Preform serial dilutions from column 1 thru column 7: transfer 20 uL between columns, mix 20 times (new tips between each column)\n5. Transfer 40 uL from column 6 of dest plate 1 to column 8 of dest plate 1, mix 20 times\n6. Transfer 20 uL master mix to dest plate 2 columns 1-5\n7. Transfer 5 uL from column 6 on dest plate 1 to column 1 on dest plate 2\n8. Transfer 5 uL from column 7 on dest plate 1 to column 2 on dest plate 2\n9. Transfer 5 uL from column 8 on dest plate 1 to column 3 on dest plate 2\n10. Transfer 5 uL (water) to columns 4-5 on dest plate 2 (new tips between each transfer)\n\n",
+        "reagent-setup": "* Custom labware (Biorad 96-well semi-skirted PCR plate with deck adapter) - Deck Slot 5\nColumns 1-8 dPBS\nColumn 9 Test Article\nColumn 11 Master Mix\nColumn 12 Nuclease-free Water\n\n\n---\n\n",
+        "reagents": "* [DPBS](link to product not available)\n* [Nuclease-Free Water](link to product not available)\n* [Master Mix](link to product not available)\n\n---\n\n",
+        "title": "droplet digital PCR Prep"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 GEN2 8-Channel Pipette\nP20 GEN2 8-Channel Pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nTransfer 180 uL of DPBS into columns 1-7 of dest plate 1\nTransfer 160 uL DPBS into column 8 of dest plate 1\nTransfer 20 uL of Test Article into column 1 of dest plate 1, mix 20 times\nPreform serial dilutions from column 1 thru column 7: transfer 20 uL between columns, mix 20 times (new tips between each column)\nTransfer 40 uL from column 6 of dest plate 1 to column 8 of dest plate 1, mix 20 times\nTransfer 20 uL master mix to dest plate 2 columns 1-5\nTransfer 5 uL from column 6 on dest plate 1 to column 1 on dest plate 2\nTransfer 5 uL from column 7 on dest plate 1 to column 2 on dest plate 2\nTransfer 5 uL from column 8 on dest plate 1 to column 3 on dest plate 2\nTransfer 5 uL (water) to columns 4-5 on dest plate 2 (new tips between each transfer)\n",
+    "reagent-setup": "\nCustom labware (Biorad 96-well semi-skirted PCR plate with deck adapter) - Deck Slot 5\nColumns 1-8 dPBS\nColumn 9 Test Article\nColumn 11 Master Mix\nColumn 12 Nuclease-free Water\n\n",
+    "reagents": [
+        "DPBS",
+        "Nuclease-Free Water",
+        "Master Mix"
+    ],
+    "title": "droplet digital PCR Prep"
+}
