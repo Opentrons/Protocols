@@ -13,6 +13,24 @@
   },
   {
     "type": "dropDown",
+    "label": "Labware for PCR Plate",
+    "name": "labware_pcr_plate",
+    "options": [
+      { "label": "eppendorftwin.tec_96_wellplate_150ul", "value": "eppendorftwin.tec_96_wellplate_150ul" },
+      { "label": "starlab_96_wellplate_200ul", "value": "starlab_96_wellplate_200ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware on the Temperature Module",
+    "name": "labware_temp_deck",
+    "options": [
+      { "label": "eppendorftwin.tec96_96_aluminumblock_150ul", "value": "eppendorftwin.tec96_96_aluminumblock_150ul" },
+      { "label": "starlab_96_aluminumblock_200ul", "value": "starlab_96_aluminumblock_200ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P20 single-channel Mount",
     "name": "p20_mount",
     "options": [

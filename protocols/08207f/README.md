@@ -19,10 +19,12 @@ This is a normalization protocol that transfers diluent buffer from a 50 mL tube
 
 
 ### Labware
-* Eppendorf Twin.Tec 96 on Aluminum Block 150 µL #0030129512
-* Eppendorf Twin.tec 96 Well Plate 150 µL
-* Opentrons 96 Filter Tip Rack 20 µL
-* Opentrons 96 Filter Tip Rack 200 µL
+* Eppendorf Twin.tec 96 Well Plate 150 µL  #0030129512
+* Eppendorf Twin.Tec 96 on Aluminum Block 150 µL
+* Starlab 96-Well PCR Plate, Skirted 200 µL #E1403-5200
+* Starlab 96-Well PCR Plate on Aluminum Block 200 µL
+* [Opentrons 96 Filter Tip Rack 20 µL](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
+* [Opentrons 96 Filter Tip Rack 200 µL](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 
 
