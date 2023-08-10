@@ -119,15 +119,20 @@ def run(ctx):
         dest_well = dest_plate.wells_by_name()[well]
 
         volume = float(row[6])
+        mix_reps = 2
 
         if volume > 20:
             p300.pick_up_tip()
             p300.aspirate(volume, source_well)
             p300.dispense(volume, dest_well)
+            p300.mix(mix_reps, 20)
+            p300.blowout() 
             p300.drop_tip()
 
         else:
             p20.pick_up_tip()
             p20.aspirate(volume, source_well)
             p20.dispense(volume, dest_well)
+            p20.mix(mix_reps, 10)
+            p20.blowout() 
             p20.drop_tip()
