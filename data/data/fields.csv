@@ -1050,18 +1050,18 @@ pip_side,1
 pip_tip,4
 pip_type,8
 pipette,1
-pipette mount 1,1
-pipette mount 2,1
-pipette type 1,1
-pipette type 2,1
 pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
 pipette_mount,18
+pipette_mount_1,1
+pipette_mount_2,1
 pipette_offset,1
 pipette_p20,1
 pipette_p300,1
 pipette_type,16
+pipette_type_1,1
+pipette_type_2,1
 pipette_types,1
 pipettes,1
 pipinfo,1
