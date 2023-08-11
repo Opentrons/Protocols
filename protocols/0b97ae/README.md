@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol does stuff!
+trevor adds the description
 
 
 ### Modules
