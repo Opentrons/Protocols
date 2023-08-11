@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":56,"vol_dna":10,"flash":true,"bead_timer":6}""")
-    return [_all_values[n] for n in names]
-
-
 # flake8: noqa
 
 
@@ -86,7 +80,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     mag_plate = Mag_mod.load_labware('nest_96_wellplate_2ml_deep','Extraction Plate')
-    final_plate = tempdeck_1.load_labware('opentrons_96_aluminumblock_biorad_wellplate_200ul', #noqa: E501 
+    final_plate = tempdeck_1.load_labware('opentrons_96_aluminumblock_biorad_wellplate_200ul', #noqa: E501
                                        'Reagent Plate')
     Diluted_plate = tempdeck_2.load_labware('appliedbiosystemsenduraplate_96_aluminumblock_220ul',  # noqa: E501
                                             'Diluted RNA plate')
@@ -228,8 +222,9 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.move_to(dest.top())
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            p20.aspirate(9.75, dest.bottom().move(types.Point(x=side, y=0, z=1)),
-                          rate=0.1)
+            p20.aspirate(9.75, dest.bottom().move(types.Point(x=side,
+                                                              y=0, z=1)),
+                         rate=0.1)
             ctx.delay(seconds=1)
             p20.move_to(dest.top())
             p20.aspirate(1.5, dest.top())
@@ -247,15 +242,17 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.dispense(15, dest.top())
     drop_tip(p20)
 
-    ctx.comment('\n~~~~~~~~~~~~~~ADDING QIAseq Bead Binding Buffer TO SAMPLES~~~~~~~~~~~~~~\n')
+    ctx.comment('\n~~~ADDING QIAseq Bead Binding Buffer TO SAMPLES~~~~~~~\n')
     for i, dest in enumerate(samples_mag):
         pick_up(p20)
         p20.aspirate(19.5, bb)
         p20.dispense(19.5, dest)
         p20.mix(3, 17, dest)
         drop_tip(p20)
-    
-    ctx.pause('Remove Plate and Centrifuge, place back on deck at site 4, on the magnetic module')
+
+    ctx.pause('''
+                Remove Plate and Centrifuge, place back on deck at site 4,
+                on the magnetic module''')
     ctx.comment('\n~~~~~~~~~~~~~~INCUBATING SAMPLES~~~~~~~~~~~~~\n')
     if TEST_MODE:
         ctx.delay(seconds=5)
@@ -273,7 +270,7 @@ def run(ctx: protocol_api.ProtocolContext):
     for _ in range(2):
         pick_up(p300)
         ctx.comment('\n~~~~~~~~~~~~~~ADDING ETHANOL~~~~~~~~~~~~~\n')
-        if _ >0:
+        if _ > 0:
             for i, dest in enumerate(samples_mag):
                 p300.mix(1, 150, etoh_1)
                 p300.aspirate(210, etoh_1)
@@ -297,7 +294,8 @@ def run(ctx: protocol_api.ProtocolContext):
             p300.move_to(dest.top(2))
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            p300.aspirate(200, dest.bottom().move(types.Point(x=side, y=0, z=1)),
+            p300.aspirate(200, dest.bottom().move(types.Point(x=side,
+                                                              y=0, z=1)),
                           rate=0.1)
             p300.move_to(dest.top(2))
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
@@ -328,9 +326,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
     Mag_mod.disengage()
 
-    ctx.pause('Remove Plate and inspect pellet to confirm it is completely dry, place back on deck at site 4, on the magnetic module')
+    ctx.pause('''
+                Remove Plate and inspect pellet to confirm it is completely
+                 dry, place back on deck at site 4, on the magnetic module
+                 ''')
 
-    ctx.comment('\n~~~~~~~~~~~~~~ELUTING WITH Nucleas-free Water~~~~~~~~~~~~~\n')
+    ctx.comment('\n~~~~~~~~~~~~~ELUTING WITH Nucleas-free Water~~~~~~~~~~~\n')
     for i, dest in enumerate(samples_mag):
         pick_up(p20)
         p20.aspirate(16, water_1)
@@ -358,7 +359,7 @@ def run(ctx: protocol_api.ProtocolContext):
     for s, d in zip(samples_mag, final_dest):
         pick_up(p20)
         p20.aspirate(14, s.bottom().move(types.Point(x=0, y=0, z=0.7)),
-                      rate=0.1)
+                     rate=0.1)
         p20.dispense(14, d)
         drop_tip(p20)
 
@@ -367,7 +368,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(p20)
         p20.aspirate(11, mm_1)
         p20.dispense(11, dest.top())
-        bead_mixing(dest, p20,19)
+        bead_mixing(dest, p20, 19)
         p20.blow_out(dest.top())
         p20.air_gap(1)
         drop_tip(p20)

@@ -1,16 +1,15 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":64,"vol_dna":10,"p300_used":"yes"}""")
-    return [_all_values[n] for n in names]
+import math
+
 metadata = {
     'protocolName': 'QIAseq FastSelect Fragmentation',
     'author': 'Trevor <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
 }
-import math 
+
+
 def run(ctx):
-    #Variables
+    # Variables
     [num_samples, vol_dna, p300_used] = get_values(  # noqa: F821
         "num_samples", "vol_dna", "p300_used")
     num_samples = int(num_samples)
@@ -23,7 +22,7 @@ def run(ctx):
     if p300_used == 'yes':
         tips3 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                  for slot in [8]]
-        
+
     # load modules
     tempdeck_1 = ctx.load_module('temperature module gen2', '10')
     tempdeck_2 = ctx.load_module('temperature module gen2', '7')
@@ -32,10 +31,10 @@ def run(ctx):
     water_res = ctx.load_labware('perkinelmer_12_reservoir_21000ul', 2,
                                  'Water reservoir')
     Mastermix_plate = tempdeck_1.load_labware('opentrons_96_aluminumblock_biorad_wellplate_200ul',  # noqa: E501
-                                           'MasterMix plate')
+                                              'MasterMix plate')
     Diluted_plate = tempdeck_2.load_labware('appliedbiosystemsenduraplate_96_aluminumblock_220ul',  # noqa: E501
-                                                'Diluted RNA plate')
-    
+                                            'Diluted RNA plate')
+
     # mapping
     water = water_res.rows()[0][0]
     mm = Mastermix_plate.rows()[0][0:2]
@@ -46,23 +45,22 @@ def run(ctx):
 
     # pipettes
     p20 = ctx.load_instrument('p20_multi_gen2', 'left',
-                                  tip_racks=tips)
+                              tip_racks=tips)
     if p300_used == 'yes':
         p300 = ctx.load_instrument('p300_multi_gen2', 'right',
                                    tip_racks=tips3)
-        
-    #Plating Water
+
+    # Plating Water
     for well in Diluted_plate.rows()[0][:num_cols]:
-        if Water_Vol>20:
-            p300.transfer(Water_Vol,water,well, new_tip = 'always')
+        if Water_Vol > 20:
+            p300.transfer(Water_Vol, water, well, new_tip='always')
         else:
-            p20.transfer(Water_Vol,water,well,new_tip = 'always')
-    
-    #Plating MasterMix
+            p20.transfer(Water_Vol, water, well, new_tip='always')
+
+    # Plating MasterMix
     for i, col in enumerate(Diluted_plate.rows()[0][:num_cols]):
         p20.transfer(10, mm[i//6], col, new_tip='always', mix_after=(5, 10))
 
-    
     ctx.pause('Click continue when ready to turn the cooling plates off')
     tempdeck_1.deactivate()
     tempdeck_2.deactivate()

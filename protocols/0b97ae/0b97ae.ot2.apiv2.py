@@ -1,13 +1,11 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"transfer_csv":"RNA Concentration,Goal Concentration,Total Volume\\n27.6,5.7,30.5\\n31.7,8.6,12.5","pipette_type_1":"p20_single_gen2","pipette_mount_1":"left","pipette_type_2":"p300_single_gen2","pipette_mount_2":"right","p300_used":"yes"}""")
-    return [_all_values[n] for n in names]
 metadata = {
     'protocolName': 'QIAseq FastSelect Normalization',
     'author': 'Trevor <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.13'
 }
+
+
 def run(ctx):
     [pipette_type_1, pipette_mount_1, pipette_type_2, pipette_mount_2,
      p300_used, transfer_csv] = get_values(  # noqa: F821
