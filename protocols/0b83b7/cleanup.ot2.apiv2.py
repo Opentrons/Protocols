@@ -25,6 +25,7 @@ def run(ctx):
         mixreps = 10
     time_settling_minutes_wash = 0.5
     time_settling_minutes_elution = 5
+    time_airdry_minutes = 10.0
     vol_initial = 30.0
     vol_beads = 66.0
     vol_wash = 150.0
@@ -45,7 +46,7 @@ def run(ctx):
                                  'reagent reservoir')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['5']]
+        for slot in ['5', '8']]
     tips200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['3', '6', '9']]
@@ -124,6 +125,9 @@ resuming.\n\n\n\n")
         nonlocal parked_tips
         if not pip:
             pip = m300 if vol >= 20 else m20
+        vol_airgap = pip.tip_racks[0].wells()[0].max_volume - vol \
+            if pip.tip_racks[0].wells()[0].max_volume - vol < 20.0 \
+            else 20.0
         for i, (s, d) in enumerate(zip(mag_samples, liquid_trash)):
             if not pip.has_tip:
                 if park:
@@ -133,6 +137,8 @@ resuming.\n\n\n\n")
             pip.move_to(s.top())
             pip.default_speed /= 16
             side = 0
+            if vol_airgap > 0:
+                pip.aspirate(vol_airgap, s.top())
             pip.aspirate(vol, s.bottom().move(Point(x=side, z=z_asp)))
             pip.move_to(s.top())
             pip.default_speed *= 16
@@ -250,11 +256,12 @@ MagDeck for {time_settling} minutes.')
          vol_supernatant=vol_wash)
     wash(m300, vol_wash, etoh, time_incubation=0,
          time_settling=time_settling_minutes_wash,
-         premix=False, do_discard_supernatant=False, do_resuspend=True,
-         vol_supernatant=vol_wash, park=False)
+         premix=False, do_discard_supernatant=True, do_resuspend=True,
+         vol_supernatant=vol_wash, park=True)
+    remove_supernatant(20, m20, park=False)
 
     # air dry
-    ctx.delay(minutes=5, msg='Air Drying')
+    ctx.delay(minutes=time_airdry_minutes, msg='Air Drying')
 
     # transfer final elution
     wash(m20, vol_elution, elution_buffer, time_incubation=5.0,
