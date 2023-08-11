@@ -6,6 +6,12 @@
     "default": 16
   },
   {
+    "type": "int",
+    "label": "sample starting column (1-12)",
+    "name": "col_start",
+    "default": 1
+  },
+  {
     "type": "float",
     "label": "volume of beads (in ul)",
     "name": "vol_beads",

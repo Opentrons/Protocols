@@ -16,8 +16,8 @@ TEST_MODE_DROP = False
 
 def run(ctx):
 
-    [num_samples, vol_beads] = get_values(  # noqa: F821
-        'num_samples', 'vol_beads')
+    [num_samples, vol_beads, col_start] = get_values(  # noqa: F821
+        'num_samples', 'vol_beads', 'col_start')
 
     if TEST_MODE_BEADS:
         mixreps = 1
@@ -59,8 +59,8 @@ def run(ctx):
 
     # reagents and variables
     num_cols = math.ceil(num_samples/8)
-    mag_samples = mag_plate.rows()[0][:num_cols]
-    elution_samples = elution_plate.rows()[0][:num_cols]
+    mag_samples = mag_plate.rows()[0][col_start-1:col_start-1+num_cols]
+    elution_samples = elution_plate.rows()[0][col_start-1:col_start-1+num_cols]
     beads = reservoir.rows()[0][0]
     etoh = reservoir.rows()[0][1:1+(math.ceil(num_cols/6))]
     elution_buffer = [reservoir.rows()[0][3]]
