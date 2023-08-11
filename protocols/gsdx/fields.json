@@ -1,25 +1,25 @@
 [
     {
         "type": "int",
-        "label": "number of listeria samples to run (including +/- controls)",
+        "label": "number of listeria wells to run (including +/- controls)",
         "name": "num_samples_listeria",
         "default": 48
     },
     {
         "type": "int",
-        "label": "number of salmonella samples to run (including +/- controls)",
+        "label": "number of salmonella wells to run (including +/- controls)",
         "name": "num_samples_salmonella",
         "default": 48
     },
     {
         "type": "int",
-        "label": "number of listeria samples in kit remaining",
+        "label": "number of listeria wells in kit remaining",
         "name": "num_samples_listeria_remaining",
         "default": 96
     },
     {
         "type": "int",
-        "label": "number of salmonella samples in kit remaining",
+        "label": "number of salmonella wells in kit remaining",
         "name": "num_samples_salmonella_remaining",
         "default": 96
     },
