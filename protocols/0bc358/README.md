@@ -1,49 +1,31 @@
-# Protocol Title (should match metadata of .py file)
+# Protocol Title (#1 Calibrator / Quality Control Working Stock Prep)
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample Prep
+	* Standard Curve
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
-
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+This protocol will create Calibrator Working Stocks (WS1, WS2, WS3, WS4) and Quality Control working stock (QC1, QC2, QC3, QC4) by diluting analytes in methanol. 
 
 ---
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [OT-2 Filter Tips, 200µL (999-00081))](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* [OT-2 Filter Tips, 1000µL (999-00082)](https://shop.opentrons.com/opentrons-1000ul-filter-tips-1000-racks/)
+* [Verex Vials in Custom 54-Position Rack](https://www.phenomenex.com/part?partNo=AR0-9921-13)
+* [11-Position Block for 28 mm Scintillation Flat Bottom Vials](https://chemglass.com/blocks-for-centrifugal-vacuum-evaporators-optichem?sku=OP-6600-11)
+
 
 ### Pipettes
-* [P300](link to pipette on shop.opentrons.com)
-* [P1000](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P1000 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Analytes](various)
+* [Methanol](link to product not available)
 
 ---
 
@@ -61,13 +43,13 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. MeOH is added to the WS1 and QC1 scintillation vials in tuberack on slot 3
-2. Analytes are transferred from the source tuberacks on slot 2 to the WS1 and QC1 scintillation vials with a pause to remove analyte caps.
-3. MeOH is added to the WS2 and QC2 scintillation vials in tuberack on slot 3
-4. Analytes are transferred from the source tuberacks on slot 5 to the WS2 and QC2 scintillation vials with a pause before each analyte to remove caps.
-5. MeOH is added to the WS3 and QC3 scintillation vials in tuberack on slot 3
-6. Analytes are transferred from the source tuberacks on slot 8 to the WS3 and QC3 scintillation vials with a pause before each analyte to remove caps (note analyte vials in D3 and D4 of the source tuberack will need to be replaced between aspiration steps).
-7. MeOH is added to the WS4 and QC4 scintillation vials in tuberack on slot 3
+1. MeOH is added to the WS1 (A1) and QC1 (C1) scintillation vials in tuberack on slot 3.
+2. Analytes are transferred from the source tuberacks on slot 2 to the WS1 and QC1 scintillation vials.
+3. MeOH is added to the WS2 (A2) and QC2 (C2) scintillation vials in tuberack on slot 3.
+4. Analytes are transferred from the source tuberacks on slot 5 to the WS2 and QC2 scintillation vials.
+5. MeOH is added to the WS3 (A3) and QC3 (C3) scintillation vials in tuberack on slot 3
+6. Analytes are transferred from the source tuberacks on slot 8 to the WS3 and QC3 scintillation vials (note protocol will pause to replace/refill analyte vials in D3 and D4 of the source tuberack between aspiration steps).
+7. MeOH is added to the WS4 (A4) and QC4 (C4) scintillation vials in tuberack on slot 3
 8. Analytes are transferred from the source tuberacks on slot 11 to the WS4 and QC4 scintillation vials with a pause before each analyte to remove caps.
 
 ### Process
@@ -83,4 +65,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-obc358
+0bc358
