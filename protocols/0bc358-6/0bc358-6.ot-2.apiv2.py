@@ -9,22 +9,11 @@ scintiallation vial into 1.5 mL snap cap microcentrifuge tubes.''',
     'author': 'Parrish Payne <parrish.payne@opentrons.com>'
     }
 
-# def get_values(*names):
-#     import json
-#     _all_values = json.loads("""{ "num_aliq":55,
-#                                   "p1000_mount":"right"}""")
-#     return [_all_values[n] for n in names]
-
 # Aliquot: aliquot 100ul from 1 vial of calibrator or QC into microcentrifuge tubes.
 
-
 def run(ctx):
-
-    # [num_aliquots, p1000_mount] = get_values(  # noqa: F821
-    #     "num_aliquots", "p1000_mount")
-
-    num_aliquots = 55
-    p1000_mount = 'right'
+    [num_aliquots, p1000_mount] = get_values(  # noqa: F821
+        "num_aliquots", "p1000_mount")
 
     # labware
 
