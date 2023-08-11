@@ -29,7 +29,7 @@ def run(protocol: protocol_api.ProtocolContext):
     p1000 = protocol.load_instrument(
         'p1000_single_gen2', 'right', tip_racks=tips)
 
-    def slow_withdraw(pip, well, z=0, delay_seconds=2.0):
+    def slow_withdraw(pip, well, z=0, delay_seconds=0):
         pip.default_speed /= 10
         if delay_seconds > 0:
             protocol.delay(seconds=delay_seconds)
