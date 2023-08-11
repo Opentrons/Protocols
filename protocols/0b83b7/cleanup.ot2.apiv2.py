@@ -27,7 +27,7 @@ def run(ctx):
     time_settling_minutes_elution = 5
     vol_initial = 30.0
     vol_beads = 66.0
-    vol_wash = 200.0
+    vol_wash = 150.0
     vol_elution = 11.0
     z_offset = 3.0
     radial_offset_fraction = 0.3  # fraction of radius
