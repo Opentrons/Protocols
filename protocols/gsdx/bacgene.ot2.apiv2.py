@@ -120,12 +120,12 @@ exceeds plate capacity')
         enzyme_listeria_1_liq = ctx.define_liquid(
             name="listeria enzyme 1",
             description="",
-            display_color="#9DFFD8",
+            display_color="#FF9900",
         )
         enzyme_listeria_2_liq = ctx.define_liquid(
             name="listeria enzyme 2",
             description="",
-            display_color="#FF9900",
+            display_color="#9DFFD8",
         )
         enzyme_salmonella_liq = ctx.define_liquid(
             name="salmonella enzyme",
@@ -269,7 +269,8 @@ exceeds plate capacity')
         num_trans = math.ceil(vol_enzyme/tip_ref.max_volume)
         vol_per_trans = round(vol_enzyme/num_trans, 1)
 
-        if num_samples_listeria_remaining % 48 == 0:
+        if num_samples_listeria_remaining % 48 == 0 or \
+                num_samples_listeria_remaining % 48 == 47:
             num_partial_listeria_buffers = 0
             num_bvs_effective = 0
         else:
@@ -390,7 +391,8 @@ exceeds plate capacity')
             drop(m300)
 
         # salmonella
-        if num_samples_salmonella_remaining % 48 == 0:
+        if num_samples_salmonella_remaining % 48 == 0 or \
+                num_samples_salmonella_remaining == 47:
             num_partial_salmonella_buffers = 0
             num_bvs_effective = 0
         else:
@@ -530,8 +532,7 @@ exceeds plate capacity')
                 :num_samples_salmonella-2] + [
                     available_wells[num_samples_salmonella-1]]
             vol_lysis_buffer_salmonella = 90.0 if not salmonella_meat else 50.0
-            num_dests_per_asp = int(
-                (tip_ref.max_volume-vol_overage)//vol_lysis_buffer_salmonella)
+            num_dests_per_asp = 2  # hard-set for now
             num_asp = math.ceil(
                 len(lysis_buffer_salmonella_dests)/num_dests_per_asp)
             lysis_buffer_salmonella_dest_sets = [
@@ -548,11 +549,13 @@ exceeds plate capacity')
                           z=OFFSET_Z_LYSIS_BUFFER_SALMONELLA)))
             num_asp_salmonella_remaining = math.ceil(
                 (num_samples_salmonella_remaining % 48) / 2)
-            bump = 24 - num_asp_salmonella_remaining \
-                if 24 - num_asp_salmonella_remaining != 24 else 0
+            bump_check = int(48/num_dests_per_asp)
+            bump = bump_check - num_asp_salmonella_remaining \
+                if bump_check - num_asp_salmonella_remaining != bump_check \
+                else 0
             for i, d_set in enumerate(lysis_buffer_salmonella_dest_sets):
                 set_ind = i + bump
-                lysis_buff = lysis_buffer_salmonella[set_ind//24]
+                lysis_buff = lysis_buffer_salmonella[set_ind//bump_check]
                 # m300.blow_out(lysis_buff.top(-1))
                 # print('salmonella', i, set_ind, lysis_buff, len(d_set))
                 # m300.blow_out(lysis_buff.top(-1))
@@ -571,7 +574,7 @@ exceeds plate capacity')
     if DO_TRANSFER_SAMPLE_TO_LYSIS:
         """ transfer listeria """
         vol_listeria = 30.0
-        num_sample_cols_listeria = math.ceil((num_samples_listeria-1)/8)
+        num_sample_cols_listeria = math.ceil((num_samples_listeria-2)/8)
         for s, d in zip(sample_plate.rows()[0][:num_sample_cols_listeria],
                         lysis_plate.rows()[0][:num_sample_cols_listeria]):
             if sample_rack_type == 'bioplastics':
@@ -591,7 +594,7 @@ exceeds plate capacity')
         """ transfer salmonella """
         [pip, vol_salmonella] = [m20, 10.0] \
             if not salmonella_meat else [m300, 50.0]
-        num_cols_samples_salmonella = math.ceil((num_samples_salmonella-1)/8)
+        num_cols_samples_salmonella = math.ceil((num_samples_salmonella-2)/8)
         for s, d in zip(
                 sample_plate.rows()[0][
                     num_cols_listeria:

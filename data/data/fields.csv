@@ -709,7 +709,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,78
-m300_mount,104
+m300_mount,105
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1250,11 +1250,8 @@ sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
 sample_quant_csv,2
-<<<<<<< Updated upstream
-sample_rate,1
-=======
 sample_rack_type,1
->>>>>>> Stashed changes
+sample_rate,1
 sample_rows,1
 sample_size,1
 sample_slots,1
