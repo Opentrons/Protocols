@@ -123,6 +123,7 @@ bead_ratio_1,1
 bead_ratio_2,1
 bead_separation_time_in_minutes,2
 bead_settling_time_on_magnet_in_minutes,1
+bead_timer,1
 bead_vol,9
 bead_vol1,1
 bead_vol2,1
@@ -468,7 +469,7 @@ final_temp,3
 final_tubes,1
 final_vol,4
 first_media_x,1
-flash,32
+flash,33
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -709,7 +710,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,78
-m300_mount,104
+m300_mount,105
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -901,7 +902,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,176
+num_samples,179
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -994,6 +995,7 @@ p300_tiprack_slot,1
 p300_tips,1
 p300_transfer_height,1
 p300_type,10
+p300_used,3
 p300gen,2
 p300m,2
 p300m_mount,1
@@ -1048,6 +1050,10 @@ pip_side,1
 pip_tip,4
 pip_type,8
 pipette,1
+pipette mount 1,1
+pipette mount 2,1
+pipette type 1,1
+pipette type 2,1
 pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
@@ -1250,11 +1256,8 @@ sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
 sample_quant_csv,2
-<<<<<<< Updated upstream
-sample_rate,1
-=======
 sample_rack_type,1
->>>>>>> Stashed changes
+sample_rate,1
 sample_rows,1
 sample_size,1
 sample_slots,1
@@ -1518,7 +1521,7 @@ track_tips,2
 tracking_reset,2
 trans_vol1,1
 transfer2,1
-transfer_csv,20
+transfer_csv,21
 transfer_scheme,2
 transfer_to_storage,1
 transfer_vol,10
@@ -1614,7 +1617,7 @@ vol_dil_to_e,1
 vol_dilution,1
 vol_dispense,1
 vol_dispensed,1
-vol_dna,2
+vol_dna,5
 vol_dna_buff,1
 vol_elution,1
 vol_elution_buffer,1

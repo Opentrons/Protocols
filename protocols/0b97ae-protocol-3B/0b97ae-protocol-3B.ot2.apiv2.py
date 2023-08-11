@@ -55,6 +55,7 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      num_samples, vol_dna , flash, bead_timer] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples","vol_dna","flash","bead_timer")
+    num_samples = int(num_samples)
 
     'Global variables'
     TEST_MODE = False
