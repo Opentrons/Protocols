@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "trevor adds the description",
     "internal": "0b97ae",
     "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Broad Category\n\t* Specific Category\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "description": "trevor adds the description\n\n\n",
         "internal": "0b97ae\n",
         "labware": "* Perkin Elmer 12 Reservoir 21000 \u00b5L\n* Applied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n\n\n",
         "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
