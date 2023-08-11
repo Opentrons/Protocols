@@ -1,4 +1,4 @@
-# Protocol Title (#2 Making Calibrator levels in 20 ml Scintillation vials)
+# Protocol Title (#6 Aliquot 100 µL in Microcentrifuge Tubes)
 
 ### Author
 [Opentrons](https://opentrons.com/)
