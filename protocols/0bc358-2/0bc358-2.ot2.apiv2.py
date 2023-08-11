@@ -10,10 +10,10 @@ metadata = {
 # Calibrator 10 (C10)=WS1 in A1
 # C9=2000ul from C10+2000ul MeOH, mix in A2
 # C8=2000ul from C9+2000ul MeOH, mix in A3
-# C7=2000ul from C8+2000ul MeOH, mix in A4
+# C7=2000ul from C8+3000ul MeOH, mix in A4 (email Aug 10)
 # C6=2000ul from C7+2000ul MeOH, mix in B1
 # C5=2000ul from C6+2000ul MeOH, mix in B2
-# C4=2000ul from C5+2000ul MeOH, mix in B3
+# C4=2000ul from C5+3000ul MeOH, mix in B3 (email Aug 10)
 # C3=2000ul from C4+2000ul MeOH, mix in C1
 # C2=2000ul from C3+2000ul MeOH, mix in C2
 # C0=2000ul pure MeOH in C3
@@ -46,12 +46,12 @@ def run(protocol: protocol_api.ProtocolContext):
     dilution_sources = [well for row in scint_vial.rows() for well in row][:8]
     dilution_destinations = [well for row in scint_vial.rows() for well in row][1:9]
     meoh_destinations = [well for row in scint_vial.rows() for well in row][1:10]
-    vol_meoh = 2000
+    vols_meoh = [2000, 2000, 3000, 2000, 2000, 3000, 2000, 2000, 2000]
 
     # pre-addition of meoh
     p1000.pick_up_tip()
     for d in meoh_destinations:
-        p1000.transfer(vol_meoh, meoh, d, new_tip='never', air_gap=20)
+        p1000.transfer(vols_meoh, meoh, d, new_tip='never', air_gap=20)
     p1000.drop_tip()
 
     dil_transfer_vol = 2000
