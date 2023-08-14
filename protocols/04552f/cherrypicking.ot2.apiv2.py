@@ -99,8 +99,8 @@ before resuming.')
 finished. Load new plate if necessary.')
             media_sources = []
 
-        if i > 0 and last_dest_lw != dest_labware \
-                and last_dest_lw == dest_plates[-1]:
+        if i > 0 and last_dest_lw != dest_labware:
+            # and last_dest_lw == dest_plates[-1]:
             dests = [media_dest[0] for media_dest in media_dests]
             vols = [media_dest[1] for media_dest in media_dests]
             if not p300.has_tip:
