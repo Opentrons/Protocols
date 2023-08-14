@@ -1,5 +1,6 @@
 import math
 from opentrons.protocol_api.labware import Well
+from opentrons.protocols.api_support.types import APIVersion
 
 metadata = {
     'protocolName': 'DOE',
@@ -27,7 +28,10 @@ def run(ctx):
     class WellH(Well):
         def __init__(self, well, height=5, min_height=2.5,
                      comp_coeff=1.15, current_volume=0, min_vol=1000):
-            super().__init__(well._impl)
+            try:
+                super().__init__(well.parent, well._core, APIVersion(2, 13))
+            except AttributeError:
+                super().__init__(well._impl)
             self.well = well
             self.height = height
             self.min_height = min_height
