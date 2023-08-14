@@ -1,27 +1,27 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "NGS LIBRARY PREP": [
+            "QIASeq FastSelect"
         ]
     },
-    "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "deck-setup": "\nWater Reservoir (slot 2):\n    Column 1: Nuclease Free Water\n    Column 2: Binding Buffer\n    Column 3 & 4: Ethanol\n    Column 10, 11 & 12: Empty for Supernatent Removal\nDiluted RNA Plate (slot 7 Temperature Module):\n    RNA Samples Starting Plate\nReagent Plate (Slot 10):\n    Column 1: MasterMix\n    Column 2: Magentic Beads",
+    "description": "This is Part 3 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 2 to this protocol is the Fragementation.\nLinks:\n Part 1: Sample Normalization\n Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation\n* Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction",
     "internal": "0b97ae-protocol-3B",
     "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-3B/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* NGS LIBRARY PREP\n\t* QIASeq FastSelect\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/Image+8-11-23+at+2.24+PM.jpg)\nWater Reservoir (slot 2):\n\tColumn 1: Nuclease Free Water\n\tColumn 2: Binding Buffer\n\tColumn 3 & 4: Ethanol\n\tColumn 10, 11 & 12: Empty for Supernatent Removal\nDiluted RNA Plate (slot 7 Temperature Module):\n\tRNA Samples Starting Plate\nReagent Plate (Slot 10):\n\tColumn 1: MasterMix\n\tColumn 2: Magentic Beads\n\n",
+        "description": "This is Part 3 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 2 to this protocol is the Fragementation.\n\nLinks:\n* [Part 1: Sample Normalization](http://protocols.opentrons.com/protocol/0b97ae)\n* [Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation](http://protocols.opentrons.com/protocol/0b97ae-protocol-2B)\n* [Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction](http://protocols.opentrons.com/protocol/0b97ae-protocol-3B)\n\n\n",
         "internal": "0b97ae-protocol-3B\n",
         "labware": "* Perkin Elmer 12 Reservoir 21000 \u00b5L\n* Applied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\n* [Bio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n\n\n",
         "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-3B/reagents.png)\n\n\n",
+        "protocol-steps": "1. Before this protocol the RNA plate should have went through the thermocycler according to FastSelect 5s/16s/23s, Table 3 and placed on a back on the temperature deck on slot 7.\n2. The Reagent plate will be placed on the temperature module on slot 10, which will contain MasterMix in column 1 and magentic beads in column 2.\n3. The reservoir will be placed on slot 2, which will contain Nucleas Free Water in well 1, Binding Buffer in well 2, and Ethanol in wells 3 and 4. Wells 10, 11 and 12 will be used for supernatent removal.\n\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/reagen.jpg)\n\n\n",
         "title": "QIAseq FastSelect Extraction"
     },
     "modules": [
@@ -31,7 +31,7 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
+    "protocol-steps": "\nBefore this protocol the RNA plate should have went through the thermocycler according to FastSelect 5s/16s/23s, Table 3 and placed on a back on the temperature deck on slot 7.\nThe Reagent plate will be placed on the temperature module on slot 10, which will contain MasterMix in column 1 and magentic beads in column 2.\nThe reservoir will be placed on slot 2, which will contain Nucleas Free Water in well 1, Binding Buffer in well 2, and Ethanol in wells 3 and 4. Wells 10, 11 and 12 will be used for supernatent removal.\n",
     "reagent-setup": "",
     "title": "QIAseq FastSelect Extraction"
 }
