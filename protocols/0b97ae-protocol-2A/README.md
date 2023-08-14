@@ -6,13 +6,16 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS LIBRARY PREP
+	* QIASeq FastSelect
 
 
 ## Description
-This protocol does stuff!
+This is Part 2 to the QIAseq FastSelect Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.
 
+Links:
+* [Part 1: Sample Normalization](http://protocols.opentrons.com/protocol/0b97ae)
+* [Part 2: QIAseq FastSelect Fragmentation](http://protocols.opentrons.com/protocol/0b97ae-protocol-2A)
 
 ### Modules
 * [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)
@@ -32,15 +35,16 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-2A/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+3a/deck.jpg)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-2A/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+3a/dddddd.jpg)
 
 
 ### Protocol Steps
-1. Step 1...
+1. The diluted RNA plate will be placed on the temperature module placed on site 7.
+2. The Mastermix Plate will be placed on temperature module placed on site 10. The volume for the MasterMix will be adjust in the protocol, depending on the RNA 	Volume put into the drop down.
 
 
 ### Process

@@ -6,12 +6,19 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS LIBRARY PREP
+	* QIASeq FastSelect
 
 
 ## Description
-This protocol does stuff!
+This is Part 3 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.
+Part 1 to this protocol is the normalization of samples.
+Part 2 to this protocol is the Fragementation.
+
+Links:
+* [Part 1: Sample Normalization](http://protocols.opentrons.com/protocol/0b97ae)
+* [Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation](http://protocols.opentrons.com/protocol/0b97ae-protocol-2B)
+* [Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction](http://protocols.opentrons.com/protocol/0b97ae-protocol-3B)
 
 
 ### Modules
@@ -35,15 +42,27 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-3B/deck.png)
-
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/Image+8-11-23+at+2.24+PM.jpg)
+Water Reservoir (slot 2):
+	Column 1: Nuclease Free Water
+	Column 2: Binding Buffer
+	Column 3 & 4: Ethanol
+	Column 10, 11 & 12: Empty for Supernatent Removal
+Diluted RNA Plate (slot 7 Temperature Module):
+	RNA Samples Starting Plate
+Reagent Plate (Slot 10):
+	Column 1: MasterMix
+	Column 2: Magentic Beads
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae-protocol-3B/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/reagen.jpg)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Before this protocol the RNA plate should have went through the thermocycler according to FastSelect 5s/16s/23s, Table 3 and placed on a back on the temperature deck on slot 7.
+2. The Reagent plate will be placed on the temperature module on slot 10, which will contain MasterMix in column 1 and magentic beads in column 2.
+3. The reservoir will be placed on slot 2, which will contain Nucleas Free Water in well 1, Binding Buffer in well 2, and Ethanol in wells 3 and 4. Wells 10, 11 and 12 will be used for supernatent removal.
+
 
 
 ### Process

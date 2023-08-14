@@ -1,4 +1,4 @@
-# QIAseq FastSelect Fragmentation
+# QIAseq FastSelect 5s, 16s, 23s Fragmentation
 
 
 ### Author
@@ -6,12 +6,20 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS LIBRARY PREP
+	* QIASeq FastSelect
 
 
 ## Description
-This protocol does stuff!
+This is Part 2 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.
+Part 1 to this protocol is the normalization of samples.
+Part 3 to this protocol is the Extraction and Clean-Up steps.
+
+Links:
+* [Part 1: Sample Normalization](http://protocols.opentrons.com/protocol/0b97ae)
+* [Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation](http://protocols.opentrons.com/protocol/0b97ae-protocol-2B)
+* [Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction](http://protocols.opentrons.com/protocol/0b97ae-protocol-3B)
+
 
 
 ### Modules
@@ -41,7 +49,9 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. The diluted RNA plate will be placed on the temperature module placed on site 7.
+2. The Mastermix Plate will be placed on temperature module placed on site 10. The volume for the MasterMix will be adjust in the protocol, depending on the RNA Volume put into the drop down.
+3. After this protocol is finished the plate should be removed and placed on a thermocycler according to FastSelect 5s/16s/23s, Table 3.
 
 
 ### Process

@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* SAMPLE PREP
+	* Normalization
 
 
 ## Description
-trevor adds the description
+With this Protocol you can Normalize RNA samples using RNA Concentration, Goal Concentration, Total Volume. This Normalization is the normalization protocol to preceed the QIAseq FastSelect and QIAsec FastSelect 5s , 16S and 23S.  
 
 
 ### Modules
@@ -32,15 +32,17 @@ trevor adds the description
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+1/Image+8-11-23+at+1.10+PM.jpg)
 
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+1/Image+8-11-23+at+2.21+PM+(2).jpg)
 
 
 ### Protocol Steps
-1. Step 1...
+1. Load CSV into the slot above, With the Columns being RNA Concentration, Goal Concentration and Total Goal Volume
+2. The Source Plate will be loaded onto the Temperature module on slot 10
+3. The Dilution Plate will be loaded onto the Temperature module on slot 7
 
 
 ### Process
