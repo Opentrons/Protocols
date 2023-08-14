@@ -123,6 +123,7 @@ bead_ratio_1,1
 bead_ratio_2,1
 bead_separation_time_in_minutes,2
 bead_settling_time_on_magnet_in_minutes,1
+bead_timer,1
 bead_vol,9
 bead_vol1,1
 bead_vol2,1
@@ -469,7 +470,7 @@ final_temp,3
 final_tubes,1
 final_vol,4
 first_media_x,1
-flash,32
+flash,33
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -902,7 +903,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,176
+num_samples,179
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -995,6 +996,7 @@ p300_tiprack_slot,1
 p300_tips,1
 p300_transfer_height,1
 p300_type,10
+p300_used,3
 p300gen,2
 p300m,2
 p300m_mount,1
@@ -1053,10 +1055,14 @@ pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
 pipette_mount,18
+pipette_mount_1,1
+pipette_mount_2,1
 pipette_offset,1
 pipette_p20,1
 pipette_p300,1
 pipette_type,16
+pipette_type_1,1
+pipette_type_2,1
 pipette_types,1
 pipettes,1
 pipinfo,1
@@ -1516,7 +1522,7 @@ track_tips,2
 tracking_reset,2
 trans_vol1,1
 transfer2,1
-transfer_csv,20
+transfer_csv,21
 transfer_scheme,2
 transfer_to_storage,1
 transfer_vol,10
@@ -1612,7 +1618,7 @@ vol_dil_to_e,1
 vol_dilution,1
 vol_dispense,1
 vol_dispensed,1
-vol_dna,2
+vol_dna,5
 vol_dna_buff,1
 vol_elution,1
 vol_elution_buffer,1
