@@ -636,7 +636,7 @@ labware_p300_tips,1
 labware_parent,2
 labware_patient_samples,1
 labware_pcr,1
-labware_pcr_plate,10
+labware_pcr_plate,11
 labware_plate,1
 labware_plates,9
 labware_pool,1
@@ -652,6 +652,7 @@ labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
 labware_source,1
+labware_temp_deck,1
 labware_tempmod,12
 labware_tempmod2,5
 labware_tips20,3
