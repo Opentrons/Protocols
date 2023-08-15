@@ -1,4 +1,4 @@
-# Protocol Title (#4 Making Calibrator Curve using 20 mL Scintillation Vial)
+# Protocol Title (#5 Making Quality Control Curve using 20 mL Scintillation Vial)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,14 +8,14 @@
 	* Standard Curve
 
 ## Description
-This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, WS4) diluting 275 µL of each Working Stock in 4.4 mL of Blank Urine. 
+This protocol will create Quality Control Curves from Working Stocks (WS1, WS2, WS3, WS4) diluting 275 µL of each Working Stock in 4.4 mL of Blank Urine. 
 
 ---
 
 ### Labware
 * [OT-2 Filter Tips, 1000µL (999-00082)](https://shop.opentrons.com/opentrons-1000ul-filter-tips-1000-racks/)
-* [Verex Vials in Custom 54-Position Rack](https://www.phenomenex.com/part?partNo=AR0-9921-13)
-* [11-Position Block for 28 mm Scintillation Flat Bottom Vials](https://chemglass.com/blocks-for-centrifugal-vacuum-evaporators-optichem?sku=OP-6600-11)
+* [12 Well Aluminum Vial Tray, for 28mm Flat bottom Vials](https://www.analytical-sales.com/product/12-well-aluminum-vial-tray-27-8mm-well-diameter/)
+* [Neptune Tiprack Base 1 Reservoir 300 mL](Link not available) 
 
 
 ### Pipettes
@@ -23,7 +23,7 @@ This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, 
 
 ### Reagents
 * [Blank Urine](various)
-* [Calibrator Working Stocks C10-C2](link to product not available)
+* [Quality Control Working Stocks QC8-QC1](link to product not available)
 
 ---
 
@@ -41,16 +41,16 @@ This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, 
 ---
 
 ### Protocol Steps
-1. 4400 µL of Blank Urine is added to the scintillation vials in positions A1-A4, B1-B4 and C1 in tuberack on slot 11.
-2. 275 ul of each C10 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A1 on slot 11.
-3. 275 ul of each C9 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A2 on slot 11.
-4. 275 ul of each C8 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A3 on slot 11.
-5. 275 ul of each C7 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 8 is then transferred to the scintillation vial in position A4 on slot 11.
-6. 275 ul of each C6 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B1 on slot 11.
-7. 275 ul of each C5 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B2 on slot 11.
-8. 275 ul of each C4 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B3 on slot 11.
-9. 275 ul of each C3 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B4 on slot 11.
-10. 275 ul of each C2 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 9 is then transferred to the scintillation vial in position C1 on slot 11.
+1. 4400 µL of Blank Urine is added to the scintillation vials in positions A1-A4 and B1-B4 in tuberack on slot 11.
+2. 275 ul of each QC8 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A1 on slot 11.
+3. 275 ul of each QC7 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A2 on slot 11.
+4. 275 ul of each QC6 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A3 on slot 11.
+5. 275 ul of each QC5 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 8 is then transferred to the scintillation vial in position A4 on slot 11.
+6. 275 ul of each QC4 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B1 on slot 11.
+7. 275 ul of each QC3 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B2 on slot 11.
+8. 275 ul of each QC2 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B3 on slot 11.
+9. 275 ul of each QC1 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B4 on slot 11.
+
 
 ### Process
 1. Input your protocol parameters above.
@@ -65,4 +65,4 @@ This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, 
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-0bc358
+0bc358-5
