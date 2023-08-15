@@ -10,8 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_plates, plate_type, serum_vol, m300_mount] = get_values(  # noqa: F821
-        "num_plates", "plate_type", "serum_vol", "m300_mount")
+    [num_plates, plate_type, serum_vol,
+        lower_asp_height, m300_mount] = get_values(  # noqa: F821
+        "num_plates", "plate_type", "serum_vol",
+            "lower_asp_height", "m300_mount")
 
     # labware
     serum_res = ctx.load_labware('agilent_1_reservoir_290ml', 7)
@@ -78,8 +80,8 @@ def run(ctx):
     for plate in source_plates:
         for i in range(len(plate.rows()[0][:6])):
             pick_up()
-            m300.mix(3, 40, plate.rows()[0][i])
-            m300.aspirate(40, plate.rows()[0][i])
+            m300.mix(3, 40, plate.rows()[0][i].bottom(z=1-lower_asp_height))
+            m300.aspirate(40, plate.rows()[0][i].bottom(z=1-lower_asp_height))
             if i < 5:
                 m300.dispense(40, plate.rows()[0][i+1])
             if i == 5:
@@ -93,6 +95,7 @@ def run(ctx):
     m300.pick_up_tip()
     for plate in source_plates:
         for col in plate.rows()[0][:7]:
+            m300.mix(5, 300, virus)
             m300.aspirate(40, virus)
             m300.dispense(40, col.top())
             ctx.delay(seconds=2)
@@ -106,9 +109,9 @@ def run(ctx):
     for s_plate, d_plate in zip(source_plates, dest_plates):
         for s, d in zip(s_plate.rows()[0][:8], d_plate.rows()[0][:8]):
             pick_up()
-            m300.aspirate(100, d, rate=0.1)
+            m300.aspirate(100, d.bottom(z=1-lower_asp_height), rate=0.1)
             m300.dispense(100, trash)
-            m300.aspirate(60, s)
+            m300.aspirate(60, s.bottom(z=1-lower_asp_height))
             m300.dispense(60, d)
             m300.drop_tip()
 
