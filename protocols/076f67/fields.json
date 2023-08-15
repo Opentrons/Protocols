@@ -25,6 +25,12 @@
   "default": 72
   },
   {
+  "type": "float",
+  "label": "How many mm lower into source/dest plates?",
+  "name": "lower_asp_height",
+  "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "m300_mount",
