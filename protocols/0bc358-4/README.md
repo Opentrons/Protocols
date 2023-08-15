@@ -1,4 +1,4 @@
-# Protocol Title (#1 Calibrator / Quality Control Working Stock Prep)
+# Protocol Title (#4 Making Calibrator Curve using 20 mL Scintillation Vial)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,24 +8,22 @@
 	* Standard Curve
 
 ## Description
-This protocol will create Calibrator Working Stocks (WS1, WS2, WS3, WS4) and Quality Control working stock (QC1, QC2, QC3, QC4) by diluting analytes in methanol. 
+This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, WS4) diluting 275 µL of each Working Stock in 4.4 mL of Blank Urine. 
 
 ---
 
 ### Labware
-* [OT-2 Filter Tips, 200µL (999-00081))](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [OT-2 Filter Tips, 1000µL (999-00082)](https://shop.opentrons.com/opentrons-1000ul-filter-tips-1000-racks/)
 * [Verex Vials in Custom 54-Position Rack](https://www.phenomenex.com/part?partNo=AR0-9921-13)
 * [11-Position Block for 28 mm Scintillation Flat Bottom Vials](https://chemglass.com/blocks-for-centrifugal-vacuum-evaporators-optichem?sku=OP-6600-11)
 
 
 ### Pipettes
-* [P300 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P1000 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [Analytes](various)
-* [Methanol](link to product not available)
+* [Blank Urine](various)
+* [Calibrator Working Stocks C10-C2](link to product not available)
 
 ---
 
@@ -43,14 +41,16 @@ This protocol will create Calibrator Working Stocks (WS1, WS2, WS3, WS4) and Qua
 ---
 
 ### Protocol Steps
-1. MeOH is added to the WS1 (A1) and QC1 (C1) scintillation vials in tuberack on slot 3.
-2. Analytes are transferred from the source tuberacks on slot 2 to the WS1 and QC1 scintillation vials.
-3. MeOH is added to the WS2 (A2) and QC2 (C2) scintillation vials in tuberack on slot 3.
-4. Analytes are transferred from the source tuberacks on slot 5 to the WS2 and QC2 scintillation vials.
-5. MeOH is added to the WS3 (A3) and QC3 (C3) scintillation vials in tuberack on slot 3
-6. Analytes are transferred from the source tuberacks on slot 8 to the WS3 and QC3 scintillation vials (note protocol will pause to replace/refill analyte vials in D3 and D4 of the source tuberack between aspiration steps).
-7. MeOH is added to the WS4 (A4) and QC4 (C4) scintillation vials in tuberack on slot 3
-8. Analytes are transferred from the source tuberacks on slot 11 to the WS4 and QC4 scintillation vials with a pause before each analyte to remove caps.
+1. 4400 µL of Blank Urine is added to the scintillation vials in positions A1-A4, B1-B4 and C1 in tuberack on slot 11.
+2. 275 ul of each C10 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A1 on slot 11.
+3. 275 ul of each C9 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A2 on slot 11.
+4. 275 ul of each C8 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 7 is then transferred to the scintillation vial in position A3 on slot 11.
+5. 275 ul of each C7 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 8 is then transferred to the scintillation vial in position A4 on slot 11.
+6. 275 ul of each C6 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B1 on slot 11.
+7. 275 ul of each C5 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 8 is then transferred to the scintillation vial in position B2 on slot 11.
+8. 275 ul of each C4 WS-1, WS-2, WS-3 and WS-4 in positions A1-A4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B3 on slot 11.
+9. 275 ul of each C3 WS-1, WS-2, WS-3 and WS-4 in positions B1-B4 of the tuberack on slot 9 is then transferred to the scintillation vial in position B4 on slot 11.
+10. 275 ul of each C2 WS-1, WS-2, WS-3 and WS-4 in positions C1-C4 of the tuberack on slot 9 is then transferred to the scintillation vial in position C1 on slot 11.
 
 ### Process
 1. Input your protocol parameters above.
