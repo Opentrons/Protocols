@@ -6,49 +6,60 @@ metadata = {
     'protocolName': '#5 Making Quality Control Curve using 20 mL Scintillation Vial',
     'description': '''This protocol makes Quality Control Curve by adding 275 µL of QC \
 made from Working Stock to 4.4 mL of blank urine in a 20 mL Scintillation Vial.''',
-    'author': 'parrish.payne@opentrons.com'
+    'author': 'Parrish Payne <parrish.payne@opentrons.com>'
     }
 
 # Making Quality Control Curves using 20 ml Scintillation vial:
-# Take 275 ul of QC1-8 made from WS1, add 4400ul blank urine, mix, to make a complete quality control curve
-# Take 275 ul of QC1-8 made from WS2, add 4400ul blank urine, mix, to make a complete quality control curve
-# Take 275 ul of QC1-8 made from WS3, add 4400ul blank urine, mix, to make a complete quality control curve
-# Take 275 ul of QC1-8 made from WS4, add 4400ul blank urine, mix, to make a complete quality control curve
+# For each destination vial QC1-8
+# Add 4400 ul blank urine
+# Add 275 ul of each WS-1, WS-2, WS-3 and WS-4
 
-def run(protocol: protocol_api.ProtocolContext):
+def run(ctx):
 
-    tips = protocol.load_labware('opentrons_96_filtertiprack_1000ul', 1)
-    urine = protocol.load_labware('nest_1_reservoir_195ml', 5).wells()[0]
-    source_scint_vial_rack = protocol.load_labware('chemglass_11x20mL', 3)
-    dest_scint_vial_rack = protocol.load_labware('chemglass_11x20mL', 6)
+    # labware
 
-    p1000 = protocol.load_instrument(
+    tips = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 4)
+    urine = ctx.load_labware('neptunetiprackbase_1_reservoir_300ul', 10).wells()[0]
+    source_scint_vial_rack = [ctx.load_labware('analytical_12_tuberack_20000ul', slot) 
+            for slot in [7, 8, 9]]
+    dest_scint_vial_rack = ctx.load_labware('analytical_12_tuberack_20000ul', 11)
+
+    # pipettes
+
+    p1000 = ctx.load_instrument(
         'p1000_single_gen2', 'right', tip_racks=[tips])
 
-    def slow_withdraw(pip, well, z=0, delay_seconds=2.0):
+    # functions 
+
+    def slow_withdraw(pip, well, z=0, delay_seconds=0):
         pip.default_speed /= 10
         if delay_seconds > 0:
-            protocol.delay(seconds=delay_seconds)
+            ctx.delay(seconds=delay_seconds)
         pip.move_to(well.top(z))
         pip.default_speed *= 10
 
     def transfer(vol, source, destination, pip=p1000):
         pip.aspirate(vol, source)
-        slow_withdraw(pip, source)
+        # slow_withdraw(pip, source)
         pip.dispense(vol, destination)
-        slow_withdraw(pip, destination)
+        # slow_withdraw(pip, destination)
+        pip.blow_out(destination.top(-3))
 
-    def mix_high_low(reps, vol, well, pip=p1000, z_low=5.0, z_high=20):
-        for _ in range(reps):
-            pip.aspirate(vol, well.bottom(z_low))
-            pip.dispense(vol, well.bottom(z_high))
+    source_tubes = [tube for tuberack in source_scint_vial_rack for row in tuberack.rows() for tube in row]
+    source_chunks = [source_tubes[i:i+4] for i in range(0, len(source_tubes), 4)]
+    dest_vials = [tube for row in dest_scint_vial_rack.rows() for tube in row][:8]
 
-    source_vials = source_scint_vial_rack.wells()[:8]
-    dest_vials = dest_scint_vial_rack.wells()[:8]
-    vol_vial = 275
+    # variables
+
     vol_urine = 4400
+    vol_airgap = 20
+    vol_ws = 275
+    asp_rate = 0.02
 
-    # Pre-transfer urine to each destination vial
+    # protocol
+
+    ctx.comment('\n----------TRANSFER URINE TO SCINTILLATION VIALS-----------\n\n')
+    
     num_transfers = math.ceil(vol_urine/p1000.max_volume)
     vol_per_transfer = vol_urine/num_transfers
     p1000.pick_up_tip()
@@ -57,9 +68,21 @@ def run(protocol: protocol_api.ProtocolContext):
             transfer(vol_per_transfer, urine, d)
     p1000.drop_tip()
 
-    # Transfer 275 µL of each C0-C10 into 20 mL scintillation vial
-    for s, d in zip(source_vials, dest_vials):
-        p1000.pick_up_tip()
-        transfer(vol_vial, s, d)
-        mix_high_low(10, 750, d)
-        p1000.drop_tip()
+    # Transfer 275 µL of each Working Stock (WS-1, WS-2, WS-3, WS-4) 
+    # into 20 mL scintillation vial. Repeat for each Mother Stock QC1-8
+
+    ctx.comment('\n---------------TRANSFER WORKING STOCKS----------------\n\n')
+
+    for chunk, d in zip(source_chunks, dest_vials):
+
+        for well in chunk:
+            p1000.pick_up_tip()
+            p1000.mix(1, vol_ws, well)
+            p1000.aspirate(vol_ws, well)
+            slow_withdraw(p1000, well)
+            p1000.aspirate(vol_airgap, well, rate = asp_rate)
+            p1000.dispense(vol_ws+vol_airgap, d)
+            p1000.mix(1, vol_ws)
+            slow_withdraw(p1000, d)
+            p1000.blow_out()
+            p1000.drop_tip()
