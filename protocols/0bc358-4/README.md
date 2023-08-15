@@ -14,9 +14,8 @@ This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, 
 
 ### Labware
 * [OT-2 Filter Tips, 1000µL (999-00082)](https://shop.opentrons.com/opentrons-1000ul-filter-tips-1000-racks/)
-* [Verex Vials in Custom 54-Position Rack](https://www.phenomenex.com/part?partNo=AR0-9921-13)
-* [11-Position Block for 28 mm Scintillation Flat Bottom Vials](https://chemglass.com/blocks-for-centrifugal-vacuum-evaporators-optichem?sku=OP-6600-11)
-
+* [12 Well Aluminum Vial Tray, for 28mm Flat bottom Vials](https://www.analytical-sales.com/product/12-well-aluminum-vial-tray-27-8mm-well-diameter/)
+* [Neptune Tiprack Base 1 Reservoir 300 mL](Link not available) 
 
 ### Pipettes
 * [P1000 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
@@ -65,4 +64,4 @@ This protocol will create Calibrator Curves from Working Stocks (WS1, WS2, WS3, 
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-0bc358
+0bc358-4
