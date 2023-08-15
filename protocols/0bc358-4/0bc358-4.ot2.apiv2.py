@@ -19,7 +19,7 @@ def run(ctx):
     # labware
 
     tips = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 4)
-    urine = ctx.load_labware('neptunetiprackbase_1_reservoir_300ul', 10).wells()[0]
+    urine = ctx.load_labware('neptunetiprackbase_1_reservoir_300ml', 10).wells()[0]
     source_scint_vial_rack = [ctx.load_labware('analytical_12_tuberack_20000ul', slot)
             for slot in [7, 8, 9]]
     dest_scint_vial_rack = ctx.load_labware('analytical_12_tuberack_20000ul', 11)
