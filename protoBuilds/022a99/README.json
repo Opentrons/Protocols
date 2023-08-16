@@ -1,0 +1,25 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Aliquoting": [],
+        "Sample Prep": []
+    },
+    "description": "This protocol transfers spheroids from a standard U-bottom 384-well plate to a specialized Akura 384-well plate. Samples are transferred to their corresponding wells. Tips are automatically changed after 16 columns to reflect new cell type. Flow rates and well positions are optimized to accurately transfer spheroid avoiding shearing.",
+    "internal": "022a99",
+    "labware": "\nAkura 384 Well Plate 50 \u00b5L #CS-09-005-02\nCorning 384 Well Plate 90 \u00b5L #3830BC\nOpentrons 96 Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "\n[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "\n- Sample Prep\n  - Aliquoting\n\n",
+        "description": "\nThis protocol transfers spheroids from a standard U-bottom 384-well plate to a specialized Akura 384-well plate. Samples are transferred to their corresponding wells. Tips are automatically changed after 16 columns to reflect new cell type. Flow rates and well positions are optimized to accurately transfer spheroid avoiding shearing.\n\n",
+        "internal": "\n022a99\n",
+        "labware": "\n- Akura 384 Well Plate 50 \u00b5L #CS-09-005-02\n- Corning 384 Well Plate 90 \u00b5L #3830BC\n- [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n",
+        "notes": "\nIf you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "\n- [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "\n1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n",
+        "title": "Spheroid Transfer"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "Spheroid Transfer"
+}
