@@ -128,7 +128,8 @@ resuming.\n\n\n\n")
         vol_airgap = pip.tip_racks[0].wells()[0].max_volume - vol \
             if pip.tip_racks[0].wells()[0].max_volume - vol < 20.0 \
             else 20.0
-        for i, (s, d) in enumerate(zip(mag_samples, liquid_trash)):
+        for i, (s, d) in enumerate(zip(mag_samples, destinations)):
+            print(destinations)
             if not pip.has_tip:
                 if park:
                     pick_up(pip, parked_tips[pip][i])
@@ -152,7 +153,7 @@ resuming.\n\n\n\n")
     def resuspend(pip, location, vol, reps=mixreps,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=2.0):
-        
+
         pip.flow_rate.aspirate *= 4
         pip.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -274,5 +275,6 @@ MagDeck for {time_settling} minutes.')
 
     # transfer final elution
     wash(m20, vol_elution, elution_buffer, time_incubation=5.0,
+         do_resuspend=True,
          time_settling=time_settling_minutes_elution, vol_supernatant=10.0,
          do_discard_supernatant=True, supernatant_destinations=elution_samples)
