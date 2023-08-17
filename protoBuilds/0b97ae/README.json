@@ -1,0 +1,36 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "SAMPLE PREP": [
+            "Normalization"
+        ]
+    },
+    "deck-setup": "",
+    "description": "With this Protocol you can Normalize RNA samples using RNA Concentration, Goal Concentration, Total Volume. This Normalization is the normalization protocol to preceed the QIAseq FastSelect and QIAsec FastSelect 5s , 16S and 23S.  ",
+    "internal": "0b97ae",
+    "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* SAMPLE PREP\n\t* Normalization\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+1/Image+8-11-23+at+1.10+PM.jpg)\n\n\n",
+        "description": "With this Protocol you can Normalize RNA samples using RNA Concentration, Goal Concentration, Total Volume. This Normalization is the normalization protocol to preceed the QIAseq FastSelect and QIAsec FastSelect 5s , 16S and 23S.  \n\n\n",
+        "internal": "0b97ae\n",
+        "labware": "* Perkin Elmer 12 Reservoir 21000 \u00b5L\n* Applied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n\n\n",
+        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Load CSV into the slot above, With the Columns being RNA Concentration, Goal Concentration and Total Goal Volume\n2. The Source Plate will be loaded onto the Temperature module on slot 10\n3. The Dilution Plate will be loaded onto the Temperature module on slot 7\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+1/Image+8-11-23+at+2.21+PM+(2).jpg)\n\n\n",
+        "title": "QIAseq FastSelect Normalization"
+    },
+    "modules": [
+        "Opentrons Temperature Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nLoad CSV into the slot above, With the Columns being RNA Concentration, Goal Concentration and Total Goal Volume\nThe Source Plate will be loaded onto the Temperature module on slot 10\nThe Dilution Plate will be loaded onto the Temperature module on slot 7\n",
+    "reagent-setup": "",
+    "title": "QIAseq FastSelect Normalization"
+}

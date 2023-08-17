@@ -1,5 +1,4 @@
 import math
-from opentrons import protocol_api
 
 metadata = {
     'protocolName': 'Normalization Using .csv File',
@@ -11,9 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, init_vol_buff,
+    [input_csv, init_vol_buff, labware_pcr_plate, labware_temp_deck,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "input_csv", "init_vol_buff", "p20_mount", "p300_mount")
+        "input_csv", "init_vol_buff", "labware_pcr_plate", "labware_temp_deck",
+        "p20_mount", "p300_mount")
 
     # labware
     tiprack20 = [
@@ -25,10 +25,10 @@ def run(ctx):
             'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')
         for slot in ['2', '9']]
     tempdeck = ctx.load_module('temperature module gen2', '3')
-    dna_plate = tempdeck.load_labware('eppendorftwin.tec96_96_aluminumblock_150ul')  # noqa: E501
+    dna_plate = tempdeck.load_labware(labware_temp_deck)  # noqa: E501
     tube_rack = ctx.load_labware(
         'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5')
-    dest_plate = ctx.load_labware('eppendorftwin.tec_96_wellplate_150ul', '6', 'end-point-plate')  # noqa: E501
+    dest_plate = ctx.load_labware(labware_pcr_plate, '6', 'end-point-plate')  # noqa: E501
 
     # pipettes
     p20 = ctx.load_instrument(
@@ -57,18 +57,6 @@ def run(ctx):
 
         if h_buff < 12:
             h_buff = 1
-
-    def pick_up(pip):
-        """Function that can be used instead of .pick_up_tip() that will pause
-        robot when robot runs out of tips, prompting user to replace tips
-        before resuming"""
-        try:
-            pip.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            pip.home()
-            ctx.pause("Replace the tips")
-            pip.reset_tipracks()
-            pip.pick_up_tip()
 
     def slow_withdraw(pip, well, delay_seconds=2.0):
         pip.default_speed /= 16
@@ -119,15 +107,20 @@ def run(ctx):
         dest_well = dest_plate.wells_by_name()[well]
 
         volume = float(row[6])
+        mix_reps = 2
 
         if volume > 20:
             p300.pick_up_tip()
             p300.aspirate(volume, source_well)
             p300.dispense(volume, dest_well)
+            p300.mix(mix_reps, 20)
+            p300.blow_out()
             p300.drop_tip()
 
         else:
             p20.pick_up_tip()
             p20.aspirate(volume, source_well)
             p20.dispense(volume, dest_well)
+            p20.mix(mix_reps, 10)
+            p20.blow_out()
             p20.drop_tip()
