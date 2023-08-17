@@ -152,6 +152,7 @@ resuming.\n\n\n\n")
     def resuspend(pip, location, vol, reps=mixreps,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=2.0):
+        
         pip.flow_rate.aspirate *= 4
         pip.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -172,8 +173,10 @@ resuming.\n\n\n\n")
              supernatant_destinations=liquid_trash):
         nonlocal parked_tips
 
+        vol_airgap = pip.min_volume
         columns_per_channel = 12//len(reagent)
-        num_transfers = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
+        num_transfers = math.ceil(
+            vol/(pip.tip_racks[0].wells()[0].max_volume-vol_airgap))
         vol_per_transfer = round(vol/num_transfers, 2)
 
         if magdeck.status == 'engaged':
@@ -198,7 +201,8 @@ resuming.\n\n\n\n")
             for _ in range(num_transfers):
                 pip.aspirate(vol_per_transfer, source)
                 slow_withdraw(pip, source)
-                pip.dispense(vol_per_transfer, well.top())
+                pip.aspirate(vol_airgap, source.top())
+                pip.dispense(pip.current_volume, well.top())
             if do_resuspend:
                 resuspend(pip, well, vol*0.8)
             else:
@@ -250,6 +254,7 @@ MagDeck for {time_settling} minutes.')
     ctx.delay(minutes=10)
 
     # remove initial supernatant
+    magdeck.engage()
     ctx.delay(minutes=3)
     remove_supernatant(vol_initial+vol_beads, park=False)
 
