@@ -176,6 +176,9 @@ resuming.\n\n\n\n")
         num_transfers = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
         vol_per_transfer = round(vol/num_transfers, 2)
 
+        if magdeck.status == 'engaged':
+            magdeck.disengage()
+
         last_source = None
 
         for i, well in enumerate(mag_samples):
@@ -240,14 +243,15 @@ MagDeck for {time_settling} minutes.')
         m300.dispense(m300.current_volume, d.bottom(2))
         m300.mix(mixreps, (vol_beads+vol_initial)*0.8, d.bottom(2))
         slow_withdraw(m300, d)
-        m300.return_tip()
-        parked_tips[m300].append(m300._last_tip_picked_up_from)
+        # m300.return_tip()
+        # parked_tips[m300].append(m300._last_tip_picked_up_from)
+        m300.drop_tip()
 
     magdeck.engage()
     ctx.delay(minutes=10)
 
     # remove initial supernatant
-    remove_supernatant(vol_initial+vol_beads)
+    remove_supernatant(vol_initial+vol_beads, park=False)
 
     # wash
     wash(m300, vol_wash, etoh, time_incubation=0,
