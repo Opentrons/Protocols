@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol performs Amplify cDNA for the Illumina COVIDSeq protocol.\nLinks:\n 1. Anneal RNA\n 2. Synthesize First Strand cDNA\n 3. Amplify cDNA\n 4. Tagment PCR Amplicons\n 5. Post Tagmentation Clean Up\n 6. Amplify Tagmented Amplicons",
+    "description": "This protocol performs Amplify cDNA for the Illumina COVIDSeq protocol.\nLinks:\n* 1. Anneal RNA\n* 2. Synthesize First Strand cDNA\n* 3. Amplify cDNA\n* 4. Tagment PCR Amplicons\n* 5. Post Tagmentation Clean Up\n* 6. Amplify Tagmented Amplicons",
     "internal": "0cded6",
     "labware": "\nQuantgene 96 Aluminum Block 200 \u00b5L\nAgilent 96 Well Plate 200 \u00b5L #5042-8502\nAgilent With Nonskirted 96 Well Plate 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {

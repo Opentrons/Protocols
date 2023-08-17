@@ -23,7 +23,7 @@ def run(ctx):
         mixreps = 1
     else:
         mixreps = 10
-    time_settling_minutes_wash = 0.5
+    time_settling_minutes_wash = 0.75
     time_settling_minutes_elution = 5
     time_airdry_minutes = 10.0
     vol_initial = 30.0
@@ -128,7 +128,7 @@ resuming.\n\n\n\n")
         vol_airgap = pip.tip_racks[0].wells()[0].max_volume - vol \
             if pip.tip_racks[0].wells()[0].max_volume - vol < 20.0 \
             else 20.0
-        for i, (s, d) in enumerate(zip(mag_samples, liquid_trash)):
+        for i, (s, d) in enumerate(zip(mag_samples, destinations)):
             if not pip.has_tip:
                 if park:
                     pick_up(pip, parked_tips[pip][i])
@@ -152,6 +152,7 @@ resuming.\n\n\n\n")
     def resuspend(pip, location, vol, reps=mixreps,
                   samples=mag_samples, x_mix_fraction=radial_offset_fraction,
                   z_mix=z_offset, dispense_height_rel=2.0):
+
         pip.flow_rate.aspirate *= 4
         pip.flow_rate.dispense *= 4
         side_x = 1 if samples.index(location) % 2 == 0 else -1
@@ -172,9 +173,14 @@ resuming.\n\n\n\n")
              supernatant_destinations=liquid_trash):
         nonlocal parked_tips
 
+        vol_airgap = pip.min_volume
         columns_per_channel = 12//len(reagent)
-        num_transfers = math.ceil(vol/pip.tip_racks[0].wells()[0].max_volume)
+        num_transfers = math.ceil(
+            vol/(pip.tip_racks[0].wells()[0].max_volume-vol_airgap))
         vol_per_transfer = round(vol/num_transfers, 2)
+
+        if magdeck.status == 'engaged':
+            magdeck.disengage()
 
         last_source = None
 
@@ -195,7 +201,8 @@ resuming.\n\n\n\n")
             for _ in range(num_transfers):
                 pip.aspirate(vol_per_transfer, source)
                 slow_withdraw(pip, source)
-                pip.dispense(vol_per_transfer, well.top())
+                pip.aspirate(vol_airgap, source.top())
+                pip.dispense(pip.current_volume, well.top())
             if do_resuspend:
                 resuspend(pip, well, vol*0.8)
             else:
@@ -240,14 +247,16 @@ MagDeck for {time_settling} minutes.')
         m300.dispense(m300.current_volume, d.bottom(2))
         m300.mix(mixreps, (vol_beads+vol_initial)*0.8, d.bottom(2))
         slow_withdraw(m300, d)
-        m300.return_tip()
-        parked_tips[m300].append(m300._last_tip_picked_up_from)
+        # m300.return_tip()
+        # parked_tips[m300].append(m300._last_tip_picked_up_from)
+        m300.drop_tip()
 
-    magdeck.engage()
     ctx.delay(minutes=10)
 
     # remove initial supernatant
-    remove_supernatant(vol_initial+vol_beads)
+    magdeck.engage()
+    ctx.delay(minutes=3)
+    remove_supernatant(vol_initial+vol_beads, park=False)
 
     # wash
     wash(m300, vol_wash, etoh, time_incubation=0,
@@ -257,7 +266,7 @@ MagDeck for {time_settling} minutes.')
     wash(m300, vol_wash, etoh, time_incubation=0,
          time_settling=time_settling_minutes_wash,
          premix=False, do_discard_supernatant=True, do_resuspend=True,
-         vol_supernatant=vol_wash, park=True)
+         vol_supernatant=vol_wash)
     remove_supernatant(20, m20, park=False)
 
     # air dry
@@ -265,5 +274,6 @@ MagDeck for {time_settling} minutes.')
 
     # transfer final elution
     wash(m20, vol_elution, elution_buffer, time_incubation=5.0,
+         do_resuspend=True,
          time_settling=time_settling_minutes_elution, vol_supernatant=10.0,
          do_discard_supernatant=True, supernatant_destinations=elution_samples)
