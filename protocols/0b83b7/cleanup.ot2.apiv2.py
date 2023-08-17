@@ -23,7 +23,7 @@ def run(ctx):
         mixreps = 1
     else:
         mixreps = 10
-    time_settling_minutes_wash = 0.5
+    time_settling_minutes_wash = 0.75
     time_settling_minutes_elution = 5
     time_airdry_minutes = 10.0
     vol_initial = 30.0
@@ -129,7 +129,6 @@ resuming.\n\n\n\n")
             if pip.tip_racks[0].wells()[0].max_volume - vol < 20.0 \
             else 20.0
         for i, (s, d) in enumerate(zip(mag_samples, destinations)):
-            print(destinations)
             if not pip.has_tip:
                 if park:
                     pick_up(pip, parked_tips[pip][i])
@@ -267,7 +266,7 @@ MagDeck for {time_settling} minutes.')
     wash(m300, vol_wash, etoh, time_incubation=0,
          time_settling=time_settling_minutes_wash,
          premix=False, do_discard_supernatant=True, do_resuspend=True,
-         vol_supernatant=vol_wash, park=True)
+         vol_supernatant=vol_wash)
     remove_supernatant(20, m20, park=False)
 
     # air dry

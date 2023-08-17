@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nblue: pooling strip  \ngreen: samples\n\n\n",
-    "description": "Links:\n Part 1\n\n Part 2\n\n Part 3\n\n Part 4\n\n* Part 5\nThis custom pooling protocol is part 5/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, samples are pooled from a PCR plate to a final pooling strip.\n",
+    "description": "Links:\n* Part 1\n\n* Part 2\n\n* Part 3\n\n* Part 4\n\n* Part 5\nThis custom pooling protocol is part 5/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, samples are pooled from a PCR plate to a final pooling strip.\n",
     "internal": "17d210",
     "labware": "\nAmplifyt 96 Well Plate 200 \u00b5L\nOpentrons 20\u00b5l Tiprack\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\n",
     "markdown": {

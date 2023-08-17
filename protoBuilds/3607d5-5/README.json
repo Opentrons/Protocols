@@ -5,7 +5,7 @@
             "Normalization"
         ]
     },
-    "description": "Links:\n SPRI 1 & 2\n\n\n PCR2 Setup\n\n\n SPRI 3\n\n\n Normalization and Pooling\n\n\n* Rerack\nThis protocol performs a tip reracking consolidation from 4x 200ul filter tipracks with only rows A and B occupied to one of the racks. A P300 multi-channel pipette is used with offset tip pickups to perform the consolidation.\n",
+    "description": "Links:\n* SPRI 1 & 2\n\n\n* PCR2 Setup\n\n\n* SPRI 3\n\n\n* Normalization and Pooling\n\n\n* Rerack\nThis protocol performs a tip reracking consolidation from 4x 200ul filter tipracks with only rows A and B occupied to one of the racks. A P300 multi-channel pipette is used with offset tip pickups to perform the consolidation.\n",
     "internal": "3607d5",
     "labware": "\nOpentrons 200ul Filtertipracks\n",
     "markdown": {
