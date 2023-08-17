@@ -247,10 +247,10 @@ MagDeck for {time_settling} minutes.')
         # parked_tips[m300].append(m300._last_tip_picked_up_from)
         m300.drop_tip()
 
-    magdeck.engage()
     ctx.delay(minutes=10)
 
     # remove initial supernatant
+    ctx.delay(minutes=3)
     remove_supernatant(vol_initial+vol_beads, park=False)
 
     # wash
