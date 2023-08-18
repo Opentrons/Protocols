@@ -6,13 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* NGS LIBRARY PREP
+	* Custom
 
 
 ## Description
-This protocol does stuff!
-
+This protocol performs an extraction for up to 96 samples, and for 3 plate types. Plates should be consistent for slots 1, 3, and 6. For protocol details and parameters, please see below.
 
 ### Modules
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
@@ -40,12 +39,17 @@ This protocol does stuff!
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/deck.png)
 
 
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/reagents.png)
-
 
 ### Protocol Steps
-1. Step 1...
+1. Water added to plate
+2. Barcode added to plate
+3. DNA added to plate
+4. Samples pooled to first column of mag plate
+5. Samples pooled to first two wells
+6. Beads added
+7. Remove super
+8. Two ethanol washes
+9. Samples pooled to first well
 
 
 ### Process

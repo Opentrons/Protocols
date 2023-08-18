@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol will transfer scattered sample tubes to a specified destination plate according to a csv. The csv header should read `sample well, sample slot, destination well`. Include the header in the csv and specify the volumes below. THe protocol will automatically pause if the user runs out of tips, rprompting the user to replace tips. A P20 or P300 pipette is specified depending on the volume selected by the user. Liquid height tracking is performed on the 50mL tube so that the pipette does not submerge.
 
 
 ### Labware
@@ -33,12 +33,10 @@ This protocol does stuff!
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0c24ca/deck.png)
 
 
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0c24ca/reagents.png)
-
-
 ### Protocol Steps
-1. Step 1...
+1. Add samples to plate according to csv
+2. If transfection mix not selected, protocol will end
+3. If transfection mix is selected, transfection mix will be added to plate depending on user-specified volume
 
 
 ### Process
