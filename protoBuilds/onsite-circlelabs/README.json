@@ -1,27 +1,26 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "NGS LIBRARY PREP": [
+            "Custom"
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "This protocol performs an extraction for up to 96 samples, and for 3 plate types. Plates should be consistent for slots 1, 3, and 6. For protocol details and parameters, please see below.",
     "internal": "onsite-circlelabs",
     "labware": "\nBulldog 96 Aluminum Block 200 \u00b5L\nFisher 96 Aluminum Block 200 \u00b5L\nBulldog 96 Well Plate 200 \u00b5L\nFisher 96 Well Plate 200 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 24 Well Aluminum Block with NEST 2 mL Snapcap\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* NGS LIBRARY PREP\n\t* Custom\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/deck.png)\n\n\n\n",
+        "description": "This protocol performs an extraction for up to 96 samples, and for 3 plate types. Plates should be consistent for slots 1, 3, and 6. For protocol details and parameters, please see below.\n\n",
         "internal": "onsite-circlelabs\n",
         "labware": "* Bulldog 96 Aluminum Block 200 \u00b5L\n* Fisher 96 Aluminum Block 200 \u00b5L\n* Bulldog 96 Well Plate 200 \u00b5L\n* Fisher 96 Well Plate 200 \u00b5L\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 96 Deepwell Plate 2mL #503001](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n\n",
         "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/reagents.png)\n\n\n",
+        "protocol-steps": "1. Water added to plate\n2. Barcode added to plate\n3. DNA added to plate\n4. Samples pooled to first column of mag plate\n5. Samples pooled to first two wells\n6. Beads added\n7. Remove super\n8. Two ethanol washes\n9. Samples pooled to first well\n\n\n",
         "title": "Tagmentation and Bead Cleanup"
     },
     "modules": [
@@ -31,7 +30,6 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
-    "reagent-setup": "",
+    "protocol-steps": "\nWater added to plate\nBarcode added to plate\nDNA added to plate\nSamples pooled to first column of mag plate\nSamples pooled to first two wells\nBeads added\nRemove super\nTwo ethanol washes\nSamples pooled to first well\n",
     "title": "Tagmentation and Bead Cleanup"
 }
