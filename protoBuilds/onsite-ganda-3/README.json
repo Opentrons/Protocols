@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This is part 3 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 2\nPart 4\n\nThis portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n* Indexing PCR Primer i5, prepared in 96 well plate with i7 primer\n* Indexing PCR Primer i7 prepared in 96 well plate with i5 primer\n* 4X rhAmpSeq Library Mix 2\nExplanation of complex parameters below:\n* Number of Samples: How many samples are to be run, from 1 to 96\n* P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "description": "This is part 3 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 2\nPart 4\n\nThis portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n Indexing PCR Primer i5, prepared in 96 well plate with i7 primer\n Indexing PCR Primer i7 prepared in 96 well plate with i5 primer\n* 4X rhAmpSeq Library Mix 2\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
     "internal": "onsite-ganda-lab",
     "labware": "\nNEST 96 Well Plate\n",
     "markdown": {
