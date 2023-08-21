@@ -12,10 +12,11 @@ metadata = {
 def run(ctx):
 
     [num_samp, barcode_sample_plate, water_vol,
-        barcode_vol, p300_mount, m20_mount] = get_values(  # noqa: F821
+        barcode_vol, temp_mod_temp,
+        p300_mount, m20_mount] = get_values(  # noqa: F821
         "num_samp", "barcode_sample_plate",
-        "water_vol", "barcode_vol", "p300_mount",
-            "m20_mount")
+        "water_vol", "barcode_vol", "temp_mod_temp", "p300_mount",
+        "m20_mount")
 
     num_samp = int(num_samp)
 
@@ -130,7 +131,7 @@ def run(ctx):
     for col in dest_cols:
         m20.aspirate(water_vol, water)
         m20.dispense(water_vol, col)
-    m20.return_tip()
+    m20.drop_tip()
 
     ctx.comment("\n---------------ADDING BARCODE----------------\n\n")
     # CHANGE MIX ########################################################
@@ -146,7 +147,7 @@ def run(ctx):
         ctx.delay(2)
         m20.blow_out(d.bottom(z=5))
 
-        m20.return_tip()
+        m20.drop_tip()
     #
     ctx.comment("\n---------------ADDING DNA----------------\n\n")
 
@@ -158,7 +159,7 @@ def run(ctx):
         m20.move_to(d.top())
         ctx.delay(seconds=2)
         m20.blow_out(d.top())
-        m20.return_tip()
+        m20.drop_tip()
 
     ctx.pause("Move plate to thermocycler then bring back on slot 6.")
 
@@ -168,7 +169,7 @@ def run(ctx):
     for col in dest_cols:
         m20.aspirate(11, col.bottom(z=0.5))
         m20.dispense(11, pool_col)
-    m20.return_tip()
+    m20.drop_tip()
 
     ctx.comment("\n---------------POOLING INTO WELLS----------------\n\n")
     p300.pick_up_tip()
@@ -185,7 +186,7 @@ def run(ctx):
         p300.dispense(10*num_col+5, pool_wells[1])
         p300.mix(1, 0.8*10*num_col, pool_wells[1])
         p300.blow_out(pool_wells[1].bottom(7))
-    p300.return_tip()
+    p300.drop_tip()
 
     ctx.comment("\n---------------ADDING BEADS----------------\n\n")
     p300.pick_up_tip()
@@ -204,7 +205,7 @@ def run(ctx):
         p300.aspirate(leftover_vol, beads, rate=0.1)
         p300.dispense(leftover_vol, pool_well)
         resuspend_pellet(pool_well, p300, 200, reps=8)
-        p300.return_tip()
+        p300.drop_tip()
         ctx.comment("\n\n")
 
     ctx.delay(minutes=5)
@@ -239,7 +240,7 @@ def run(ctx):
     m20.dispense(20, trash)
     ctx.delay(seconds=2)
     m20.blow_out(trash)
-    p300.return_tip()
+    p300.drop_tip()
 
     mag_mod.disengage()
 
@@ -308,5 +309,5 @@ def run(ctx):
     ctx.delay(seconds=2)
     p300.blow_out()
 
-    p300.return_tip()
-    m20.return_tip()
+    p300.drop_tip()
+    m20.drop_tip()

@@ -42,6 +42,12 @@
     "default": 1
   },
   {
+    "type": "int",
+    "label": "Temperature Module Temperature (4-95)",
+    "name": "temp_mod_temp",
+    "default": 4
+  },
+  {
     "type": "dropDown",
     "label": "P300 Single-Channel Mount",
     "name": "p300_mount",
