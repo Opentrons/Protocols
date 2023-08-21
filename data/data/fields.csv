@@ -57,6 +57,7 @@ acid_demin_yn,1
 acid_volume,1
 adapter_ligation,1
 add_ic,1
+add_transfection_mix,1
 adjust_final_vol,1
 agar_volume,1
 air_dry_time,2
@@ -100,6 +101,8 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_sample_plate,1
+barcode_vol,1
 barcode_well,1
 barcode_well_start,1
 bb_asp_rate_multiplier,1
@@ -268,7 +271,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,15
+csv_samp,16
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -309,6 +312,7 @@ dest_format,1
 dest_labware,1
 dest_lw,1
 dest_lw_def,1
+dest_plate,1
 dest_plate1,1
 dest_plate2,1
 dest_plate3,1
@@ -560,6 +564,7 @@ init_samp_vol,1
 init_temp,2
 init_time,2
 init_vol,3
+init_vol_50,1
 init_vol_bca,1
 init_vol_bsa,1
 init_vol_buff,1
@@ -712,7 +717,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,78
+m20_mount,79
 m300_mount,105
 m300_type,2
 m_mount,1
@@ -897,7 +902,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,69
+num_samp,70
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -922,6 +927,8 @@ num_tests,1
 num_tipracks,1
 num_tubes,2
 num_wells,2
+number_05_plates,1
+number_14_plates,1
 number_of_columns,1
 number_of_dna_samples,1
 number_of_oligo_standards,1
@@ -971,7 +978,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,133
+p20_mount,134
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -988,7 +995,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,151
+p300_mount,153
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1177,6 +1184,7 @@ reagents_csv,1
 reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
+remove_tube_vol,1
 replenish_tips_manually,1
 reps_mix,2
 res,2
@@ -1431,7 +1439,7 @@ temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
 temp_mod_setting,3
-temp_mod_temp,1
+temp_mod_temp,2
 temp_mod_temperature,1
 temp_s1_part1,1
 temp_s1_part2,1
@@ -1522,6 +1530,7 @@ tr9,1
 track_start,1
 track_tips,2
 tracking_reset,2
+trans_mix_vol,1
 trans_vol1,1
 transfer2,1
 transfer_csv,21
@@ -1683,7 +1692,7 @@ waste,2
 waste_water_mode,1
 water_rate,1
 water_res_vol,1
-water_vol,2
+water_vol,3
 water_volume,2
 water_well,1
 wb_col,1

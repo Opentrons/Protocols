@@ -84,6 +84,7 @@ def parse(protocol_path):
     if has_fields:
         with open(fields_json_path) as f:
             fields = json.load(f)
+
             # for simulation, we need to add a get_values() fn that supplies
             # the default values
             default_values = {

@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This is Part 2 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 3 to this protocol is the Extraction and Clean-Up steps.\nLinks:\n* Part 1: Sample Normalization\n* Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation\n* Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction",
+    "description": "This is Part 2 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 3 to this protocol is the Extraction and Clean-Up steps.\nLinks:\n Part 1: Sample Normalization\n Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation\n* Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction",
     "internal": "0b97ae-protocol-2B",
     "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
     "markdown": {
