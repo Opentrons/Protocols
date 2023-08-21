@@ -36,6 +36,9 @@ def run(ctx):
     m20 = ctx.load_instrument(
          'p20_multi_gen2', 'right', tip_racks=tiprack20)
 
+    m300.flow_rate.aspirate /= 2
+    m20.flow_rate.aspirate /= 2
+
     # variables
     mm = reservoir.wells()[:num_plates]
     sample_sources = sample_plate.rows()[0]
