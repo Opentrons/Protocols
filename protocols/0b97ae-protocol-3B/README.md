@@ -42,7 +42,7 @@ Links:
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/Image+8-11-23+at+2.24+PM.jpg)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/3F240714-EB34-4978-97F6-5BD0739E874B_1_105_c.jpeg)
 Water Reservoir (slot 2):
 	Column 1: Nuclease Free Water
 	Column 2: Binding Buffer
