@@ -28,7 +28,7 @@
   "type": "float",
   "label": "How many mm lower into source/dest plates?",
   "name": "lower_asp_height",
-  "default": 1
+  "default": 0.7
   },
   {
     "type": "dropDown",
