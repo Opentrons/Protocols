@@ -390,6 +390,3 @@ def run(ctx: protocol_api.ProtocolContext):
         cancellationToken.set_false()
         thread.join()
     ctx.set_rail_lights(True)
-
-    for c in ctx.commands():
-        print(c)
