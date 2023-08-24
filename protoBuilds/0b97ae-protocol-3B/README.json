@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nWater Reservoir (slot 2):\n    Column 1: Nuclease Free Water\n    Column 2: Binding Buffer\n    Column 3 & 4: Ethanol\n    Column 10, 11 & 12: Empty for Supernatent Removal\nDiluted RNA Plate (slot 7 Temperature Module):\n    RNA Samples Starting Plate\nReagent Plate (Slot 10):\n    Column 1: MasterMix\n    Column 2: Magentic Beads",
-    "description": "This is Part 3 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 2 to this protocol is the Fragementation.\nLinks:\n Part 1: Sample Normalization\n Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation\n* Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction",
+    "description": "This is Part 3 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 2 to this protocol is the Fragementation.\nLinks:\n* Part 1: Sample Normalization\n* Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation\n* Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction",
     "internal": "0b97ae-protocol-3B",
     "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
     "markdown": {
