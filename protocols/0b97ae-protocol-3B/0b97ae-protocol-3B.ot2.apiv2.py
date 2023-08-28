@@ -78,7 +78,7 @@ def run(ctx: protocol_api.ProtocolContext):
     tempdeck_1.set_temperature(4)
     tempdeck_2 = ctx.load_module('temperature module gen2', '7')
     tempdeck_2.set_temperature(4)
-    Mag_mod = ctx.load_module('magnetic module', '4')
+    Mag_mod = ctx.load_module('magnetic module gen2', '4')
     Mag_mod.disengage()
 
     # load labware
@@ -204,6 +204,9 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.dispense(19.5, dest, rate=0.5)
         bead_mixing(dest, p20, 15, reps=6)
         p20.blow_out(dest.bottom(20))
+        p20.aspirate(1, dest.top())
+        ctx.delay(seconds=10)
+        p20.aspirate(1, dest.top())
         drop_tip(p20)
 
     ctx.pause('Remove Plate and Centrifuge, place back on deck at site 4, on the magnetic module')
@@ -235,6 +238,8 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             p20.dispense(p20.current_volume, Removal_Trash_1)
             p20.blow_out()
+            p20.air_gap(1)
+            ctx.delay(seconds=10)
             p20.air_gap(1)
         drop_tip(p20)
 
