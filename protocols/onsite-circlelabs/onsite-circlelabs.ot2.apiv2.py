@@ -142,7 +142,7 @@ def run(ctx):
         m20.aspirate(barcode_vol, s.bottom(z=0.8), rate=0.1)
         # slow_tip_withdrawal(m20, d)
         m20.dispense(barcode_vol, d)
-        m20.mix(1, 4, d)
+        m20.mix(7, 4, d)
         m20.move_to(d.bottom(z=5))
         ctx.delay(2)
         m20.blow_out(d.bottom(z=5))
