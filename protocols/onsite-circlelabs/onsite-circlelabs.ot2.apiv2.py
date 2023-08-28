@@ -156,9 +156,10 @@ def run(ctx):
         m20.aspirate(dna_vol, s.bottom(z=0.8))
         m20.dispense(dna_vol, d)
         m20.mix(3, 5, d)
-        m20.move_to(d.top())
+        slow_tip_withdrawal(m20, d)
         ctx.delay(seconds=2)
         m20.blow_out(d.top())
+        m20.touch_tip()
         m20.drop_tip()
 
     ctx.pause("Move plate to thermocycler then bring back on slot 6.")

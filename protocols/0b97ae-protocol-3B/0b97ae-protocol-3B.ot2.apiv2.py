@@ -75,7 +75,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load modules
     tempdeck_1 = ctx.load_module('temperature module gen2', '10')
+    tempdeck_1.set_temperature(4)
     tempdeck_2 = ctx.load_module('temperature module gen2', '7')
+    tempdeck_2.set_temperature(4)
     Mag_mod = ctx.load_module('magnetic module', '4')
     Mag_mod.disengage()
 
@@ -114,7 +116,7 @@ def run(ctx: protocol_api.ProtocolContext):
     Removal_Trash_2 = water_res.rows()[0][10]
     Removal_Trash_3 = water_res.rows()[0][11]
     mm_1 = Reagent_plate.rows()[0][0]
-    beads = Reagent_plate.rows()[0][1]
+    beads = Reagent_plate.rows()[0][0]
 
     def pick_up(pip):
         try:
@@ -364,15 +366,15 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.dispense(14, d)
         drop_tip(p20)
 
-    ctx.comment('\n~~~~~~~~~~~~~~FIRST STRAND SYNTHESIS SETUP~~~~~~~~~~~~~\n')
-    for i, dest in enumerate(final_dest):
-        pick_up(p20)
-        p20.aspirate(11, mm_1)
-        p20.dispense(11, dest.top())
-        bead_mixing(dest, p20, 19)
-        p20.blow_out(dest.top())
-        p20.air_gap(1)
-        drop_tip(p20)
+    # ctx.comment('\n~~~~~~~~~~~~~~FIRST STRAND SYNTHESIS SETUP~~~~~~~~~~~~~\n')
+    # for i, dest in enumerate(final_dest):
+    #     pick_up(p20)
+    #     p20.aspirate(11, mm_1)
+    #     p20.dispense(11, dest.top())
+    #     bead_mixing(dest, p20, 19)
+    #     p20.blow_out(dest.top())
+    #     p20.air_gap(1)
+    #     drop_tip(p20)
 
     if flash:
         if not ctx._hw_manager.hardware.is_simulator:
@@ -388,6 +390,3 @@ def run(ctx: protocol_api.ProtocolContext):
         cancellationToken.set_false()
         thread.join()
     ctx.set_rail_lights(True)
-
-    for c in ctx.commands():
-        print(c)

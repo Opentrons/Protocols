@@ -219,7 +219,7 @@ clearance_water,2
 clearance_water_tube,1
 col_meoh,1
 col_mq,1
-col_start,1
+col_start,2
 cold,3
 cols,1
 column_count,2
@@ -910,7 +910,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,179
+num_samples,180
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -1615,7 +1615,7 @@ vol_a_to_b,1
 vol_aliqout,1
 vol_aliquot,1
 vol_ampure_beads,1
-vol_beads,1
+vol_beads,2
 vol_bulb,1
 vol_c_to_d,1
 vol_cd154,1
@@ -1631,7 +1631,7 @@ vol_dispense,1
 vol_dispensed,1
 vol_dna,5
 vol_dna_buff,1
-vol_elution,1
+vol_elution,2
 vol_elution_buffer,1
 vol_elution_final,1
 vol_etoh,1
@@ -1640,6 +1640,7 @@ vol_final_plate,1
 vol_h2o,2
 vol_h_lysate,1
 vol_ic,1
+vol_initial,1
 vol_lys_buffer,1
 vol_media_tubes,1
 vol_meoh,1
@@ -1669,7 +1670,7 @@ vol_transfer,1
 vol_tube1,1
 vol_tube2,1
 vol_tube3,1
-vol_wash,1
+vol_wash,2
 vol_water,3
 vol_xp1,1
 volume,5

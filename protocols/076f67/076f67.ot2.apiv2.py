@@ -81,11 +81,12 @@ def run(ctx):
         for i in range(len(plate.rows()[0][:6])):
             pick_up()
             m300.mix(3, 40, plate.rows()[0][i].bottom(z=1-lower_asp_height))
-            m300.aspirate(40, plate.rows()[0][i].bottom(z=1-lower_asp_height))
+            m300.aspirate(40, plate.rows()[0][i].bottom(z=1-lower_asp_height),
+                          rate=0.4)
             if i < 5:
-                m300.dispense(40, plate.rows()[0][i+1])
+                m300.dispense(40, plate.rows()[0][i+1], rate=0.4)
             if i == 5:
-                m300.dispense(40, trash)
+                m300.dispense(40, trash, rate=0.4)
 
             m300.drop_tip()
         ctx.comment('\n')
