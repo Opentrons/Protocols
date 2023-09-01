@@ -22,7 +22,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Labware on the Temperature Module",
+    "label": "Labware for Samples on the Temperature Module",
     "name": "labware_temp_deck",
     "options": [
       { "label": "eppendorftwin.tec96_96_aluminumblock_150ul", "value": "eppendorftwin.tec96_96_aluminumblock_150ul" },
