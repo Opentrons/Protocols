@@ -1,4 +1,4 @@
-# Protocol Title (should match metadata of .py file)
+# 16S Library pooling
 
 ### Author
 [Opentrons](https://opentrons.com/)
