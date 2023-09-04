@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n\n",
-    "description": "This is a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system\nThe protocol is broken down into 3 main parts:\n Pipette mixing of lysates, binding buffer and magnetic beads\n Bead washing 3x using magnetic module\n* Final elution to PCR plate\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (slot 3). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n",
+    "description": "This is a Nucleaic Acid Purification Protocol for the OT-2 liquid handling system\nThe protocol is broken down into 3 main parts:\n* Pipette mixing of lysates, binding buffer and magnetic beads\n* Bead washing 3x using magnetic module\n* Final elution to PCR plate\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (slot 3). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n",
     "internal": "0ff0c3",
     "labware": "\nOT-2 Filter Tips, 200\u00b5L\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nNEST 1-Well Reservoir, 195 mL\n\nOpentrons Tough 0.2 mL 96-Well PCR Plate, Full Skirt\n",
     "markdown": {
