@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol automates preparation of plates that will be used in the Magnetic Particle Processing protocol on the KingFisher Flex.\nThis protocol is still a work in progress and will be updated.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples to be run (1-96).\n Pipette Mount: Select which mount the P300 Single-Channel Pipette (GEN2) is attached to.\n",
+    "description": "This protocol automates preparation of plates that will be used in the Magnetic Particle Processing protocol on the KingFisher Flex.\nThis protocol is still a work in progress and will be updated.\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples to be run (1-96).\n* Pipette Mount: Select which mount the P300 Single-Channel Pipette (GEN2) is attached to.\n",
     "internal": "743f54",
     "labware": "\nOpentrons 200\u00b5L Filter Tips\nOpentrons 4-in-1 Tube Rack (with 24 Well Insert)\nReservoirs for Wash Buffers (like the NEST 1-Well Reservoir, 195mL)\nReservoir for Elution Buffer (like the NEST 12-Well Reservoir, 15mL)\n1.5mL Mictrocentrifuge Tube\nKingFisher 96-Deepwell Plate\nKingFisher 96-Well Microplate\n",
     "markdown": {

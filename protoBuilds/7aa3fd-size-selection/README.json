@@ -5,7 +5,7 @@
             "Custom"
         ]
     },
-    "description": "This protocol performs the final size selection step of NGS library prep.\n\n\n\nEppendorf twin.tec 96-well PCR plate 150ul #0030128605\nOpentrons magnetic module\nOpentrons 4-in-1 tuberack with 4x6 insert for 2ml Eppendorf snapcap tubes or equivalent.\nOpentrons 10ul and 200ul filter tipracks\nOpentrons GEN1 P10 and P300 single-channel electronic pipettes\n\n\n\n4x6 tuberack with 2ml Eppendorf snapcap tubes (slot 2)\n tube A1: SPRI beads\n tube B1-B3: 80% ethanol\n* tube C1: Low EDTA TE",
+    "description": "This protocol performs the final size selection step of NGS library prep.\n\n\n\nEppendorf twin.tec 96-well PCR plate 150ul #0030128605\nOpentrons magnetic module\nOpentrons 4-in-1 tuberack with 4x6 insert for 2ml Eppendorf snapcap tubes or equivalent.\nOpentrons 10ul and 200ul filter tipracks\nOpentrons GEN1 P10 and P300 single-channel electronic pipettes\n\n\n\n4x6 tuberack with 2ml Eppendorf snapcap tubes (slot 2)\n* tube A1: SPRI beads\n* tube B1-B3: 80% ethanol\n* tube C1: Low EDTA TE",
     "internal": "7aa3fd",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",

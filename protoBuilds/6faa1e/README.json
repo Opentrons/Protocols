@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "This protocol automates the steps of transferring mastermix from source plates to destination plates.\n\n\n\nP20 multi-channel GEN2 electronic pipette\nOpentrons 20ul tiprack\nThermo Scientific\u2122 PCR Plate, 96-well, semi-skirted\nEppendorf PCR cooler\n\n\n\nDeck Setup\n Destination Plates (PCR Plate on top of Eppendorf Cooler) (Slots 1-8)\n Source Plate (NEST 12-channel 15ml reservoir on top of ice tray) (Slot 11)\n* Opentrons 20 uL tip rack (Slot 10)",
+    "description": "This protocol automates the steps of transferring mastermix from source plates to destination plates.\n\n\n\nP20 multi-channel GEN2 electronic pipette\nOpentrons 20ul tiprack\nThermo Scientific\u2122 PCR Plate, 96-well, semi-skirted\nEppendorf PCR cooler\n\n\n\nDeck Setup\n* Destination Plates (PCR Plate on top of Eppendorf Cooler) (Slots 1-8)\n* Source Plate (NEST 12-channel 15ml reservoir on top of ice tray) (Slot 11)\n* Opentrons 20 uL tip rack (Slot 10)",
     "internal": "6faa1e",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
