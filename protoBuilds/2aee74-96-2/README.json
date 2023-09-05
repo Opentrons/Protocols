@@ -5,8 +5,8 @@
             "Olink\u00ae Target 96"
         ]
     },
-    "deck-setup": "\nNote: all volumes for 96 samples (including controls)\n green on reservoir (slot 5): 10562.0\u00b5l extension mix\n blue on incubation plate (slot 2): samples\n",
-    "description": "Links:\n Part 1: Incubation\n Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 2/3: Extension for use with the Olink\u00ae Target 96 protocol for protein biomarker discovery.\n\nOlink\u00ae is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.\n",
+    "deck-setup": "\nNote: all volumes for 96 samples (including controls)\n* green on reservoir (slot 5): 10562.0\u00b5l extension mix\n* blue on incubation plate (slot 2): samples\n",
+    "description": "Links:\n* Part 1: Incubation\n* Part 2: Extension\n* Part 3: Detection\nThis protocol accomplishes part 2/3: Extension for use with the Olink\u00ae Target 96 protocol for protein biomarker discovery.\n\nOlink\u00ae is a registered trademark of Olink Proteomics AB. Opentrons is not affiliated with or endorsed by Olink Proteomics AB.\n",
     "internal": "2aee74",
     "labware": "\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nNEST 12-Well Reservoir, 15 mL\nOpentrons Filter Tips\n",
     "markdown": {

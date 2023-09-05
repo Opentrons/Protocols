@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol preps a 96 well plate with 50ul of sample from a custom 96 tube tube rack. Samples are drawn from the tube rack by column (A1, B1, C1...H1, A2...etc.) and dispensed to the well plate in the same order. The pipette will dispense, and then blowout after dispensing into the well plate. The user has the ability to manipulate the number of samples per run. \nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples (1-96) for this run.\n P300 Single-Channel Mount: Specify which mount (left or right) to host the P300-single channel pipette.\n",
+    "description": "This protocol preps a 96 well plate with 50ul of sample from a custom 96 tube tube rack. Samples are drawn from the tube rack by column (A1, B1, C1...H1, A2...etc.) and dispensed to the well plate in the same order. The pipette will dispense, and then blowout after dispensing into the well plate. The user has the ability to manipulate the number of samples per run. \nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples (1-96) for this run.\n* P300 Single-Channel Mount: Specify which mount (left or right) to host the P300-single channel pipette.\n",
     "internal": "1dec68",
     "labware": "\nBio-Rad 50ul 96 Well Plate\n(Opentrons 300uL tips)[https://shop.opentrons.com/universal-filter-tips/]\nCustom 96 tube rack\n",
     "markdown": {
