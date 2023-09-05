@@ -1,24 +1,23 @@
 {
     "author": "Opentrons",
     "categories": {
-        "NGS Library Prep": [
-            "Cleanup"
-        ]
+        "Cleanup": [],
+        "NGS Library Prep": []
     },
     "description": "This protocol is equipped to perform any of 4x cleanups for the Paragon NGS prep protocol.",
     "internal": "0b83b7",
     "labware": "\nNEST 0.2 mL 96-Well PCR Plate, Full Skirt\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* NGS Library Prep\n\t* Cleanup\n\n\n",
-        "description": "This protocol is equipped to perform any of 4x cleanups for the Paragon NGS prep protocol.\n\n\n",
-        "internal": "0b83b7\n",
-        "labware": "* [NEST 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-2-ml-96-well-pcr-plate-full-skirt/)\n* [NEST 12 Well Reservoir 15 mL #360102](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)\n* [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n* [Opentrons 96 Filter Tip Rack 20 \u00b5L](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n\n\n",
-        "modules": "* [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
-        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
-        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
-        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "title": "Paragon Cleanup"
+        "author": "\n[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "\n- NGS Library Prep\n  - Cleanup\n\n",
+        "description": "\nThis protocol is equipped to perform any of 4x cleanups for the Paragon NGS prep protocol.\n\n",
+        "internal": "\n0b83b7\n",
+        "labware": "\n- [NEST 0.2 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-2-ml-96-well-pcr-plate-full-skirt/)\n- [NEST 12 Well Reservoir 15 mL #360102](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)\n- [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n- [Opentrons 96 Filter Tip Rack 20 \u00b5L](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n\n",
+        "modules": "\n- [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/temperature-module-gen2/)\n- [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n",
+        "notes": "\nIf you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "\n- [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n- [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "\n1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n",
+        "title": "NGS Cleanup"
     },
     "modules": [
         "Opentrons Temperature Module (GEN2)",
@@ -27,5 +26,5 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "title": "Paragon Cleanup"
+    "title": "NGS Cleanup"
 }
