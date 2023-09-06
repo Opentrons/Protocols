@@ -26,7 +26,10 @@ def run(ctx):
         if line and line.split(',')[0].strip()]
 
     num_cols = math.ceil((num_samples)/8)
-    tc = ctx.load_module('thermocyclerModuleV2')
+    try:
+        tc = ctx.load_module('thermocyclerModuleV2')
+    except:  # noqa
+        tc = ctx.load_module('thermocycler')
     tc.open_lid()
     tc_plate = tc.load_labware('biorad_96_wellplate_200ul_pcr')
     tipracks300 = [
@@ -60,47 +63,51 @@ def run(ctx):
         vol_rxn_mix_2 = 90.0
 
     # define liquids
-    rxn_mix_1_liq = ctx.define_liquid(
-        name='DNAse',
-        description='DNAse',
-        display_color='#00FF00',
-    )
-    rxn_mix_2_liq = ctx.define_liquid(
-        name='PK',
-        description='PK',
-        display_color='#0000FF',
-    )
-    diluent_liq = ctx.define_liquid(
-        name='dilution buffer',
-        description='dilution buffer',
-        display_color='#FF0000',
-    )
-    mastermix_liq = ctx.define_liquid(
-        name='mastermix',
-        description='mastermix',
-        display_color='#FBFF00',
-    )
-    sample_liq = ctx.define_liquid(
-        name='sample',
-        description='sample, NTC, and DAC',
-        display_color='#F300FF',
-    )
-    pc_liq = ctx.define_liquid(
-        name='positive control',
-        description='diluted 1:100',
-        display_color='#050F5D',
-    )
+    try:
+        rxn_mix_1_liq = ctx.define_liquid(
+            name='DNAse',
+            description='DNAse',
+            display_color='#00FF00',
+        )
+        rxn_mix_2_liq = ctx.define_liquid(
+            name='PK',
+            description='PK',
+            display_color='#0000FF',
+        )
+        diluent_liq = ctx.define_liquid(
+            name='dilution buffer',
+            description='dilution buffer',
+            display_color='#FF0000',
+        )
+        mastermix_liq = ctx.define_liquid(
+            name='mastermix',
+            description='mastermix',
+            display_color='#FBFF00',
+        )
+        sample_liq = ctx.define_liquid(
+            name='sample',
+            description='sample, NTC, and DAC',
+            display_color='#F300FF',
+        )
+        pc_liq = ctx.define_liquid(
+            name='positive control',
+            description='diluted 1:100',
+            display_color='#050F5D',
+        )
 
-    # load liquids
-    [s.load_liquid(sample_liq, volume=200/num_samples) for s in samples]
-    pc.load_liquid(pc_liq, volume=200)
-    if not type_molecule == 'pDNA':
-        rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8*1.1+2000)
-    if not type_molecule == '101':
-        rxn_mix_2.load_liquid(
-            rxn_mix_2_liq, volume=vol_rxn_mix_2*num_cols*8*1.1+2000)
-    mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4*1.1+2000)
-    [d.load_liquid(diluent_liq, volume=13500) for d in diluent[:num_cols]]
+        # load liquids
+        [s.load_liquid(sample_liq, volume=200/num_samples) for s in samples]
+        pc.load_liquid(pc_liq, volume=200)
+        if not type_molecule == 'pDNA':
+            rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8*1.1+2000)
+        if not type_molecule == '101':
+            rxn_mix_2.load_liquid(
+                rxn_mix_2_liq, volume=vol_rxn_mix_2*num_cols*8*1.1+2000)
+        mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4*1.1+2000)
+        [d.load_liquid(diluent_liq, volume=13500) for d in diluent[:num_cols]]
+
+    except:  # noqa
+        pass
 
     def pick_up(pip):
         try:
@@ -118,10 +125,11 @@ def run(ctx):
     def track_dilution(vol):
         nonlocal vol_current
         nonlocal dil_current
-        if vol + vol_current > vol_max_dil:
+        vol_actual = vol*8  # multi-channel pipette
+        if vol_actual + vol_current > vol_max_dil:
             vol_current = 0
             dil_current = next(dil_tracker)
-        vol_current += vol
+        vol_current += vol_actual
         return dil_current
 
     def wick(pip, well, side=1):
