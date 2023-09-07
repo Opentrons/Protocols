@@ -1,5 +1,4 @@
-# Protocol Title
-PCR Prep
+# PCR Prep
 
 ### Author
 [Opentrons](https://opentrons.com/)

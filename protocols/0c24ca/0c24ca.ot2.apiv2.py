@@ -87,7 +87,7 @@ def run(ctx):
         dest_well = dest_slot.wells_by_name()[dest_well_name]
 
         pick_up(pip)
-        pip.aspirate(remove_tube_vol, source_well)
+        pip.aspirate(remove_tube_vol, source_well.bottom(z=2))
         pip.dispense(remove_tube_vol, dest_well)
         pip.drop_tip()
 

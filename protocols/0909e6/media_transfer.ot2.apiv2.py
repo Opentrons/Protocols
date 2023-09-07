@@ -1,6 +1,7 @@
 import math
 from opentrons.protocol_api.labware import Well
 from opentrons.protocols.api_support.types import APIVersion
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'DOE',
@@ -36,7 +37,7 @@ def run(ctx):
             self.height = height
             self.min_height = min_height
             self.comp_coeff = comp_coeff
-            self.radius = self.diameter/2
+            self.radius = self.diameter/2 if self.diameter else self.width/2
             self.current_volume = current_volume
             self.min_vol = min_vol
 
@@ -100,7 +101,7 @@ def run(ctx):
     # parse data
     factor_data = [
         [float(val) for val in line.split(',')[1:] if val.strip()]
-        for line in csv_factors.splitlines()[2:]
+        for line in csv_factors.splitlines()[3:]
     ]
 
     all_factor_tubes = [
@@ -114,8 +115,11 @@ def run(ctx):
         if cell.strip()]
     factor_tubes = [
         all_factor_tubes[ind] for ind in factor_indices]
+    factor_viscosities = [
+        bool(visc) for visc in csv_factors.splitlines()[1].split(',')[1:]
+        if visc.strip()]
     factor_volumes_ul = [
-        float(cell)*1000 for cell in csv_factors.splitlines()[1].split(',')[1:]
+        float(cell)*1000 for cell in csv_factors.splitlines()[2].split(',')[1:]
         if cell.strip()]
     # ref_vol = tuberacks15[0].wells()[0].max_volume / 1000  # 2ml or 15ml
     # ref_height = tuberacks15[0].wells()[0].depth
@@ -129,9 +133,11 @@ def run(ctx):
         for well, vol, height in zip(
             factor_tubes, factor_volumes_ul, factor_heights)]
 
-    def slow_withdraw(well, pip=p1000):
+    def slow_withdraw(well, pip=p1000, delay_s=2.0):
         ctx.max_speeds['A'] = 25
         ctx.max_speeds['Z'] = 25
+        if delay_s > 0:
+            ctx.delay(seconds=delay_s)
         pip.move_to(well.top())
         del ctx.max_speeds['A']
         del ctx.max_speeds['Z']
@@ -182,6 +188,9 @@ def run(ctx):
         for vol in vols_split:
             media_info.append({well: vol})
 
+    wells_h = [
+        WellH(well, height=0) for well in wells_ordered]
+
     for d in media_info:
         well = list(d.keys())[0]
         asp_vol = list(d.values())[0]
@@ -217,13 +226,53 @@ def run(ctx):
     p1000.return_tip()
     p1000.reset_tipracks()
 
+    viscosity_map = {
+        20: {
+            'aspirate': 6.5,
+            'delay_aspiration': 2.0,
+            'dispense': 6.5,
+            'delay_dispense': 2.0,
+            'default': 7.56
+        },
+        300: {
+            'aspirate': 80,
+            'delay_aspiration': 2.0,
+            'dispense': 80,
+            'delay_dispense': 2.0,
+            'default': 92.86
+        },
+        1000: {
+            'aspirate': 247,
+            'delay_aspiration': 2.0,
+            'dispense': 247,
+            'delay_dispense': 2.0,
+            'default': 247
+        }
+    }
+
     # transfer factors
-    for i, factor in enumerate(factors):
+    for i, (visc, factor) in enumerate(zip(factor_viscosities, factors)):
         factor_vols = [line[i] for line in factor_data]
         factor_info = [
             {well: vol}
-            for well, vol in zip(wells_ordered, factor_vols)]
+            for well, vol in zip(wells_h, factor_vols)]
         factor_sets = custom_distribute(factor_info, pip=pip_small)
+        if visc:
+            asp_rate_relative = viscosity_map[
+                int(pip_small.max_volume)]['aspirate'] / (
+                    viscosity_map[int(pip_small.max_volume)]['default'])
+            asp_delay = viscosity_map[
+                int(pip_small.max_volume)]['delay_aspiration']
+            disp_rate_relative = viscosity_map[
+                int(pip_small.max_volume)]['dispense'] / (
+                    viscosity_map[int(pip_small.max_volume)]['default'])
+            disp_delay = viscosity_map[
+                int(pip_small.max_volume)]['delay_dispense']
+        else:
+            asp_rate_relative = 1
+            asp_delay = 2.0
+            disp_rate_relative = 1
+            disp_delay = 2.0
         for factor_set in factor_sets:
             # aspirate total vol needed
             if not pip_small.has_tip:
@@ -237,10 +286,15 @@ def run(ctx):
                 else:
                     ag_vol = pip_small.max_volume - asp_vol
                 pip_small.aspirate(ag_vol, factor.well.top())
-                pip_small.aspirate(asp_vol, factor.height_dec(asp_vol))
-                slow_withdraw(factor.well, pip_small)
+                pip_small.aspirate(
+                    asp_vol, factor.height_dec(asp_vol),
+                    rate=asp_rate_relative)
+                slow_withdraw(factor.well, pip_small, delay_s=asp_delay)
                 pip_small.dispense(
-                    pip_small.current_volume, well.bottom(well.depth/2))
+                    pip_small.current_volume,
+                    well.height_inc(asp_vol).move(Point(z=3)),
+                    rate=disp_rate_relative)
+                ctx.delay(seconds=disp_delay)
                 pip_small.blow_out(well.top(-2))
 
             # total_factor_vol = sum([sum(dict.values()) for dict in
