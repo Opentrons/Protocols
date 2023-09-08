@@ -42,7 +42,7 @@ Links:
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/3F240714-EB34-4978-97F6-5BD0739E874B_1_105_c.jpeg)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/deck.jpg)
 Water Reservoir (slot 2):
 	Column 1: Nuclease Free Water
 	Column 2: Binding Buffer
@@ -55,7 +55,7 @@ Reagent Plate (Slot 10):
 	Column 2: Magentic Beads
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/part+4/reagen.jpg)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/reagents.jpg)
 
 
 ### Protocol Steps
