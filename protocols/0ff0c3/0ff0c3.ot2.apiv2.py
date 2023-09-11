@@ -198,15 +198,20 @@ def run(ctx):
         pick_up(m300)
         m300.aspirate(50, elution_buff)
         m300.dispense(50, col)
-        m300.mix(15, 50, col)
+        
+        for i in range(20):
+                m300.aspirate(50, col.bottom(0.2), rate=2)
+                m300.dispense(50, col.bottom(2), rate=2)
+        
+        #m300.mix(15, 50, col)
         m300.drop_tip()
-
-    mag_mod.engage(height_from_base=4.0)
-    ctx.delay(minutes=5)
+        #May need to replace this with a for loop for the mixing
+    mag_mod.engage(height_from_base=3.5)
+    #ctx.delay(minutes=5)
 
     for s, d in zip(samples, destination):
         pick_up(m300)
-        m300.aspirate(50, s.bottom(0.4), rate=0.1)
+        m300.aspirate(50, s.bottom(0.1), rate=0.1)
         m300.dispense(50, d)
         m300.drop_tip()
 
