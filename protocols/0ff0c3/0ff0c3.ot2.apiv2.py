@@ -59,7 +59,7 @@ def run(ctx):
         else:
             current_pipette.move_to(well_location.center())
         ctx.max_speeds[axis] = None
-        
+
     def slow_tip_withdrawal(current_pipette, well_location, to_center=False):
         if current_pipette.mount == 'right':
             axis = 'A'
@@ -89,9 +89,12 @@ def run(ctx):
 
         for i in range(num_mix):
             m300.aspirate(mix_vol, col.bottom(5))
-            m300.dispense(mix_vol, col.bottom(10))
+            m300.dispense(mix_vol, col.bottom(25))
 
-        slow_tip_withdrawal(m300, col)
+        #lowering tip into bottom of well, then slow withdrawal to remove drops
+        m300.aspirate(mix_vol, col.bottom(25))
+        m300.dispense(mix_vol, col.bottom(5), rate=0.1)
+        extra_slow_tip_withdrawal(m300, col)
         m300.drop_tip()
 
     ctx.comment('\n-------------INCUBATION ON MAGNET---------------\n\n')
