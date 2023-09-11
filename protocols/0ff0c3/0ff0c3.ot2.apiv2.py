@@ -98,9 +98,9 @@ def run(ctx):
         m300.drop_tip()
 
     ctx.comment('\n-------------INCUBATION ON MAGNET---------------\n\n')
-    mag_mod.engage(height_from_base=4.0)
-    ctx.delay(minutes=10)
-
+    mag_mod.engage(height_from_base=3.5)
+    ctx.delay(minutes=5)
+    #Turning on magnet, then mixing to allow beads in top of sample to separate out of solution
     ctx.comment('\n----------------REMOVING SUPER------------------\n\n')
     sup_vol = 1820   # as per Parker during onsite
     for col in samples:
