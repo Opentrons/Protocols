@@ -145,35 +145,44 @@ def run(ctx):
     #this pause is not necessary if extracting 40 or fewer samples
 
     ctx.comment('\n---------------WASH STEP----------------\n\n')
-
-    wash_vol = 500
-    num_buff_transfers = math.ceil(wash_vol/tip_ref_vol)
-    buff_transfer_vol = wash_vol/num_buff_transfers
-
     for i in range(3):
+        #adding wash and mixing
         for col in samples:
             pick_up(m300)
 
-            for i in range(num_buff_transfers):
-                m300.aspirate(buff_transfer_vol, wash_buff)
-                m300.dispense(buff_transfer_vol, col.top())
-                m300.blow_out()
+            for i in range(3):
+                m300.aspirate(166.7, wash_buff)
+                m300.dispense(166.7, col.bottom(15))#dispensing within deepwell
+                m300.blow_out(col.bottom(15))
+                
+            for i in range(15):
+                m300.aspirate(200, col.bottom(2), rate=2)
+                m300.dispense(200, col.bottom(7), rate=3)
+            
+            m300.aspirate(200, col.bottom(2), rate=1)
+            m300.dispense(200, col.bottom(2), rate=0.2)
+            extra_slow_tip_withdrawal(m300, col)
+            m300.drop_tip()    
 
-            m300.mix(5, 200, col)
-            m300.drop_tip()
+            #Standard mix:
+            #m300.mix(5, 200, col)
+            #m300.drop_tip()
 
-        mag_mod.engage(height_from_base=4.0)
+        mag_mod.engage(height_from_base=3.5)
         ctx.delay(minutes=5)
 
+        #Removing wash
         for col in samples:
             pick_up(m300)
 
-            for i in range(num_buff_transfers):
-                m300.aspirate(buff_transfer_vol, col.bottom(0.4), rate=0.1)
+            for i in range(2):
+                m300.aspirate(180, col.bottom(0.2), rate=0.5)
                 slow_tip_withdrawal(m300, col)
-                m300.dispense(buff_transfer_vol, trash)
-                m300.blow_out()
+                m300.dispense(200, trash, rate=0.5)
+                m300.aspirate(20)
 
+            m300.aspirate(180, col.bottom(0.1), rate=0.1)
+            m300.dispense(200, trash, rate=0.5)         
             m300.drop_tip()
 
         mag_mod.disengage()
