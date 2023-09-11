@@ -48,6 +48,18 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
+    def extra_slow_tip_withdrawal(current_pipette, well_location, to_center=False):
+        if current_pipette.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        ctx.max_speeds[axis] = 3
+        if to_center is False:
+            current_pipette.move_to(well_location.top())
+        else:
+            current_pipette.move_to(well_location.center())
+        ctx.max_speeds[axis] = None
+        
     def slow_tip_withdrawal(current_pipette, well_location, to_center=False):
         if current_pipette.mount == 'right':
             axis = 'A'
