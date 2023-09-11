@@ -21,7 +21,7 @@
         "pipettes": "* [P20 GEN2 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
         "protocol-steps": "1. Transfer 2-35 uL from the 96 well PCR plate to a 2 mL snap tube\n2. Repeat across the entire plate according to the .csv file\n\n",
-        "title": "Protocol Title (should match metadata of .py file)"
+        "title": "16S Library pooling"
     },
     "modules": [
         "Magnetic Module (GEN2) - Not used in protocol but loaded so module can remain on the deck"
@@ -30,5 +30,5 @@
     "pipettes": "\nP20 GEN2 Single Channel Pipette\n\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
     "protocol-steps": "\nTransfer 2-35 uL from the 96 well PCR plate to a 2 mL snap tube\nRepeat across the entire plate according to the .csv file\n",
-    "title": "Protocol Title (should match metadata of .py file)"
+    "title": "16S Library pooling"
 }

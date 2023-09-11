@@ -27,7 +27,7 @@
     ]
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Sample tube removal volume",
     "name": "remove_tube_vol",
     "default": 20
@@ -51,13 +51,13 @@
     ]
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Transfection mix volume",
     "name": "trans_mix_vol",
     "default": 40
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Initial volume of transfection mix in 50mL tube (mL)",
     "name": "init_vol_50",
     "default": 40

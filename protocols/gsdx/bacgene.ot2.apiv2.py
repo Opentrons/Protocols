@@ -310,33 +310,42 @@ exceeds plate capacity')
         # print(lysis_buffer_listeria_creation)
 
         # load partial liq
-        try:
-            [well.load_liquid(
-                lysis_buffer_l_prepared_liq,
-                volume=11000/num_partial_listeria_buffers)
-             for well in lysis_buffer_listeria[:num_partial_listeria_buffers]]
+        if num_samples_listeria > 0:
+            try:
+                [
+                    well.load_liquid(
+                        lysis_buffer_l_prepared_liq,
+                        volume=11000/num_partial_listeria_buffers)
+                    for well in lysis_buffer_listeria[
+                        :num_partial_listeria_buffers]]
 
-            # load full liq
-            [well.load_liquid(
-                lysis_buffer_l_fresh_liq,
-                volume=11000/num_additional_listeria_buffers)
-             for well in lysis_buffer_listeria[
-                num_partial_listeria_buffers:
-                num_partial_listeria_buffers+num_additional_listeria_buffers]]
-            [well.load_liquid(
-                enzyme_listeria_1_liq,
-                volume=500/num_additional_listeria_buffers)
-             for well in enzyme_listeria_1[
-                num_partial_listeria_buffers:
-                num_partial_listeria_buffers+num_additional_listeria_buffers]]
-            [well.load_liquid(
-                enzyme_listeria_2_liq,
-                volume=500/num_additional_listeria_buffers)
-             for well in enzyme_listeria_2[
-                num_partial_listeria_buffers:
-                num_partial_listeria_buffers+num_additional_listeria_buffers]]
-        except AttributeError:
-            pass
+                # load full liq
+                [
+                    well.load_liquid(
+                        lysis_buffer_l_fresh_liq,
+                        volume=11000/num_additional_listeria_buffers)
+                    for well in lysis_buffer_listeria[
+                        num_partial_listeria_buffers:
+                        num_partial_listeria_buffers +
+                        num_additional_listeria_buffers]]
+                [
+                    well.load_liquid(
+                        enzyme_listeria_1_liq,
+                        volume=500/num_additional_listeria_buffers)
+                    for well in enzyme_listeria_1[
+                        num_partial_listeria_buffers:
+                        num_partial_listeria_buffers +
+                        num_additional_listeria_buffers]]
+                [
+                    well.load_liquid(
+                        enzyme_listeria_2_liq,
+                        volume=500/num_additional_listeria_buffers)
+                    for well in enzyme_listeria_2[
+                        num_partial_listeria_buffers:
+                        num_partial_listeria_buffers +
+                        num_additional_listeria_buffers]]
+            except AttributeError:
+                pass
 
         # listeria
         for enzyme1, enzyme2, lysis_buff in zip(
@@ -425,30 +434,34 @@ exceeds plate capacity')
             num_partial_salmonella_buffers+num_additional_salmonella_buffers]
 
         # load partial liq
-        try:
-            [well.load_liquid(
-                lysis_buffer_s_prepared_liq,
-                volume=11000/num_partial_salmonella_buffers)
-             for well in lysis_buffer_salmonella[
-                :num_partial_salmonella_buffers]]
+        if num_samples_listeria > 0:
+            try:
+                [
+                    well.load_liquid(
+                        lysis_buffer_s_prepared_liq,
+                        volume=11000/num_partial_salmonella_buffers)
+                    for well in lysis_buffer_salmonella[
+                        :num_partial_salmonella_buffers]]
 
-            # load full liq
-            [well.load_liquid(
-                lysis_buffer_s_fresh_liq,
-                volume=11000/num_additional_salmonella_buffers)
-             for well in lysis_buffer_salmonella[
-                num_partial_salmonella_buffers:
-                num_partial_salmonella_buffers +
-                    num_additional_salmonella_buffers]]
-            [well.load_liquid(
-                enzyme_salmonella_liq,
-                volume=500/num_additional_salmonella_buffers)
-             for well in enzyme_salmonella[
-                num_partial_salmonella_buffers:
-                num_partial_salmonella_buffers +
-                    num_additional_salmonella_buffers]]
-        except AttributeError:
-            pass
+                # load full liq
+                [
+                    well.load_liquid(
+                        lysis_buffer_s_fresh_liq,
+                        volume=11000/num_additional_salmonella_buffers)
+                    for well in lysis_buffer_salmonella[
+                        num_partial_salmonella_buffers:
+                        num_partial_salmonella_buffers +
+                            num_additional_salmonella_buffers]]
+                [
+                    well.load_liquid(
+                        enzyme_salmonella_liq,
+                        volume=500/num_additional_salmonella_buffers)
+                    for well in enzyme_salmonella[
+                        num_partial_salmonella_buffers:
+                        num_partial_salmonella_buffers +
+                            num_additional_salmonella_buffers]]
+            except AttributeError:
+                pass
 
         for enzyme, lysis_buff in zip(enzyme_salmonella_creation,
                                       lysis_buffer_salmonella_creation):
