@@ -100,28 +100,49 @@ def run(ctx):
     ctx.comment('\n-------------INCUBATION ON MAGNET---------------\n\n')
     mag_mod.engage(height_from_base=3.5)
     ctx.delay(minutes=5)
+    
     #Turning on magnet, then mixing to allow beads in top of sample to separate out of solution
+    ctx.comment('\n----------Mixing Sample + Bind on Magnet-----------\n\n')
+    mix_vol = 200
+    num_mix = 5
+    for col in samples:
+        pick_up(m300)
+        
+        for i in range(num_mix):
+            m300.aspirate(mix_vol, col.bottom(25))
+            m300.dispense(mix_vol, col.bottom(7), rate=1)
+
+        m300.aspirate(mix_vol, col.bottom(25))
+        m300.dispense(mix_vol, col.bottom(5), rate=0.1)
+        extra_slow_tip_withdrawal(m300, col)
+        m300.drop_tip()
+    #ctx.delay(minutes=10)
+    #10 minutes of delay to allow last bit of beads to come out of suspension. reduce this number by 1 minute per column
+    
     ctx.comment('\n----------------REMOVING SUPER------------------\n\n')
-    sup_vol = 1820   # as per Parker during onsite
+    # sup_vol = 1820   # as per customer during onsite
     for col in samples:
         pick_up(m300)
 
-        tip_ref_vol = m300.tip_racks[0].wells()[0].max_volume
-        num_transfers = math.ceil(sup_vol/tip_ref_vol)
-        transfer_vol = sup_vol/num_transfers
+        # tip_ref_vol = m300.tip_racks[0].wells()[0].max_volume
+        # num_transfers = math.ceil(sup_vol/tip_ref_vol)
+        # transfer_vol = sup_vol/num_transfers
 
-        for i in range(num_transfers):
-            m300.aspirate(transfer_vol, col.bottom(0.4), rate=0.1)
-            # m300.aspirate(20, col.bottom(0.4), rate=0.1)
-            slow_tip_withdrawal(m300, col)
-            m300.dispense(transfer_vol, trash)
-            m300.blow_out()
+        for i in range(10):
+            m300.aspirate(180, col.bottom(0.2), rate=0.2)
+            extra_slow_tip_withdrawal(m300, col)
+            m300.dispense(200, trash, rate=0.5)
+            m300.aspirate(20)
+            #m300.blow_out()
 
+        m300.aspirate(100, col.bottom(0.1), rate=0.1)
+        m300.dispense(120, trash, rate=0.1)         
         m300.drop_tip()
 
     mag_mod.disengage()
 
-    ctx.pause("Empty liquid waste Reservoir")
+    ctx.pause("Empty waste reservoir, add elution and wash buffers, and place a skirted PCR plate in slot 3 for final elution")
+    #this pause is not necessary if extracting 40 or fewer samples
 
     ctx.comment('\n---------------WASH STEP----------------\n\n')
 
