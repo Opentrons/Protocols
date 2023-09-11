@@ -188,7 +188,8 @@ def run(ctx):
         mag_mod.disengage()
 
     ctx.comment('\n----------------AIR DRY BEADS------------------\n\n')
-    ctx.delay(minutes=5)
+     #ctx.delay(minutes=5)
+    #this can be removed if purifying several columns of samples
 
     ctx.comment('\n----------------ELUTION STEP------------------\n\n')
 
