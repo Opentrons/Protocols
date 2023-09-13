@@ -383,6 +383,7 @@ dna_well_plate_tmod,1
 do_cool_samples,1
 do_deactivate_tc,1
 do_dnase_step,1
+do_flash,1
 do_mm_resusp_pause,1
 do_plate_mm,1
 do_premix,1

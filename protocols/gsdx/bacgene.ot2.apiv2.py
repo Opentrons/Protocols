@@ -29,12 +29,19 @@ P300_MOUNT = 'right'
 
 def run(ctx):
 
+    def flash_lights():
+        initial_status = ctx.rail_lights_on
+        for _ in range(19):
+            ctx.set_rail_lights(not ctx.rail_lights_on)
+            ctx.delay(seconds=0.25)
+        ctx.set_rail_lights(initial_status)
+
     [num_samples_listeria, num_samples_salmonella,
      num_samples_listeria_remaining, num_samples_salmonella_remaining,
-     sample_rack_type, salmonella_meat] = get_values(  # noqa: F821
+     sample_rack_type, salmonella_meat, do_flash] = get_values(  # noqa: F821
         'num_samples_listeria', 'num_samples_salmonella',
         'num_samples_listeria_remaining', 'num_samples_salmonella_remaining',
-        'sample_rack_type', 'salmonella_meat')
+        'sample_rack_type', 'salmonella_meat', 'do_flash')
 
     # modules
     tempdeck = ctx.load_module('temperature module gen2', '10')
@@ -190,11 +197,15 @@ exceeds plate capacity')
         num_cols_offset_samples_listeria*8+num_samples_salmonella]
 
     # load liquids
+    vol_sample = 5.0
+
     try:
         if num_samples_listeria > 0:
-            positive_control_l.load_liquid(positive_control_l_liq, volume=10)
+            positive_control_l.load_liquid(
+                positive_control_l_liq, volume=vol_sample)
         if num_samples_salmonella > 0:
-            positive_control_s.load_liquid(positive_control_s_liq, volume=10)
+            positive_control_s.load_liquid(
+                positive_control_s_liq, volume=vol_sample)
         [well.load_liquid(samples_listeria_liq_sample,
                           volume=30/len(samples_single_listeria))
          for well in samples_single_listeria]
@@ -635,8 +646,6 @@ exceeds plate capacity')
         ctx.delay(minutes=10, msg='Incubating for 10 minutes @ 95C.')
         tempdeck.set_temperature(37)
 
-    vol_sample = 5.0
-
     if DO_TRANSFER_SAMPLE_TO_PCR:
         """ transfer samples to PCR plate """
 
@@ -713,3 +722,6 @@ exceeds plate capacity')
             drop(m20)
 
     tempdeck.deactivate()
+
+    if do_flash:
+        flash_lights()
