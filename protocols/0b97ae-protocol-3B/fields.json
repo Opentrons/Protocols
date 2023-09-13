@@ -38,5 +38,41 @@
     "label": "Bead Timer?",
     "name": "bead_timer",
     "default": 6
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Reservoir PerkinElmer or Nest?",
+    "name": "reservoir",
+    "options": [
+      {"label": "perkinelmer", "value": "perkinelmer"},
+      {"label": "nest", "value": "nest"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Final Plate Biorad or AppliedBio?",
+    "name": "final_plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Diluted DNA Plate Biorad or AppliedBio?",
+    "name": "dilution_plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Reagent Plate Biorad or AppliedBio?",
+    "name": "reagent_plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
   }
 ]

@@ -53,9 +53,28 @@ def create_thread(ctx, cancel_token):
 def run(ctx: protocol_api.ProtocolContext):
     """PROTOCOLS."""
     [
-     num_samples, vol_dna , flash, bead_timer] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples","vol_dna","flash","bead_timer")
+     num_samples, vol_dna , flash, bead_timer, reservoir, F_Plate, D_Plate, R_Plate] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples","vol_dna","flash","bead_timer","reservoir","final_plate","dilution_plate","reagent_plate")
     num_samples = int(num_samples)
+    if reservoir == 'perkinelmer':
+        res_labware = 'perkinelmer_12_reservoir_21000ul'
+    else:
+        res_labware = 'nest_12_reservoir_15ml'
+
+    if F_Plate == 'Biorad':
+        F_labware = 'opentrons_96_aluminumblock_biorad_wellplate_200ul'
+    else:
+        F_labware = 'appliedbiosystemsenduraplate_96_aluminumblock_220ul'
+
+    if D_Plate == 'Biorad':
+        D_labware = 'opentrons_96_aluminumblock_biorad_wellplate_200ul'
+    else:
+        D_labware = 'appliedbiosystemsenduraplate_96_aluminumblock_220ul'
+    
+    if R_Plate == 'Biorad':
+        R_labware = 'biorad_96_wellplate_200ul_pcr'
+    else:
+        R_labware = 'appliedbiosystemsenduraplate_96_aluminumblock_220ul'
 
     'Global variables'
     TEST_MODE = False
@@ -83,13 +102,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     mag_plate = Mag_mod.load_labware('nest_96_wellplate_2ml_deep','Extraction Plate')
-    final_plate = tempdeck_1.load_labware('opentrons_96_aluminumblock_biorad_wellplate_200ul', #noqa: E501
+    final_plate = tempdeck_1.load_labware(F_labware, #noqa: E501
                                        'Reagent Plate')
-    Diluted_plate = tempdeck_2.load_labware('appliedbiosystemsenduraplate_96_aluminumblock_220ul',  # noqa: E501
+    Diluted_plate = tempdeck_2.load_labware(D_labware,  # noqa: E501
                                             'Diluted RNA plate')
-    water_res = ctx.load_labware('perkinelmer_12_reservoir_21000ul', 2,
+    water_res = ctx.load_labware(res_labware, 2,
                                  'Water reservoir')
-    Reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1')
+    Reagent_plate = ctx.load_labware(R_labware, '1')
 
     # load tipracks
     tips3 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
