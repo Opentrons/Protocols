@@ -38,5 +38,32 @@
     "label": "Bead Timer?",
     "name": "bead_timer",
     "default": 6
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Final Plate Biorad or AppliedBio?",
+    "name": "F_Plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Diluted DNA Plate Biorad or AppliedBio?",
+    "name": "D_Plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Is the Reagent Plate Biorad or AppliedBio?",
+    "name": "R_Plate",
+    "options": [
+      {"label": "Biorad", "value": "Biorad"},
+      {"label": "AppliedBio", "value": "AppliedBio"}
+    ]
   }
 ]
