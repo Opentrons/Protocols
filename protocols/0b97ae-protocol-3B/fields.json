@@ -41,6 +41,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Is the Reservoir PerkinElmer or Nest?",
+    "name": "reservoir",
+    "options": [
+      {"label": "perkinelmer", "value": "perkinelmer"},
+      {"label": "nest", "value": "nest"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Is the Final Plate Biorad or AppliedBio?",
     "name": "final_plate",
     "options": [
