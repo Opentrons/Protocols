@@ -42,7 +42,7 @@
   {
     "type": "dropDown",
     "label": "Is the Final Plate Biorad or AppliedBio?",
-    "name": "F_Plate",
+    "name": "final_plate",
     "options": [
       {"label": "Biorad", "value": "Biorad"},
       {"label": "AppliedBio", "value": "AppliedBio"}
@@ -51,7 +51,7 @@
   {
     "type": "dropDown",
     "label": "Is the Diluted DNA Plate Biorad or AppliedBio?",
-    "name": "D_Plate",
+    "name": "dilution_plate",
     "options": [
       {"label": "Biorad", "value": "Biorad"},
       {"label": "AppliedBio", "value": "AppliedBio"}
@@ -60,7 +60,7 @@
   {
     "type": "dropDown",
     "label": "Is the Reagent Plate Biorad or AppliedBio?",
-    "name": "R_Plate",
+    "name": "reagent_plate",
     "options": [
       {"label": "Biorad", "value": "Biorad"},
       {"label": "AppliedBio", "value": "AppliedBio"}
