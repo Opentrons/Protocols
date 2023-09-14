@@ -207,24 +207,24 @@ exceeds plate capacity')
             positive_control_s.load_liquid(
                 positive_control_s_liq, volume=vol_sample)
         [well.load_liquid(samples_listeria_liq_sample,
-                          volume=30/len(samples_single_listeria))
+                          volume=round(30/len(samples_single_listeria)))
          for well in samples_single_listeria[
             :max(0, len(samples_single_listeria)-2)]]
         [well.load_liquid(samples_salmonella_liq_sample,
-                          volume=10/len(samples_single_salmonella))
+                          volume=round(10/len(samples_single_salmonella)))
          for well in samples_single_salmonella[
             :max(0, len(samples_single_salmonella)-2)]]
         [well.load_liquid(samples_listeria_liq_lysis,
-                          volume=30/len(lysis_single_listeria))
+                          volume=round(30/len(lysis_single_listeria)))
          for well in lysis_single_listeria]
         [well.load_liquid(samples_salmonella_liq_lysis,
-                          volume=10/len(lysis_single_salmonella))
+                          volume=round(10/len(lysis_single_salmonella)))
          for well in lysis_single_salmonella]
         [well.load_liquid(samples_listeria_liq_pcr,
-                          volume=30/len(pcr_single_listeria))
+                          volume=round(30/len(pcr_single_listeria)))
          for well in pcr_single_listeria]
         [well.load_liquid(samples_salmonella_liq_pcr,
-                          volume=10/len(pcr_single_salmonella))
+                          volume=round(10/len(pcr_single_salmonella)))
          for well in pcr_single_salmonella]
     except AttributeError:
         pass
