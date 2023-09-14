@@ -338,6 +338,7 @@ diluent_csv,1
 diluent_scheme,1
 diluent_vol,1
 dilution_factor,2
+dilution_plate,1
 dilvol,1
 disp_bottom_clearance,1
 disp_delay,1
@@ -383,6 +384,7 @@ dna_well_plate_tmod,1
 do_cool_samples,1
 do_deactivate_tc,1
 do_dnase_step,1
+do_flash,1
 do_mm_resusp_pause,1
 do_plate_mm,1
 do_premix,1
@@ -469,6 +471,7 @@ final_air_gap,1
 final_asp_speed,1
 final_conc,1
 final_extension_cycles,1
+final_plate,1
 final_plate_slot4,1
 final_temp,3
 final_tubes,1
@@ -1176,6 +1179,7 @@ reagent,1
 reagent1_loadname,1
 reagent2_loadname,1
 reagent_labware,3
+reagent_plate,1
 reagent_scan,5
 reagent_slot_scan,2
 reagent_transfer_vol,2
@@ -1192,6 +1196,7 @@ res12_type,1
 res1_type,1
 res_dead_vol,1
 res_type,20
+reservoir,1
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
