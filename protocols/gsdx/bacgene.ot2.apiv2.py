@@ -436,7 +436,7 @@ exceeds plate capacity')
             num_partial_salmonella_buffers+num_additional_salmonella_buffers]
 
         # load partial liq
-        if num_samples_listeria > 0:
+        if num_samples_salmonella > 0:
             try:
                 [
                     well.load_liquid(
