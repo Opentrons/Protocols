@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "\n green: RT Mix\n blue: sample from part 1\n",
+    "deck-setup": "\n* green: RT Mix\n* blue: sample from part 1\n",
     "description": "Links:\n\n\nPart 1\n\n\nPart 2\n\n\nPart 3\n\n\nThis protocol performs part 2/3 of a custom CYP Induction PCR prep.\n",
     "internal": "60d861",
     "labware": "\nThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate, 0.1 mL\nNEST 1-Well Reservoirs, 195 mL\nOpentrons 20\u00b5L Tips\n",
