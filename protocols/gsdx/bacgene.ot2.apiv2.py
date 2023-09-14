@@ -208,10 +208,12 @@ exceeds plate capacity')
                 positive_control_s_liq, volume=vol_sample)
         [well.load_liquid(samples_listeria_liq_sample,
                           volume=30/len(samples_single_listeria))
-         for well in samples_single_listeria]
+         for well in samples_single_listeria[
+            :max(0, len(samples_single_listeria)-2)]]
         [well.load_liquid(samples_salmonella_liq_sample,
                           volume=10/len(samples_single_salmonella))
-         for well in samples_single_salmonella]
+         for well in samples_single_salmonella[
+            :max(0, len(samples_single_salmonella)-2)]]
         [well.load_liquid(samples_listeria_liq_lysis,
                           volume=30/len(lysis_single_listeria))
          for well in lysis_single_listeria]
