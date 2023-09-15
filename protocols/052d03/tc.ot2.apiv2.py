@@ -54,7 +54,7 @@ def run(ctx):
     pc = tuberack.wells()[num_samples]
     rxn_mix_1 = res.wells()[0]
     rxn_mix_2 = res.wells()[1]
-    diluent = res.wells()[2:5]
+    diluent = res.wells()[2:6]
     mm = res.wells()[5]
 
     if type_molecule == '401':
@@ -104,7 +104,8 @@ def run(ctx):
             rxn_mix_2.load_liquid(
                 rxn_mix_2_liq, volume=vol_rxn_mix_2*num_cols*8*1.1+2000)
         mm.load_liquid(mastermix_liq, volume=16.5*len(data)*4*1.1+2000)
-        [d.load_liquid(diluent_liq, volume=13500) for d in diluent[:num_cols]]
+        [d.load_liquid(diluent_liq, volume=1200)
+         for d in diluent[:math.ceil(num_cols*4/3)]]
 
     except:  # noqa
         pass

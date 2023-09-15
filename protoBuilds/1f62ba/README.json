@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol preps one PCR plate with DNA, water, primer letter, primer number, and Kappa enzyme. New tips are granted for DNA and primers, whereas just one column of tips is used for the Kappa enzyme and water, respectively. The water is added via multi-dispensing.\nExplanation of complex parameters below:\n Number of Columns: Specify the number of DNA columns for this protocol.\n P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 multi-channel pipette.\n",
+    "description": "This protocol preps one PCR plate with DNA, water, primer letter, primer number, and Kappa enzyme. New tips are granted for DNA and primers, whereas just one column of tips is used for the Kappa enzyme and water, respectively. The water is added via multi-dispensing.\nExplanation of complex parameters below:\n* Number of Columns: Specify the number of DNA columns for this protocol.\n* P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 multi-channel pipette.\n",
     "internal": "1f62ba",
     "labware": "\nNest 12-well reservoir, 15mL\n20ul Filter Tips\n",
     "markdown": {
