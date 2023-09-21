@@ -80,17 +80,18 @@ def run(ctx):
         dest_well = dest_plate.wells_by_name()[well]
         volume = float(row[7])
 
-        if volume > 20:
-            if not p300.has_tip:
-                p300.pick_up_tip()
-            p300.aspirate(volume, buffer.bottom(h_buff))
-            p300.dispense(volume, dest_well)
+        if volume > 0:
+            if volume > 20:
+                if not p300.has_tip:
+                    p300.pick_up_tip()
+                p300.aspirate(volume, buffer.bottom(h_buff))
+                p300.dispense(volume, dest_well)
 
-        else:
-            if not p20.has_tip:
-                p20.pick_up_tip()
-            p20.aspirate(volume, buffer.bottom(h_buff))
-            p20.dispense(volume, dest_well)
+            else:
+                if not p20.has_tip:
+                    p20.pick_up_tip()
+                p20.aspirate(volume, buffer.bottom(h_buff))
+                p20.dispense(volume, dest_well)
 
         adjust_height(volume)
 
@@ -108,19 +109,21 @@ def run(ctx):
 
         volume = float(row[6])
         mix_reps = 2
+        tip_height = 0.5
 
-        if volume > 20:
-            p300.pick_up_tip()
-            p300.aspirate(volume, source_well)
-            p300.dispense(volume, dest_well)
-            p300.mix(mix_reps, 20)
-            p300.blow_out()
-            p300.drop_tip()
+        if volume > 0:
+            if volume > 20:
+                p300.pick_up_tip()
+                p300.aspirate(volume, source_well.bottom(tip_height))
+                p300.dispense(volume, dest_well)
+                p300.mix(mix_reps, 20)
+                p300.blow_out()
+                p300.drop_tip()
 
-        else:
-            p20.pick_up_tip()
-            p20.aspirate(volume, source_well)
-            p20.dispense(volume, dest_well)
-            p20.mix(mix_reps, 10)
-            p20.blow_out()
-            p20.drop_tip()
+            else:
+                p20.pick_up_tip()
+                p20.aspirate(volume, source_well.bottom(tip_height))
+                p20.dispense(volume, dest_well)
+                p20.mix(mix_reps, 10)
+                p20.blow_out()
+                p20.drop_tip()
