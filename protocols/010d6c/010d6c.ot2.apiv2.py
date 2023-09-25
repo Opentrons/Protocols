@@ -1,8 +1,10 @@
+
+
 metadata = {
     'protocolName': 'Ribogreen Assay',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.14'
+    'apiLevel': '2.13'
 }
 
 
@@ -33,8 +35,8 @@ def run(ctx):
         heater_shaker = ctx.load_module('heaterShakerModuleV1', 6)
         heater_shaker.close_labware_latch()
         hs_plate = heater_shaker.load_labware('nunc_96_wellplate_400ul')
-    except ModuleNotFoundError:
-        hs_plate = heater_shaker.load_labware('nunc_96_wellplate_400ul')
+    except ValueError:
+        hs_plate = ctx.load_labware('nunc_96_wellplate_400ul', 6)
 
     deep_plate = ctx.load_labware('pyramid_96_wellplate_2000ul', 4)
     tuberack_15 = ctx.load_labware('opentrons_15_tuberack_5000ul', 7)
@@ -141,7 +143,7 @@ def run(ctx):
         heater_shaker.set_and_wait_for_temperature(37)
         ctx.delay(minutes=10)
         heater_shaker.deactivate_heater()
-    except ModuleNotFoundError:
+    except UnboundLocalError:
         ctx.delay(minutes=10)
 
     ctx.comment('\n------------PLATING DYE------------\n\n')
