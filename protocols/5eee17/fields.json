@@ -10,8 +10,8 @@
     "label": "HPLC rack type",
     "name": "lw_hplc",
     "options": [
-      {"label": "black", "value": "bd_54_tuberack_5ml_black"},
-      {"label": "blue", "value": "bd_48_tuberack_5ml_blue"}
+      { "label": "black", "value": "bd_54_tuberack_5ml_black" },
+      { "label": "blue", "value": "bd_48_tuberack_5ml_blue" }
     ]
   },
   {
@@ -34,6 +34,12 @@
   },
   {
     "type": "float",
+    "label": "dilution 15ml tube volume (in uL)",
+    "name": "vol_dilution_1",
+    "default": 500.0
+  },
+  {
+    "type": "float",
     "label": "dilution 15ml tube low mix height (in mm above bottom)",
     "name": "height_intermediate_low",
     "default": 5.0
@@ -49,6 +55,12 @@
     "label": "dilution 15ml tube high mix height (in mm above bottom)",
     "name": "height_intermediate_high",
     "default": 60.0
+  },
+  {
+    "type": "float",
+    "label": "final HPLC tube volume (in uL)",
+    "name": "vol_dilution_2",
+    "default": 800.0
   },
   {
     "type": "float",
