@@ -89,6 +89,9 @@ def run(ctx):
         pick_up(pip)
         pip.aspirate(remove_tube_vol, source_well.bottom(z=2))
         pip.dispense(remove_tube_vol, dest_well)
+        if pip == p300:
+            pip.blow_out()
+            pip.touch_tip()
         pip.drop_tip()
 
     if add_transfection_mix:
@@ -104,4 +107,8 @@ def run(ctx):
             pip.aspirate(trans_mix_vol, trans_mix_tube)
             adjust_height(trans_mix_vol)
             pip.dispense(trans_mix_vol, dest_well)
+
+            if pip == p300:
+                pip.blow_out()
+                pip.touch_tip()
             pip.drop_tip()

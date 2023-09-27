@@ -271,7 +271,7 @@ csv_file_1,1
 csv_file_2,1
 csv_input,3
 csv_oil,1
-csv_samp,16
+csv_samp,17
 csv_samp1,1
 csv_samp2,1
 csv_samp3,1
@@ -334,6 +334,7 @@ dil_json_1,1
 dil_json_2,1
 dil_json_3,1
 dil_plate_type,1
+diluent_buff_col,1
 diluent_csv,1
 diluent_scheme,1
 diluent_vol,1
@@ -407,6 +408,7 @@ ds_620,1
 ds_650,1
 ds_690,1
 dst_plate,1
+duplicate_plating,1
 dwp,1
 dwp_volume,1
 e_temp,2
@@ -721,7 +723,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,79
-m300_mount,105
+m300_mount,106
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -998,7 +1000,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,153
+p300_mount,154
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1108,6 +1110,7 @@ plate_map_4_csv,1
 plate_name,1
 plate_scan,4
 plate_scan2,4
+plate_standard,1
 plate_type,12
 plates,1
 pool_columns,1
@@ -1632,6 +1635,8 @@ vol_deadreservoir,1
 vol_dil_to_d,1
 vol_dil_to_e,1
 vol_dilution,1
+vol_dilution_1,1
+vol_dilution_2,1
 vol_dispense,1
 vol_dispensed,1
 vol_dna,5

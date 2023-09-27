@@ -1,0 +1,66 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File (header: source slot, source well, dest well)",
+    "name": "csv_samp",
+    "default": "source slot, source well, dest well\n7, A1, A1"
+  },
+  {
+    "type": "dropDown",
+    "label": "Plate matrix buffer solution?",
+    "name": "plate_standard",
+    "options": [
+      {"label": "Yes, plate matrix buffer", "value": true},
+      {"label": "No, start at plating calibration standards", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Deepwell plate column (1-12)",
+    "name": "diluent_buff_col",
+    "options": [
+      {"label": "1", "value": 1},
+      {"label": "2", "value": 2},
+      {"label": "3", "value": 3},
+      {"label": "4", "value": 4},
+      {"label": "5", "value": 5},
+      {"label": "6", "value": 6},
+      {"label": "7", "value": 7},
+      {"label": "8", "value": 8},
+      {"label": "9", "value": 9},
+      {"label": "10", "value": 10},
+      {"label": "11", "value": 11},
+      {"label": "12", "value": 12}
+
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Duplicate or triplicate plating?",
+    "name": "duplicate_plating",
+    "options": [
+      {"label": "Duplicate plating", "value": true},
+      {"label": "Triplicate plating", "value": false}
+    ]
+  },
+
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Single-Channel Mount",
+    "name": "p300_mount",
+    "options": [
+
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  }
+]
