@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* NGS LIBRARY PREP\n\t* QIASeq FastSelect\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/deck.jpg)\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/deck2b.jpg)\n\n\n",
         "description": "This is Part 2 to the QIAseq FastSelect 5s, 16s, 23s Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nPart 1 to this protocol is the normalization of samples.\nPart 3 to this protocol is the Extraction and Clean-Up steps.\n\nLinks:\n* [Part 1: Sample Normalization](http://protocols.opentrons.com/protocol/0b97ae)\n* [Part 2: QIAseq FastSelect 5s, 16s, 23s Fragmentation](http://protocols.opentrons.com/protocol/0b97ae-protocol-2B)\n* [Part 3: QIAseq FastSelect 5s, 16s, 23s Extraction](http://protocols.opentrons.com/protocol/0b97ae-protocol-3B)\n\n\n\n",
         "internal": "0b97ae-protocol-2B\n",
         "labware": "* Perkin Elmer 12 Reservoir 21000 \u00b5L\n* Applied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\n* [Opentrons 96 Tip Rack 20 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n\n\n",
@@ -21,7 +21,7 @@
         "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
         "protocol-steps": "1. The diluted RNA plate will be placed on the temperature module placed on site 7.\n2. The Mastermix Plate will be placed on temperature module placed on site 10. The volume for the MasterMix will be adjust in the protocol, depending on the RNA Volume put into the drop down.\n3. After this protocol is finished the plate should be removed and placed on a thermocycler according to FastSelect 5s/16s/23s, Table 3.\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/reagents.jpg)\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b97ae/reag2b.jpg)\n\n\n",
         "title": "QIAseq FastSelect 5s, 16s, 23s Fragmentation"
     },
     "modules": [
