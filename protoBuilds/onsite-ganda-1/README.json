@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nIf the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n\n",
-    "description": "This is part 1 of a 4 part protocol for the rhAmpSeq kit.\n* Part 2\n\nPart 3\nPart 4\n\nThis portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n* 10X rhAmp PCR Panel - Forward Pool\n* 10X rhAmp PCR Panel - Reverse Pool\n* 4X rhAmpSeq Library Mix 1\nExplanation of complex parameters below:\n* Number of Samples: How many samples are to be run, from 1 to 96\n* P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "description": "This is part 1 of a 4 part protocol for the rhAmpSeq kit.\n* Part 2\n\nPart 3\nPart 4\n\nThis portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n 10X rhAmp PCR Panel - Forward Pool\n 10X rhAmp PCR Panel - Reverse Pool\n* 4X rhAmpSeq Library Mix 1\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
     "internal": "onsite-ganda-lab",
     "labware": "\nNEST 96 Well Plate\n",
     "markdown": {
