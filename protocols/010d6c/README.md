@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol performs a Ribrogreen assay - for detailed protocol steps, please see below. There is the option to perform duplicate/triplicate plating. The csv for sample input should include source slow, source well, destination well in the header.
 
 
 ### Labware
@@ -37,7 +37,13 @@ This protocol does stuff!
 
 
 ### Protocol Steps
-1. Step 1...
+1. ADDING BUFFER TO PLATE
+2. ADDING CALIBRATION
+3. DUPLICATE PLATING/TRIPLICATE PLATING
+4. ADDING SAMPLE
+5. PLATING TRITON
+6. PLATING TE
+7. PLATING DYE
 
 
 ### Process
