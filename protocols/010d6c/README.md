@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol performs a Ribrogreen assay - for detailed protocol steps, please see below. There is the option to perform duplicate/triplicate plating. The csv for sample input should include source slow, source well, destination well in the header.
+This protocol performs a Ribrogreen assay - for detailed protocol steps, please see below. There is the option to perform duplicate/triplicate plating. The csv for sample input should include `source slot, source well, destination well` in the header.
 
 
 ### Labware
