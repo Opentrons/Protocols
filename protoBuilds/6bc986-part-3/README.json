@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "Part 3 of 6: Transfer of DNA Template\nLinks:\n Distribution of Sample Lysis Buffer\n Distribution of Prot K (Apostle)\n Transfer of DNA Template\n Distribution of Master Mix\n Distribution of Elution Buffer\n Distribution of Prot K (Qiagen)\nThis protocol is a translation of the attached json protocol json protocol to python: 5 ul DNA template is transferred to the columns of a PCR plate.\nThe deck layout can be displayed by uploading the attached json protocol to the Opentrons Protocol Designer web page.",
+    "description": "Part 3 of 6: Transfer of DNA Template\nLinks:\n* Distribution of Sample Lysis Buffer\n* Distribution of Prot K (Apostle)\n* Transfer of DNA Template\n* Distribution of Master Mix\n* Distribution of Elution Buffer\n* Distribution of Prot K (Qiagen)\nThis protocol is a translation of the attached json protocol json protocol to python: 5 ul DNA template is transferred to the columns of a PCR plate.\nThe deck layout can be displayed by uploading the attached json protocol to the Opentrons Protocol Designer web page.",
     "internal": "6bc986-part-3",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
