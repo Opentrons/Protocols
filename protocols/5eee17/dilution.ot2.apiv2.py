@@ -11,13 +11,14 @@ metadata = {
 def run(ctx):
 
     [num_extracts, lw_hplc, vol_dilution, mixreps_dilution, height_source,
-     vol_dilution_1, height_intermediate_low, height_intermediate_middle,
-     height_intermediate_high, vol_dilution_2,
-     height_final] = get_values(  # noqa: F821
+     vol_dilution_1_l, vol_dilution_1_r, height_intermediate_low,
+     height_intermediate_middle, height_intermediate_high, vol_dilution_2_l,
+     vol_dilution_2_r, height_final] = get_values(  # noqa: F821
         'num_extracts', 'lw_hplc', 'vol_dilution', 'mixreps_dilution',
-        'height_source', 'vol_dilution_1', 'height_intermediate_low',
-        'height_intermediate_middle', 'height_intermediate_high',
-        'vol_dilution_2', 'height_final')
+        'height_source', 'vol_dilution_1_l', 'vol_dilution_1_r',
+        'height_intermediate_low', 'height_intermediate_middle',
+        'height_intermediate_high', 'vol_dilution_2_l', 'vol_dilution_2_r',
+        'height_final')
 
     tuberacks_50 = [
         ctx.load_labware('bd_24_tuberack_50ml_green', slot, '50ml tubes')
@@ -106,6 +107,8 @@ resuming.')
         for i in range(math.ceil(len(finals)/2))]
 
     # dilute
+    vols_dilution_1 = [vol_dilution_1_l, vol_dilution_1_r]
+    vols_dilution_2 = [vol_dilution_2_l, vol_dilution_2_r]
     num_sets = math.ceil(num_extracts/2)
     for set_ind in range(num_sets):
         check_refill(set_ind*2)
@@ -115,16 +118,17 @@ resuming.')
         final_set = final_sets[get_set_index(set_ind, 'final')]
         pick_up([p1000l, p1000r][:len(source_set)])
 
-        for pip, tube in zip(pips, source_set):
-            pip.aspirate(vol_dilution_1, tube.bottom(height_source))
+        for i, (pip, tube) in enumerate(zip(pips, source_set)):
+            pip.aspirate(vols_dilution_1[i], tube.bottom(height_source))
             pip.air_gap(100)
 
-        for pip, i_tube, f_tube in zip(pips, intermediate_set, final_set):
+        for i, (pip, i_tube, f_tube) in enumerate(
+                zip(pips, intermediate_set, final_set)):
             pip.dispense(100, i_tube.top())
             pip.dispense(pip.current_volume,
                          i_tube.bottom(height_intermediate_middle))
             mix(pip, mixreps_dilution, 1000, i_tube)
-            pip.transfer(vol_dilution_2,
+            pip.transfer(vols_dilution_2[i],
                          i_tube.bottom(height_intermediate_low),
                          f_tube.bottom(height_final),
                          new_tip='never')

@@ -34,8 +34,14 @@
   },
   {
     "type": "float",
-    "label": "dilution 15ml tube volume (in uL)",
-    "name": "vol_dilution_1",
+    "label": "dilution 15ml tube volume (in uL), left pipette",
+    "name": "vol_dilution_1_l",
+    "default": 500.0
+  },
+  {
+    "type": "float",
+    "label": "dilution 15ml tube volume (in uL), right pipette",
+    "name": "vol_dilution_1_r",
     "default": 500.0
   },
   {
@@ -58,8 +64,14 @@
   },
   {
     "type": "float",
-    "label": "final HPLC tube volume (in uL)",
-    "name": "vol_dilution_2",
+    "label": "final HPLC tube volume (in uL), left pipette",
+    "name": "vol_dilution_2_l",
+    "default": 800.0
+  },
+  {
+    "type": "float",
+    "label": "final HPLC tube volume (in uL), right pipette",
+    "name": "vol_dilution_2_r",
     "default": 800.0
   },
   {
