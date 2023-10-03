@@ -32,7 +32,7 @@ def run(ctx):
         mount='left',
         tip_racks=[tiprack_1000])
     p300 = ctx.load_instrument(
-        'p300_single_gen2',
+        'p300_single',
         mount='right',
         tip_racks=tipracks_300)
 
@@ -47,10 +47,10 @@ def run(ctx):
     conc_lists = [[int(cell) for cell in line.split(',') if cell]
                   for line in concentration_csv.splitlines() if line]
 
-    concs = [5, 10, 25, 50, 100, 500, 1000, 5000, 10000, 25000, 50000, 100000]
-    diluent_vols = [320, 450, 180, 320, 450, 320, 450, 320, 450, 180, 320, 450]
-    sample_vols = [80, 50, 120, 80, 50, 80, 50, 80, 50, 120, 80, 50]
-    concs_init = [1, 1, 10, 10, 10, 100, 100, 1000, 1000, 10000, 10000, 10000]
+    concs = [5, 10, 25, 50, 100, 500, 1000, 2500, 5000, 10000, 50000, 100000]
+    diluent_vols = [320, 450, 180, 320, 450, 320, 450, 180, 320, 450, 180, 450]
+    sample_vols = [80, 50, 120, 80, 50, 80, 50, 120, 80, 50, 80, 50]
+    concs_init = [1, 1, 10, 10, 10, 100, 100, 1000, 1000, 1000, 10000, 10000]
     dil_formulae = {
         conc: {'diluent_vol': diluent_vol,
                'sample_vol': sample_vol,
