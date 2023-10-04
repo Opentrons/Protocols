@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":24,"source_type":"wellplate","mmx_type":"mmx_wellplate","p20_mount":"right","m20_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
-
 import math
 from opentrons import protocol_api
 
