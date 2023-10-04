@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "\n* yellow on 96-wellplates: sample\n* blue on tuberack: prepared mastermix\n* purple on strips: mastermix strips for plating (loaded empty)",
+    "deck-setup": "\n yellow on 96-wellplates: sample\n blue on tuberack: prepared mastermix\n* purple on strips: mastermix strips for plating (loaded empty)",
     "description": "This protocol provides a custom qPCR prep on the OT-2 for up to 4x source 96-well plates into 1x destination 384-wellplate. Mastermix is prepared manually and transferred to each reaction well on the OT-2.\nEach protocol run generates an output .csv file that is compatible with Quantstudio instruments. To retrieve the file, launch a Jupyter Notebook server on your robot by following these instructions. The file will be named after the 9000 plate barcode scan, followed by \".csv.\"",
     "internal": "055b94",
     "labware": "\nKingFisher 96 Well Plate 200 \u00b5L #97002540\nThermoFisher Microamp 96 Aluminum Block 200 \u00b5L #4346906\nMicroamp 384 Well Plate 40 \u00b5L #4483273\ncustom 24 Tube Rack with Custom 2 mL\nKingFisher 96 Deep Well Plate #95040450\nCustom 96 Well Plate 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
