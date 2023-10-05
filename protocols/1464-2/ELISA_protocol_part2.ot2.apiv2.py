@@ -15,7 +15,7 @@ def run(ctx):
     # labware setup
     tuberack_4 = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
-    deep_plates = [ctx.load_labware('plateone_96_wellplate_2000ul', slot)
+    deep_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)
                    for slot in ['5', '6']]
     trough = ctx.load_labware('nest_12_reservoir_15ml', '8')
     plate = ctx.load_labware(

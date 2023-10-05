@@ -5,7 +5,7 @@
             "Cell Culture"
         ]
     },
-    "deck-setup": " \nTuberack on slot 9:\n tube A1: drug A\n tube A2: drug B\n* tube A3: media\n",
+    "deck-setup": " \nTuberack on slot 9:\n* tube A1: drug A\n* tube A2: drug B\n* tube A3: media\n",
     "description": "This protocol performs a custom cell culture assay on up to 8 flat well plates. Please see these instructions for the exact transfer scheme.\n",
     "internal": "37190e",
     "labware": "\nCorning 96 Well Plate 360 \u00b5L Flat, 3650\nOpentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical\nOpentrons 200\u00b5L Filter Tips\nOpentrons 20\u00b5L Filter Tips\n",
