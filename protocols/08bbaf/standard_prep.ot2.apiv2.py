@@ -22,9 +22,14 @@ def run(ctx):
         tempdeck.set_temperature(temp_setting)
 
     # labware
-    plate = ctx.load_labware('thermo_96_wellplate_750uL', '1')
-    tuberack_diluent = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', )
+    try:
+        plate = tempdeck.load_labware(
+            'opentrons_96_flat_bottom_adapter_nest_wellplate_200ul_flat')
+    except FileNotFoundError:
+        plate = tempdeck.load_labware(
+            'opentrons_96_aluminumblock_nest_wellplate_100ul')
+    tuberack_diluent = ctx.load_labware(
+        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '1')
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
 
