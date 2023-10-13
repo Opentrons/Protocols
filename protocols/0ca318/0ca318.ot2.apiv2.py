@@ -71,16 +71,6 @@ def run(ctx):
 
     unfilled_mmx_col = mmx_plate.rows()[0][5]
 
-    # transfer sample
-    if source_type == "tuberack":
-        ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
-        for tube, dest in zip(sample_tubes, pcr_plate.wells()):
-            p20.pick_up_tip()
-            p20.aspirate(2.5, tube, rate=0.5)
-            p20.dispense(2.5, dest)
-            p20.blow_out()
-            p20.drop_tip()
-
     if mmx_type == 'mmx_wellplate':
         ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
         m20.pick_up_tip()
@@ -88,11 +78,11 @@ def run(ctx):
         for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
 
             m20.aspirate(10, s_col, rate=0.5)
-            m20.dispense(10, d_col.top(), rate=0.5)  # noqa: E501
-            m20.blow_out()
+            m20.dispense(10, d_col, rate=0.5)  # noqa: E501
             m20.aspirate(11.5, s_col, rate=0.5)
-            m20.dispense(11.5, d_col.top(), rate=0.5)  # noqa: E501
+            m20.dispense(11.5, d_col, rate=0.5)  # noqa: E501
             m20.blow_out()
+            m20.touch_tip()
             ctx.comment('\n')
         m20.drop_tip()
 
@@ -104,11 +94,11 @@ def run(ctx):
 
             for well in unfilled_col:
                 p20.aspirate(10, unfilled_mmx_col, rate=0.5)
-                p20.dispense(10, well.top(), rate=0.5)  # noqa: E501
-                p20.blow_out()
+                p20.dispense(10, well, rate=0.5)  # noqa: E501
                 p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
-                p20.dispense(11.5, well.top(), rate=0.5)  # noqa: E501
+                p20.dispense(11.5, well, rate=0.5)  # noqa: E501
                 p20.blow_out()
+                p20.touch_tip()
             p20.drop_tip()
 
     elif mmx_type == "mmx_tuberack":
@@ -119,13 +109,25 @@ def run(ctx):
         for s, d in zip(mmx, pcr_plate.wells()[:num_samp]):
 
             p20.aspirate(10, s, rate=0.5)
-            p20.dispense(10, d.top(), rate=0.5)  # noqa: E501
-            p20.blow_out()
+            p20.dispense(10, d, rate=0.5)  # noqa: E501
             p20.aspirate(11.5, s, rate=0.5)
-            p20.dispense(11.5, d.top(), rate=0.5)  # noqa: E501
+            p20.dispense(11.5, d, rate=0.5)  # noqa: E501
             p20.blow_out()
+            p20.touch_tip()
             ctx.comment('\n')
         p20.drop_tip()
+
+    # transfer sample
+    if source_type == "tuberack":
+        ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
+        for tube, dest in zip(sample_tubes, pcr_plate.wells()):
+            p20.pick_up_tip()
+            p20.aspirate(2.5, tube, rate=0.5)
+            p20.dispense(2.5, dest)
+            p20.mix(3, 20, dest)
+            p20.blow_out()
+            p20.touch_tip()
+            p20.drop_tip()
 
     ctx.comment('\n\n------------Running PCR-------------\n')
 
@@ -149,11 +151,13 @@ def run(ctx):
 
     ]
 
+    tc_mod.close_lid()
     tc_mod.execute_profile(steps=profile1, repetitions=1, block_max_volume=25)
     tc_mod.execute_profile(steps=profile2, repetitions=25, block_max_volume=25)
     tc_mod.execute_profile(steps=profile3, repetitions=1, block_max_volume=25)
     tc_mod.set_block_temperature(4)
     tc_mod.set_lid_temperature(25)
+    tc_mod.open_lid()
 
     ctx.comment('''Centrifuge the PCR plate at 1,000 × g at 20°C for 1 minute
                 to collect condensation, carefully remove seal.

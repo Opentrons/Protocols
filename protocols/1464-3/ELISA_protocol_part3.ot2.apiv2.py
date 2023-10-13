@@ -29,17 +29,21 @@ def run(ctx):
         tip_racks=tiprack_m300)
 
     # reagent setup
-    TMB_substrate = trough.wells('A2')
-    stop_solution = trough.wells('A3')
+    TMB_substrate = trough.wells_by_name()['A6']
+    stop_solution = trough.wells_by_name()['A12']
 
     """
     Adding TMB substrate
     """
+    m300.pick_up_tip()
     m300.distribute(
         100,
-        TMB_substrate,
+        TMB_substrate.bottom(),
         [col[0].top() for col in plate.columns()[:number_of_columns]],
-        blow_out=TMB_substrate)
+        blow_out=TMB_substrate,
+        new_tip='never')
+    m300.aspirate(20, plate.columns()[number_of_columns-1][0].top())
+    m300.drop_tip()
 
     ctx.delay(minutes=30)
 
@@ -48,5 +52,5 @@ def run(ctx):
     """
     for col in plate.columns()[:number_of_columns]:
         m300.pick_up_tip()
-        m300.transfer(100, stop_solution, col, new_tip='never')
+        m300.transfer(100, stop_solution.bottom(), col, new_tip='never')
         m300.drop_tip()
