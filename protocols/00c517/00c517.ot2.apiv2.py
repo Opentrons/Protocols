@@ -35,7 +35,7 @@ def run(ctx):
 
     strip_tube_plate = ctx.load_labware('3dprint_96_tuberack_200ul', 7)
     sample_plate = ctx.load_labware('agilent_96_wellplate_500ul', 8)
-    agilent_plate = ctx.load_labware('agilent_96_wellplate_1400ul', 3)
+    agilent_plate = ctx.load_labware('agilent_96_wellplate_500ul', 11)
     uv_plate = ctx.load_labware('greineruvstar_96_wellplate_392ul', 5)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in [9]]
@@ -125,10 +125,10 @@ def run(ctx):
 
     for sample, chunk in zip(samples, pixul_chunks):
         pick_up(p300)
-        p300.aspirate(sds_vol+samp_vol, sds)
-        p300.dispense(sds_vol+samp_vol, sample)
-        adjust_height(sds_vol+samp_vol, 'sds')
-        p300.mix(5, sds_vol*0.8, sample, rate=0.5)
+        p300.aspirate(sds_vol, sds.bottom(h_sds))
+        p300.dispense(sds_vol, sample)
+        adjust_height(sds_vol, 'sds')
+        p300.mix(5, (sds_vol+samp_vol)*0.8, sample, rate=0.5)
         for well in chunk:
             p300.aspirate(split_vol if split_vol <= 100 else 100,   # FIX THIS
                           sample.bottom(z=0.6), rate=0.5)
@@ -183,7 +183,8 @@ def run(ctx):
         num_dispenses = math.ceil(vol/300)
         vol_ctr = vol
         for _ in range(num_dispenses):
-            p300.aspirate(p300.max_volume if vol_ctr > 300 else vol_ctr, sds)
+            p300.aspirate(p300.max_volume if vol_ctr > 300 else vol_ctr,
+                          sds.bottom(h_sds))
             adjust_height(p300.max_volume if vol_ctr > 300 else vol_ctr, 'sds')
             p300.dispense(p300.max_volume if vol_ctr > 300 else vol_ctr,
                           tube.top())
@@ -218,7 +219,7 @@ def run(ctx):
     ctx.comment('\n-------ADDING SDS TO PLATE-----\n\n\n')
     pick_up(p300)
     for well in agilent_plate.wells()[:num_samp]:
-        p300.aspirate(40-samp_vol, sds)
+        p300.aspirate(40-samp_vol, sds.bottom(h_sds))
         adjust_height(40-samp_vol, 'sds')
         p300.dispense(40-samp_vol, well)
     p300.drop_tip()
@@ -242,8 +243,8 @@ def run(ctx):
         p20.aspirate(samp_vol, s)
         p20.dispense(samp_vol, d)
         p20.mix(5, 20, d)
+        p20.aspirate(20, d)
         for uv_well in chunk:
-            p20.aspirate(10, d)
             p20.dispense(10, uv_well)
         p20.drop_tip()
         ctx.comment('\n')

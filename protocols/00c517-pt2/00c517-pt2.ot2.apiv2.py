@@ -127,7 +127,8 @@ def run(ctx):
                 pip.mix(10, 20, source_well)
             elif pip == p300:
                 pip.mix(5,
-                        0.8*init_samp_vol if 0.8*init_samp_vol < 300 else 300)
+                        0.8*init_samp_vol if 0.8*init_samp_vol < 300 else 300,
+                        source_well)
 
             pip.aspirate(samp_vol, source_well)
             pip.dispense(samp_vol, dest_well)
