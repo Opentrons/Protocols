@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\ngreen: RSB  \nblue: samples  \n\n\n",
-    "description": "Links:\n SPRI 1 & 2\n\n\n PCR2 Setup\n\n\n SPRI 3\n\n\n Normalization and Pooling\n\n\n* Rerack\nThis is a custom normalization pooling protocol from up to 12 sources to a pooling tube. The input .csv for RSB volume specification should be specified as follows:\nwell,volume rsb\nA1,200\nB1,15\n...\n",
+    "description": "Links:\n* SPRI 1 & 2\n\n\n* PCR2 Setup\n\n\n* SPRI 3\n\n\n* Normalization and Pooling\n\n\n* Rerack\nThis is a custom normalization pooling protocol from up to 12 sources to a pooling tube. The input .csv for RSB volume specification should be specified as follows:\nwell,volume rsb\nA1,200\nB1,15\n...\n",
     "internal": "3607d5",
     "labware": "\nOpentrons 20\u00b5l Tiprack\nOpentrons 300\u00b5l Tiprack\nOpentrons 96 Well Aluminum Block\nOpentrons 4-in-1 Tuberack Set\n",
     "markdown": {

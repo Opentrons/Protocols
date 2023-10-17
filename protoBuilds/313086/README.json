@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\ngreen: lysis/binding buffer (13ml per channel)\npink: elution buffer: (9ml per channel)\nblue: starting samples\n\n\n",
-    "description": "Links:\n Logix Smart Nasopharyngeal Covid-19 Plating (Station A)\n Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station B)\nThis protocol plates lysis/binding buffer, samples, and elution buffer in a NEST 96-deepwell plate. Samples should be arranged in up to 4x Opentrons tuberacks, and buffers should be loaded in a NEST 12-channel reservoir. The transfer order is as shown below:\n\nDeepwells A1 and B1 are left empty for controls to be added later on.\n",
+    "description": "Links:\n* Logix Smart Nasopharyngeal Covid-19 Plating (Station A)\n* Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station B)\nThis protocol plates lysis/binding buffer, samples, and elution buffer in a NEST 96-deepwell plate. Samples should be arranged in up to 4x Opentrons tuberacks, and buffers should be loaded in a NEST 12-channel reservoir. The transfer order is as shown below:\n\nDeepwells A1 and B1 are left empty for controls to be added later on.\n",
     "internal": "313086",
     "labware": "\nNEST 12-Well Reservoirs, 15 mL\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nOpentrons 24 tuberack with NEST 1.5 mL Microcentrifuge Tubes\nOpentrons 300\u00b5l tipracks\nOpentrons 1000\u00b5l tipracks\n\nTo purchase tips, reagents, or pipettes, please visit our online store or contact our sales team at info@opentrons.com",
     "markdown": {

@@ -5,8 +5,8 @@
             "PCR Prep"
         ]
     },
-    "deck-setup": "\n reservoir channel 1: lipofectamine 2000\n reservoir channel 2: V141 plasmid\n* 96-wellplate: siRNA\n",
-    "description": "Links:\n Random Aliquoting\n\n\n Plasmind Luciferase Assay\n\n\n QIAcuity Plate Transfer\n\n\n PCR Prep\n\n\nThis protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.\n",
+    "deck-setup": "\n* reservoir channel 1: lipofectamine 2000\n* reservoir channel 2: V141 plasmid\n* 96-wellplate: siRNA\n",
+    "description": "Links:\n* Random Aliquoting\n\n\n* Plasmind Luciferase Assay\n\n\n* QIAcuity Plate Transfer\n\n\n* PCR Prep\n\n\nThis protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.\n",
     "internal": "9250d7",
     "labware": "\nCorning 96 Well Plate 360 ul Flat\nCustom 384 Well Plate 100 ul\nNEST 12-Well Reservoirs, 15 mL #999-00076\nOpentrons 20ul tips\n",
     "markdown": {

@@ -118,7 +118,7 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
-    vol_max_dil = 0.8*diluent[0].max_volume
+    vol_max_dil = 10500
     vol_current = 0
     dil_tracker = iter(diluent)
     dil_current = next(dil_tracker)
