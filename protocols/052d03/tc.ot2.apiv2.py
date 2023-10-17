@@ -267,6 +267,11 @@ def run(ctx):
             m300.dispense(vol_dil, d.bottom(5))
             slow_withdraw(m300, d)
 
+    def mix_high_low(reps, vol, well, h_low, h_high):
+        for _ in range(reps):
+            m300.aspirate(vol, well.bottom(h_low))
+            m300.dispense(vol, well.bottom(h_high))
+
     # perform dilutions
     for i, dil_set in enumerate(dil_sets_all):
         sources = [rxn_mix_1_dests[i]] + dil_set[:len(dil_sets_all[0])-1]
@@ -274,10 +279,12 @@ def run(ctx):
         for s, d in zip(sources, dests):
             if not m300.has_tip:
                 pick_up(m300)
+            m300.mix(1, 20, s.bottom(5))
             m300.aspirate(20, s.bottom(5))
             slow_withdraw(m300, s)
             m300.dispense(20, d.bottom(d.depth/2))
-            m300.mix(5, 50, d.bottom(d.depth/2))
+            mix_high_low(8, 50, d, d.depth/2-2, d.depth/2+3)
+            m300.mix(8, 50, d.bottom(d.depth/2))
             slow_withdraw(m300, d)
             m300.drop_tip()
 
@@ -301,10 +308,10 @@ def run(ctx):
     for d in pc_mm_dest_set:
         if not p20.has_tip:
             pick_up(p20)
-        p20.aspirate(2, pc.top())  # pre-airgap
+        p20.aspirate(2, pc.bottom(0.5))  # pre-airgap
         p20.aspirate(5.5, pc.bottom(0.5))
         slow_withdraw(p20, pc)
-        p20.dispense(p20.current_volume, d.bottom(2))
+        p20.dispense(5.5, d.bottom(2))
         slow_withdraw(p20, d)
         p20.drop_tip()
 
@@ -319,10 +326,10 @@ def run(ctx):
     for s, d_set in zip(cp_sources, mm_dest_sets):
         for d in d_set:
             pick_up(p20)
-            p20.aspirate(2, s.top())  # pre-airgap
+            p20.aspirate(2, s.bottom(5))  # pre-airgap
             p20.aspirate(5.5, s.bottom(5))
             slow_withdraw(p20, s)
-            p20.dispense(p20.current_volume, d.bottom(2))
+            p20.dispense(5.5, d.bottom(2))
             slow_withdraw(p20, d)
             p20.drop_tip()
 
