@@ -11,9 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, source_type, mmx_type,
+    [num_samp, source_type, mmx_type, start_tip,
         p20_mount, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "source_type", "mmx_type", "p20_mount", "m20_mount")
+        "num_samp", "source_type", "mmx_type",
+        "start_tip", "p20_mount", "m20_mount")
 
     # num_samp = 96
     # source_type = "tuberack"
@@ -49,6 +50,10 @@ def run(ctx):
                               tip_racks=tips)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tips)
+    all_tips = [tip for rack in tips for tip in rack.wells()]
+    start_tip -= 1
+    m20.starting_tip = all_tips[start_tip]
+    p20.starting_tip = all_tips[start_tip]
 
     def pick_up(pip):
         try:
@@ -75,16 +80,24 @@ def run(ctx):
         ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
         m20.pick_up_tip()
 
-        for s_col, d_col in zip(mmx, pcr_plate.rows()[0][:num_full_cols]):
+        for i, (s_col, d_col) in enumerate(zip(
+                                                mmx,
+                                                pcr_plate.rows()[0][:num_full_cols])):  # noqa: E501
+            if i % 4 == 0 and i > 0:
+                if m20.has_tip:
+                    m20.drop_tip()
+                m20.pick_up_tip()
 
             m20.aspirate(10, s_col, rate=0.5)
             m20.dispense(10, d_col, rate=0.5)  # noqa: E501
-            m20.aspirate(11.5, s_col, rate=0.5)
-            m20.dispense(11.5, d_col, rate=0.5)  # noqa: E501
-            m20.blow_out()
+            m20.aspirate(12.5, s_col, rate=0.5)
+            m20.dispense(12.5, d_col, rate=0.5)  # noqa: E501
+            m20.blow_out(d_col.top())
             m20.touch_tip()
             ctx.comment('\n')
-        m20.drop_tip()
+
+        if m20.has_tip:
+            m20.drop_tip()
 
         if remainder:
             ctx.comment('\n\nTRANSFERRING MASTERMIX TO UNFILLED COLUMN\n')
@@ -95,9 +108,9 @@ def run(ctx):
             for well in unfilled_col:
                 p20.aspirate(10, unfilled_mmx_col, rate=0.5)
                 p20.dispense(10, well, rate=0.5)  # noqa: E501
-                p20.aspirate(11.5, unfilled_mmx_col, rate=0.5)
-                p20.dispense(11.5, well, rate=0.5)  # noqa: E501
-                p20.blow_out()
+                p20.aspirate(12.5, unfilled_mmx_col, rate=0.5)
+                p20.dispense(12.5, well, rate=0.5)  # noqa: E501
+                p20.blow_out(well.top())
                 p20.touch_tip()
             p20.drop_tip()
 
@@ -106,26 +119,36 @@ def run(ctx):
         ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
         p20.pick_up_tip()
 
-        for s, d in zip(mmx, pcr_plate.wells()[:num_samp]):
+        for i, (s, d) in enumerate(zip(mmx, pcr_plate.wells()[:num_samp])):
+
+            if i % 4 == 0 and i > 0:
+                if m20.has_tip:
+                    m20.drop_tip()
+                m20.pick_up_tip()
 
             p20.aspirate(10, s, rate=0.5)
             p20.dispense(10, d, rate=0.5)  # noqa: E501
-            p20.aspirate(11.5, s, rate=0.5)
-            p20.dispense(11.5, d, rate=0.5)  # noqa: E501
-            p20.blow_out()
+            p20.aspirate(12.5, s, rate=0.5)
+            p20.dispense(12.5, d, rate=0.5)  # noqa: E501
+            p20.blow_out(d.top())
             p20.touch_tip()
             ctx.comment('\n')
         p20.drop_tip()
 
     # transfer sample
+    sample_wells = [
+                    well for column in pcr_plate.columns()[1:11]
+                    for well in column[1:7]
+                    ]
+
     if source_type == "tuberack":
         ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
-        for tube, dest in zip(sample_tubes, pcr_plate.wells()):
+        for tube, dest in zip(sample_tubes, sample_wells):
             p20.pick_up_tip()
             p20.aspirate(2.5, tube, rate=0.5)
             p20.dispense(2.5, dest)
             p20.mix(3, 20, dest)
-            p20.blow_out()
+            p20.blow_out(dest.top())
             p20.touch_tip()
             p20.drop_tip()
 
