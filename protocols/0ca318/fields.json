@@ -26,6 +26,12 @@
     ]
   },
   {
+    "type": "int",
+    "label": "Tip pick up start (by column, 1-192)",
+    "name": "start_tip",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
