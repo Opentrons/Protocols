@@ -5,7 +5,7 @@
             "ELISA"
         ]
     },
-    "description": "Links:\n Part 1: Dilution\n Part 2-1: Antibody Addition\n* Part 2-2: Substrate and Stop Solution Addtion\nThis is the third part of a ELISA protocol: Substrate and Stop Solution Addition. This should be run immediately after the incubation and wash steps.\nDownload full protocol details here.\n\nYou will need:\n P300 Multi-channel Pipette\n P300 Single-channel Pipette\n Opentrons Tube Racks (2 mL Eppendorf)\n Opentrons Tube Rack (15 + 50 mL)\n 96-well Plate\n 12-row Trough\n* 300 uL Tip Racks",
+    "description": "Links:\n* Part 1: Dilution\n* Part 2-1: Antibody Addition\n* Part 2-2: Substrate and Stop Solution Addtion\nThis is the third part of a ELISA protocol: Substrate and Stop Solution Addition. This should be run immediately after the incubation and wash steps.\nDownload full protocol details here.\n\nYou will need:\n* P300 Multi-channel Pipette\n* P300 Single-channel Pipette\n* Opentrons Tube Racks (2 mL Eppendorf)\n* Opentrons Tube Rack (15 + 50 mL)\n* 96-well Plate\n* 12-row Trough\n* 300 uL Tip Racks",
     "internal": "AwOUI09G\n1464",
     "markdown": {
         "author": "[Opentrons](http://www.opentrons.com/)\n\n",
