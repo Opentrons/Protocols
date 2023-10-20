@@ -105,7 +105,7 @@ def run(ctx):
         def wrapper(*args, **kwargs):
             func(*args, **kwargs, rate=0.5)
             ctx.delay(seconds=1)
-            func.__self__.blow_out([*args][1].labware.object.top())
+            # func.__self__.blow_out([*args][1].labware.object.top())
             func.__self__.touch_tip()
         return wrapper
 
@@ -122,7 +122,7 @@ def run(ctx):
             func(*args, **kwargs)
             func.__self__.move_to([*args][1].labware.object.top())
             ctx.delay(seconds=0.5)
-            func.__self__.blow_out([*args][1].labware.object.top())
+            # func.__self__.blow_out([*args][1].labware.object.top())
             func.__self__.touch_tip()
         return wrapper
 
