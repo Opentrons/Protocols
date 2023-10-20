@@ -70,7 +70,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m300 = ctx.load_instrument('p300_multi_gen2', p300_mount)
     m20 = ctx.load_instrument('p20_multi_gen2', p20_mount)
 
-    mounted_on = {"left": types.Mount.LEFT, "right":types.Mount.RIGHT}
+    mounted_on = {"left" : types.Mount.LEFT, "right" : types.Mount.RIGHT}
 
     pick_up_current = 0.15  # 150 mA for single tip
     ctx._hw_manager.hardware._attached_instruments[
