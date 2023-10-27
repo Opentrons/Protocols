@@ -23,8 +23,8 @@
     "label": "Use modules?",
     "name": "NOMODULES",
     "options": [
-       {"label": "No", "value": "NO"},
-       {"label": "Yes", "value": "YES"}
+       {"label": "Yes", "value": "NO"},
+        {"label": "No", "value": "YES"}
     ]
   },
   {
