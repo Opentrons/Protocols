@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This is Part 2 to the QIAseq FastSelect Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nLinks:\n* Part 1: Sample Normalization\n* Part 2: QIAseq FastSelect Fragmentation",
+    "description": "This is Part 2 to the QIAseq FastSelect Protocol. This protocol is used to perform the addition of samples with mastermix into a plate.\nLinks:\n Part 1: Sample Normalization\n Part 2: QIAseq FastSelect Fragmentation",
     "internal": "0b97ae-protocol-2A",
     "labware": "\nPerkin Elmer 12 Reservoir 21000 \u00b5L\nApplied Biosystems Enduraplate 96 Aluminum Block 220 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L\n",
     "markdown": {

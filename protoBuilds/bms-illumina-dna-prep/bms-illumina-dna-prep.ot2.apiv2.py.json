@@ -1,0 +1,1426 @@
+{
+    "content": "# flake8: noqa\n\nfrom opentrons import protocol_api\n\nfrom opentrons import types\n\nimport inspect\n\nmetadata = {\n    'protocolName': 'Illumina DNA Prep - BMS',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.14'\n}\n# I removed the right() function because it is never used\n# settings\n# SAMPLES = '24x'         # 8x, 16x, or 24x\n# YES or NO, DRYRUN = 'YES' will return tips, skip incubation times,\n# shorten mix, for testing purposes\n# DRYRUN = 'NO'\n# YES or NO, NOMODULES = 'YES' will not require modules on the deck and will\n# skip module steps, for testing purposes, if DRYRUN = 'YES', then NOMODULES\n# will automatically set itself to 'NO'\n# NOMODULES = 'NO'\n# TIPREUSE = 'NO'\n# YES or NO, Reusing tips on wash steps reduces tips needed, no tip refill\n# needed, suggested only for 24x run with all steps\n\n# YES or NO, Sets whether to use protocol specific z offsets for each tip and\n# labware or no offsets aside from defaults\n# OFFSET = 'YES'\n\n# sections\n# STEP_TAG = 1     # 1 is include, 0 is skip, steps with \"DECK\" are\n# for reaction\n# to take place with the on deck Thermocycler module\n# This arrangement makes it possibly to set up and run only the first\n# half, or to skips steps and resume if there is an Error.\n# STEP_TAGDECK = 1\n# If non \"DECK\" steps are skipped, then TIPREUSE will automatically set\n# itself to 'NO' in order to keep tip order correct.\n# STEP_TSB = 1\n# STEP_TSBDECK = 1\n# STEP_WASH = 1\n# STEP_PCR = 1\n# STEP_PCRDECK = 1\n# STEP_POSTPCR = 1\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n\n    global TIPREUSE\n\n    [SAMPLES,\n     DRYRUN,\n     NOMODULES,\n     TIPREUSE,\n     OFFSET,\n     STEP_TAG,\n     STEP_TAGDECK,\n     STEP_TSB,\n     STEP_TSBDECK,\n     STEP_WASH,\n     STEP_PCR,\n     STEP_PCRDECK,\n     STEP_POSTPCR] = get_values(  # noqa: F821\n     \"SAMPLES\",\n     \"DRYRUN\",\n     \"NOMODULES\",\n     \"TIPREUSE\",\n     \"OFFSET\",\n     \"STEP_TAG\",\n     \"STEP_TAGDECK\",\n     \"STEP_TSB\",\n     \"STEP_TSBDECK\",\n     \"STEP_WASH\",\n     \"STEP_PCR\",\n     \"STEP_PCRDECK\",\n     \"STEP_POSTPCR\")\n\n    STEPS = {STEP_TAG, STEP_TSB, STEP_WASH, STEP_PCR, STEP_POSTPCR}\n    simulating = False\n    real_temp = False\n    real_incubate_time = 0.01\n\n    if DRYRUN == 'YES':\n        protocol.comment(\"THIS IS A DRY RUN\")\n    else:\n        protocol.comment(\"THIS IS A REACTION RUN\")\n        NOMODULES = 'NO'\n\n    if all(STEPS) is True:\n        if TIPREUSE == 'YES':\n            TIPREUSE = 'YES'\n            protocol.comment(\"TIP REUSING\")\n    else:\n        TIPREUSE = 'NO'\n        protocol.comment(\"NO TIP REUSING\")\n\n    # labware\n    if NOMODULES == 'YES':\n        protocol.comment(\"THIS IS A NO MODULE RUN\")\n        # <--- Actually an Eppendorf 96 well, same dimensions\n        mag_block = protocol.load_module('magnetic module gen2', '1')\n        # <--- Actually an Eppendorf 96 well, same dimensions\n        sample_plate_mag = mag_block.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt')\n        if TIPREUSE == 'NO':\n            reservoir = protocol.load_labware('nest_12_reservoir_15ml', '2')\n        else:\n            reservoir = protocol.load_labware(\n                'nest_96_wellplate_2ml_deep', '2')\n\n        temp_block = protocol.load_module('temperature module gen2', '3')\n        reagent_plate = temp_block.load_labware(\n            'armadillo_96_aluminumblock_200ul')\n        tiprack_20 = protocol.load_labware(\n            'opentrons_96_filtertiprack_20ul', '4')\n        tiprack_200_1 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '5')\n        tiprack_200_2 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '6')\n        try:\n            thermocycler = protocol.load_module('thermocyclerModuleV2')\n        except:\n            thermocycler = protocol.load_module('thermocycler')\n\n        sample_plate_thermo = thermocycler.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt')\n        tiprack_200_3 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '9')\n    else:\n        protocol.comment(\"THIS IS A MODULE RUN\")\n        mag_block = protocol.load_module('magnetic module gen2', '1')\n        # <--- Actually an Eppendorf 96 well, same dimensions\n        sample_plate_mag = mag_block.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt')\n        if TIPREUSE == 'NO':\n            reservoir = protocol.load_labware('nest_12_reservoir_15ml', '2')\n        else:\n            reservoir = protocol.load_labware(\n                'nest_96_wellplate_2ml_deep', '2')\n        temp_block = protocol.load_module('temperature module gen2', '3')\n        reagent_plate = temp_block.load_labware(\n            'armadillo_96_aluminumblock_200ul')\n        tiprack_20 = protocol.load_labware(\n            'opentrons_96_filtertiprack_20ul', '4')\n        tiprack_200_1 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '5')\n        tiprack_200_2 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '6')\n        try:\n            thermocycler = protocol.load_module('thermocyclerModuleV2')\n        except:\n            thermocycler = protocol.load_module('thermocycler')\n        sample_plate_thermo = thermocycler.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt')\n        tiprack_200_3 = protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', '9')\n\n    if TIPREUSE == 'YES':\n        protocol.comment(\"THIS PROTOCOL WILL REUSE TIPS FOR WASHES\")\n\n    # reagent - plate\n    TAG = reagent_plate.wells_by_name()['A1']\n    TSB = reagent_plate.wells_by_name()['A2']\n    PCR = reagent_plate.wells_by_name()['A3']\n    Barcodes1 = reagent_plate.wells_by_name()['A7']\n    Barcodes2 = reagent_plate.wells_by_name()['A8']\n    Barcodes3 = reagent_plate.wells_by_name()['A9']\n\n    # offset\n    if TIPREUSE == 'NO':\n        p300_offset_Res = 2\n    else:\n        p300_offset_Res = 3\n    p300_offset_Thermo = 1\n    p300_offset_Mag = 1\n    # p300_offset_Deck = 0.3\n    p300_offset_Temp = 0.8\n    # p300_offset_Tube = 0\n    # if TIPREUSE == 'NO':\n    # p20_offset_Res = 2\n    # else:\n    # p20_offset_Res = 2\n    p20_offset_Thermo = 1\n    p20_offset_Mag = 1\n    # p20_offset_Deck = 0.3\n    p20_offset_Temp = 1\n    # p20_offset_Tube = 0\n\n    # reagent - deepwell\n    if TIPREUSE == 'NO':\n        AMPure = reservoir['A1']\n        water = reservoir['A2']\n        EtOH_1 = reservoir['A4']\n        EtOH_2 = reservoir['A4']\n        EtOH_3 = reservoir['A4']\n        RSB = reservoir['A6']\n        TWB_1 = reservoir['A8']\n        TWB_2 = reservoir['A8']\n        TWB_3 = reservoir['A8']\n        Liquid_trash = reservoir['A12'].bottom(p300_offset_Res)\n    else:\n        AMPure = reservoir['A1']\n        EtOH_1 = reservoir['A4']\n        EtOH_2 = reservoir['A3']\n        EtOH_3 = reservoir['A2']\n        RSB = reservoir['A6']\n        TWB_1 = reservoir['A8']\n        TWB_2 = reservoir['A9']\n        TWB_3 = reservoir['A10']\n        Liquid_trash = reservoir['A12'].bottom(p300_offset_Res)\n\n    # pipette\n    if NOMODULES == 'NO':\n        p300 = protocol.load_instrument('p300_multi_gen2', 'left', tip_racks=[\n                                        tiprack_200_1, tiprack_200_2,\n                                        tiprack_200_3])\n        p20 = protocol.load_instrument(\n            'p20_multi_gen2', 'right', tip_racks=[tiprack_20])\n    else:\n        p300 = protocol.load_instrument('p300_multi_gen2', 'left', tip_racks=[\n                                        tiprack_200_1, tiprack_200_2,\n                                        tiprack_200_3])\n        p20 = protocol.load_instrument(\n            'p20_multi_gen2', 'right', tip_racks=[tiprack_20])\n\n    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):\n\n        if to_center is False:\n            current_pipette.move_to(well_location.top(), speed=10)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            protocol.pause(f\"Replace empty tip racks for {pip}\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # samples\n    # FIXME: This does not seem to be used\n    src_file_path = inspect.getfile(lambda: None)\n    protocol.comment(src_file_path)\n\n    # tip and sample tracking\n    if SAMPLES == '8x':\n        protocol.comment(\"There are 8 Samples\")\n        samplecolumns = 1\n        TWB_washtip_1 = tiprack_200_1['A3']\n        TWB_removetip_1 = tiprack_200_1['A4']\n        W1_ETOH_washtip_1 = tiprack_200_1['A10']\n        W1_ETOH_removetip_1 = tiprack_200_1['A6']\n    elif SAMPLES == '16x':\n        protocol.comment(\"There are 16 Samples\")\n        samplecolumns = 2\n        TWB_washtip_1 = tiprack_200_1['A5']\n        TWB_washtip_2 = tiprack_200_1['A6']\n        TWB_removetip_1 = tiprack_200_1['A7']\n        TWB_removetip_2 = tiprack_200_1['A8']\n        W1_ETOH_washtip_1 = tiprack_200_2['A7']\n        W1_ETOH_washtip_2 = tiprack_200_2['A8']\n        W1_ETOH_removetip_1 = tiprack_200_2['A9']\n        W1_ETOH_removetip_2 = tiprack_200_2['A10']\n    elif SAMPLES == '24x':\n        protocol.comment(\"There are 24 Samples\")\n        samplecolumns = 3\n        TWB_washtip_1 = tiprack_200_1['A7']\n        TWB_washtip_2 = tiprack_200_1['A8']\n        TWB_washtip_3 = tiprack_200_1['A9']\n        TWB_removetip_1 = tiprack_200_1['A10']\n        TWB_removetip_2 = tiprack_200_1['A6']\n        TWB_removetip_3 = tiprack_200_1['A12']\n        W1_ETOH_washtip_1 = tiprack_200_3['A4']\n        W1_ETOH_washtip_2 = tiprack_200_3['A5']\n        W1_ETOH_washtip_3 = tiprack_200_3['A6']\n        W1_ETOH_removetip_1 = tiprack_200_3['A7']\n        W1_ETOH_removetip_2 = tiprack_200_3['A8']\n        W1_ETOH_removetip_3 = tiprack_200_3['A9']\n    else:\n        protocol.pause(\"ERROR?\")\n\n    # FIXME: Commented out variables are never used in the protocol\n    # positions\n    ##########################################################################\n    #  sample_plate_thermo on the Thermocycler\n    # A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Thermo - 5))  # Beads to the Right\n    # A1_p20_bead_top = sample_plate_thermo['A1'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Thermo + 2))  # Beads to the Right\n    # A1_p20_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Thermo - 2))  # Beads to the Right\n    A1_p300_bead_side = sample_plate_thermo['A1'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Thermo - 7.2))  # Beads to the Right\n    A1_p300_bead_top = sample_plate_thermo['A1'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Thermo - 1))  # Beads to the Right\n    A1_p300_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(\n        x=0.80, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A1_p300_loc1 = sample_plate_thermo['A1'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    A1_p300_loc2 = sample_plate_thermo['A1'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A1_p300_loc3 = sample_plate_thermo['A1'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    # A3_p20_bead_side = sample_plate_thermo['A2'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Thermo - 5))  # Beads to the Right\n    # A3_p20_bead_top = sample_plate_thermo['A2'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Thermo + 2))  # Beads to the Right\n    # A3_p20_bead_mid = sample_plate_thermo['A2'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Thermo - 2))  # Beads to the Right\n    A3_p300_bead_side = sample_plate_thermo['A2'].center().move(types.Point(\n        x=0.50, y=0, z=p300_offset_Thermo - 7.2))  # Beads to the Right\n    A3_p300_bead_top = sample_plate_thermo['A2'].center().move(types.Point(\n        x=-1.30, y=0, z=p300_offset_Thermo - 1))  # Beads to the Right\n    A3_p300_bead_mid = sample_plate_thermo['A2'].center().move(types.Point(\n        x=-0.80, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A3_p300_loc1 = sample_plate_thermo['A2'].center().move(types.Point(\n        x=-1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    A3_p300_loc2 = sample_plate_thermo['A2'].center().move(types.Point(\n        x=-1.3, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A3_p300_loc3 = sample_plate_thermo['A2'].center().move(types.Point(\n        x=-1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    # A5_p20_bead_side = sample_plate_thermo['A3'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Thermo - 5))  # Beads to the Right\n    # A5_p20_bead_top = sample_plate_thermo['A3'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Thermo + 2))  # Beads to the Right\n    # A5_p20_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Thermo - 2))  # Beads to the Right\n    A5_p300_bead_side = sample_plate_thermo['A3'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Thermo - 7.2))  # Beads to the Right\n    A5_p300_bead_top = sample_plate_thermo['A3'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Thermo - 1))  # Beads to the Right\n    A5_p300_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(\n        x=0.80, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A5_p300_loc1 = sample_plate_thermo['A3'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    A5_p300_loc2 = sample_plate_thermo['A3'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Thermo - 4))  # Beads to the Right\n    A5_p300_loc3 = sample_plate_thermo['A3'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Thermo - 4))\n    # Beads to the Right\n    ##########################################################################\n\n    bypass = protocol.deck.position_for(\n        '11').move(types.Point(x=70, y=80, z=130))\n\n    # commands\n    if DRYRUN == 'NO':\n        protocol.comment(\"SETTING THERMO and TEMP BLOCK Temperature\")\n        if real_temp:\n            thermocycler.set_block_temperature(4)\n            thermocycler.set_lid_temperature(100)\n            temp_block.set_temperature(4)\n#        temp_block.set_temperature(4)\n        thermocycler.open_lid()\n\n    if STEP_TAG == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> TAGMENTATION')\n        protocol.comment('==============================================')\n\n        protocol.comment('--> Adding Tagmentation Mix ')\n        if DRYRUN == 'NO':\n            TagVol = 20\n            TagMixRep = 10\n            TagMixVol = 40\n        if DRYRUN == 'YES':\n            TagVol = 20\n            TagMixRep = 1\n            TagMixVol = 40\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            pick_up(p300)\n            p300.mix(3, 20, TAG.bottom(z=p300_offset_Temp), rate=0.5)\n            p300.aspirate(TagVol, TAG.bottom(z=p300_offset_Temp), rate=0.25)\n            p300.dispense(TagVol, sample_plate_thermo[X].bottom(\n                z=p300_offset_Thermo), rate=0.25)\n            p300.mix(TagMixRep, TagMixVol)\n            p300.move_to(sample_plate_thermo[X].top())\n            protocol.delay(seconds=2)\n            p300.blow_out(sample_plate_thermo[X].top(z=-5))\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            pick_up(p300)\n            p300.mix(3, 20, TAG.bottom(z=p300_offset_Temp), rate=0.5)\n            p300.aspirate(TagVol, TAG.bottom(z=p300_offset_Temp), rate=0.25)\n            p300.dispense(TagVol, sample_plate_thermo[X].bottom(\n                z=p300_offset_Thermo), rate=0.25)\n            p300.mix(TagMixRep, TagMixVol)\n            p300.blow_out(sample_plate_thermo[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            pick_up(p300)\n            p300.mix(3, 20, TAG.bottom(z=p300_offset_Temp), rate=0.5)\n            p300.aspirate(TagVol, TAG.bottom(z=p300_offset_Temp), rate=0.25)\n            p300.dispense(TagVol, sample_plate_thermo[X].bottom(\n                z=p300_offset_Thermo), rate=0.25)\n            p300.mix(TagMixRep, TagMixVol)\n            p300.blow_out(sample_plate_thermo[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n    if STEP_TAGDECK == 1:\n        if DRYRUN == 'NO':\n            ###################################################################\n\n            thermocycler.close_lid()\n            profile_TAG = [\n                {'temperature': 55, 'hold_time_minutes': 15}\n            ]\n            thermocycler.execute_profile(\n                steps=profile_TAG, repetitions=1, block_max_volume=50)\n            thermocycler.set_block_temperature(10)\n        #######################################################################\n            thermocycler.open_lid()\n    else:\n        protocol.pause('Seal, Run ERAT (60min)')\n\n    thermocycler.open_lid()\n\n    if STEP_TSB == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> Adapter Ligation')\n        protocol.comment('==============================================')\n\n        protocol.comment('--> Adding Tagmentation Stop Buffer')\n        if DRYRUN == 'NO':\n            if NOMODULES == 'NO':\n                TSBVol = 10\n                TSBMixRep = 10\n                TSBMixVol = 20\n            else:\n                TSBVol = 10\n                TSBMixRep = 10\n                TSBMixVol = 10\n        if DRYRUN == 'YES':\n            if NOMODULES == 'NO':\n                TSBVol = 10\n                TSBMixRep = 1\n                TSBMixVol = 20\n            else:\n                TSBVol = 10\n                TSBMixRep = 1\n                TSBMixVol = 10\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            pick_up(p20)\n            p20.aspirate(TSBVol, TSB.bottom(z=p20_offset_Temp))\n            p20.dispense(TSBVol, sample_plate_thermo[X].bottom(\n                z=p20_offset_Thermo))\n            p20.mix(TSBMixRep, TSBMixVol)\n            p20.blow_out(sample_plate_thermo[X].top(z=-5))\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            p20.pick_up_tip()\n            p20.aspirate(TSBVol, TSB.bottom(z=p20_offset_Temp))\n            p20.dispense(TSBVol, sample_plate_thermo[X].bottom(\n                z=p20_offset_Thermo))\n            p20.mix(TSBMixRep, TSBMixVol)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            p20.pick_up_tip()\n            p20.aspirate(TSBVol, TSB.bottom(z=p20_offset_Temp))\n            p20.dispense(TSBVol, sample_plate_thermo[X].bottom(\n                z=p20_offset_Thermo))\n            p20.mix(TSBMixRep, TSBMixVol)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n\n    if STEP_TSBDECK == 1:\n        if DRYRUN == 'NO':\n            ###################################################################\n\n            thermocycler.close_lid()\n            profile_PTC = [\n                {'temperature': 37, 'hold_time_minutes': 15}\n            ]\n            protocol.comment('Run PTC (15min)')\n            thermocycler.execute_profile(\n                steps=profile_PTC, repetitions=1, block_max_volume=60)\n            thermocycler.set_block_temperature(10)\n            ###################################################################\n            thermocycler.open_lid()\n\n\n    # FIXME: Commented out variables are never used in the protocol\n    # positions\n    ##########################################################################\n    #  sample_plate_mag on the Mag Block\n    # A1_p20_bead_side = sample_plate_mag['A1'].center().move(types.Point(\n        # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A1_p20_bead_top = sample_plate_mag['A1'].center().move(types.Point(\n        # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A1_p20_bead_mid = sample_plate_mag['A1'].center().move(types.Point(\n        # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A1_p300_bead_side = sample_plate_mag['A1'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A1_p300_bead_top = sample_plate_mag['A1'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    A1_p300_bead_mid = sample_plate_mag['A1'].center().move(types.Point(\n        x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A1_p300_loc1 = sample_plate_mag['A1'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A1_p300_loc2 = sample_plate_mag['A1'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A1_p300_loc3 = sample_plate_mag['A1'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A3_p20_bead_side = sample_plate_mag['A2'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A3_p20_bead_top = sample_plate_mag['A2'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A3_p20_bead_mid = sample_plate_mag['A2'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A3_p300_bead_side = sample_plate_mag['A2'].center().move(types.Point(\n        x=1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A3_p300_bead_top = sample_plate_mag['A2'].center().move(types.Point(\n        x=-1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    A3_p300_bead_mid = sample_plate_mag['A2'].center().move(types.Point(\n        x=-0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A3_p300_loc1 = sample_plate_mag['A2'].center().move(types.Point(\n        x=-1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A3_p300_loc2 = sample_plate_mag['A2'].center().move(types.Point(\n        x=-1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A3_p300_loc3 = sample_plate_mag['A2'].center().move(types.Point(\n        x=-1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A5_p20_bead_side = sample_plate_mag['A3'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A5_p20_bead_top = sample_plate_mag['A3'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A5_p20_bead_mid = sample_plate_mag['A3'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A5_p300_bead_side = sample_plate_mag['A3'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A5_p300_bead_top = sample_plate_mag['A3'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    A5_p300_bead_mid = sample_plate_mag['A3'].center().move(types.Point(\n        x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A5_p300_loc1 = sample_plate_mag['A3'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A5_p300_loc2 = sample_plate_mag['A3'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A5_p300_loc3 = sample_plate_mag['A3'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A7_p20_bead_side = sample_plate_mag['A4'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A7_p20_bead_top = sample_plate_mag['A4'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A7_p20_bead_mid = sample_plate_mag['A4'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A7_p300_bead_side = sample_plate_mag['A4'].center().move(types.Point(\n        x=1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A7_p300_bead_top = sample_plate_mag['A4'].center().move(types.Point(\n        x=-1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A7_p300_bead_mid = sample_plate_mag['A4'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A7_p300_loc1 = sample_plate_mag['A4'].center().move(types.Point(\n        x=-1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A7_p300_loc2 = sample_plate_mag['A4'].center().move(types.Point(\n        x=-1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A7_p300_loc3 = sample_plate_mag['A4'].center().move(types.Point(\n        x=-1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A9_p20_bead_side = sample_plate_mag['A5'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A9_p20_bead_top = sample_plate_mag['A5'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A9_p20_bead_mid = sample_plate_mag['A5'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A9_p300_bead_side = sample_plate_mag['A5'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A9_p300_bead_top = sample_plate_mag['A5'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A9_p300_bead_mid = sample_plate_mag['A5'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A9_p300_loc1 = sample_plate_mag['A5'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A9_p300_loc2 = sample_plate_mag['A5'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A9_p300_loc3 = sample_plate_mag['A5'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A11_p20_bead_side = sample_plate_mag['A6'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A11_p20_bead_top = sample_plate_mag['A6'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A11_p20_bead_mid = sample_plate_mag['A6'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    A11_p300_bead_side = sample_plate_mag['A6'].center().move(types.Point(\n        x=1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    A11_p300_bead_top = sample_plate_mag['A6'].center().move(types.Point(\n        x=-1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A11_p300_bead_mid = sample_plate_mag['A6'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A11_p300_loc1 = sample_plate_mag['A6'].center().move(types.Point(\n        x=-1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    A11_p300_loc2 = sample_plate_mag['A6'].center().move(types.Point(\n        x=-1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    A11_p300_loc3 = sample_plate_mag['A6'].center().move(types.Point(\n        x=-1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n\n\n\n\n\n\n    # Beads to the Right\n    # A7_p20_bead_side = sample_plate_mag['A4'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A7_p20_bead_top = sample_plate_mag['A4'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A7_p20_bead_mid = sample_plate_mag['A4'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    XA7_p300_bead_side = sample_plate_mag['A7'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    XA7_p300_bead_top = sample_plate_mag['A7'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A7_p300_bead_mid = sample_plate_mag['A7'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA7_p300_loc1 = sample_plate_mag['A7'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA7_p300_loc2 = sample_plate_mag['A7'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA7_p300_loc3 = sample_plate_mag['A7'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A9_p20_bead_side = sample_plate_mag['A5'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A9_p20_bead_top = sample_plate_mag['A5'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A9_p20_bead_mid = sample_plate_mag['A5'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    XA9_p300_bead_side = sample_plate_mag['A8'].center().move(types.Point(\n        x=1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    XA9_p300_bead_top = sample_plate_mag['A8'].center().move(types.Point(\n        x=-1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A9_p300_bead_mid = sample_plate_mag['A8'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA9_p300_loc1 = sample_plate_mag['A8'].center().move(types.Point(\n        x=-1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA9_p300_loc2 = sample_plate_mag['A8'].center().move(types.Point(\n        x=-1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA9_p300_loc3 = sample_plate_mag['A8'].center().move(types.Point(\n        x=-1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    # A11_p20_bead_side = sample_plate_mag['A6'].center().move(types.Point(\n    # x=-1.8 * 0.50, y=0, z=p20_offset_Mag - 5))  # Beads to the Right\n    # A11_p20_bead_top = sample_plate_mag['A6'].center().move(types.Point(\n    # x=1.5, y=0, z=p20_offset_Mag + 2))  # Beads to the Right\n    # A11_p20_bead_mid = sample_plate_mag['A6'].center().move(types.Point(\n    # x=1, y=0, z=p20_offset_Mag - 2))  # Beads to the Right\n    XA11_p300_bead_side = sample_plate_mag['A9'].center().move(types.Point(\n        x=-1, y=0, z=p300_offset_Mag - 7.6))  # Beads to the Right\n    XA11_p300_bead_top = sample_plate_mag['A9'].center().move(types.Point(\n        x=1.30, y=0, z=p300_offset_Mag - 1))  # Beads to the Right\n    # A11_p300_bead_mid = sample_plate_mag['A9'].center().move(types.Point(\n    # x=0.80, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA11_p300_loc1 = sample_plate_mag['A9'].center().move(types.Point(\n        x=1.3 * 0.8, y=1.3 * 0.8, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA11_p300_loc2 = sample_plate_mag['A9'].center().move(types.Point(\n        x=1.3, y=0, z=p300_offset_Mag - 4))  # Beads to the Right\n    XA11_p300_loc3 = sample_plate_mag['A9'].center().move(types.Point(\n        x=1.3 * 0.8, y=-1.3 * 0.8, z=p300_offset_Mag - 4))\n    # Beads to the Right\n    ##########################################################################\n\n    if STEP_WASH == 1:\n        protocol.pause(\"PLACE sample_plate on MAGNET\")\n        protocol.comment('==============================================')\n        protocol.comment('--> TAGMENTATION WASH')\n        protocol.comment('==============================================')\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=8.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=5)\n            protocol.delay(minutes=1)\n\n        protocol.comment('--> Removing Supernatant')\n        RemoveSup = 90\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 1))\n            p300.aspirate(RemoveSup - 30, rate=0.05)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_bead_side)\n            if X == 'A2':\n                p300.move_to(A3_p300_bead_side)\n            if X == 'A3':\n                p300.move_to(A5_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 1))\n            p300.aspirate(RemoveSup - 30, rate=0.05)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_bead_side)\n            if X == 'A2':\n                p300.move_to(A3_p300_bead_side)\n            if X == 'A3':\n                p300.move_to(A5_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 1))\n            p300.aspirate(RemoveSup - 30, rate=0.05)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_bead_side)\n            if X == 'A2':\n                p300.move_to(A3_p300_bead_side)\n            if X == 'A3':\n                p300.move_to(A5_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET DISENGAGE')\n            mag_block.disengage()\n\n        protocol.comment('--> Repeating 3 washes')\n        washreps = 3\n        for wash in range(washreps):\n            protocol.comment('--> TWB Wash #' + str(wash + 1))\n            if DRYRUN == 'NO':\n                TWBMixRep = 10\n                TWBMixVol = 70\n            if DRYRUN == 'YES':\n                TWBMixRep = 10\n                TWBMixVol = 70\n            if samplecolumns >= 1:  # ----------------------------------------\n                X = 'A1'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_washtip_1)\n                p300.aspirate(100, TWB_1.bottom(z=p300_offset_Res))\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_top)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_top)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_top)\n                p300.dispense(100, rate=0.75)\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_mid)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_mid)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_mid)\n                p300.mix(TWBMixRep, TWBMixVol)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n\n                p300.default_speed = 400\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n            if samplecolumns >= 2:  # ----------------------------------------\n                X = 'A2'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_washtip_2)\n                p300.aspirate(100, TWB_2.bottom(z=p300_offset_Res))\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_top)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_top)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_top)\n                p300.dispense(100, rate=0.75)\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_mid)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_mid)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_mid)\n                p300.mix(TWBMixRep, TWBMixVol)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n\n                p300.default_speed = 400\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n            if samplecolumns >= 3:  # ----------------------------------------\n                X = 'A3'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_washtip_3)\n                p300.aspirate(100, TWB_3.bottom(z=p300_offset_Res))\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_top)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_top)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_top)\n                p300.dispense(100, rate=0.75)\n                p300.default_speed = 5\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_mid)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_mid)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_mid)\n                p300.mix(TWBMixRep, TWBMixVol)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n                p300.default_speed = 400\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n\n            if DRYRUN == 'NO':\n                protocol.comment('MAGNET ENGAGE')\n                mag_block.engage(height_from_base=8.5)\n                protocol.delay(minutes=1)\n                mag_block.engage(height_from_base=7)\n                protocol.delay(minutes=1)\n                mag_block.engage(height_from_base=5)\n                protocol.delay(minutes=1)\n\n            protocol.comment('--> Remove TWB Wash #' + str(wash + 1))\n            RemoveSup = 110\n            if samplecolumns >= 1:  # ----------------------------------------\n                X = 'A1'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_removetip_1)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(RemoveSup - 30, rate=0.05)\n                p300.default_speed = 5\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_side)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_side)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(20, rate=0.05)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n                protocol.delay(minutes=0.1)\n                p300.aspirate(10, rate=0.05)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n            if samplecolumns >= 2:  # ----------------------------------------\n                X = 'A2'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_removetip_2)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(RemoveSup - 30, rate=0.05)\n                p300.default_speed = 5\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_side)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_side)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(20, rate=0.05)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n                protocol.delay(minutes=0.1)\n                p300.aspirate(10, rate=0.05)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n            if samplecolumns >= 3:  # ----------------------------------------\n                X = 'A3'\n                pick_up(p300)if TIPREUSE == 'NO' else \\\n                    p300.pick_up_tip(TWB_removetip_3)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(RemoveSup - 30, rate=0.05)\n                p300.default_speed = 5\n                if X == 'A1':\n                    p300.move_to(A1_p300_bead_side)\n                if X == 'A2':\n                    p300.move_to(A3_p300_bead_side)\n                if X == 'A3':\n                    p300.move_to(A5_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(20, rate=0.05)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n                protocol.delay(minutes=0.1)\n                p300.aspirate(10, rate=0.05)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(bypass)\n                if TIPREUSE == 'NO':\n                    p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n                else:\n                    p300.return_tip()\n\n            if DRYRUN == 'NO':\n                protocol.comment('MAGNET DISENGAGE')\n                mag_block.disengage()\n\n            wash += 1\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=5)\n\n        protocol.comment('--> Removing Residual Supernatant')\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.aspirate(50, rate=0.25)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.aspirate(50, rate=0.25)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.aspirate(50, rate=0.25)\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        if DRYRUN == 'NO':\n            mag_block.engage(height_from_base=3)\n            protocol.delay(minutes=0.5)\n\n            protocol.comment('MAGNET DISENGAGE')\n            mag_block.disengage()\n\n    if STEP_PCR == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> AMPLIFICATION')\n        protocol.comment('==============================================')\n\n        protocol.comment('ADDING PCR')\n        if DRYRUN == 'NO':\n            PCRVol = 40\n            PCRMixRep = 10\n            PCRMixVol = 30\n        if DRYRUN == 'YES':\n            PCRVol = 40\n            PCRMixRep = 10\n            PCRMixVol = 30\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            pick_up(p300)\n            p300.aspirate(PCRVol, PCR.bottom(p300_offset_Temp))\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc3)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc3)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc3)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            reps = 1\n            for x in range(reps):\n                if X == 'A1':\n                    p300.move_to(A1_p300_loc3)\n                if X == 'A2':\n                    p300.move_to(A3_p300_loc3)\n                if X == 'A3':\n                    p300.move_to(A5_p300_loc3)\n                p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag[X].center())\n            p300.default_speed = 400\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            pick_up(p300)\n            p300.aspirate(PCRVol, PCR.bottom(p300_offset_Temp))\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc3)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc3)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc3)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            reps = 1\n            for x in range(reps):\n                if X == 'A1':\n                    p300.move_to(A1_p300_loc3)\n                if X == 'A2':\n                    p300.move_to(A3_p300_loc3)\n                if X == 'A3':\n                    p300.move_to(A5_p300_loc3)\n                p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag[X].center())\n            p300.default_speed = 400\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            pick_up(p300)\n            p300.aspirate(PCRVol, PCR.bottom(p300_offset_Temp))\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc3)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc3)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc3)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc2)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc2)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc2)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            if X == 'A1':\n                p300.move_to(A1_p300_loc1)\n            if X == 'A2':\n                p300.move_to(A3_p300_loc1)\n            if X == 'A3':\n                p300.move_to(A5_p300_loc1)\n            p300.dispense(PCRVol / 5, rate=0.75)\n            reps = 1\n            for x in range(reps):\n                if X == 'A1':\n                    p300.move_to(A1_p300_loc3)\n                if X == 'A2':\n                    p300.move_to(A3_p300_loc3)\n                if X == 'A3':\n                    p300.move_to(A5_p300_loc3)\n                p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(PCRMixRep, PCRMixVol)\n            p300.move_to(sample_plate_mag[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag[X].center())\n            p300.default_speed = 400\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        protocol.comment('--> Adding Barcodes')\n        BarcodeVol = 10\n        BarcodeMixRep = 10\n        BarcodeMixVol = 10\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            p20.pick_up_tip()\n            p20.aspirate(BarcodeVol, Barcodes1.bottom(\n                z=p20_offset_Temp), rate=0.25)\n            p20.dispense(\n                BarcodeVol, sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.mix(BarcodeMixRep, BarcodeMixVol)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            p20.pick_up_tip()\n            p20.aspirate(BarcodeVol, Barcodes2.bottom(\n                z=p20_offset_Temp), rate=0.25)\n            p20.dispense(\n                BarcodeVol, sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.mix(BarcodeMixRep, BarcodeMixVol)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            p20.pick_up_tip()\n            p20.aspirate(BarcodeVol, Barcodes3.bottom(\n                z=p20_offset_Temp), rate=0.25)\n            p20.dispense(\n                BarcodeVol, sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.mix(BarcodeMixRep, BarcodeMixVol)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.pause(\"PLACE sample_plate on THERMO\")\n\n    if STEP_PCRDECK == 1:\n        #######################################################################\n        protocol.comment('Seal, Run PCR (25min)')\n\n        thermocycler.close_lid()\n        profile_PCR_1 = [\n            {'temperature': 68, 'hold_time_minutes': 3},\n            {'temperature': 98, 'hold_time_minutes': 3}\n        ]\n        thermocycler.execute_profile(\n            steps=profile_PCR_1, repetitions=1, block_max_volume=50)\n        profile_PCR_2 = [\n            {'temperature': 98, 'hold_time_seconds': 45},\n            {'temperature': 62, 'hold_time_seconds': 30},\n            {'temperature': 68, 'hold_time_minutes': 2}\n        ]\n        thermocycler.execute_profile(\n            steps=profile_PCR_2, repetitions=5, block_max_volume=50)\n        profile_PCR_3 = [\n            {'temperature': 68, 'hold_time_minutes': 1}\n        ]\n        thermocycler.execute_profile(\n            steps=profile_PCR_3, repetitions=1, block_max_volume=50)\n        thermocycler.set_block_temperature(4)\n        #######################################################################\n        thermocycler.open_lid()\n    else:\n        protocol.comment('Seal, Run PCR (60min)')\n\n    Liquid_trash = reservoir['A11']\n\n    if STEP_POSTPCR == 1:\n        protocol.pause(\"PLACE sample_plate on MAGNET\")\n        protocol.comment('==============================================')\n        protocol.comment('--> CLEANUP')\n        protocol.comment('==============================================')\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=8.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=5)\n            protocol.delay(minutes=1)\n\n        protocol.comment('--> Transferring Supernatant')\n        TransferSup = 45\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A1'\n            Y = 'A4'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag), rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A2'\n            Y = 'A5'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag), rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A3'\n            Y = 'A6'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].bottom(z=p300_offset_Mag),\n                rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET DISENGAGE')\n            mag_block.disengage()\n\n        protocol.comment('--> ADDING WATER')\n        for column in sample_plate_mag.rows()[0][3:6][:samplecolumns]:\n            pick_up(p300)\n            p300.aspirate(40, water)\n            p300.dispense(40, column)\n            p300.mix(5, 60, column)\n            p300.blow_out(column.top())\n            p300.drop_tip()\n\n        protocol.comment('--> ADDING AMPure (0.8x)')\n        AMPureVol = 45\n        AMPureMixRep = 20\n        AMPureMixVol = 100\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A4'\n            pick_up(p300)\n            p300.mix(10, AMPureVol + 10, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A5'\n            pick_up(p300)\n            p300.mix(3, AMPureVol + 10, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A6'\n            pick_up(p300)\n            p300.mix(3, AMPureVol + 10, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.delay(minutes=5*real_incubate_time)\n\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=8.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=6)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=5)\n            protocol.delay(minutes=1)\n\n        protocol.comment('--> TRANSFERRING SUPERNAT TO NEW COLUMNS 7, 8, 9')\n        TransferSup = 125\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A4'\n            Y = 'A7'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag), rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A5'\n            Y = 'A8'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag), rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A6'\n            Y = 'A9'\n            pick_up(p300)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].\n                bottom(z=p300_offset_Mag + 1), rate=0.05)\n            protocol.delay(seconds=0.1)\n            p300.aspirate(\n                TransferSup / 2, sample_plate_mag[X].bottom(z=p300_offset_Mag),\n                rate=0.05)\n            p300.dispense(\n                TransferSup + 5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))\n            protocol.delay(seconds=0.1)\n            p300.blow_out(sample_plate_mag[Y].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        mag_block.disengage()\n\n        protocol.comment('--> ADDING AMPure (0.8x)')\n        AMPureVol = 15\n        AMPureMixRep = 20\n        AMPureMixVol = 120\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A7'\n            pick_up(p300)\n            p300.mix(10, 100, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A8'\n            pick_up(p300)\n            p300.mix(3, 100, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A9'\n            pick_up(p300)\n            p300.mix(3, 100, AMPure.bottom(z=p300_offset_Res))\n            p300.aspirate(AMPureVol, AMPure.bottom(\n                z=p300_offset_Res), rate=0.25)\n            slow_tip_withdrawal(p300, AMPure)\n            p300.dispense(AMPureVol, sample_plate_mag[X].bottom(\n                z=p300_offset_Mag), rate=0.25)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            p300.mix(AMPureMixRep, AMPureMixVol)\n            p300.blow_out(sample_plate_mag[X].top(z=-5))\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.delay(minutes=5*real_incubate_time)\n\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=8.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7.5)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=7)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=6)\n            protocol.delay(minutes=1)\n            mag_block.engage(height_from_base=5)\n            protocol.delay(minutes=1)\n\n        protocol.comment('--> Removing Supernatant...')\n        RemoveSup = 140\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A7'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n            p300.aspirate(RemoveSup - 30, rate=0.1)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_bead_side)\n            if X == 'A8':\n                p300.move_to(XA9_p300_bead_side)\n            if X == 'A9':\n                p300.move_to(XA11_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(Liquid_trash.top(z=5))\n            protocol.delay(minutes=0.1)\n            p300.blow_out()\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A8'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n            p300.aspirate(RemoveSup - 30, rate=0.1)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_bead_side)\n            if X == 'A8':\n                p300.move_to(XA9_p300_bead_side)\n            if X == 'A9':\n                p300.move_to(XA11_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(Liquid_trash.top(z=5))\n            protocol.delay(minutes=0.1)\n            p300.blow_out()\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A9'\n            pick_up(p300)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n            p300.aspirate(RemoveSup - 30, rate=0.1)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_bead_side)\n            if X == 'A8':\n                p300.move_to(XA9_p300_bead_side)\n            if X == 'A9':\n                p300.move_to(XA11_p300_bead_side)\n            protocol.delay(minutes=0.1)\n            p300.aspirate(20, rate=0.05)\n            p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            protocol.delay(minutes=0.1)\n            p300.aspirate(10, rate=0.05)\n            p300.move_to(sample_plate_mag[X].top(z=2))\n            p300.default_speed = 400\n            p300.dispense(200, Liquid_trash)\n            p300.move_to(Liquid_trash.top(z=5))\n            protocol.delay(minutes=0.1)\n            p300.blow_out()\n            p300.move_to(bypass)\n            p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n\n        protocol.comment('--> Repeating 2 washes')\n        washreps = 2\n        for wash in range(washreps):\n            protocol.comment('--> ETOH Wash #' + str(wash + 1))\n            ETOHMaxVol = 150\n            WASHNUM = 1\n            if samplecolumns >= 1:  # ----------------------------------------\n                X = 'A7'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_washtip_1)\n                elif WASHNUM == 2:\n                    pass  # # FIXME: W2_ETOH_washtip_1 is never defined\n                    # p300.pick_up_tip(W2_ETOH_washtip_1)\n                p300.aspirate(ETOHMaxVol, EtOH_1.bottom(z=p300_offset_Res))\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                p300.dispense(ETOHMaxVol - 50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].center())\n                p300.dispense(50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 5\n                p300.move_to(sample_plate_mag[X].top(z=-2))\n                protocol.delay(minutes=0.1)\n                p300.blow_out(sample_plate_mag[X].top())\n                p300.default_speed = 400\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            if samplecolumns >= 2:  # ----------------------------------------\n                X = 'A8'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_washtip_2)\n                elif WASHNUM == 2:\n                    pass\n                    # FIXME: W2_ETOH_washtip_2 is never defined\n                    # p300.pick_up_tip(W2_ETOH_washtip_2)\n                p300.aspirate(ETOHMaxVol, EtOH_2.bottom(z=p300_offset_Res))\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                p300.dispense(ETOHMaxVol - 50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].center())\n                p300.dispense(50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 5\n                p300.move_to(sample_plate_mag[X].top(z=-2))\n                protocol.delay(minutes=0.1)\n                p300.blow_out(sample_plate_mag[X].top())\n                p300.default_speed = 400\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            if samplecolumns >= 3:  # ----------------------------------------\n                X = 'A9'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_washtip_3)\n                elif WASHNUM == 2:\n                    pass\n                    # FIXME: W2_ETOH_washtip_3 is undefined\n                    # p300.pick_up_tip(W2_ETOH_washtip_3)\n                p300.aspirate(ETOHMaxVol, EtOH_3.bottom(z=p300_offset_Res))\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                p300.dispense(ETOHMaxVol - 50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].center())\n                p300.dispense(50, rate=0.5)\n                p300.move_to(sample_plate_mag[X].top(z=2))\n                p300.default_speed = 5\n                p300.move_to(sample_plate_mag[X].top(z=-2))\n                protocol.delay(minutes=0.1)\n                p300.blow_out(sample_plate_mag[X].top())\n                p300.default_speed = 400\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            protocol.delay(minutes=0.5)\n\n            protocol.comment('--> Remove ETOH Wash #' + str(wash + 1))\n            if samplecolumns >= 1:  # ----------------------------------------\n                X = 'A7'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_removetip_1)\n                elif WASHNUM == 2:\n                    pass\n                    # FIXME: W2_ETOH_removetip_1 is never defined\n                    # p300.pick_up_tip(W2_ETOH_removetip_1)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(ETOHMaxVol, rate=0.1)\n                p300.default_speed = 5\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(200 - ETOHMaxVol, rate=0.1)\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(Liquid_trash.top(z=5))\n                protocol.delay(minutes=0.12)\n                p300.blow_out()\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            if samplecolumns >= 2:  # ----------------------------------------\n                X = 'A8'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_removetip_2)\n                elif WASHNUM == 2:\n                    pass\n                    # FIXME: W2_ETOH_removetip_2 is never defined\n                    # p300.pick_up_tip(W2_ETOH_removetip_2)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(ETOHMaxVol, rate=0.1)\n                p300.default_speed = 5\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(200 - ETOHMaxVol, rate=0.1)\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(Liquid_trash.top(z=5))\n                protocol.delay(minutes=0.12)\n                p300.blow_out()\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            if samplecolumns >= 3:  # ----------------------------------------\n                X = 'A9'\n                if TIPREUSE == 'NO':\n                    pick_up(p300)\n                elif WASHNUM == 1:\n                    p300.pick_up_tip(W1_ETOH_removetip_3)\n                elif WASHNUM == 2:\n                    pass\n                    # FIXME: W2_ETOH_removetip_3 is never defined\n                    # p300.pick_up_tip(W2_ETOH_removetip_3)\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag + 2))\n                p300.aspirate(ETOHMaxVol, rate=0.1)\n                p300.default_speed = 5\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_side)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_side)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_side)\n                protocol.delay(minutes=0.1)\n                p300.aspirate(200 - ETOHMaxVol, rate=0.1)\n                p300.default_speed = 400\n                p300.dispense(200, Liquid_trash)\n                p300.move_to(Liquid_trash.top(z=5))\n                protocol.delay(minutes=0.12)\n                p300.blow_out()\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            wash += 1\n\n        if DRYRUN == 'NO':\n            protocol.delay(minutes=5*real_incubate_time)\n\n        protocol.comment('--> Removing Residual ETOH')\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A7'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(20, rate=0.1)if NOMODULES == 'NO' else p20.aspirate(\n                10, rate=0.25)\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A8'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(20, rate=0.1)if NOMODULES == 'NO' else p20.aspirate(\n                10, rate=0.25)\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A9'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(20, rate=0.1)if NOMODULES == 'NO' else p20.aspirate(\n                10, rate=0.25)\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n\n        if DRYRUN == 'NO':\n            mag_block.engage(height_from_base=6)\n            protocol.comment('AIR DRY')\n            protocol.delay(minutes=0.5)\n\n            protocol.comment('MAGNET DISENGAGE')\n            mag_block.disengage()\n\n        protocol.comment('--> Adding RSB')\n        RSBVol = 35\n        RSBMixRep = 5\n        RSBMixVol = 25\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A7'\n            pick_up(p300)\n            p300.aspirate(RSBVol, RSB.bottom(p300_offset_Res))\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc3)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc3)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc3)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            reps = 5\n            for x in range(reps):\n                p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n                p300.aspirate(RSBVol, rate=0.5)\n                if X == 'A7':\n                    p300.move_to(XA7_p300_bead_top)\n                if X == 'A8':\n                    p300.move_to(XA9_p300_bead_top)\n                if X == 'A9':\n                    p300.move_to(XA11_p300_bead_top)\n                p300.dispense(RSBVol, rate=1)\n            reps = 3\n            # for x in range(reps):\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc1)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc1)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc1)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc3)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc3)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc3)\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            # p300.move_to(Xsample_plate_mag.wells_by_name()\n            #              [X].bottom(z=p300_offset_Mag))\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            p300.move_to(sample_plate_mag.wells_by_name()[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag.wells_by_name()[X].center())\n            p300.default_speed = 400\n            if TIPREUSE == 'NO':\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            else:\n                p300.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A8'\n            pick_up(p300)\n            p300.aspirate(RSBVol, RSB.bottom(p300_offset_Res))\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc3)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc3)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc3)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            reps = 5\n            # for x in range(reps):\n            #     p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            #     p300.aspirate(RSBVol, rate=0.5)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_bead_top)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_bead_top)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_bead_top)\n            #     p300.dispense(RSBVol, rate=1)\n            # reps = 3\n            # for x in range(reps):\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc1)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc1)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc1)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc3)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc3)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc3)\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            # p300.move_to(Xsample_plate_mag.wells_by_name()\n            #              [X].bottom(z=p300_offset_Mag))\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            p300.move_to(sample_plate_mag.wells_by_name()[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag.wells_by_name()[X].center())\n            p300.default_speed = 400\n            if TIPREUSE == 'NO':\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            else:\n                p300.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A9'\n            pick_up(p300)\n            p300.aspirate(RSBVol, RSB.bottom(p300_offset_Res))\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            p300.default_speed = 5\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc3)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc3)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc3)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc2)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc2)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc2)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            if X == 'A7':\n                p300.move_to(XA7_p300_loc1)\n            if X == 'A8':\n                p300.move_to(XA9_p300_loc1)\n            if X == 'A9':\n                p300.move_to(XA11_p300_loc1)\n            p300.dispense(RSBVol / 5, rate=0.75)\n            reps = 1\n            # for x in range(reps):\n            #     p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))\n            #     p300.aspirate(RSBVol, rate=0.5)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_bead_top)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_bead_top)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_bead_top)\n            #     p300.dispense(RSBVol, rate=1)\n            # reps = 1\n            # for x in range(reps):\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc1)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc1)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc1)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc2)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc2)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc2)\n            #     p300.mix(RSBMixRep, RSBMixVol)\n            #     if X == 'A7':\n            #         p300.move_to(XA7_p300_loc3)\n            #     if X == 'A8':\n            #         p300.move_to(XA9_p300_loc3)\n            #     if X == 'A9':\n            #         p300.move_to(XA11_p300_loc3)\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            # p300.move_to(sample_plate_mag.wells_by_name()\n            #              [X].bottom(z=p300_offset_Mag))\n            p300.mix(RSBMixRep, RSBMixVol, sample_plate_mag.wells_by_name()[X])\n            p300.move_to(sample_plate_mag.wells_by_name()[X].top())\n            protocol.delay(seconds=0.5)\n            p300.move_to(sample_plate_mag.wells_by_name()[X].center())\n            p300.default_speed = 400\n            if TIPREUSE == 'NO':\n                p300.drop_tip() if DRYRUN == 'NO' else p300.return_tip()\n            else:\n                p300.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.delay(minutes=5*real_incubate_time)\n\n            protocol.comment('MAGNET ENGAGE')\n            mag_block.engage(height_from_base=5)\n\n            protocol.delay(minutes=4)\n\n        protocol.comment('--> Transferring Supernatant')\n\n        if NOMODULES == 'NO':\n            TransferSup = 30\n        else:\n            TransferSup = 20\n        if samplecolumns >= 1:  # ----------------------------------------\n            X = 'A7'\n            Y = 'A10'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 2:  # ----------------------------------------\n            X = 'A8'\n            Y = 'A11'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n        if samplecolumns >= 3:  # ----------------------------------------\n            X = 'A9'\n            Y = 'A12'\n            p20.pick_up_tip()\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(sample_plate_mag[X].bottom(z=p20_offset_Mag))\n            p20.aspirate(TransferSup / 2, rate=0.25)\n            p20.dispense(\n                TransferSup / 2, sample_plate_mag[Y].bottom(z=p20_offset_Mag))\n            p20.move_to(bypass)\n            p20.drop_tip() if DRYRUN == 'NO' else p20.return_tip()\n\n        if DRYRUN == 'NO':\n            protocol.comment('MAGNET DISENGAGE')\n            mag_block.disengage()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "armadillo",
+                "brandId": [
+                    "12434"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 18.81
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "wellPlate",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "G1",
+                        "H1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "G2",
+                        "H2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "E3",
+                        "F3",
+                        "G3",
+                        "H3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "E4",
+                        "F4",
+                        "G4",
+                        "H4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "E5",
+                        "F5",
+                        "G5",
+                        "H5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6",
+                        "E6",
+                        "F6",
+                        "G6",
+                        "H6",
+                        "A7",
+                        "B7",
+                        "C7",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "G7",
+                        "H7",
+                        "A8",
+                        "B8",
+                        "C8",
+                        "D8",
+                        "E8",
+                        "F8",
+                        "G8",
+                        "H8",
+                        "A9",
+                        "B9",
+                        "C9",
+                        "D9",
+                        "E9",
+                        "F9",
+                        "G9",
+                        "H9",
+                        "A10",
+                        "B10",
+                        "C10",
+                        "D10",
+                        "E10",
+                        "F10",
+                        "G10",
+                        "H10",
+                        "A11",
+                        "B11",
+                        "C11",
+                        "D11",
+                        "E11",
+                        "F11",
+                        "G11",
+                        "H11",
+                        "A12",
+                        "B12",
+                        "C12",
+                        "D12",
+                        "E12",
+                        "F12",
+                        "G12",
+                        "H12"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "aluminumBlock",
+                "displayName": "Armadillo 96 Aluminum Block 200 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1",
+                    "G1",
+                    "H1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2",
+                    "F2",
+                    "G2",
+                    "H2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3",
+                    "E3",
+                    "F3",
+                    "G3",
+                    "H3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4",
+                    "E4",
+                    "F4",
+                    "G4",
+                    "H4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "E6",
+                    "F6",
+                    "G6",
+                    "H6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "E7",
+                    "F7",
+                    "G7",
+                    "H7"
+                ],
+                [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8",
+                    "E8",
+                    "F8",
+                    "G8",
+                    "H8"
+                ],
+                [
+                    "A9",
+                    "B9",
+                    "C9",
+                    "D9",
+                    "E9",
+                    "F9",
+                    "G9",
+                    "H9"
+                ],
+                [
+                    "A10",
+                    "B10",
+                    "C10",
+                    "D10",
+                    "E10",
+                    "F10",
+                    "G10",
+                    "H10"
+                ],
+                [
+                    "A11",
+                    "B11",
+                    "C11",
+                    "D11",
+                    "E11",
+                    "F11",
+                    "G11",
+                    "H11"
+                ],
+                [
+                    "A12",
+                    "B12",
+                    "C12",
+                    "D12",
+                    "E12",
+                    "F12",
+                    "G12",
+                    "H12"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "armadillo_96_aluminumblock_200ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "A9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 74.25,
+                    "z": 3.86
+                },
+                "B1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "B9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 65.25,
+                    "z": 3.86
+                },
+                "C1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "C9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 56.25,
+                    "z": 3.86
+                },
+                "D1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "D9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 47.25,
+                    "z": 3.86
+                },
+                "E1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "E9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 38.25,
+                    "z": 3.86
+                },
+                "F1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "F9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 29.25,
+                    "z": 3.86
+                },
+                "G1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "G9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 20.25,
+                    "z": 3.86
+                },
+                "H1": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 14.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H10": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 95.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H11": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 104.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H12": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 113.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H2": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 23.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H3": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 32.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H4": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 41.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H5": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 50.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H6": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 59.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H7": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 68.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H8": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 77.38,
+                    "y": 11.25,
+                    "z": 3.86
+                },
+                "H9": {
+                    "depth": 14.95,
+                    "diameter": 5.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 200,
+                    "x": 86.38,
+                    "y": 11.25,
+                    "z": 3.86
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "label": "Number of samples",
+            "name": "SAMPLES",
+            "options": [
+                {
+                    "label": "24 samples",
+                    "value": "24x"
+                },
+                {
+                    "label": "16 samples",
+                    "value": "16x"
+                },
+                {
+                    "label": "8 samples",
+                    "value": "8x"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Do a dry run?",
+            "name": "DRYRUN",
+            "options": [
+                {
+                    "label": "No",
+                    "value": "NO"
+                },
+                {
+                    "label": "Yes",
+                    "value": "YES"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Use modules?",
+            "name": "NOMODULES",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "NO"
+                },
+                {
+                    "label": "No",
+                    "value": "YES"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Tip reuse?",
+            "name": "TIPREUSE",
+            "options": [
+                {
+                    "label": "No",
+                    "value": "NO"
+                },
+                {
+                    "label": "Yes",
+                    "value": "YES"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Offset?",
+            "name": "OFFSET",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "YES"
+                },
+                {
+                    "label": "No",
+                    "value": "NO"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Include tagmentation step in protocol run?",
+            "name": "STEP_TAG",
+            "options": [
+                {
+                    "label": "Include",
+                    "value": 1
+                },
+                {
+                    "label": "Skip",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run tagmentation incubation on the deck thermocycler?",
+            "name": "STEP_TAGDECK",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run TSB step?",
+            "name": "STEP_TSB",
+            "options": [
+                {
+                    "label": "Include",
+                    "value": 1
+                },
+                {
+                    "label": "Skip",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run TSB incubation step on the deck thermocycler",
+            "name": "STEP_TSBDECK",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run tagmentation wash with TWB step",
+            "name": "STEP_WASH",
+            "options": [
+                {
+                    "label": "Include",
+                    "value": 1
+                },
+                {
+                    "label": "Skip",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run PCR cycle step",
+            "name": "STEP_PCR",
+            "options": [
+                {
+                    "label": "Include",
+                    "value": 1
+                },
+                {
+                    "label": "Skip",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run PCR step on deck thermocycler?",
+            "name": "STEP_PCRDECK",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run post PCR cleanup step",
+            "name": "STEP_POSTPCR",
+            "options": [
+                {
+                    "label": "Include",
+                    "value": 1
+                },
+                {
+                    "label": "Skip",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Armadillo 96 Aluminum Block 200 \u00b5L on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "armadillo_96_aluminumblock_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.14",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Illumina DNA Prep - BMS",
+        "source": "Protocol Library"
+    },
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Armadillo 96 Aluminum Block 200 \u00b5L on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        }
+    ]
+}
