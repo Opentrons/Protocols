@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"starting_buffer_volume":50,"number_of_standards":6,"concentration_csv":"50,500,5000\\n10,10000,100000\\n100,,\\n5,,"}""")
-    return [_all_values[n] for n in names]
-
-
 import math
 
 metadata = {

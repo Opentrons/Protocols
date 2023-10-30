@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Substrate and Stop Solution Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.14'
+    'apiLevel': '2.13'
 }
 
 
