@@ -1,8 +1,8 @@
 metadata = {
-    'protocolName': 'ELISA',
+    'protocolName': 'Substrate and Stop Solution Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -29,8 +29,8 @@ def run(ctx):
         tip_racks=tiprack_m300)
 
     # reagent setup
-    TMB_substrate = trough.wells_by_name()['A6']
-    stop_solution = trough.wells_by_name()['A12']
+    TMB_substrate = trough.wells_by_name()['A6'].bottom(z=0)
+    stop_solution = trough.wells_by_name()['A12'].bottom(z=0)
 
     """
     Adding TMB substrate
@@ -38,9 +38,11 @@ def run(ctx):
     m300.pick_up_tip()
     m300.distribute(
         100,
-        TMB_substrate.bottom(),
+        TMB_substrate,
         [col[0].top() for col in plate.columns()[:number_of_columns]],
-        blow_out=TMB_substrate,
+        blow_out=False,
+        disposal_volume=0.05,
+
         new_tip='never')
     m300.aspirate(20, plate.columns()[number_of_columns-1][0].top())
     m300.drop_tip()
@@ -52,5 +54,5 @@ def run(ctx):
     """
     for col in plate.columns()[:number_of_columns]:
         m300.pick_up_tip()
-        m300.transfer(100, stop_solution.bottom(), col, new_tip='never')
+        m300.transfer(100, stop_solution, col, new_tip='never')
         m300.drop_tip()

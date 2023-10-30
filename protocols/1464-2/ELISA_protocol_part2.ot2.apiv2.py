@@ -1,10 +1,10 @@
 import math
 
 metadata = {
-    'protocolName': 'ELISA',
+    'protocolName': 'Antibody Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -83,6 +83,7 @@ def run(ctx):
     """
     Adding HCP Standards
     """
+    ctx.comment('hcp')
     for standard in standards:
         p300.distribute(50, standard, dests[0])
         dests.pop(0)
@@ -90,10 +91,10 @@ def run(ctx):
     """
     Adding Samples
     """
-    for sample in samples:
+    for sample, chunk in zip(samples, dests):
         p300.pick_up_tip()
         p300.aspirate(130, sample)
-        for dest in dests[0]:
-            p300.dispense(50, dest)
+        for well in chunk:
+            p300.dispense(50, well)
         p300.drop_tip()
-        dests.pop(0)
+        # dests.pop(0)

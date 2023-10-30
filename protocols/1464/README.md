@@ -25,7 +25,7 @@ You will need:
 * P300 Single-channel Pipette
 * [Opentrons Tube Racks (2 mL Eppendorf)](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * [Opentrons Tube Rack (15 + 50 mL)](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [2 mL 96-deep well Plate](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
+* NEST 2 mL 96-deep well Plate
 * 96-well Plate
 * 12-row Trough
 * 1000 uL Tip Rack
