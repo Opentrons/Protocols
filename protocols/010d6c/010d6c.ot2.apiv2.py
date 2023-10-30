@@ -55,10 +55,10 @@ def run(ctx):
                  if line.split(',')[0].strip()][1:]
 
     # mapping
-    matrix_buff = reservoir.wells_by_name()['A1']
-    triton = reservoir.wells_by_name()['A3']
-    te = reservoir.wells_by_name()['A5']
-    dye = reservoir.wells_by_name()['A7']
+    matrix_buff = reservoir.wells_by_name()['A1'].bottom(z=4)
+    triton = reservoir.wells_by_name()['A3'].bottom(z=4)
+    te = reservoir.wells_by_name()['A5'].bottom(z=4)
+    dye = reservoir.wells_by_name()['A7'].bottom(z=4)
     calibration_solution = tuberack_15.wells()[0]
 
     # protocol
