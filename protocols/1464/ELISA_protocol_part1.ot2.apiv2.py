@@ -1,4 +1,4 @@
-import math
+cimport math
 
 metadata = {
     'protocolName': 'ELISA: Dilution',
