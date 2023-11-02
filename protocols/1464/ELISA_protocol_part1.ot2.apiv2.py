@@ -10,9 +10,9 @@ metadata = {
 
 def run(ctx):
     [starting_buffer_volume, number_of_standards,
-     concentration_csv] = get_values(  # noqa: F821
+     concentration_csv, init_vol_buff] = get_values(  # noqa: F821
      'starting_buffer_volume', 'number_of_standards',
-     'concentration_csv')
+     'concentration_csv', "init_vol_buff")
 
     # labware setup
     tuberack_1 = ctx.load_labware(
@@ -41,6 +41,26 @@ def run(ctx):
     samples = tubes[2 + number_of_standards:]
     dilution_buffer = tuberack_1.wells_by_name()['A3']
 
+    v_naught_buff = init_vol_buff*1000
+
+    radius_sds = dilution_buffer.diameter/2
+
+    h_naught_buff = 0.85*v_naught_buff/(math.pi*radius_sds**2)
+
+    h_buff = h_naught_buff
+
+    def adjust_height(volume_from_loop):
+        nonlocal h_buff
+
+        radius = radius_sds
+
+        dh = (volume_from_loop/(math.pi*radius**2))*1.33
+
+        h_buff -= dh
+
+        if h_buff < 12:
+            h_buff = 1
+
     dil_dests = [row for deep_plate in deep_plates
                  for row in deep_plate.rows()]
 
@@ -62,9 +82,6 @@ def run(ctx):
         for conc, diluent_vol, sample_vol, conc_init, index in zip(
             concs, diluent_vols, sample_vols, concs_init, range(12))
         }
-
-    buffer_height = 20 + \
-        (50 - starting_buffer_volume) * 1000 / (math.pi * (13.5 ** 2))
 
     dilution_concs = []
     for sample_index, concentrations in enumerate(conc_lists):
@@ -94,16 +111,13 @@ def run(ctx):
                  for c_list in concs for conc in c_list]
         for volume, dest in zip(volumes, dests):
             p1000.pick_up_tip()
-            buffer_height += volume / (math.pi * (13.5 ** 2))
-            if buffer_height > 75:
-                source = dilution_buffer.bottom(3)
-            else:
-                source = dilution_buffer.top(-buffer_height)
             p1000.transfer(
                 volume,
-                source,
+                dilution_buffer.bottom(z=h_buff),
                 dest.top(-20),
                 new_tip='never')
+
+            adjust_height(volume)
             p1000.blow_out(dest.top())
             p1000.drop_tip()
 

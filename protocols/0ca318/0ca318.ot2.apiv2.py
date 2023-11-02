@@ -65,6 +65,8 @@ def run(ctx):
 
     # mapping
     num_full_cols = math.floor(num_samp/8)
+    dispense_wells = [well for column in pcr_plate.columns()[1:11]
+                      for well in column[1:7]][:num_samp]
 
     remainder = False if num_samp % 8 == 0 else True
 
@@ -119,7 +121,7 @@ def run(ctx):
         ctx.comment('\n\nTRANSFERRING MASTERMIX TO PLATE\n')
         p20.pick_up_tip()
 
-        for i, (s, d) in enumerate(zip(mmx, pcr_plate.wells()[:num_samp])):
+        for i, (s, d) in enumerate(zip(mmx, dispense_wells)):
 
             if i % 4 == 0 and i > 0:
                 if m20.has_tip:
@@ -135,24 +137,18 @@ def run(ctx):
             ctx.comment('\n')
         p20.drop_tip()
 
-    # transfer sample
-    sample_wells = [
-                    well for column in pcr_plate.columns()[1:11]
-                    for well in column[1:7]
-                    ]
-
     if source_type == "tuberack":
         ctx.comment('\n\nTRANSFERRING SAMPLE TO PCR PLATE\n')
-        for tube, dest in zip(sample_tubes, sample_wells):
+        for tube, dest in zip(sample_tubes, dispense_wells):
             p20.pick_up_tip()
             p20.aspirate(2.5, tube, rate=0.5)
             p20.dispense(2.5, dest)
-            p20.mix(3, 20, dest)
+            p20.mix(6, 20, dest, rate=0.5)
             p20.blow_out(dest.top())
             p20.touch_tip()
             p20.drop_tip()
 
-    ctx.comment('\n\n------------Running PCR-------------\n')
+    ctx.comment('\n\n-----------Running PCR------------\n')
 
     profile1 = [
 
