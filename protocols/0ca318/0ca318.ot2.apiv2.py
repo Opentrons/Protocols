@@ -148,7 +148,7 @@ def run(ctx):
             p20.touch_tip()
             p20.drop_tip()
 
-    ctx.comment('\n\n------------Running PCR-------------\n')
+    ctx.comment('\n\n-----------Running PCR------------\n')
 
     profile1 = [
 

@@ -572,7 +572,7 @@ init_vol,3
 init_vol_50,1
 init_vol_bca,1
 init_vol_bsa,1
-init_vol_buff,1
+init_vol_buff,2
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
