@@ -1,11 +1,5 @@
 [
     {
-        "type": "float",
-        "label": "starting buffer volume, in ul",
-        "name": "starting_buffer_volume",
-        "default": 50.0
-    },
-    {
         "type": "int",
         "label": "number of standards",
         "name": "number_of_standards",

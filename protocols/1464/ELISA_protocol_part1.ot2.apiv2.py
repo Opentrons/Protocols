@@ -9,9 +9,9 @@ metadata = {
 
 
 def run(ctx):
-    [starting_buffer_volume, number_of_standards,
+    [number_of_standards,
      concentration_csv, init_vol_buff] = get_values(  # noqa: F821
-     'starting_buffer_volume', 'number_of_standards',
+     'number_of_standards',
      'concentration_csv', "init_vol_buff")
 
     # labware setup
