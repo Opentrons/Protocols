@@ -12,8 +12,8 @@
     "label": "Where are the samples?",
     "name": "source_type",
     "options": [
-      {"label": "Already in the 96 well plate on thermocycler", "value": "wellplate"},
-      {"label": "In tube racks", "value": "tuberack"}
+      {"label": "In tube racks", "value": "tuberack"},
+      {"label": "Already in the 96 well plate on thermocycler", "value": "wellplate"}
     ]
   },
   {
@@ -21,8 +21,8 @@
     "label": "What is the mastermix in in slot 3 temperature module?",
     "name": "mmx_type",
     "options": [
-      {"label": "In a 96 wellplate aluminum block", "value": "mmx_wellplate"},
-      {"label": "Nest 1.5mL in a 24 aluminum block", "value": "mmx_tuberack"}
+      {"label": "Nest 1.5mL in a 24 aluminum block", "value": "mmx_tuberack"},
+      {"label": "In a 96 wellplate aluminum block", "value": "mmx_wellplate"}
     ]
   },
   {

@@ -22,7 +22,7 @@ def run(ctx):
         'corning_96_wellplate_360ul_flat', '9')
 
     tipracks_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                    for slot in ['3', '10']]
+                    for slot in ['3']]
     tiprack_m300 = ctx.load_labware('opentrons_96_tiprack_300ul', '7')
 
     # instrument setup
