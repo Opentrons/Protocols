@@ -25,7 +25,7 @@ def run(ctx):
                     for slot in ['3']]
     tiprack_m300 = ctx.load_labware('opentrons_96_tiprack_300ul', '7')
 
-    # instrument setup
+    # instruments setup
     m300 = ctx.load_instrument(
         'p300_multi_gen2',
         mount='left',

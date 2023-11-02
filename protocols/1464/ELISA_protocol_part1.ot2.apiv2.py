@@ -83,9 +83,6 @@ def run(ctx):
             concs, diluent_vols, sample_vols, concs_init, range(12))
         }
 
-    buffer_height = 20 + \
-        (50 - starting_buffer_volume) * 1000 / (math.pi * (13.5 ** 2))
-
     dilution_concs = []
     for sample_index, concentrations in enumerate(conc_lists):
         new_concs = []

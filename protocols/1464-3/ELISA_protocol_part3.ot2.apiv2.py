@@ -28,7 +28,7 @@ def run(ctx):
         mount='left',
         tip_racks=tiprack_m300)
 
-    # reagent setup
+    # reagents setup
     TMB_substrate = trough.wells_by_name()['A6']
     stop_solution = trough.wells_by_name()['A12']
 
