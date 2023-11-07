@@ -1,3 +1,5 @@
+# flake8: noqa
+
 metadata = {
     'protocolName': 'Ribogreen Assay',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
