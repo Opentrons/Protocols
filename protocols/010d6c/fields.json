@@ -3,20 +3,20 @@
     "type": "textFile",
     "label": ".CSV File (header: source slot, source well, dest well)",
     "name": "csv_samp",
-    "default": "source slot, source well, dest well\n7, A1, A1"
+    "default": "source slot,source well,dest well\n8,A1,A4\n8,A1,A5"
   },
   {
     "type": "dropDown",
-    "label": "Plate matrix buffer solution?",
+    "label": "Do calibration standards need prepared?",
     "name": "plate_standard",
     "options": [
-      {"label": "Yes, plate matrix buffer", "value": true},
+      {"label": "Yes, prepare calibration standards", "value": true},
       {"label": "No, start at plating calibration standards", "value": false}
     ]
   },
   {
     "type": "dropDown",
-    "label": "Deepwell plate column (1-12)",
+    "label": "Which column in the deepwell plate should the calibration standard be prepared in? (1-12)",
     "name": "diluent_buff_col",
     "options": [
       {"label": "1", "value": 1},
