@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'Normalization Using .csv File',\n    'author': 'Parrish Payne <parrish.payne@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\n\ndef run(ctx):\n\n    [input_csv, init_vol_buff, labware_pcr_plate, labware_temp_deck,\n        p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"input_csv\", \"init_vol_buff\", \"labware_pcr_plate\", \"labware_temp_deck\",\n        \"p20_mount\", \"p300_mount\")\n\n    # labware\n    tiprack20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '20ul tiprack')\n        for slot in ['1', '8']]\n    tiprack300 = [\n        ctx.load_labware(\n            'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')\n        for slot in ['2', '9']]\n    tempdeck = ctx.load_module('temperature module gen2', '3')\n    dna_plate = tempdeck.load_labware(labware_temp_deck)  # noqa: E501\n    tube_rack = ctx.load_labware(\n        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5')\n    dest_plate = ctx.load_labware(labware_pcr_plate, '6', 'end-point-plate')  # noqa: E501\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # Helper Functions\n    # liquid height tracking\n    v_naught_buff = init_vol_buff*1000\n\n    radius_sds = tube_rack.wells_by_name()['A3'].diameter/2\n\n    h_naught_buff = 0.85*v_naught_buff/(math.pi*radius_sds**2)\n\n    h_buff = h_naught_buff\n\n    def adjust_height(volume_from_loop):\n        nonlocal h_buff\n\n        radius = radius_sds\n\n        dh = (volume_from_loop/(math.pi*radius**2))*1.33\n\n        h_buff -= dh\n\n        if h_buff < 12:\n            h_buff = 1\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # mapping\n\n    buffer = tube_rack.wells_by_name()['A3']\n\n    # parse\n    all_rows = [[val.strip() for val in line.split(',')]\n                for line in input_csv.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    # Adding buffer to the wells\n    for row in all_rows:\n        well = row[0]\n        dest_well = dest_plate.wells_by_name()[well]\n        volume = float(row[7])\n\n        if volume > 20:\n            if not p300.has_tip:\n                p300.pick_up_tip()\n            p300.aspirate(volume, buffer.bottom(h_buff))\n            p300.dispense(volume, dest_well)\n\n        else:\n            if not p20.has_tip:\n                p20.pick_up_tip()\n            p20.aspirate(volume, buffer.bottom(h_buff))\n            p20.dispense(volume, dest_well)\n\n        adjust_height(volume)\n\n    if p20.has_tip:\n        p20.drop_tip()\n    if p300.has_tip:\n        p300.drop_tip()\n\n    # Adding sample to the wells\n    for row in all_rows:\n\n        well = row[0]\n        source_well = dna_plate.wells_by_name()[well]\n        dest_well = dest_plate.wells_by_name()[well]\n\n        volume = float(row[6])\n        mix_reps = 2\n\n        if volume > 20:\n            p300.pick_up_tip()\n            p300.aspirate(volume, source_well)\n            p300.dispense(volume, dest_well)\n            p300.mix(mix_reps, 20)\n            p300.blow_out()\n            p300.drop_tip()\n\n        else:\n            p20.pick_up_tip()\n            p20.aspirate(volume, source_well)\n            p20.dispense(volume, dest_well)\n            p20.mix(mix_reps, 10)\n            p20.blow_out()\n            p20.drop_tip()\n",
+    "content": "# flake8: noqa\nfrom opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Normalization Using .csv File',\n    'author': 'Parrish Payne <parrish.payne@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.13'\n}\n\ndef run(ctx):\n\n    [input_csv, init_vol_buff, labware_pcr_plate,\n        labware_dna_plate, temp_mod, temperature,\n        p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"input_csv\", \"init_vol_buff\", \"labware_pcr_plate\",\n        \"labware_dna_plate\", \"temp_mod\", \"temperature\",\n        \"p20_mount\", \"p300_mount\")\n\n    if not 4 <= temperature <= 95:\n        raise Exception(\n            \"Temperature module range is between 4 and 95\u00baC\")\n\n    # modules\n    temp_mod = None\n    if temp_mod:\n        temp_mod = ctx.load_module(\"temperature module gen2\", '3')\n\n    # labware\n    tiprack20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '20ul tiprack')\n        for slot in ['1', '8']]\n    tiprack300 = [\n        ctx.load_labware(\n            'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')\n        for slot in ['2', '9']]\n\n    dna_plate = None\n    if temp_mod == True and labware_dna_plate == \"eppendorftwin.tec_96_wellplate_150ul\":\n        dna_plate = temp_mod.load_labware(\"eppendorftwin.tec96_96_aluminumblock_150ul\", 'sample plate')\n\n    elif temp_mod == True and labware_dna_plate == \"starlab_96_wellplate_200ul\":\n        dna_plate = temp_mod.load_labware(\"starlab_96_aluminumblock_200ul\", 'sample plate')\n\n    else:\n        dna_plate = ctx.load_labware(labware_dna_plate, '3', 'sample plate')\n\n    tube_rack = ctx.load_labware(\n        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5')\n    dest_plate = ctx.load_labware(labware_pcr_plate, '6', 'end-point-plate') # noqa: E501\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # Helper Functions\n    # liquid height tracking\n    v_naught_buff = init_vol_buff*1000\n\n    radius_sds = tube_rack.wells_by_name()['A3'].diameter/2\n\n    h_naught_buff = 0.85*v_naught_buff/(math.pi*radius_sds**2)\n\n    h_buff = h_naught_buff\n\n    def adjust_height(volume_from_loop):\n        nonlocal h_buff\n\n        radius = radius_sds\n\n        dh = (volume_from_loop/(math.pi*radius**2))*1.33\n\n        h_buff -= dh\n\n        if h_buff < 12:\n            h_buff = 1\n\n    def slow_withdraw(pip, well, delay_seconds=2.0):\n        pip.default_speed /= 16\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        pip.move_to(well.top())\n        pip.default_speed *= 16\n\n    # Set temperature module temperature\n    if temp_mod:\n        ctx.comment(\"\\n\\nSetting temperature module to {} \u00baC\\n\".\n                    format(temperature))\n        temp_mod.set_temperature(temperature)\n\n    # mapping\n    buffer = tube_rack.wells_by_name()['A3']\n\n    # parse\n    all_rows = [[val.strip() for val in line.split(',')]\n                for line in input_csv.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    # Adding buffer to the wells\n    for row in all_rows:\n        well = row[0]\n        dest_well = dest_plate.wells_by_name()[well]\n        volume = float(row[7])\n\n        if volume > 0:\n            if volume > 20:\n                if not p300.has_tip:\n                    p300.pick_up_tip()\n                p300.aspirate(volume, buffer.bottom(h_buff))\n                p300.dispense(volume, dest_well)\n\n            else:\n                if not p20.has_tip:\n                    p20.pick_up_tip()\n                p20.aspirate(volume, buffer.bottom(h_buff))\n                p20.dispense(volume, dest_well)\n\n        adjust_height(volume)\n\n    if p20.has_tip:\n        p20.drop_tip()\n    if p300.has_tip:\n        p300.drop_tip()\n\n    # Adding sample to the wells\n    for row in all_rows:\n\n        well = row[0]\n        source_well = dna_plate.wells_by_name()[well]\n        dest_well = dest_plate.wells_by_name()[well]\n\n        volume = float(row[6])\n        mix_reps = 2\n        tip_height = 0.5\n\n        if volume > 0:\n            if volume > 20:\n                p300.pick_up_tip()\n                p300.aspirate(volume, source_well.bottom(tip_height))\n                p300.dispense(volume, dest_well)\n                p300.mix(mix_reps, 20)\n                p300.blow_out()\n                p300.drop_tip()\n\n            else:\n                p20.pick_up_tip()\n                p20.aspirate(volume, source_well.bottom(tip_height))\n                p20.dispense(volume, dest_well)\n                p20.mix(mix_reps, 10)\n                p20.blow_out()\n                p20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -4546,7 +4546,7 @@
         },
         {
             "label": "Labware on the Temperature Module",
-            "name": "labware_temp_deck",
+            "name": "labware_dna_plate",
             "options": [
                 {
                     "label": "eppendorftwin.tec96_96_aluminumblock_150ul",
@@ -4558,6 +4558,27 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "label": "Use temperature module on slot 3?",
+            "name": "temp_mod",
+            "options": [
+                {
+                    "label": "Use temperature module",
+                    "value": true
+                },
+                {
+                    "label": "Do not use temperature module",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 4,
+            "label": "Temperature module temperature (4-95C)",
+            "name": "temperature",
+            "type": "int"
         },
         {
             "label": "P20 single-channel Mount",
@@ -4614,7 +4635,7 @@
             "type": "opentrons_96_filtertiprack_200ul"
         },
         {
-            "name": "Eppendorf Twin.Tec 96 96 Aluminum Block 150 \u00b5L on Temperature Module GEN2 on 3",
+            "name": "sample plate on 3",
             "share": false,
             "slot": "3",
             "type": "eppendorftwin.tec96_96_aluminumblock_150ul"
@@ -4656,12 +4677,5 @@
         "protocolName": "Normalization Using .csv File",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Eppendorf Twin.Tec 96 96 Aluminum Block 150 \u00b5L on Temperature Module GEN2 on 3",
-            "share": false,
-            "slot": "3",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }

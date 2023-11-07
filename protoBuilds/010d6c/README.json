@@ -12,21 +12,21 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/deck.png)\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/ddddd.png)\n\n\n",
         "description": "This protocol performs a Ribrogreen assay - for detailed protocol steps, please see below. There is the option to perform duplicate/triplicate plating. The csv for sample input should include `source slot, source well, destination well` in the header.\n\n\n",
         "internal": "010d6c\n",
         "labware": "* Corning 12 Reservoir 2000 \u00b5L\n* Nunc 96 Well Plate 400 \u00b5L\n* Opentrons 15 Tube Rack with eppendorf 5 mL\n* Pyramid 96 Well Plate 2000 \u00b5L\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 24 Tube Rack with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. ADDING BUFFER TO PLATE\n2. ADDING CALIBRATION\n3. DUPLICATE PLATING/TRIPLICATE PLATING\n4. ADDING SAMPLE\n5. PLATING TRITON\n6. PLATING TE\n7. PLATING DYE\n\n\n",
+        "protocol-steps": "1. Calibration standard preparation in deep well plate (matrix buffer addition)\n2. Calibration standard preparation in deep well plate (4 ug/mL calibration stock addition)\n3. Calibration standard plating (duplicate or triplicate)\n4. Sample plating (duplicate or triplicate)\n5. Triton addition\n6. TE addition\n7. Heating at 37 C for 10 minutes\n8. Dye addition\n\n\n\n",
         "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/reagents.png)\n\n\n",
         "title": "Ribogreen Assay"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nADDING BUFFER TO PLATE\nADDING CALIBRATION\nDUPLICATE PLATING/TRIPLICATE PLATING\nADDING SAMPLE\nPLATING TRITON\nPLATING TE\nPLATING DYE\n",
+    "protocol-steps": "\nCalibration standard preparation in deep well plate (matrix buffer addition)\nCalibration standard preparation in deep well plate (4 ug/mL calibration stock addition)\nCalibration standard plating (duplicate or triplicate)\nSample plating (duplicate or triplicate)\nTriton addition\nTE addition\nHeating at 37 C for 10 minutes\nDye addition\n",
     "reagent-setup": "",
     "title": "Ribogreen Assay"
 }
