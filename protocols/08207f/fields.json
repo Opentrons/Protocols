@@ -22,11 +22,28 @@
   },
   {
     "type": "dropDown",
-    "label": "Labware on the Temperature Module",
-    "name": "labware_temp_deck",
+    "label": "(Optional) Temperature module with aluminum block",
+    "name": "temp_mod_lname",
     "options": [
-      { "label": "eppendorftwin.tec96_96_aluminumblock_150ul", "value": "eppendorftwin.tec96_96_aluminumblock_150ul" },
-      { "label": "starlab_96_aluminumblock_200ul", "value": "starlab_96_aluminumblock_200ul" }
+      {"label": "No temperature module", "value": false},
+      {"label": "Temperature module + aluminum block ", "value": true}
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Set temperature of the temperature module",
+    "name": "temperature",
+    "default": 4
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Sample Plate",
+    "name": "dna_plate_lname",
+    "options": [
+      { "label": "eppendorftwin.tec96 on aluminum block_150ul", "value": "eppendorftwin.tec96_96_aluminumblock_150ul" },
+      { "label": "starlab_96 on aluminum block_200ul", "value": "starlab_96_aluminumblock_200ul" },
+      { "label": "eppendorftwin.tec_96_wellplate_150ul", "value": "eppendorftwin.tec_96_wellplate_150ul" },
+      { "label": "starlab_96_wellplate_200ul", "value": "starlab_96_wellplate_200ul" }
     ]
   },
   {

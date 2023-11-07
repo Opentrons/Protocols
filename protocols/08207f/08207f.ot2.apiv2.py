@@ -10,11 +10,20 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, init_vol_buff, labware_pcr_plate, labware_temp_deck,
-        p20_mount, p300_mount] = get_values(  # noqa: F821
-        "input_csv", "init_vol_buff", "labware_pcr_plate", "labware_temp_deck",
-        "p20_mount", "p300_mount")
+    [input_csv, init_vol_buff, labware_pcr_plate, dna_plate_lname,
+        temp_mod_lname, temperature, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "input_csv", "init_vol_buff", "labware_pcr_plate", "dna_plate_lname",
+        "temp_mod_lname", "temperature","p20_mount", "p300_mount")
 
+    if not 4 <= temperature <= 95:
+        raise Exception(
+            "Temperature module range is between 4 and 95ºC")
+
+    # modules
+    temp_mod = None
+    if temp_mod_lname:
+        temp_mod = ctx.load_module("temperature module gen2", '3')
+    
     # labware
     tiprack20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
@@ -24,8 +33,14 @@ def run(ctx):
         ctx.load_labware(
             'opentrons_96_filtertiprack_200ul', slot, '200ul tiprack')
         for slot in ['2', '9']]
-    tempdeck = ctx.load_module('temperature module gen2', '3')
-    dna_plate = tempdeck.load_labware(labware_temp_deck)  # noqa: E501
+    
+    dna_plate = None
+    if temp_mod:
+        dna_plate = temp_mod.load_labware(dna_plate_lname, 'sample plate')
+    else:
+        dna_plate = ctx.load_labware(dna_plate_lname, '3', 'sample plate')
+    
+    
     tube_rack = ctx.load_labware(
         'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5')
     dest_plate = ctx.load_labware(labware_pcr_plate, '6', 'end-point-plate')  # noqa: E501
@@ -65,8 +80,13 @@ def run(ctx):
         pip.move_to(well.top())
         pip.default_speed *= 16
 
-    # mapping
+    # Set temperature module temperature
+    if temp_mod:
+        ctx.comment("\n\nSetting temperature module to {} ºC\n".
+                    format(temperature))
+        temp_mod.set_temperature(temperature)
 
+    # mapping
     buffer = tube_rack.wells_by_name()['A3']
 
     # parse
@@ -80,17 +100,18 @@ def run(ctx):
         dest_well = dest_plate.wells_by_name()[well]
         volume = float(row[7])
 
-        if volume > 20:
-            if not p300.has_tip:
-                p300.pick_up_tip()
-            p300.aspirate(volume, buffer.bottom(h_buff))
-            p300.dispense(volume, dest_well)
+        if volume > 0:
+            if volume > 20:
+                if not p300.has_tip:
+                    p300.pick_up_tip()
+                p300.aspirate(volume, buffer.bottom(h_buff))
+                p300.dispense(volume, dest_well)
 
-        else:
-            if not p20.has_tip:
-                p20.pick_up_tip()
-            p20.aspirate(volume, buffer.bottom(h_buff))
-            p20.dispense(volume, dest_well)
+            else:
+                if not p20.has_tip:
+                    p20.pick_up_tip()
+                p20.aspirate(volume, buffer.bottom(h_buff))
+                p20.dispense(volume, dest_well)
 
         adjust_height(volume)
 
@@ -108,19 +129,21 @@ def run(ctx):
 
         volume = float(row[6])
         mix_reps = 2
+        tip_height = 0.5
 
-        if volume > 20:
-            p300.pick_up_tip()
-            p300.aspirate(volume, source_well)
-            p300.dispense(volume, dest_well)
-            p300.mix(mix_reps, 20)
-            p300.blow_out()
-            p300.drop_tip()
+        if volume > 0:
+            if volume > 20:
+                p300.pick_up_tip()
+                p300.aspirate(volume, source_well.bottom(tip_height))
+                p300.dispense(volume, dest_well)
+                p300.mix(mix_reps, 20)
+                p300.blow_out()
+                p300.drop_tip()
 
-        else:
-            p20.pick_up_tip()
-            p20.aspirate(volume, source_well)
-            p20.dispense(volume, dest_well)
-            p20.mix(mix_reps, 10)
-            p20.blow_out()
-            p20.drop_tip()
+            else:
+                p20.pick_up_tip()
+                p20.aspirate(volume, source_well.bottom(tip_height))
+                p20.dispense(volume, dest_well)
+                p20.mix(mix_reps, 10)
+                p20.blow_out()
+                p20.drop_tip()
