@@ -51,7 +51,6 @@ def run(ctx):
         'p20_single_gen2', 'right', tip_racks=tipracks20)
 
     samples = tuberack.wells()[:num_samples]
-    pc = tuberack.wells()[num_samples]
     rxn_mix_1 = res.wells()[0]
     rxn_mix_2 = res.wells()[1]
     diluent = res.wells()[2:6]
@@ -89,15 +88,9 @@ def run(ctx):
             description='sample, NTC, and DAC',
             display_color='#F300FF',
         )
-        pc_liq = ctx.define_liquid(
-            name='positive control',
-            description='diluted 1:100',
-            display_color='#050F5D',
-        )
 
         # load liquids
         [s.load_liquid(sample_liq, volume=200/num_samples) for s in samples]
-        pc.load_liquid(pc_liq, volume=200)
         if not type_molecule == 'pDNA':
             rxn_mix_1.load_liquid(rxn_mix_1_liq, volume=30*num_cols*8*1.1+2000)
         if not type_molecule == '101':
@@ -291,7 +284,7 @@ def run(ctx):
     # mm
     mm_dest_sets = [
         mm_plate.rows()[i % 8][(i//8)*4:(i//8 + 1)*4]
-        for i in range(len(data)+1)]
+        for i in range(len(data))]
     pick_up(p20)
     for d_set in mm_dest_sets:
         for d in d_set:
@@ -302,18 +295,18 @@ def run(ctx):
             slow_withdraw(p20, d)
     p20.drop_tip()
 
-    # add diluted positive control
-    pc_mm_dest_set = mm_dest_sets.pop(2)
-    pick_up(p20)
-    for d in pc_mm_dest_set:
-        if not p20.has_tip:
-            pick_up(p20)
-        p20.aspirate(2, pc.bottom(0.5))  # pre-airgap
-        p20.aspirate(5.5, pc.bottom(0.5))
-        slow_withdraw(p20, pc)
-        p20.dispense(5.5, d.bottom(2))
-        slow_withdraw(p20, d)
-        p20.drop_tip()
+    # # add diluted positive control
+    # pc_mm_dest_set = mm_dest_sets.pop(2)
+    # pick_up(p20)
+    # for d in pc_mm_dest_set:
+    #     if not p20.has_tip:
+    #         pick_up(p20)
+    #     p20.aspirate(2, pc.bottom(0.5))  # pre-airgap
+    #     p20.aspirate(5.5, pc.bottom(0.5))
+    #     slow_withdraw(p20, pc)
+    #     p20.dispense(5.5, d.bottom(2))
+    #     slow_withdraw(p20, d)
+    #     p20.drop_tip()
 
     # cherrypick
     cp_lw_map = {
@@ -334,7 +327,7 @@ def run(ctx):
             p20.drop_tip()
 
     # fill remaining columns if necessary
-    num_mm_dest_sets = len(data) + 1  # including PC
+    num_mm_dest_sets = len(data)  # including PC
     if num_mm_dest_sets % 8 == 0:
         remaining_rows = 0
     else:
