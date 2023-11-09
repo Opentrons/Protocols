@@ -66,7 +66,8 @@ def run(ctx):
     """
     num_cols = math.ceil((2 + number_of_standards + len(samples)) / 8) * 2
     m300.distribute(100, antibody,
-                    plate.columns()[:num_cols], blow_out=antibody)
+                    plate.columns()[:num_cols],
+                    blow_out=antibody)
 
     """
     Adding Water
