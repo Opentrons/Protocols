@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "SAMPLE PREP": [
+            "Custom Sample Transfer"
+        ]
+    },
+    "deck-setup": "",
+    "description": "With this Protocol you can add lysis buffer, chloroform, and wash with Isopropanol to samples. This protocol is set up to do 384 samples across 4 different plates.  ",
+    "internal": "029f5b",
+    "labware": "\nAxygen 96well minitube system corning 96 wellplate 1320\u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\n[Opentrons Nest 1 well Reservoir 290 mL]\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* SAMPLE PREP\n\t* Custom Sample Transfer\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/029f5b/Layout.jpg)\n\n\n",
+        "description": "With this Protocol you can add lysis buffer, chloroform, and wash with Isopropanol to samples. This protocol is set up to do 384 samples across 4 different plates.  \n\n\n",
+        "internal": "029f5b\n",
+        "labware": "* Axygen 96well minitube system corning 96 wellplate 1320\u00b5L\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons Nest 1 well Reservoir 290 mL]\n\n\n",
+        "modules": "N/A\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 multi Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Load tubes and reservoirs\n2. The reagent reservoir will be on slot 6\n3. The cleaning reservoir will be on slot 9\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/029f5b/Liquids.jpg)\n\n\n",
+        "title": "FBelz Protocol"
+    },
+    "modules": [],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 multi Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nLoad tubes and reservoirs\nThe reagent reservoir will be on slot 6\nThe cleaning reservoir will be on slot 9\n",
+    "reagent-setup": "",
+    "title": "FBelz Protocol"
+}

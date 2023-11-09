@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Substrate and Stop Solution Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -41,8 +41,7 @@ def run(ctx):
         TMB_substrate,
         [col[0].top() for col in plate.columns()[:number_of_columns]],
         blow_out=TMB_substrate,
-        new_tip='never',
-        rate=0.75)
+        new_tip='never')
     m300.drop_tip()
 
     ctx.delay(minutes=30)
