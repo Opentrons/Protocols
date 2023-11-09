@@ -181,7 +181,7 @@ def run(ctx):
     p1000.pick_up_tip()
     wells_ordered = [well for row in plate.rows() for well in row]
     vols_media = [
-        float(line.split(',')[0]) for line in csv_factors.splitlines()[2:]]
+        float(line.split(',')[0]) for line in csv_factors.splitlines()[3:]]
     media_info = []
     for well, vol_media in zip(wells_ordered, vols_media):
         vols_split = split_media_vol(vol_media)
