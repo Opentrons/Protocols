@@ -17,7 +17,7 @@ def run(ctx):
     [input_csv, p20_mount] = get_values(  # noqa: F821
         'input_csv', 'p20_mount')
 
-    p20_mount = 'right'
+    p20_mount = 'p20_mount'
 
     # labware
     tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -37,31 +37,40 @@ def run(ctx):
 
     # parse
     all_rows = [
-        [val.strip().upper() for val in line.split(',')]
-        for line in input_csv.splitlines()[1:]
+        [val.strip() for val in line.split(',')]
+        for line in input_csv.splitlines()
         if line and line.split(',')[0]][1:]
 
-    all_samples = [
-        well
-        for well in pcr_plate.wells()
-        ]
+    for row in (all_rows):
 
-    for row, source in zip(all_rows, all_samples):
-
+        source = (row[0])
         volume = float(row[2])
         dest = (row[3])
 
-        if volume > 20:
-            num_transfers = math.ceil(volume/p20.max_volume)
-            transfer_vol = volume/num_transfers
-            for _ in range(num_transfers):
+        if volume > 0:
+            if volume > 20:
+                num_transfers = math.ceil(volume/p20.max_volume)
+                transfer_vol = volume/num_transfers
+                for _ in range(num_transfers):
 
+                    p20.pick_up_tip()
+                    p20.aspirate(transfer_vol, pcr_plate.wells_by_name()[source], rate=0.5)
+                    ctx.max_speeds[axis] = 5
+                    p20.move_to(pcr_plate.wells_by_name()[source].bottom(10))
+                    ctx.max_speeds[axis] = None
+                    p20.dispense(transfer_vol, tube_rack.wells_by_name()[dest], rate=0.5)
+                    ctx.max_speeds[axis] = 5
+                    p20.move_to(tube_rack.wells_by_name()[dest].bottom(15))
+                    ctx.max_speeds[axis] = None
+                    p20.drop_tip()
+            else:
                 p20.pick_up_tip()
-                p20.aspirate(transfer_vol, source)
-                p20.dispense(transfer_vol, tube_rack.wells_by_name()[dest])
+                p20.aspirate(volume, pcr_plate.wells_by_name()[source], rate=0.5)
+                ctx.max_speeds[axis] = 5
+                p20.move_to(pcr_plate.wells_by_name()[source].bottom(10))
+                ctx.max_speeds[axis] = None
+                p20.dispense(volume, tube_rack.wells_by_name()[dest], rate=0.5)
+                ctx.max_speeds[axis] = 5
+                p20.move_to(tube_rack.wells_by_name()[dest].bottom(15))
+                ctx.max_speeds[axis] = None
                 p20.drop_tip()
-        else:
-            p20.pick_up_tip()
-            p20.aspirate(volume, source)
-            p20.dispense(volume, tube_rack.wells_by_name()[dest])
-            p20.drop_tip()
