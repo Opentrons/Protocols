@@ -116,7 +116,7 @@ resuming.')
         p20.transfer(5, caa, s, mix_after=(2, 5), new_tip='never')
         p20.drop_tip()
 
-    ctx.pause('Put plate back in temperature module')
+    ctx.pause('Put plate back in temperature module.')
     heat_func(25)
     ctx.delay(minutes=30, msg='Incubating 30 minutes at RT (25C) for \
 alkylation.')
