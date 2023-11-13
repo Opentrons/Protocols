@@ -265,6 +265,7 @@ csv3_buff,1
 csv3_samp,1
 csv3_urea,1
 csv_aq,1
+csv_buff,1
 csv_factors,1
 csv_file,2
 csv_file_1,1
@@ -276,6 +277,7 @@ csv_samp1,1
 csv_samp2,1
 csv_samp3,1
 csv_sample,2
+csv_stock,1
 ctrl_csv,1
 ctrl_transfer_vol,1
 custom_labware_lname,1
@@ -338,6 +340,7 @@ diluent_buff_col,1
 diluent_csv,1
 diluent_scheme,1
 diluent_vol,1
+dilute_stock,1
 dilution_factor,2
 dilution_plate,1
 dilvol,1
@@ -723,7 +726,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,79
-m300_mount,106
+m300_mount,107
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -1000,7 +1003,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,154
+p300_mount,155
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1342,6 +1345,7 @@ slow_asp_rate,1
 slow_speed_down,1
 slow_speed_up,1
 small_pip,1
+sol_vol,1
 source,1
 source_asp_flow_rate_mmx,1
 source_asp_flow_rate_plate,1
