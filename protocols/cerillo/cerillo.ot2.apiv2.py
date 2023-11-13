@@ -39,7 +39,7 @@ def run(ctx):
 
     # labware
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 5)
-    plate_reader = ctx.load_labware('cerillo_stratus_armadillo_flatbottom_200ul', 1)
+    plate_reader = ctx.load_labware('cerillo_stratus_armadillo_flatbottom_200ul', 1)  # noqa: E501
     deepwell = ctx.load_labware('nest_96_wellplate_2ml_deep', 3)
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
             for slot in [7, 8, 9]]
@@ -64,7 +64,7 @@ def run(ctx):
     if dilute_stock:
 
         # protocol
-        ctx.comment('\n---------------ADDING BUFFER TO PLATE--------------\n\n')
+        ctx.comment('\n---------------ADDING BUFFER TO PLATE-------------\n\n')
         p300.pick_up_tip()
         for line, row in zip(csv_lines_buff, deepwell.rows()):
             for well_vol, well_name in zip(line, row):
