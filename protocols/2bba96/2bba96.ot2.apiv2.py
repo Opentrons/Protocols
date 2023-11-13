@@ -2,12 +2,11 @@ from opentrons.protocol_api.labware import Well, OutOfTipsError
 from types import MethodType
 import math
 import csv
-from opentrons.protocols.api_support.types import APIVersion
 
 metadata = {
     'title': 'Custom Dilution From CSV',
     'author': 'Steve Plonk',
-    'apiLevel': '2.13'
+    'apiLevel': '2.10'
 }
 
 
@@ -71,7 +70,7 @@ def run(ctx):
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
-            super().__init__(well.parent, well._core, APIVersion(2, 13))
+            super().__init__(well._impl)
             self.well = well
             self.min_height = min_height
             self.comp_coeff = comp_coeff
