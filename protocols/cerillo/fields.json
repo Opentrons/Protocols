@@ -14,7 +14,7 @@
   {
     "type": "dropDown",
     "label": "Dilute stock solution? before adding cells?",
-    "name": "pre_mix",
+    "name": "dilute_stock",
     "options": [
       {"label": "Yes, dilute stock solution with csvs", "value": true},
       {"label": "No, just transfers cells and solution to plate reader", "value": false}
@@ -26,27 +26,23 @@
     "name": "sol_vol",
     "default": 20
   },
-
   {
-    "type": "int",
-    "label": "Pre-mix repetitions",
-    "name": "premix_reps",
-    "default": 3
-  },
-
-  {
-    "type": "float",
-    "label": "Pre-mix Rate",
-    "name": "mix_rate",
-    "default": 1
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "p300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
   },
   {
     "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "m300_mount",
     "options": [
-      {"label": "Left", "value": "left"},
-      {"label": "Right", "value": "right"}
+
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
     ]
   }
 ]

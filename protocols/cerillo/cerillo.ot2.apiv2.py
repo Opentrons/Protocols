@@ -89,24 +89,26 @@ def run(ctx):
         p300.drop_tip()
 
         ctx.comment('\n-------------Mixing solution and stock------------\n\n')
-        for col in deepwell.rows()[0]:
+        for s, d in zip(deepwell.rows()[0], plate_reader.rows()[0]):
             m300.pick_up_tip()
-            m300.mix(5, 50, col)
+            m300.mix(5, 50, s)
+            m300.aspirate(sol_vol, s)
+            m300.dispense(sol_vol, d)
             m300.drop_tip()
 
-    m300.pick_up_tip()
-    m300.mix(20, 200, cells)
+    else:
+        ctx.comment('\n-----------Transferring solution to reader-------\n\n')
+        for s, d in zip(deepwell.rows()[0], plate_reader.rows()[0]):
+            m300.pick_up_tip()
+            m300.aspirate(sol_vol, s)
+            m300.dispense(sol_vol, d)
+            m300.drop_tip()
 
     ctx.comment('\n-------------Transferring cells to reader-------------\n\n')
+    m300.pick_up_tip()
+    m300.mix(20, 200, cells)
     for col in plate_reader.rows()[0]:
         m300.aspirate(180, cells)
         m300.dispense(180, col)
+        m300.mix(3, 150, col)
     m300.drop_tip()
-
-    ctx.comment('\n-------------Transferring cells to reader-------------\n\n')
-    for s, d in zip(deepwell.rows()[0], plate_reader.rows()[0]):
-        m300.pick_up_tip()
-        m300.aspirate(sol_vol, s)
-        m300.dispense(sol_vol, d)
-        m300.mix(3, 150, d)
-        m300.drop_tip()
