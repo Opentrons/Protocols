@@ -35,13 +35,21 @@ def run(ctx):
     """
     Adding TMB substrate
     """
+
+    chunks = [
+              plate.rows()[0][i:i+2]
+              for i in range(0, len(plate.rows()[0][:number_of_columns]),
+                             2)
+                    ]
     m300.pick_up_tip()
-    m300.distribute(
-        100,
-        TMB_substrate,
-        [col[0].top() for col in plate.columns()[:number_of_columns]],
-        blow_out=TMB_substrate,
-        new_tip='never')
+    for chunk in chunks:
+        m300.aspirate(200, TMB_substrate)
+        for i, well in enumerate(chunk):
+            m300.dispense(100, well.top())
+            if i == 1:
+                ctx.delay(seconds=1.5)
+                m300.blow_out()
+        ctx.comment('\n')
     m300.drop_tip()
 
     ctx.delay(minutes=30)

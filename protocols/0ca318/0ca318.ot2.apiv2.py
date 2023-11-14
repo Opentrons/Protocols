@@ -124,16 +124,18 @@ def run(ctx):
         for i, (s, d) in enumerate(zip(mmx, dispense_wells)):
 
             if i % 4 == 0 and i > 0:
-                if m20.has_tip:
-                    m20.drop_tip()
-                m20.pick_up_tip()
+                if p20.has_tip:
+                    p20.drop_tip()
+                p20.pick_up_tip()
 
             p20.aspirate(10, s, rate=0.5)
             p20.dispense(10, d, rate=0.5)  # noqa: E501
             p20.aspirate(12.5, s, rate=0.5)
             p20.dispense(12.5, d, rate=0.5)  # noqa: E501
+            p20.move_to(d.top())
+            ctx.delay(seconds=1)
             p20.blow_out(d.top())
-            p20.touch_tip()
+            p20.touch_tip(v_offset=-5)
             ctx.comment('\n')
         p20.drop_tip()
 
