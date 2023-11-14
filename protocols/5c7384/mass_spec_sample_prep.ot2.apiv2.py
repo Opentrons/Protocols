@@ -181,6 +181,8 @@ plate of ethanol before resuming.')
         p300.transfer(230, m.bottom(1), waste, new_tip='never')
         p300.drop_tip()
 
+    ctx.pause('Place plate in thermocycler')
+
     """ On-Bead Digestion """
     if p300.channels == 1:
         samples = samples_s
@@ -210,7 +212,6 @@ plate of ethanol before resuming.')
             p20.drop_tip()
 
     heat_func(37)
-    ctx.pause('Put plate back in temperature module')
     ctx.comment('Protocol complete. Please shake the plate from the magnetic \
 module to resuspend the beads, and replace on the thermocycler now set at \
 37C.')
