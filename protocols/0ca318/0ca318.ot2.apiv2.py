@@ -132,9 +132,10 @@ def run(ctx):
             p20.dispense(10, d, rate=0.5)  # noqa: E501
             p20.aspirate(12.5, s, rate=0.5)
             p20.dispense(12.5, d, rate=0.5)  # noqa: E501
+            p20.move_to(d.top())
             ctx.delay(seconds=1)
             p20.blow_out(d.top())
-            p20.touch_tip()
+            p20.touch_tip(v_offset=-5)
             ctx.comment('\n')
         p20.drop_tip()
 
