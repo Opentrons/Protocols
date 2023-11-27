@@ -1,3 +1,9 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":"source slot,source well,dest well\\n8,A1,A4\\n8,A1,A5","plate_standard":true,"diluent_buff_col":1,"duplicate_plating":true,"m300_mount":"left","p300_mount":"right"}""")
+    return [_all_values[n] for n in names]
+
+
 # flake8: noqa
 
 metadata = {
@@ -139,7 +145,7 @@ def run(ctx):
         calibration_vols = [1000, 750, 500, 250, 100, 50, 20, 0]
 
         p300.pick_up_tip() # Moved to outside of loop
-        p300.mix(1, 300, calibration_solution) # Moved to outside of loop
+        p300.mix(1, 300, calibration_solution.bottom(z=4)) # Moved to outside of loop
 
         for vol, well in zip(calibration_vols, diluent_buff_col):
             if vol == 0:
@@ -249,7 +255,7 @@ def run(ctx):
     for well in dispense_wells:
         m300.dispense(50, well.top())
         ctx.delay(seconds = 1)
-        m300.move_to(well.top(z = -3))
+        m300.move_to(well.top(z = 0))
         m300.touch_tip()
         ctx.delay(seconds = 1)
 
@@ -263,7 +269,7 @@ def run(ctx):
     for well in dispense_wells:
         m300.dispense(50, well.top())
         ctx.delay(seconds = 1)
-        m300.move_to(well.top(z = -3))
+        m300.move_to(well.top(z = 0))
         m300.touch_tip()
         ctx.delay(seconds = 1)
 
@@ -290,7 +296,7 @@ def run(ctx):
         for well in wells:
             m300.dispense(100, well.top())
             ctx.delay(seconds = 1)
-            m300.move_to(well.top(z = -3))
+            m300.move_to(well.top(z = 0))
             m300.touch_tip()
             ctx.delay(seconds = 1)
 

@@ -135,9 +135,8 @@ def run(ctx):
 
         if transfer_vol <= 0:
             continue
-
-        p20.aspirate(transfer_vol, water)
-        p20.dispense(transfer_vol, dest_well.bottom(z=1.5))
+        p20.transfer(transfer_vol, water, dest_well.bottom(z=1.5),
+                     new_tip='never')
         p20.blow_out()
 
     p20.drop_tip()
