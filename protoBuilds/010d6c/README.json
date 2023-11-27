@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/ddddd.png)\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/Screen+Shot+2023-11-27+at+1.39.18+PM.png)\n\n\n",
         "description": "This protocol performs a Ribrogreen assay - for detailed protocol steps, please see below. There is the option to perform duplicate/triplicate plating. The csv for sample input should include `source slot, source well, destination well` in the header.\n\n\n",
         "internal": "010d6c\n",
         "labware": "* Corning 12 Reservoir 2000 \u00b5L\n* Nunc 96 Well Plate 400 \u00b5L\n* Opentrons 15 Tube Rack with eppendorf 5 mL\n* Pyramid 96 Well Plate 2000 \u00b5L\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 24 Tube Rack with NEST 2 mL Snapcap](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n\n\n",

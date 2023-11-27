@@ -29,7 +29,7 @@ This protocol performs a Ribrogreen assay - for detailed protocol steps, please 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/ddddd.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/Screen+Shot+2023-11-27+at+1.39.18+PM.png)
 
 
 ### Reagent Setup
