@@ -10,7 +10,6 @@
     "label": "P20 pipette type",
     "name": "p20_type",
     "options": [
-
       {"label": "single (GEN2)", "value": "p20_single_gen2"},
       {"label": "multi (GEN2)", "value": "p20_multi_gen2"}
     ]
@@ -42,7 +41,7 @@
     "name": "p300_mount",
     "options": [
       {"label": "right", "value": "right"},
-      {"label": "left", "value": "left"},
+      {"label": "left", "value": "left"}
     ]
   },
   {

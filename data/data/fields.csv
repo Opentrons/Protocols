@@ -820,7 +820,7 @@ mnt300,12
 mnt50,1
 mntmulti,2
 mntsingle,2
-module_type,1
+module_type,2
 mother_plate_type,1
 mount,2
 mount_m20,9
@@ -918,7 +918,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,180
+num_samples,181
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -986,14 +986,14 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,134
+p20_mount,135
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
 p20_side,1
 p20_single_mount,4
 p20_tube_height,1
-p20_type,6
+p20_type,7
 p20m_mount,1
 p20mnt,6
 p20s_mount,1
@@ -1003,7 +1003,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,155
+p300_mount,156
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1012,7 +1012,7 @@ p300_tip_start_col,1
 p300_tiprack_slot,1
 p300_tips,1
 p300_transfer_height,1
-p300_type,10
+p300_type,11
 p300_used,3
 p300gen,2
 p300m,2
@@ -1104,7 +1104,7 @@ plate_b_start_col,1
 plate_c_start_col,1
 plate_cols,1
 plate_count,8
-plate_def,1
+plate_def,2
 plate_height,2
 plate_map_1_csv,1
 plate_map_2_csv,1

@@ -138,7 +138,7 @@ when the plate has been moved.')
 
     mag_samples = mag_samples_s if p20.channels == 1 else mag_samples_m
     for i, m in enumerate(mag_samples):
-        _pick_up(p20, tips20[0].wells()[i])
+        _pick_up(p20)
         p20.transfer(43, m.bottom(1), waste, new_tip='never')
         p20.drop_tip()
 
@@ -165,7 +165,7 @@ plate of ethanol before resuming.')
     """ Acetonitrile Wash """
     magdeck.disengage()
     for i, (m, a) in enumerate(zip(mag_samples, acetonitrile)):
-        _pick_up(p300, tips300[0].wells()[i])
+        _pick_up(p300)
         p300.transfer(171.5, a, m, mix_after=(10, 50), new_tip='never')
         p300.drop_tip()
 
@@ -173,7 +173,7 @@ plate of ethanol before resuming.')
     ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes')
 
     for i, m in enumerate(mag_samples):
-        _pick_up(p300, tips300[0].wells()[i])
+        _pick_up(p300)
         p300.transfer(230, m.bottom(1), waste, new_tip='never')
         p300.drop_tip()
 

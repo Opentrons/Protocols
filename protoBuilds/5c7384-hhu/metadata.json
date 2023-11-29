@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "mass_spec_sample_prep_hhu.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/5c7384-hhu",
+    "slug": "5c7384-hhu",
+    "status": "ok"
+}
