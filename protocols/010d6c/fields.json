@@ -50,7 +50,7 @@
     "name": "m300_mount",
     "options": [
       {"label": "Right", "value": "right"},
-      {"label": "Left", "value": "left"},
+      {"label": "Left", "value": "left"}
     ]
   },
   {
