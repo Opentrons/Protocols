@@ -5,7 +5,7 @@
             "Aliquoting"
         ]
     },
-    "description": "Links:\n Random Aliquoting\n\n\n Plasmind Luciferase Assay\n\n\n QIAcuity Plate Transfer\n\n\n PCR Prep\n\n\nThis protocol performs a custom aliquoting procedure based on a randomly-generated 1-4 plate map. Enough volume to accommodate all 4 destination wells, including overage volume, is aspirated from the source well and distributed to all 4 destination wells. A new tip is obtained for each source-destination set. The layout is shown below:  \n\nThe proper pipette (P20 or P300) is selected automatically based on the input siRNA volume.\n",
+    "description": "Links:\n* Random Aliquoting\n\n\n* Plasmind Luciferase Assay\n\n\n* QIAcuity Plate Transfer\n\n\n* PCR Prep\n\n\nThis protocol performs a custom aliquoting procedure based on a randomly-generated 1-4 plate map. Enough volume to accommodate all 4 destination wells, including overage volume, is aspirated from the source well and distributed to all 4 destination wells. A new tip is obtained for each source-destination set. The layout is shown below:  \n\nThe proper pipette (P20 or P300) is selected automatically based on the input siRNA volume.\n",
     "internal": "925d07",
     "labware": "\nEppendorf V-bottom, Lo-Bind 96-well plates #0030603303\nOpentrons 300\u00b5L Tips\n",
     "markdown": {

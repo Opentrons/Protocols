@@ -1,14 +1,14 @@
 {
-    "author": "Opentrons (verified)",
+    "author": "Opentrons (verified)\nOpentrons has launched a new Protocol Library. You should use the new page for this protocol. This page won\u2019t be available after January 31st, 2024.",
     "categories": {
         "PCR": [
             "PCR Prep"
         ]
     },
-    "description": "Part 2 of 2: Master Mix Distribution and DNA Transfer\nLinks:\n Part 1: Master Mix Assembly\n Part 2: Master Mix Distribution and DNA Transfer\nThis protocol allows your robot to distribute a master mix solution from well A1 of a trough to PCR strips. Robot will then transfer DNA samples to the master mix solution.\n\nYou will need:\n 12-channel reservoir\n 96-well PCR plate",
+    "description": "Part 2 of 2: Master Mix Distribution and DNA Transfer\nLinks:\n* Part 1: Master Mix Assembly\n* Part 2: Master Mix Distribution and DNA Transfer\nThis protocol allows your robot to distribute a master mix solution from well A1 of a trough to PCR strips. Robot will then transfer DNA samples to the master mix solution.\n\nYou will need:\n* 12-channel reservoir\n* 96-well PCR plate",
     "internal": "OT-2 PCR Prep v2",
     "markdown": {
-        "author": "[Opentrons (verified)](https://opentrons.com/)\n\n",
+        "author": "[Opentrons (verified)](https://opentrons.com/)\n\n***Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/pcr_prep_part_2). This page won\u2019t be available after January 31st, 2024.***\n\n",
         "categories": "* PCR\n    * PCR Prep\n\n",
         "description": "Part 2 of 2: Master Mix Distribution and DNA Transfer\n\nLinks:\n* [Part 1: Master Mix Assembly](./pcr_prep_part_1)\n* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2)\n\n\nThis protocol allows your robot to distribute a master mix solution from well A1 of a trough to PCR strips. Robot will then transfer DNA samples to the master mix solution.\n\n---\n\nYou will need:\n* [12-channel reservoir](https://www.usascientific.com/12-channel-automation-reservoir.aspx)\n* [96-well PCR plate](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n\n",
         "internal": "OT-2 PCR Prep v2\n",
