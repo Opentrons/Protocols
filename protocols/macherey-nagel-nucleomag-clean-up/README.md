@@ -8,6 +8,8 @@
 [Opentrons](https://opentrons.com/)
 
 
+***Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/macherey-nagel-nucleomag-clean-up). This page won’t be available after January 31st, 2024.***
+
 ## Categories
 * NGS Library Prep
 	* MACHEREY-NAGEL Clean-Up
