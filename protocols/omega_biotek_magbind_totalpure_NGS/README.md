@@ -6,6 +6,8 @@
 ### Partner
 [Omega Bio-tek](http://omegabiotek.com/store/)
 
+***Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/omega_biotek_magbind_totalpure_ngs). This page won’t be available after January 31st, 2024.***
+
 ## Categories
 * Featured
     * NGS Cleanup and Size Selection with Omega Bio-tek Mag-Bind® TotalPure

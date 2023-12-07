@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv_samp":"source slot,source well,dest well\\n8,A1,A4\\n8,A1,A5","plate_standard":true,"diluent_buff_col":1,"duplicate_plating":true,"m300_mount":"left","p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 # flake8: noqa
 
 metadata = {
