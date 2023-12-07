@@ -135,7 +135,7 @@ def run(ctx):
 
         p300.drop_tip()
 
-        ctx.comment('\n------------ADDING CALIBRATION------------\n\n')
+        ctx.comment('\n------------ADDING CALIBRATION-----------\n\n')
         calibration_vols = [1000, 750, 500, 250, 100, 50, 20, 0]
 
         p300.pick_up_tip() # Moved to outside of loop
