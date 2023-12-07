@@ -40,7 +40,7 @@ def run(ctx):
             Pipette.aspirate(Pipette.max_volume, Source.bottom(z = 4))
             # Touch tip
             Pipette.move_to(Source.top(z = -3))
-            Pipette.touch_tip()
+            Pipette.touch_tip(v_offset=1)
 
             # Dispense max volume
             if not Dispense_Top:
@@ -50,7 +50,7 @@ def run(ctx):
 
             # Touch tip
             Pipette.move_to(Destination.top(z = -3))
-            Pipette.touch_tip()
+            Pipette.touch_tip(v_offset=1)
 
             # Update current volume
             current_vol -= Pipette.max_volume
@@ -65,7 +65,7 @@ def run(ctx):
         Pipette.aspirate(current_vol, Source.bottom(z = 4))
         # Touch tip
         Pipette.move_to(Source.top(z = -3))
-        Pipette.touch_tip()
+        Pipette.touch_tip(v_offset=1)
 
         # Dispense volume
         if not Dispense_Top:
@@ -74,7 +74,7 @@ def run(ctx):
             Pipette.dispense(current_vol, Destination.top())
         # Touch tip
         Pipette.move_to(Destination.top(z = -3))
-        Pipette.touch_tip()
+        Pipette.touch_tip(v_offset=1)
 
 
     # labware
@@ -121,7 +121,7 @@ def run(ctx):
         buffer_vols = [0, 250, 500, 750, 900, 950, 980, 1000]
 
         p300.pick_up_tip()
-        p300.mix(1, 300, matrix_buff)
+        p300.mix(1, 300, matrix_buff.bottom(z=4))
 
         for vol, well in zip(buffer_vols, diluent_buff_col):
 
@@ -161,19 +161,19 @@ def run(ctx):
                           for well in ['A1', 'A2', 'A11', 'A12']]
         source_col = diluent_buff_col[0]
         m300.pick_up_tip()
-        m300.mix(1, 220, source_col.bottom(z = 3)) # Added in pre-wet
-        m300.aspirate(220, source_col.bottom(z = 3))
+        m300.mix(5, 300, source_col.bottom(z = 3)) # Added in pre-wet
+        m300.aspirate(200, source_col.bottom(z = 3))
 
         # Added in touch tip
         m300.move_to(source_col.top(z = -3))
-        m300.touch_tip()
+        m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
             m300.dispense(50, well.bottom(z = 3))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
-            m300.touch_tip()
+            m300.touch_tip(v_offset=1)
 
         m300.drop_tip()
 
@@ -183,19 +183,19 @@ def run(ctx):
                           for well in ['A1', 'A2', 'A3', 'A10', 'A11', 'A12']]
         source_col = diluent_buff_col[0]
         m300.pick_up_tip()
-        m300.mix(1, 300, source_col.bottom(z = 3)) # Added in pre-wet
+        m300.mix(5, 300, source_col.bottom(z = 3)) # Added in pre-wet
         m300.aspirate(300, source_col.bottom(z = 3))
 
         # Added in touch tip
         m300.move_to(source_col.top(z = -3))
-        m300.touch_tip()
+        m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
             m300.dispense(50, well.bottom(z = 3))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
-            m300.touch_tip()
+            m300.touch_tip(v_offset=1)
 
         m300.drop_tip()
 
@@ -217,14 +217,14 @@ def run(ctx):
         # Only pick up tip and aspirate if start of new replicate batch
         if index%reps == 0:
             p300.pick_up_tip()
-            p300.mix(1, 50*reps, source_well.bottom(z = 3)) # Added in pre-wet
-            p300.aspirate(50*reps, source_well.bottom(z = 3))
+            p300.mix(1, 50*reps, source_well.bottom(z = 4)) # Added in pre-wet
+            p300.aspirate(50*reps, source_well.bottom(z = 4))
             p300.move_to(source_well.top(-3))
-            p300.touch_tip()
+            p300.touch_tip(v_offset=1)
 
         p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 3)) # Set z offset
         p300.move_to(hs_plate.wells_by_name()[dest_well].top(-3))
-        p300.touch_tip()
+        p300.touch_tip(v_offset=1)
 
         # Only drop up tip if end of new replicate batch
         if index%reps == reps - 1:
@@ -233,8 +233,8 @@ def run(ctx):
     ctx.comment('\n------------PLATING TRITON------------\n\n')
 
     # Slow down aspirate and dispense rate
-    m300.flow_rate.dispense *= 2
-    m300.flow_rate.aspirate *= 2
+    m300.flow_rate.dispense *= 2.128
+    m300.flow_rate.aspirate *= 2.128
 
     dispense_wells = hs_plate.rows()[0][:6]
     m300.pick_up_tip()
@@ -243,14 +243,14 @@ def run(ctx):
 
     # Added in touch tip
     m300.move_to(triton.top(z = -3))
-    m300.touch_tip()
+    m300.touch_tip(v_offset=1)
 
 
     for well in dispense_wells:
         m300.dispense(50, well.top())
         ctx.delay(seconds = 1)
         m300.move_to(well.top(z = 0))
-        m300.touch_tip()
+        m300.touch_tip(v_offset=1)
         ctx.delay(seconds = 1)
 
     m300.drop_tip()
@@ -264,15 +264,18 @@ def run(ctx):
         m300.dispense(50, well.top())
         ctx.delay(seconds = 1)
         m300.move_to(well.top(z = 0))
-        m300.touch_tip()
+        m300.touch_tip(v_offset=1)
         ctx.delay(seconds = 1)
 
     m300.drop_tip()
 
     try:
+        ctx.pause('Place lid on plate on heater shaker')
         heater_shaker.set_and_wait_for_temperature(37)
         ctx.delay(minutes=10)
         heater_shaker.deactivate_heater()
+        ctx.delay(minutes=5)
+        ctx.pause('Remove lid on plate on heater shaker')
     except:
         ctx.delay(minutes=10)
 
@@ -285,13 +288,13 @@ def run(ctx):
     for i in range(0, 12, 3):
         wells = [well for well in hs_plate.rows()[0][i : i+3]]
         m300.aspirate(300, dye.bottom(z = 3))
-        m300.touch_tip()
+        m300.touch_tip(v_offset=1)
 
         for well in wells:
             m300.dispense(100, well.top())
             ctx.delay(seconds = 1)
             m300.move_to(well.top(z = 0))
-            m300.touch_tip()
+            m300.touch_tip(v_offset=1)
             ctx.delay(seconds = 1)
 
 #     for _ in range(2):
