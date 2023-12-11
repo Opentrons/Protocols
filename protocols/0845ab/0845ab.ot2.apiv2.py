@@ -33,7 +33,8 @@ def run(ctx):
     try:
         old_plate = ctx.load_labware('opentrons_96_wellplate_200ul_pcr_full_skirt', 2)  # noqa: E501
     except FileNotFoundError:
-        old_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 2)
+        old_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+                                     2)
 
     tuberack = ctx.load_labware('opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 3)  # noqa: E501
 
