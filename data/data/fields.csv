@@ -726,7 +726,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,79
-m300_mount,107
+m300_mount,108
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -910,7 +910,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,70
+num_samp,71
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -986,7 +986,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,135
+p20_mount,136
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1191,6 +1191,7 @@ reagent_slot_scan,2
 reagent_transfer_vol,2
 reagent_type,1
 reagents_csv,1
+real_mode,1
 reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
