@@ -1,3 +1,9 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":48,"real_mode":false,"p20_mount":"right","m300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
+
 import math
 from opentrons import protocol_api
 
@@ -40,7 +46,7 @@ def run(ctx):
 
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)
     trash = ctx.load_labware('nest_1_reservoir_195ml', 8).wells()[0].top()
-    tmt_plate = ctx.load_labware('tmtpro18_pcr_plate', 9)
+    tmt_plate = ctx.load_labware('opentrons_96_tiprack_sarstedt_200ul', 9)
 
     if not ctx.is_simulating:
 
@@ -103,12 +109,11 @@ def run(ctx):
     ctx.comment('\n---------------ADDING BEADS TO PLATES----------------\n\n')
 
     pick_up(p20)
-    p20.mix(20, 20, beads, rate=1.5)
+    p20.mix(15, 20, beads, rate=1.5)
     for well in dest_wells:
         p20.aspirate(4, beads)
         slow_tip_withdrawal(p20, beads)
         p20.dispense(4, well)
-        slow_tip_withdrawal(p20, beads)
         p20.blow_out()
     p20.drop_tip() if real_mode else p20.return_tip()
 
@@ -148,7 +153,7 @@ def run(ctx):
         ctx.comment('\n---------------Adding Ethanol----------------\n\n')
         pick_up(m300)
         for col in dest_cols:
-            m300.aspirate(100, ethanol, rate=0.1)
+            m300.aspirate(100, ethanol, rate=0.5)
             slow_tip_withdrawal(m300, ethanol)
             m300.dispense(100, col.top())
         m300.drop_tip() if real_mode else m300.return_tip()
@@ -211,7 +216,7 @@ def run(ctx):
         pick_up(p20)
         p20.aspirate(5, mm_teab)
         p20.dispense(5, well)
-        p20.mix(3, 20, well)
+        p20.mix(3, 9, well)
         p20.drop_tip() if real_mode else p20.return_tip()
 
     ctx.comment('\n-----From TMT Wells to Sample Wells----------\n\n')
@@ -233,6 +238,8 @@ def run(ctx):
 
     ctx.delay(minutes=15 if real_mode else 0.5)
     # WHAT IS POOL VOLUME?
+    print(all_pools)
+    ctx.comment('ddd')
     for pool in all_pools:
         pick_up(p20)
         for well in new_wells:
