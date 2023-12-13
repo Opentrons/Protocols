@@ -3,7 +3,7 @@
 ### Author
 [Opentrons (verified)](https://opentrons.com/)
 
-***Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/sci-macherey-nagel-nucleomag). This page won’t be available after January 31st, 2024.***
+# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/sci-macherey-nagel-nucleomag). This page won’t be available after January 31st, 2024.
 
 ## Categories
 * Nucleic Acid Extraction & Purification
@@ -20,7 +20,7 @@ Explanation of complex parameters below:
 * `Deepwell type`: Specify which well plate will be mounted on the magnetic module.
 * `Reservoir Type`: Specify which reservoir will be employed.
 * `Starting Volume`: Specify starting volume of sample (ul).
-* ``: Specify the volume of binding buffer to use (ul).
+* `Binding Buffer Volume`: Specify the volume of binding buffer to use (ul).
 * `Elution Volume`: Specify elution volume (ul).
 * `Park Tips`: Specify whether to park tips or drop tips.
 * `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.

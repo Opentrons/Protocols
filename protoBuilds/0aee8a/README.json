@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "Sample Prep": [
             "Serial Dilution"
@@ -10,7 +10,7 @@
     "internal": "0aee8a",
     "labware": "\nOpentrons 200ul Filter Tips \nOpentrons 20ul Filter Tips\nNEST 12-Well Reservoirs 15mL\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* Sample Prep\n\t* Serial Dilution\n\n\n",
         "deck-setup": "\nVolume Definitions:\n* VOL1= DMSO transfer volume for vertical plates (post dilution volume) \n* VOL2= DMSO transfer volume for horizontal plates (post dilution volume)\n* VOL3= Compound C predilution volume DMSO (optional)\n* VOL4= Compound D predilution volume DMSO (optional)\n* VOL5= Compound A predilution volume DMSO (optional)\n* VOL6= Compound B predilution volume DMSO (optional)\n* VOL7= Compound C predilution volume compound (optional)\n* VOL8= Compound D predilution volume compound (optional)\n* VOL9= Compound A predilution volume compound (optional)\n* VOL10= Compound B predilution volume compound (optional)\n* VOL11= Compound C/D initial volume \n* VOL12= Compound C/D Serial dilution volume \n* VOL13= Compound A/B initial volume\n* VOL14= Compound A/B serial dilution volume\n* VOL15= Final plate volume for integra transfer \n\n",
         "description": "This protocol outlines serial dilution of compound stock. There is an optional predilution step for each compounds involved. For detailed protocol steps, please see below. Labware setup consists of NEST 12 well 15mL reservoir in slot 1, Nest 96 well 100 uL plate in slot 2,4,5,7,8,10 & 11 as well as P20 filter tips in slot 3 and P200 filter tips in slot 6.\n\n\n",

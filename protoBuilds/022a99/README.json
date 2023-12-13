@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "Aliquoting": [],
         "Sample Prep": []
@@ -8,7 +8,7 @@
     "internal": "022a99",
     "labware": "\nAkura 384 Well Plate 50 \u00b5L #CS-09-005-02\nCorning 384 Well Plate 90 \u00b5L #3830BC\nOpentrons 96 Tip Rack 20 \u00b5L\n",
     "markdown": {
-        "author": "\n[Opentrons](https://opentrons.com/)\n\n",
+        "author": "\n[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "\n- Sample Prep\n  - Aliquoting\n\n",
         "description": "\nThis protocol transfers spheroids from a standard U-bottom 384-well plate to a specialized Akura 384-well plate. Samples are transferred to their corresponding wells. Tips are automatically changed after 16 columns to reflect new cell type. Flow rates and well positions are optimized to accurately transfer spheroid avoiding shearing.\n\n",
         "internal": "\n022a99\n",
