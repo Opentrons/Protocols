@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocols performs a blead cleanup on the OT-2 with overnight digestion step for 16, 32, or 48 samples. For detailed description of requirements and steps, please see below. 
+This protocols performs a blead cleanup on the OT-2 with overnight digestion step for 16, 32, or 48 samples. For detailed description of requirements and steps, please see below.
 
 ### Modules
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)
@@ -37,12 +37,12 @@ This protocols performs a blead cleanup on the OT-2 with overnight digestion ste
 
 
 ### Reagent Setup
-![reagents](https://s3.console.aws.amazon.com/s3/object/opentrons-protocol-library-website?region=us-east-1&prefix=custom-README-images/0845ab/Screen+Shot+2023-12-10+at+9.37.20+PM.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0845ab/Screen+Shot+2023-12-10+at+9.37.20+PM.png)
 
 
 ### Protocol Steps
 1. 12 well reservoir (liquid stock plate) contains: A1= 100% ACN, A2= 70% ethanol
-2. Eppendorf rack (liquid stock epps) contains: A1= bead solution, A2= digestion solution, A3= 200 mM TEAB, A4= 5% HA, A5= 20% formic acid
+2. Eppendorf rack (liquid stock epps) contains: A1= bead solution, A2= 200 mM TEAB, A3= 5% HA, A4= 20% formic acid
 3. Homogenize bead solution in A1 of Eppendorf rack (50 µl 3x, fast speed)
 4. 4 µl beads from A1 to column 1-6* of slot 1 (same tips)
 5. 30 µl of sample from column 1-6* slot 2 to column 1-6* slot 1 (A1 to A1, B2 to B2 etc, new tip always)
