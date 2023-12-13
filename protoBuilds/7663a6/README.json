@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "7663a6",
     "labware": "\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
         "deck-setup": "* Deck Setup running 10 columns. Mastermix is held in A1 of the tube rack on Slot 3.\n\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Screen+Shot+2021-06-29+at+11.23.20+AM.png)\n\n---\n\n",
         "description": "This protocol preps a 96 well plate by column with mastermix and sample. Mastermix is held in an Opentrons 24-tube aluminum block without the temperature module. The aluminum block is placed in the freezer prior to running to keep mastermix cool.\n\n\nExplanation of complex parameters below:\n* `Number of Columns`: Input number of sample columns for this run.\n* `Source Plate Starting Column`: Specify the source plate starting column for samples.\n* `Destination Plate Starting Column`: Specify the destination plate starting column.\n* `Sample Volume (ul)`: Specify sample volume in ul.\n* `Mastermix Volume (ul)`: Specify mastermix volume in ul.\n* `Source Aspiration Height (Plate)`: Specify aspiration height (in mm) from the bottom of the well in the sample plate.\n* `Source Aspiration Height (Tube)`: Specify aspiration height (in mm) from the bottom of the tube in the mastermix tube.\n* `Source Aspiration Flow Rate Sample (ul/sec)`: Specify the aspiration flow rate for sample.\n* `Delay After Aspiration Mastermix (seconds)`: Specify the delay after aspirating mastermix in the tube. This may be helpful with viscous liquids, allowing the pipette time to achieve the full volume before moving on.\n* `Source Aspiration Flow Rate Mastermix (ul/sec)`: Specify the aspiration flow rate for mastermix.\n* `Dispense Height (from bottom)`: Specify dispense height (in mm) from the bottom of the well in the destination plate.\n* `Dispense Flow Rate Sample`: Specify the dispense flow rate of sample into destination plate.\n* `Dispense Flow Rate Mastermix`: Specify the dispense flow rate of mastermix into destination plate.\n* `Mix Repetitions`: Specify number of mix steps.\n* `Touch Tip?`: Specify whether to include touch tip in this run.\n* `Blowout?`: Specify whether to include blow out in this run.\n* `P20 Single Mount`: Specify left or right mount for the P20 single.\n* `P20 Multi Mount`: Specify left or right mount for the P20 multi.\n\n\n\n\n---\n\n",
