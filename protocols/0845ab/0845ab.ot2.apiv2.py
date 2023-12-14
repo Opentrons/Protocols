@@ -232,11 +232,12 @@ def run(ctx):
 
     ctx.delay(minutes=15 if real_mode else 0.5)
     # WHAT IS POOL VOLUME?
-    print(all_pools)
-    ctx.comment('ddd')
-    for pool in all_pools:
+    chunked_wells_of_16 = [new_wells[i:i+16]
+                           for i in range(0, len(new_wells), 16)]
+
+    for chunk, pool in zip(chunked_wells_of_16, all_pools):
         pick_up(p20)
-        for well in new_wells:
+        for well in chunk:
             for _ in range(2):
                 p20.aspirate(20, well)
                 p20.dispense(20, pool)
