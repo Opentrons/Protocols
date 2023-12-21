@@ -127,27 +127,27 @@ exceeds plate capacity')
         enzyme_listeria_1_liq = ctx.define_liquid(
             name="listeria enzyme 1",
             description="",
-            display_color="#FF9900",
+            display_color="#000fde",
         )
         enzyme_listeria_2_liq = ctx.define_liquid(
             name="listeria enzyme 2",
             description="",
-            display_color="#9DFFD8",
+            display_color="#000fde",
         )
         enzyme_salmonella_liq = ctx.define_liquid(
             name="salmonella enzyme",
             description="",
-            display_color="#50D5FF",
+            display_color="#000fde",
         )
         positive_control_l_liq = ctx.define_liquid(
             name="listeria postive control",
             description="",
-            display_color="#FF80F5",
+            display_color="#ffff00",
         )
         positive_control_s_liq = ctx.define_liquid(
             name="salmonella positive control",
             description="",
-            display_color="#7EFF42",
+            display_color="#ffff00",
         )
         samples_listeria_liq_sample = ctx.define_liquid(
             name="listeria samples",
