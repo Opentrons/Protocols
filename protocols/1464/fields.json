@@ -1,11 +1,5 @@
 [
     {
-        "type": "float",
-        "label": "starting buffer volume, in ul",
-        "name": "starting_buffer_volume",
-        "default": 50.0
-    },
-    {
         "type": "int",
         "label": "number of standards",
         "name": "number_of_standards",
@@ -16,5 +10,11 @@
         "label": "concentration .csv file",
         "name": "concentration_csv",
         "default": "50,500,5000\n10,10000,100000\n100,,\n5,,"
+    },
+    {
+        "type": "int",
+        "label": "Initial volume of buffer (mL)",
+        "name": "init_vol_buff",
+        "default": 45
     }
 ]

@@ -23,11 +23,26 @@
   {
     "type": "dropDown",
     "label": "Labware on the Temperature Module",
-    "name": "labware_temp_deck",
+    "name": "labware_dna_plate",
     "options": [
       { "label": "eppendorftwin.tec96_96_aluminumblock_150ul", "value": "eppendorftwin.tec96_96_aluminumblock_150ul" },
       { "label": "starlab_96_aluminumblock_200ul", "value": "starlab_96_aluminumblock_200ul" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Use temperature module on slot 3?",
+    "name": "temp_mod",
+    "options": [
+      { "label": "Use temperature module", "value": true },
+      { "label": "Do not use temperature module", "value": false }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Temperature module temperature (4-95C)",
+    "name": "temperature",
+    "default": 4
   },
   {
     "type": "dropDown",

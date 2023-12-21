@@ -4,22 +4,22 @@ metadata = {
     'protocolName': 'ELISA: Dilution',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
 def run(ctx):
-    [starting_buffer_volume, number_of_standards,
-     concentration_csv] = get_values(  # noqa: F821
-     'starting_buffer_volume', 'number_of_standards',
-     'concentration_csv')
+    [number_of_standards,
+     concentration_csv, init_vol_buff] = get_values(  # noqa: F821
+     'number_of_standards',
+     'concentration_csv', "init_vol_buff")
 
     # labware setup
     tuberack_1 = ctx.load_labware(
         'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '1')
     tuberack_4 = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
-    deep_plates = [ctx.load_labware('plateone_96_wellplate_2000ul', slot)
+    deep_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)
                    for slot in ['5', '6']]
 
     tiprack_1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '2')
@@ -41,15 +41,38 @@ def run(ctx):
     samples = tubes[2 + number_of_standards:]
     dilution_buffer = tuberack_1.wells_by_name()['A3']
 
+    v_naught_buff = init_vol_buff*1000
+
+    radius_sds = dilution_buffer.diameter/2
+
+    h_naught_buff = 0.85*v_naught_buff/(math.pi*radius_sds**2)
+
+    h_buff = h_naught_buff
+
+    def adjust_height(volume_from_loop):
+        nonlocal h_buff
+
+        radius = radius_sds
+
+        dh = (volume_from_loop/(math.pi*radius**2))*1.33
+
+        h_buff -= dh
+
+        if h_buff < 12:
+            h_buff = 1
+
     dil_dests = [row for deep_plate in deep_plates
                  for row in deep_plate.rows()]
 
     conc_lists = [[int(cell) for cell in line.split(',') if cell]
                   for line in concentration_csv.splitlines() if line]
 
-    concs = [5, 10, 25, 50, 100, 500, 1000, 2500, 5000, 10000, 50000, 100000]
-    diluent_vols = [320, 450, 180, 320, 450, 320, 450, 180, 320, 450, 180, 450]
-    sample_vols = [80, 50, 120, 80, 50, 80, 50, 120, 80, 50, 80, 50]
+    concs = [5, 10, 25, 50, 100, 500, 1000, 5000, 10000, 25000, 50000, 100000]
+
+    diluent_vols = [320, 450, 180, 320, 450, 320, 450, 320, 450, 180, 320, 450]
+
+    sample_vols = [80, 50, 120, 80, 50, 80, 50, 80, 50, 120, 80, 50]
+
     concs_init = [1, 1, 10, 10, 10, 100, 100, 1000, 1000, 1000, 10000, 10000]
     dil_formulae = {
         conc: {'diluent_vol': diluent_vol,
@@ -59,9 +82,6 @@ def run(ctx):
         for conc, diluent_vol, sample_vol, conc_init, index in zip(
             concs, diluent_vols, sample_vols, concs_init, range(12))
         }
-
-    buffer_height = 20 + \
-        (50 - starting_buffer_volume) * 1000 / (math.pi * (13.5 ** 2))
 
     dilution_concs = []
     for sample_index, concentrations in enumerate(conc_lists):
@@ -82,7 +102,7 @@ def run(ctx):
         dilution_concs.append(new_concs)
 
     # transfer dilution buffer
-    p1000.pick_up_tip()
+
     for sample_index, (row, concs) in enumerate(
             zip(dil_dests, dilution_concs)):
         volumes = [dil_formulae[conc]['diluent_vol']
@@ -90,18 +110,16 @@ def run(ctx):
         dests = [row[dil_formulae[conc]['col_index']]
                  for c_list in concs for conc in c_list]
         for volume, dest in zip(volumes, dests):
-            buffer_height += volume / (math.pi * (13.5 ** 2))
-            if buffer_height > 75:
-                source = dilution_buffer.bottom(3)
-            else:
-                source = dilution_buffer.top(-buffer_height)
+            p1000.pick_up_tip()
             p1000.transfer(
                 volume,
-                source,
+                dilution_buffer.bottom(z=h_buff),
                 dest.top(-20),
                 new_tip='never')
+
+            adjust_height(volume)
             p1000.blow_out(dest.top())
-    p1000.drop_tip()
+            p1000.drop_tip()
 
     # transfer samples
     for sample_index, (row, concs) in enumerate(

@@ -1,10 +1,10 @@
 import math
 
 metadata = {
-    'protocolName': 'ELISA',
+    'protocolName': 'Antibody Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -22,10 +22,10 @@ def run(ctx):
         'corning_96_wellplate_360ul_flat', '9')
 
     tipracks_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                    for slot in ['3', '10']]
+                    for slot in ['3']]
     tiprack_m300 = ctx.load_labware('opentrons_96_tiprack_300ul', '7')
 
-    # instrument setup
+    # instruments setup
     m300 = ctx.load_instrument(
         'p300_multi_gen2',
         mount='left',
@@ -66,7 +66,8 @@ def run(ctx):
     """
     num_cols = math.ceil((2 + number_of_standards + len(samples)) / 8) * 2
     m300.distribute(100, antibody,
-                    plate.columns()[:num_cols], blow_out=antibody)
+                    plate.columns()[:num_cols],
+                    blow_out=antibody)
 
     """
     Adding Water
@@ -83,6 +84,7 @@ def run(ctx):
     """
     Adding HCP Standards
     """
+    ctx.comment('hcp')
     for standard in standards:
         p300.distribute(50, standard, dests[0])
         dests.pop(0)
@@ -90,10 +92,10 @@ def run(ctx):
     """
     Adding Samples
     """
-    for sample in samples:
+    for sample, chunk in zip(samples, dests):
         p300.pick_up_tip()
         p300.aspirate(130, sample)
-        for dest in dests[0]:
-            p300.dispense(50, dest)
+        for well in chunk:
+            p300.dispense(50, well)
         p300.drop_tip()
-        dests.pop(0)
+        # dests.pop(0)

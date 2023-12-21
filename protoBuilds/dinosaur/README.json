@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. You should use the new page for this protocol. This page won\u2019t be available after January 31st, 2024.",
     "categories": {
         "Getting Started": [
             "Dinosaur"
@@ -8,7 +8,7 @@
     "description": "Draw a picture of a dinosaur (Stegosaurus!) on a 96 well plate using food coloring.\n\n\n\n\nOpentrons 300uL Tips\nOpentrons 200uL Filter Tips\nBio-Rad 96 Well Plate 200 uL PCR\nNEST 96 Well Plate 100 uL PCR Full Skirt\nCorning 96 Well Plate 360 \u00b5L Flat\nNEST 96 Well Plate 200 \u00b5L Flat\nP300 Single Channel GEN2\n\nFor more detailed information on compatible labware, please visit our Labware Library.\n\n\nDeck Setup\n\nProtocol Steps\n\nDistribute 50 uL of green solution to all the necessary wells.\nDistribute 50 uL of blue solution to all the necessary wells.\nEnjoy the dinosaur!\n",
     "internal": "dinosaur",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/dinosaur). This page won\u2019t be available after January 31st, 2024.\n\n",
         "categories": "* Getting Started\n\t* Dinosaur\n\n",
         "description": "Draw a picture of a dinosaur (Stegosaurus!) on a 96 well plate using food coloring.\n\n![Dinosaur](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dinosaur/dinosaur_result.png)\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Opentrons 200uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Bio-Rad 96 Well Plate 200 uL PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr/)\n* [NEST 96 Well Plate 100 uL PCR Full Skirt](https://labware.opentrons.com/nest_96_wellplate_100ul_pcr_full_skirt/)\n* [Corning 96 Well Plate 360 \u00b5L Flat](https://labware.opentrons.com/corning_96_wellplate_360ul_flat/)\n* [NEST 96 Well Plate 200 \u00b5L Flat](https://labware.opentrons.com/nest_96_wellplate_200ul_flat/)\n* [P300 Single Channel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)\n\nFor more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n**Deck Setup**\n![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dinosaur/dinosaur_deck_layout.png)\n\n\n**Protocol Steps**\n\n1. Distribute 50 uL of green solution to all the necessary wells.\n2. Distribute 50 uL of blue solution to all the necessary wells.\n3. Enjoy the dinosaur!\n\n",
         "internal": "dinosaur",

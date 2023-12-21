@@ -5,6 +5,9 @@
 [Opentrons](https://opentrons.com/)
 
 
+
+# Opentrons has launched a new Protocol Library. This page won’t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.
+
 ## Categories
 * Sample Prep
 	* Plate Filling
@@ -29,7 +32,7 @@ This protocol performs a Ribrogreen assay - for detailed protocol steps, please 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/010d6c/Screen+Shot+2023-11-27+at+1.39.18+PM.png)
 
 
 ### Reagent Setup
@@ -37,13 +40,15 @@ This protocol performs a Ribrogreen assay - for detailed protocol steps, please 
 
 
 ### Protocol Steps
-1. ADDING BUFFER TO PLATE
-2. ADDING CALIBRATION
-3. DUPLICATE PLATING/TRIPLICATE PLATING
-4. ADDING SAMPLE
-5. PLATING TRITON
-6. PLATING TE
-7. PLATING DYE
+1. Calibration standard preparation in deep well plate (matrix buffer addition)
+2. Calibration standard preparation in deep well plate (4 ug/mL calibration stock addition)
+3. Calibration standard plating (duplicate or triplicate)
+4. Sample plating (duplicate or triplicate)
+5. Triton addition
+6. TE addition
+7. Heating at 37 C for 10 minutes
+8. Dye addition
+
 
 
 ### Process

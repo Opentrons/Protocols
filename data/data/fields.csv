@@ -265,6 +265,7 @@ csv3_buff,1
 csv3_samp,1
 csv3_urea,1
 csv_aq,1
+csv_buff,1
 csv_factors,1
 csv_file,2
 csv_file_1,1
@@ -276,6 +277,7 @@ csv_samp1,1
 csv_samp2,1
 csv_samp3,1
 csv_sample,2
+csv_stock,1
 ctrl_csv,1
 ctrl_transfer_vol,1
 custom_labware_lname,1
@@ -338,6 +340,7 @@ diluent_buff_col,1
 diluent_csv,1
 diluent_scheme,1
 diluent_vol,1
+dilute_stock,1
 dilution_factor,2
 dilution_plate,1
 dilvol,1
@@ -400,7 +403,7 @@ dry_on_temperature_module,1
 dry_time,23
 drying_time,2
 drying_time_in_minutes,2
-dryrun,7
+dryrun,8
 ds_520,1
 ds_540,1
 ds_570,1
@@ -572,7 +575,7 @@ init_vol,3
 init_vol_50,1
 init_vol_bca,1
 init_vol_bsa,1
-init_vol_buff,1
+init_vol_buff,2
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
@@ -637,6 +640,7 @@ labware_collect_plate,1
 labware_cultureplate,1
 labware_deep_well,1
 labware_dest,2
+labware_dna_plate,1
 labware_dna_sample_plate,1
 labware_elisa_plate,3
 labware_firstrna,1
@@ -664,7 +668,6 @@ labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
 labware_source,1
-labware_temp_deck,1
 labware_tempmod,12
 labware_tempmod2,5
 labware_tips20,3
@@ -723,7 +726,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,79
-m300_mount,106
+m300_mount,108
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -817,7 +820,7 @@ mnt300,12
 mnt50,1
 mntmulti,2
 mntsingle,2
-module_type,1
+module_type,2
 mother_plate_type,1
 mount,2
 mount_m20,9
@@ -869,7 +872,7 @@ no_plates,2
 no_samps,2
 noblank,1
 noce,1
-nomodules,6
+nomodules,7
 norep,1
 norm_data,1
 np,1
@@ -907,7 +910,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,70
+num_samp,71
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -915,7 +918,7 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_sample_columns,1
-num_samples,180
+num_samples,181
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -951,7 +954,7 @@ numvisbys,1
 occupied_well_csv1,5
 occupied_well_csv2,4
 occupied_well_csv3,4
-offset,6
+offset,7
 offset_x,24
 offset_x_resuspension,12
 omni_tray_24,1
@@ -983,14 +986,14 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,134
+p20_mount,136
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
 p20_side,1
 p20_single_mount,4
 p20_tube_height,1
-p20_type,6
+p20_type,7
 p20m_mount,1
 p20mnt,6
 p20s_mount,1
@@ -1000,7 +1003,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,154
+p300_mount,156
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1009,7 +1012,7 @@ p300_tip_start_col,1
 p300_tiprack_slot,1
 p300_tips,1
 p300_transfer_height,1
-p300_type,10
+p300_type,11
 p300_used,3
 p300gen,2
 p300m,2
@@ -1101,7 +1104,7 @@ plate_b_start_col,1
 plate_c_start_col,1
 plate_cols,1
 plate_count,8
-plate_def,1
+plate_def,2
 plate_height,2
 plate_map_1_csv,1
 plate_map_2_csv,1
@@ -1188,6 +1191,7 @@ reagent_slot_scan,2
 reagent_transfer_vol,2
 reagent_type,1
 reagents_csv,1
+real_mode,1
 reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
@@ -1285,7 +1289,7 @@ sample_tube_clearance,1
 sample_type,1
 sample_vol,24
 sample_volume,5
-samples,42
+samples,43
 samples_csv,1
 samples_labware,2
 samples_loadname,1
@@ -1342,6 +1346,7 @@ slow_asp_rate,1
 slow_speed_down,1
 slow_speed_up,1
 small_pip,1
+sol_vol,1
 source,1
 source_asp_flow_rate_mmx,1
 source_asp_flow_rate_plate,1
@@ -1386,7 +1391,6 @@ start_tip,2
 start_tip_p20,2
 start_tip_p300,2
 start_urea_vol,1
-starting_buffer_volume,1
 starting_conc,2
 starting_diluent_vol,1
 starting_plasma_vol,1
@@ -1413,17 +1417,17 @@ step_frerat,1
 step_freratdeck,1
 step_lig,4
 step_ligdeck,3
-step_pcr,5
-step_pcrdeck,4
+step_pcr,6
+step_pcrdeck,5
 step_postlig,4
-step_postpcr,3
+step_postpcr,4
 step_postpcr1,2
 step_postpcr2,2
-step_tag,1
-step_tagdeck,1
-step_tsb,1
-step_tsbdeck,1
-step_wash,1
+step_tag,2
+step_tagdeck,2
+step_tsb,2
+step_tsbdeck,2
+step_wash,2
 strip_type,2
 super_asp_rate,1
 super_disp_rate,1
@@ -1440,7 +1444,7 @@ te_well,2
 temp,2
 temp_gen,1
 temp_lysate,1
-temp_mod,2
+temp_mod,3
 temp_mod_lname,2
 temp_mod_on,2
 temp_mod_s1_lname,1
@@ -1461,7 +1465,7 @@ tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
 tempdeck_slot,1
-temperature,12
+temperature,13
 temperature1,1
 temperature2,1
 tempgen,1
@@ -1507,7 +1511,7 @@ tiprack_lname_20_ul,1
 tiprack_lname_300ul,1
 tiprack_slot,1
 tiprack_start,1
-tipreuse,5
+tipreuse,6
 tips,2
 tipstrategy_dilution,1
 tiptrash,2

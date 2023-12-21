@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Normalization',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.2'
+    'apiLevel': '2.12'
     }
 
 tiprack_slots = ['1', '4', '7', '10']

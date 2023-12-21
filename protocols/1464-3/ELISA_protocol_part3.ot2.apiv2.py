@@ -1,8 +1,8 @@
 metadata = {
-    'protocolName': 'ELISA',
+    'protocolName': 'Substrate and Stop Solution Addition',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.13'
+    'apiLevel': '2.14'
 }
 
 
@@ -28,21 +28,28 @@ def run(ctx):
         mount='left',
         tip_racks=tiprack_m300)
 
-    # reagent setup
+    # reagents setup
     TMB_substrate = trough.wells_by_name()['A6']
     stop_solution = trough.wells_by_name()['A12']
 
     """
     Adding TMB substrate
     """
+
+    chunks = [
+              plate.rows()[0][i:i+2]
+              for i in range(0, len(plate.rows()[0][:number_of_columns]),
+                             2)
+                    ]
     m300.pick_up_tip()
-    m300.distribute(
-        100,
-        TMB_substrate.bottom(),
-        [col[0].top() for col in plate.columns()[:number_of_columns]],
-        blow_out=TMB_substrate,
-        new_tip='never')
-    m300.aspirate(20, plate.columns()[number_of_columns-1][0].top())
+    for chunk in chunks:
+        m300.aspirate(200, TMB_substrate)
+        for i, well in enumerate(chunk):
+            m300.dispense(100, well.top())
+            if i == 1:
+                ctx.delay(seconds=1.5)
+                m300.blow_out()
+        ctx.comment('\n')
     m300.drop_tip()
 
     ctx.delay(minutes=30)
@@ -52,5 +59,5 @@ def run(ctx):
     """
     for col in plate.columns()[:number_of_columns]:
         m300.pick_up_tip()
-        m300.transfer(100, stop_solution.bottom(), col, new_tip='never')
+        m300.transfer(100, stop_solution, col, new_tip='never')
         m300.drop_tip()

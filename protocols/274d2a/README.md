@@ -3,6 +3,8 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
+# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/274d2a). This page won’t be available after January 31st, 2024.
+
 ## Categories
 * Sample Prep
 	* Cherrypicking

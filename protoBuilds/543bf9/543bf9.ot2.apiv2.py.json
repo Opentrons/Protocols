@@ -1,108 +1,108 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'Standard Curve Dilutions with CSV File',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [p50_mount, csv_file_1, csv_file_2,\n        diluent_vol, asp_speed, disp_speed,\n        air_gap_vol, delay_time] = get_values(  # noqa: F821\n        \"p50_mount\", \"csv_file_1\", \"csv_file_2\", \"diluent_vol\", \"asp_speed\",\n        \"disp_speed\", \"air_gap_vol\", \"delay_time\")\n\n    # Load Labware\n    plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 6)\n    tuberack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 3)\n    tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul',\n                                 slot) for slot in range(1, 3)]\n\n    # Load Pipette\n    p50 = ctx.load_instrument('p50_single', p50_mount,\n                              tip_racks=tipracks)\n    max_vol = p50.max_volume - air_gap_vol\n\n    # Reagents\n    stock1 = tuberack['A1']\n    stock2 = tuberack['A2']\n\n    well_positions_curve1 = {\"Int1\": \"A1\", \"Int2\": \"A2\", \"Int3\": \"A3\",\n                             \"Int4\": \"A4\", \"Std1\": \"B1\", \"Std2\": \"B2\",\n                             \"Std3\": \"B3\", \"Std4\": \"B4\", \"Std5\": \"B5\",\n                             \"Std6\": \"B6\", \"Std7\": \"B7\", \"Std8\": \"B8\",\n                             \"Blank (Std9)\": \"B9\", \"QC1\": \"C1\",\n                             \"QC2\": \"C2\", \"QC3\": \"C3\", \"QC4\": \"C4\"}\n\n    well_positions_curve2 = {\"Int1\": \"E1\", \"Int2\": \"E2\", \"Int3\": \"E3\",\n                             \"Int4\": \"E4\", \"Std1\": \"F1\", \"Std2\": \"F2\",\n                             \"Std3\": \"F3\", \"Std4\": \"F4\", \"Std5\": \"F5\",\n                             \"Std6\": \"F6\", \"Std7\": \"F7\", \"Std8\": \"F8\",\n                             \"Blank (Std9)\": \"F9\", \"QC1\": \"G1\",\n                             \"QC2\": \"G2\", \"QC3\": \"G3\", \"QC4\": \"G4\"}\n\n    data_c1 = [[val.strip() for val in line.split(',')] for line in\n               csv_file_1.splitlines() if line.split(',')[0].strip()]\n\n    data_c2 = [[val.strip() for val in line.split(',')] for line in\n               csv_file_2.splitlines() if line.split(',')[0].strip()]\n\n    transformed_data_c1 = []\n    transformed_data_c2 = []\n\n    def transform_data(data, well_positions, results):\n        for i, line in enumerate(data):\n            if line[4] == '':\n                continue\n            if line[0] in well_positions_curve1:\n                if line[1] == '':\n                    src_conc = None\n                    sample_src = None\n                    dest = plate[well_positions[line[0]]]\n                    dil_vol = float(line[4])\n                    src_vol = None\n                    results.append([src_conc, sample_src, dest, dil_vol,\n                                    src_vol])\n                    continue\n                src_conc = float(line[1])\n                if line[2] == 'stock1':\n                    sample_src = stock1\n                elif line[2] == 'stock2':\n                    sample_src = stock2\n                else:\n                    sample_src = plate[well_positions[line[2]]]\n                dest = plate[well_positions[line[0]]]\n                src_vol = float(line[3])\n                dil_vol = float(line[4])\n                results.append([src_conc, sample_src, dest, dil_vol, src_vol])\n\n    def change_flow_rates(asp_speed, disp_speed):\n        p50.flow_rate.aspirate = asp_speed\n        p50.flow_rate.dispense = disp_speed\n\n    def reset_flow_rates():\n        p50.flow_rate.aspirate = 25\n        p50.flow_rate.dispense = 50\n\n    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):\n        if current_pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            current_pipette.move_to(well_location.top())\n        else:\n            current_pipette.move_to(well_location.center())\n        ctx.max_speeds[axis] = None\n\n    def preWet(volume, location):\n        ctx.comment(f\"Pre-Wetting the tip at {location}\")\n        p50.aspirate(volume, location)\n        slow_tip_withdrawal(p50, location)\n        p50.dispense(volume, location)\n        slow_tip_withdrawal(p50, location)\n\n    # Volume Tracking\n    class VolTracker:\n        def __init__(self, labware, well_vol, pip_type='single',\n                     mode='reagent'):\n            self.labware_wells = dict.fromkeys(labware, 0)\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n\n        def tracker(self, vol, well_only=False):\n            '''tracker() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the reservoir.'''\n            well = next(iter(self.labware_wells))\n            if self.labware_wells[well] + vol >= self.well_vol:\n                del self.labware_wells[well]\n                well = next(iter(self.labware_wells))\n                if well_only:\n                    return well\n            if well_only:\n                return well\n            if self.pip_type == 'multi':\n                self.labware_wells[well] = self.labware_wells[well] + vol*8\n            elif self.pip_type == 'single':\n                self.labware_wells[well] = self.labware_wells[well] + vol\n            if self.mode == 'waste':\n                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of\n                            total waste''')\n            else:\n                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid\n                            used from {well}''')\n            return well\n\n    diluentTrack = VolTracker(tuberack.rows()[1][:3], diluent_vol)\n\n    # Liquid Handling Steps\n    def liquid_handle(data):\n        change_flow_rates(asp_speed, disp_speed)\n        for line in data:\n            src_conc = line[0]\n            sample_src = line[1]\n            dest = line[2]\n            dil_vol = line[3]\n            src_vol = line[4]\n            # Add diluent and then transfer samples\n            p50.pick_up_tip()\n            num_trans = math.ceil(dil_vol/max_vol)\n            vol_per_trans = dil_vol/num_trans\n            preWet(vol_per_trans, diluentTrack.tracker(vol_per_trans))\n            for _ in range(num_trans):\n                loc = diluentTrack.tracker(vol_per_trans, well_only=True)\n                p50.aspirate(vol_per_trans,\n                             diluentTrack.tracker(vol_per_trans))\n                ctx.delay(seconds=delay_time)\n                slow_tip_withdrawal(p50, loc)\n                p50.air_gap(air_gap_vol)\n                p50.dispense(vol_per_trans+air_gap_vol, dest)\n                ctx.delay(seconds=delay_time)\n                slow_tip_withdrawal(p50, dest)\n            p50.drop_tip()\n            if src_conc is not None:\n                p50.pick_up_tip()\n                num_trans = math.ceil(src_vol/max_vol)\n                vol_per_trans = src_vol/num_trans\n                preWet(vol_per_trans, sample_src)\n                for _ in range(num_trans):\n                    p50.aspirate(vol_per_trans, sample_src)\n                    ctx.delay(seconds=delay_time)\n                    slow_tip_withdrawal(p50, sample_src)\n                    p50.air_gap(air_gap_vol)\n                    p50.dispense(vol_per_trans+air_gap_vol, dest)\n                    ctx.delay(seconds=delay_time)\n                    slow_tip_withdrawal(p50, dest)\n                p50.mix(3, (src_vol+dil_vol)/2)\n                slow_tip_withdrawal(p50, dest)\n                p50.blow_out()\n                p50.touch_tip()\n                p50.drop_tip()\n        reset_flow_rates()\n\n    # First Standard Curve\n    transform_data(data_c1, well_positions_curve1,\n                   transformed_data_c1)\n    liquid_handle(transformed_data_c1)\n\n    # Second Standard Curve\n    if len(data_c2) > 0:\n        transform_data(data_c2, well_positions_curve2,\n                       transformed_data_c2)\n        liquid_handle(transformed_data_c2)\n",
-    "custom_labware_defs": [],
-    "fields": [
+  "content": "import math\n\nmetadata = {\n    'protocolName': 'Standard Curve Dilutions with CSV File',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [p50_mount, csv_file_1, csv_file_2,\n        diluent_vol, asp_speed, disp_speed,\n        air_gap_vol, delay_time] = get_values(  # noqa: F821\n        \"p50_mount\", \"csv_file_1\", \"csv_file_2\", \"diluent_vol\", \"asp_speed\",\n        \"disp_speed\", \"air_gap_vol\", \"delay_time\")\n\n    # Load Labware\n    plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 6)\n    tuberack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 3)\n    tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul',\n                                 slot) for slot in range(1, 3)]\n\n    # Load Pipette\n    p50 = ctx.load_instrument('p50_single', p50_mount,\n                              tip_racks=tipracks)\n    max_vol = p50.max_volume - air_gap_vol\n\n    # Reagents\n    stock1 = tuberack['A1']\n    stock2 = tuberack['A2']\n\n    well_positions_curve1 = {\"Int1\": \"A1\", \"Int2\": \"A2\", \"Int3\": \"A3\",\n                             \"Int4\": \"A4\", \"Std1\": \"B1\", \"Std2\": \"B2\",\n                             \"Std3\": \"B3\", \"Std4\": \"B4\", \"Std5\": \"B5\",\n                             \"Std6\": \"B6\", \"Std7\": \"B7\", \"Std8\": \"B8\",\n                             \"Blank (Std9)\": \"B9\", \"QC1\": \"C1\",\n                             \"QC2\": \"C2\", \"QC3\": \"C3\", \"QC4\": \"C4\"}\n\n    well_positions_curve2 = {\"Int1\": \"E1\", \"Int2\": \"E2\", \"Int3\": \"E3\",\n                             \"Int4\": \"E4\", \"Std1\": \"F1\", \"Std2\": \"F2\",\n                             \"Std3\": \"F3\", \"Std4\": \"F4\", \"Std5\": \"F5\",\n                             \"Std6\": \"F6\", \"Std7\": \"F7\", \"Std8\": \"F8\",\n                             \"Blank (Std9)\": \"F9\", \"QC1\": \"G1\",\n                             \"QC2\": \"G2\", \"QC3\": \"G3\", \"QC4\": \"G4\"}\n\n    data_c1 = [[val.strip() for val in line.split(',')] for line in\n               csv_file_1.splitlines() if line.split(',')[0].strip()]\n\n    data_c2 = [[val.strip() for val in line.split(',')] for line in\n               csv_file_2.splitlines() if line.split(',')[0].strip()]\n\n    transformed_data_c1 = []\n    transformed_data_c2 = []\n\n    def transform_data(data, well_positions, results):\n        for i, line in enumerate(data):\n            if line[4] == '':\n                continue\n            if line[0] in well_positions_curve1:\n                if line[1] == '':\n                    src_conc = None\n                    sample_src = None\n                    dest = plate[well_positions[line[0]]]\n                    dil_vol = float(line[4])\n                    src_vol = None\n                    results.append([src_conc, sample_src, dest, dil_vol,\n                                    src_vol])\n                    continue\n                src_conc = float(line[1])\n                if line[2] == 'stock1':\n                    sample_src = stock1\n                elif line[2] == 'stock2':\n                    sample_src = stock2\n                else:\n                    sample_src = plate[well_positions[line[2]]]\n                dest = plate[well_positions[line[0]]]\n                src_vol = float(line[3])\n                dil_vol = float(line[4])\n                results.append([src_conc, sample_src, dest, dil_vol, src_vol])\n\n    def change_flow_rates(asp_speed, disp_speed):\n        p50.flow_rate.aspirate = asp_speed\n        p50.flow_rate.dispense = disp_speed\n\n    def reset_flow_rates():\n        p50.flow_rate.aspirate = 25\n        p50.flow_rate.dispense = 50\n\n    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):\n        if current_pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            current_pipette.move_to(well_location.top())\n        else:\n            current_pipette.move_to(well_location.center())\n        ctx.max_speeds[axis] = None\n\n    def preWet(volume, location):\n        ctx.comment(f\"Pre-Wetting the tip at {location}\")\n        p50.aspirate(volume, location)\n        slow_tip_withdrawal(p50, location)\n        p50.dispense(volume, location)\n        slow_tip_withdrawal(p50, location)\n\n    # Volume Tracking\n    class VolTracker:\n        def __init__(self, labware, well_vol, pip_type='single',\n                     mode='reagent'):\n            self.labware_wells = dict.fromkeys(labware, 0)\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n\n        def tracker(self, vol, well_only=False):\n            '''tracker() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the reservoir.'''\n            well = next(iter(self.labware_wells))\n            if self.labware_wells[well] + vol >= self.well_vol:\n                del self.labware_wells[well]\n                well = next(iter(self.labware_wells))\n                if well_only:\n                    return well\n            if well_only:\n                return well\n            if self.pip_type == 'multi':\n                self.labware_wells[well] = self.labware_wells[well] + vol*8\n            elif self.pip_type == 'single':\n                self.labware_wells[well] = self.labware_wells[well] + vol\n            if self.mode == 'waste':\n                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of\n                            total waste''')\n            else:\n                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid\n                            used from {well}''')\n            return well\n\n    diluentTrack = VolTracker(tuberack.rows()[1][:3], diluent_vol)\n\n    # Liquid Handling Steps\n    def liquid_handle(data):\n        change_flow_rates(asp_speed, disp_speed)\n        for line in data:\n            src_conc = line[0]\n            sample_src = line[1]\n            dest = line[2]\n            dil_vol = line[3]\n            src_vol = line[4]\n            # Add diluent and then transfer samples\n            p50.pick_up_tip()\n            num_trans = math.ceil(dil_vol/max_vol)\n            vol_per_trans = dil_vol/num_trans\n            preWet(vol_per_trans, diluentTrack.tracker(vol_per_trans))\n            for _ in range(num_trans):\n                loc = diluentTrack.tracker(vol_per_trans, well_only=True)\n                p50.aspirate(vol_per_trans,\n                             diluentTrack.tracker(vol_per_trans))\n                ctx.delay(seconds=delay_time)\n                slow_tip_withdrawal(p50, loc)\n                p50.air_gap(air_gap_vol)\n                p50.dispense(vol_per_trans+air_gap_vol, dest)\n                ctx.delay(seconds=delay_time)\n                slow_tip_withdrawal(p50, dest)\n            p50.drop_tip()\n            if src_conc is not None:\n                p50.pick_up_tip()\n                num_trans = math.ceil(src_vol/max_vol)\n                vol_per_trans = src_vol/num_trans\n                preWet(vol_per_trans, sample_src)\n                for _ in range(num_trans):\n                    p50.aspirate(vol_per_trans, sample_src)\n                    ctx.delay(seconds=delay_time)\n                    slow_tip_withdrawal(p50, sample_src)\n                    p50.air_gap(air_gap_vol)\n                    p50.dispense(vol_per_trans+air_gap_vol, dest)\n                    ctx.delay(seconds=delay_time)\n                    slow_tip_withdrawal(p50, dest)\n                p50.mix(3, (src_vol+dil_vol)/2)\n                slow_tip_withdrawal(p50, dest)\n                p50.blow_out()\n                p50.touch_tip()\n                p50.drop_tip()\n        reset_flow_rates()\n\n    # First Standard Curve\n    transform_data(data_c1, well_positions_curve1,\n                   transformed_data_c1)\n    liquid_handle(transformed_data_c1)\n\n    # Second Standard Curve\n    if len(data_c2) > 0:\n        transform_data(data_c2, well_positions_curve2,\n                       transformed_data_c2)\n        liquid_handle(transformed_data_c2)\n",
+  "custom_labware_defs": [],
+  "fields": [
+    {
+      "label": "P50 Single Channel Mount Position",
+      "name": "p50_mount",
+      "options": [
         {
-            "label": "P50 Single Channel Mount Position",
-            "name": "p50_mount",
-            "options": [
-                {
-                    "label": "Left",
-                    "value": "left"
-                },
-                {
-                    "label": "Right",
-                    "value": "right"
-                }
-            ],
-            "type": "dropDown"
+          "label": "Left",
+          "value": "left"
         },
         {
-            "default": "Stock1 Conc.,12120000,ng/ml,,,,,,,\nInts,Source starting Conc./Source name,,Source Vol (uL),Diluent vol (uL),Final Con (ng/ml),Final Vol (uL),Fold Dil of Source,,\n,,,,,,,,,\nInt1,12120000,stock1,8.3,41.7,2000000,50,6.06,,\nInt2,2000000, Int1,12.5,37.5,500000,50,4,,\nInt3,500000, Int2,5.0,45.0,50000,50,10,,\nInt4,50000, Int3,25.0,25.0,25000,50,2,,\n,,,,,,,,,\nStandard Curve Dilutions from the diluted stock solution,,,,,,,,,\nStd #,Source starting Conc./Source Name,,Source Vol (uL),Diluent vol (uL),Final Con (ng/ml),Final Vol (uL),Fold Dil of source,,\n,,,,,,,,,\nStd1,25000.0,Int4,5,45,2500,50,10,,\nStd2,2500.0,Std1,12.5,37.5,625,50,4,,\nStd3,625.0,Std2,12.5,37.5,156.3,50,4,,\nStd4,156.3,Std3,12.5,37.5,39.1,50,4,,\nStd5,39.1,Std4,12.5,37.5,9.8,50,4,,\nStd6,9.8,Std5,12.5,37.5,2.4,50,4,,\nStd7,2.4,Std6,12.5,37.5,0.6,50,4,,\nStd8,0.6,Std7,12.5,37.5,0.15,50,4,,\nBlank (Std9),,,,50,,50.0,,,\nQC Samples ,,,,,,,,,\nQC1,25000,Int4,5.2,59.8,2000,65,12.5,,\nQC2,2000,QC1,5,45,200,50,10,,\nQC3,200,QC2,5,45,20,50,10,,\nQC4,20,QC3,5,45,2,50,10,,\n,,,,,,,,,",
-            "label": "First Curve CSV File",
-            "name": "csv_file_1",
-            "type": "textFile"
-        },
-        {
-            "default": ",,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n",
-            "label": "Second Curve CSV File (Optional)",
-            "name": "csv_file_2",
-            "type": "textFile"
-        },
-        {
-            "default": 1000,
-            "label": "Diluent Tube(s) Volume (uL)",
-            "name": "diluent_vol",
-            "type": "float"
-        },
-        {
-            "default": 10,
-            "label": "Aspirate Flow Rate (uL/s)",
-            "name": "asp_speed",
-            "type": "float"
-        },
-        {
-            "default": 10,
-            "label": "Dispense Flow Rate (uL/s)",
-            "name": "disp_speed",
-            "type": "float"
-        },
-        {
-            "default": 10,
-            "label": "Air Gap Volume (uL)",
-            "name": "air_gap_vol",
-            "type": "float"
-        },
-        {
-            "default": 2,
-            "label": "Delay After Aspirate and Dispense (seconds)",
-            "name": "delay_time",
-            "type": "float"
+          "label": "Right",
+          "value": "right"
         }
-    ],
-    "instruments": [
-        {
-            "mount": "left",
-            "name": "p50_single"
-        }
-    ],
-    "labware": [
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
-            "share": false,
-            "slot": "1",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
-            "share": false,
-            "slot": "2",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 3",
-            "share": false,
-            "slot": "3",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
-        },
-        {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 6",
-            "share": false,
-            "slot": "6",
-            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
-        },
-        {
-            "name": "Opentrons Fixed Trash on 12",
-            "share": false,
-            "slot": "12",
-            "type": "opentrons_1_trash_1100ml_fixed"
-        }
-    ],
-    "metadata": {
-        "apiLevel": "2.9",
-        "author": "Sakib <sakib.hossain@opentrons.com>",
-        "description": "Custom Protocol Request",
-        "protocolName": "Standard Curve Dilutions with CSV File"
+      ],
+      "type": "dropDown"
     },
-    "modules": []
+    {
+      "default": "Stock1 Conc.,12120000,ng/ml,,,,,,,\nInts,Source starting Conc./Source name,,Source Vol (uL),Diluent vol (uL),Final Con (ng/ml),Final Vol (uL),Fold Dil of Source,,\n,,,,,,,,,\nInt1,12120000,stock1,8.3,41.7,2000000,50,6.06,,\nInt2,2000000, Int1,12.5,37.5,500000,50,4,,\nInt3,500000, Int2,5.0,45.0,50000,50,10,,\nInt4,50000, Int3,25.0,25.0,25000,50,2,,\n,,,,,,,,,\nStandard Curve Dilutions from the diluted stock solution,,,,,,,,,\nStd #,Source starting Conc./Source Name,,Source Vol (uL),Diluent vol (uL),Final Con (ng/ml),Final Vol (uL),Fold Dil of source,,\n,,,,,,,,,\nStd1,25000.0,Int4,5,45,2500,50,10,,\nStd2,2500.0,Std1,12.5,37.5,625,50,4,,\nStd3,625.0,Std2,12.5,37.5,156.3,50,4,,\nStd4,156.3,Std3,12.5,37.5,39.1,50,4,,\nStd5,39.1,Std4,12.5,37.5,9.8,50,4,,\nStd6,9.8,Std5,12.5,37.5,2.4,50,4,,\nStd7,2.4,Std6,12.5,37.5,0.6,50,4,,\nStd8,0.6,Std7,12.5,37.5,0.15,50,4,,\nBlank (Std9),,,,50,,50.0,,,\nQC Samples ,,,,,,,,,\nQC1,25000,Int4,5.2,59.8,2000,65,12.5,,\nQC2,2000,QC1,5,45,200,50,10,,\nQC3,200,QC2,5,45,20,50,10,,\nQC4,20,QC3,5,45,2,50,10,,\n,,,,,,,,,",
+      "label": "First Curve CSV File",
+      "name": "csv_file_1",
+      "type": "textFile"
+    },
+    {
+      "default": ",,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n,,,,,,,,,\n",
+      "label": "Second Curve CSV File (Optional)",
+      "name": "csv_file_2",
+      "type": "textFile"
+    },
+    {
+      "default": 1000,
+      "label": "Diluent Tube(s) Volume (uL)",
+      "name": "diluent_vol",
+      "type": "float"
+    },
+    {
+      "default": 10,
+      "label": "Aspirate Flow Rate (uL/s)",
+      "name": "asp_speed",
+      "type": "float"
+    },
+    {
+      "default": 10,
+      "label": "Dispense Flow Rate (uL/s)",
+      "name": "disp_speed",
+      "type": "float"
+    },
+    {
+      "default": 10,
+      "label": "Air Gap Volume (uL)",
+      "name": "air_gap_vol",
+      "type": "float"
+    },
+    {
+      "default": 2,
+      "label": "Delay After Aspirate and Dispense (seconds)",
+      "name": "delay_time",
+      "type": "float"
+    }
+  ],
+  "instruments": [
+    {
+      "mount": "left",
+      "name": "p50_single"
+    }
+  ],
+  "labware": [
+    {
+      "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+      "share": false,
+      "slot": "1",
+      "type": "opentrons_96_tiprack_300ul"
+    },
+    {
+      "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
+      "share": false,
+      "slot": "2",
+      "type": "opentrons_96_tiprack_300ul"
+    },
+    {
+      "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 3",
+      "share": false,
+      "slot": "3",
+      "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+    },
+    {
+      "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 6",
+      "share": false,
+      "slot": "6",
+      "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+    },
+    {
+      "name": "Opentrons Fixed Trash on 12",
+      "share": false,
+      "slot": "12",
+      "type": "opentrons_1_trash_1100ml_fixed"
+    }
+  ],
+  "metadata": {
+    "apiLevel": "2.9",
+    "author": "Sakib <sakib.hossain@opentrons.com>",
+    "description": "Custom Protocol Request",
+    "protocolName": "Standard Curve Dilutions with CSV File"
+  },
+  "modules": []
 }

@@ -3,6 +3,8 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
+# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/customizable_serial_dilution_ot2). This page won’t be available after January 31st, 2024.
+
 ## Categories
 * Featured
     * Serial Dilution
@@ -16,17 +18,17 @@ With this protocol, you can do a simple serial dilution across a 96-well plate u
 
 ![serial dilution](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/Customizable+Serial+Dilution+Illustration+LATEST+VERSION.jpg)
 
-***Example Setup***
+Example Setup
 
-This protocol uses the inputs you define for "***Dilution Factor***" and "***Total Mixing Volume***" to automatically infer the necessary transfer volume for each dilution across your plate. For a 1 in 3 dilution series across an entire plate, as seen above:
+This protocol uses the inputs you define for "Dilution Factor" and "Total Mixing Volume" to automatically infer the necessary transfer volume for each dilution across your plate. For a 1 in 3 dilution series across an entire plate, as seen above:
 
 -- Start with your samples/reagents in Column 1 of your plate. In this example, you would pre-add 150 uL of concentrated sample to the first column of your 96-well plate.
 
--- Define a ***Total Mixing Volume*** of 150uL, a ***Dilution Factor*** of 3, and set ***Number of Dilutions*** = 11.
+-- Define a Total Mixing Volume of 150uL, a Dilution Factor of 3, and set Number of Dilutions = 11.
 
 -- Your OT-2 will add 100uL of diluent to each empty well in your plate. Then it will transfer 50uL from Column 1 between each well/column in the plate.
 
--- "***Total mixing volume***" = transfer volume + diluent volume.
+-- "Total mixing volume" = transfer volume + diluent volume.
 
 ---
 
@@ -52,13 +54,13 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 ## Process
 1. Choose the pipette you want to use from the dropdown menu above and which side it is installed on the OT-2
 2. Set your dilution factor.
-    ***Example:*** If you want a 1:2 ratio of sample to total reaction volume, you would set your dilution factor to 2.
+    Example: If you want a 1:2 ratio of sample to total reaction volume, you would set your dilution factor to 2.
 3. Set your number of dilutions (max is 11, 10 if using blank)
 4. Set your total mixing volume. (Total mixing volume = transfer volume + diluent volume). Be careful to make sure this number does not exceed the volume capacity of your plate. To see how this number is used, scroll to the example above.
 5. Set whether a blank will be made or not. The blank will be added to the first available column in the plate.
-    ***NOTE:*** 10 dilutions is the max allowed when using a blank
+    NOTE: 10 dilutions is the max allowed when using a blank
 6. Set your tip reuse strategy.
-    ***Note:*** This defaults to no tip changes; adjust only if you want to change tips between each well.
+    Note: This defaults to no tip changes; adjust only if you want to change tips between each well.
 7. Set your air gap, if desired. This will add a specified amount of air into the tip after aspiration
 8. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
 9. Upload into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!

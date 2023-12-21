@@ -3,6 +3,9 @@
 ### Author
 [Opentrons](http://www.opentrons.com/)
 
+
+# Opentrons has launched a new Protocol Library. This page won’t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.
+
 ## Categories
 * Proteins & Proteomics
     * ELISA
@@ -25,7 +28,7 @@ You will need:
 * P300 Single-channel Pipette
 * [Opentrons Tube Racks (2 mL Eppendorf)](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * [Opentrons Tube Rack (15 + 50 mL)](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [2 mL 96-deep well Plate](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
+* NEST 2 mL 96-deep well Plate
 * 96-well Plate
 * 12-row Trough
 * 1000 uL Tip Rack

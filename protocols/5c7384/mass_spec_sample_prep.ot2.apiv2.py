@@ -131,7 +131,7 @@ alkylation.')
         _pick_up(p20)
         p20.transfer(15, a, s, mix_after=(2, 20),
                      new_tip='never')
-        p20.drop_tip(tips20[0].wells()[i])
+        p20.return_tip()
 
     ctx.pause('Please move plate from thermocycler to magnetic module. Resume \
 when the plate has been moved.')
@@ -152,7 +152,7 @@ when the plate has been moved.')
         for i, (m, e) in enumerate(zip(mag_samples, etoh)):
             _pick_up(p300)
             p300.transfer(200, e, m, mix_after=(10, 50), new_tip='never')
-            p300.drop_tip(tips300[0].wells()[i])
+            p300.return_tip()
 
         magdeck.engage()
         ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
@@ -160,7 +160,7 @@ when the plate has been moved.')
         for i, m in enumerate(mag_samples):
             _pick_up(p300)
             p300.transfer(230, m.bottom(1), waste, new_tip='never')
-            p300.drop_tip(tips300[0].wells()[i])
+            p300.return_tip()
 
         ctx.pause('Please replace the ethanol plate (slot 6) with a fresh \
 plate of ethanol before resuming.')
@@ -170,15 +170,17 @@ plate of ethanol before resuming.')
     for i, (m, a) in enumerate(zip(mag_samples, acetonitrile)):
         _pick_up(p300, tips300[0].wells()[i])
         p300.transfer(171.5, a, m, mix_after=(10, 50), new_tip='never')
-        p300.drop_tip(tips300[0].wells()[i])
+        p300.return_tip()
 
     magdeck.engage()
-    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
+    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes')
 
     for i, m in enumerate(mag_samples):
         _pick_up(p300, tips300[0].wells()[i])
         p300.transfer(230, m.bottom(1), waste, new_tip='never')
         p300.drop_tip()
+
+    ctx.pause('Place plate in thermocycler')
 
     """ On-Bead Digestion """
     if p300.channels == 1:

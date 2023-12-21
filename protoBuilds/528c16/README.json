@@ -1,16 +1,16 @@
 {
-    "author": "Opentrons",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "Sample Prep": [
             "Plate Filling"
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.\nExplanation of complex parameters below:\n* csv file: The csv file should be formatted like so. Note - for no mix steps, input \"0\" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:\n\n* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.\n* P20/P1000 Mount: Specify which mount (left or right) for each single channel pipette.\n",
+    "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.\nExplanation of complex parameters below:\n* csv file: The csv file should be formatted like so. Note - for no mix steps, input \"0\" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:\n\n Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.\n P20/P1000 Mount: Specify which mount (left or right) for each single channel pipette.\n",
     "internal": "528c16",
     "labware": "\nOpentrons 4-in-1 tube rack with 50mL & 15mL Falcon tubes\nOpentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes\nOpentrons 1000ul tips\nOpentrons 20ul tips\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-14+at+9.46.44+AM.png)\n\n---\n\n",
         "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.\n\n\nExplanation of complex parameters below:\n* `csv file`: The csv file should be formatted like so. Note - for no mix steps, input \"0\" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:\n\n![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+1.52.52+PM.png)\n* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.\n* `P20/P1000 Mount`: Specify which mount (left or right) for each single channel pipette.\n\n---\n\n",
