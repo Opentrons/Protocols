@@ -92,13 +92,6 @@ def run(ctx):
     Create and plate standards
     """
     # single tip with P300
-    default_current = 0.8
-    current_modifier = 1/8
-    current = default_current*current_modifier
-    ctx._hw_manager.hardware._attached_instruments[
-        m300._implementation.get_mount()
-        ].update_config_item('pick_up_current', current)
-
     tips_standard_dilution = m300.tip_racks[-1].rows()[-1]
     standard_dest_sets = [col[:3] for col in assay_plate.columns()]
     standard_dil_vols = [1000]*3 + [500]*8
@@ -171,11 +164,6 @@ def run(ctx):
     """
     Dilute and transfer samples to assay plate
     """
-    current_modifier = 5/8
-    current = default_current*current_modifier
-    ctx._hw_manager.hardware._attached_instruments[
-        m300._implementation.get_mount()
-        ].update_config_item('pick_up_current', current)
 
     if DROP:
         tips_sample_transfer = m300.tip_racks[-1].rows()[1]
