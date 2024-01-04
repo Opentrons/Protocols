@@ -46,6 +46,16 @@
 
   {
     "type": "dropDown",
+    "label": "Do you require user input pauses to add and remove plate lid for heating step?",
+    "name": "user_input_pause",
+    "options": [
+      {"label": "Yes", "value": true},
+      {"label": "No", "value": false}
+    ]
+  },
+
+  {
+    "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "m300_mount",
     "options": [

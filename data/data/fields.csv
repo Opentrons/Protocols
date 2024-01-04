@@ -1614,6 +1614,7 @@ use_tuberack_a,1
 use_tuberack_b,1
 user_enzyme_volume,1
 user_enzyme_well,1
+user_input_pause,1
 using_magdeck,1
 using_tempdeck,4
 v_0_tube,1
