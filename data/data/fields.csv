@@ -112,7 +112,7 @@ bead_asp_rate_multiplier,1
 bead_clean_up,2
 bead_delay_time,1
 bead_disp_rate_multiplier,1
-bead_dry_time,5
+bead_dry_time,6
 bead_dry_time_nuc_water,1
 bead_incubation_time_in_minutes,2
 bead_loc,1
@@ -725,8 +725,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,79
-m300_mount,108
+m20_mount,80
+m300_mount,110
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -884,7 +884,7 @@ num_384_cols,1
 num_aliquots,1
 num_antibodies,1
 num_cell_lines,2
-num_col,8
+num_col,10
 num_cols,3
 num_columns,1
 num_curves,1
@@ -1614,6 +1614,7 @@ use_tuberack_a,1
 use_tuberack_b,1
 user_enzyme_volume,1
 user_enzyme_well,1
+user_input_pause,1
 using_magdeck,1
 using_tempdeck,4
 v_0_tube,1
