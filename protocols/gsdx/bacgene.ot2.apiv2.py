@@ -132,7 +132,7 @@ exceeds plate capacity')
         enzyme_listeria_2_liq = ctx.define_liquid(
             name="listeria enzyme 2",
             description="",
-            display_color="#000fde",
+            display_color="#ffa500",
         )
         enzyme_salmonella_liq = ctx.define_liquid(
             name="salmonella enzyme",
