@@ -3,7 +3,7 @@
 ### Author
 [Opentrons (verified)](https://opentrons.com/)
 
-# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/pcr_prep_part_1). This page won’t be available after January 31st, 2024.
+# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](https://library.opentrons.com/p/pcr_prep_part_1). This page won’t be available after January 31st, 2024.
 
 ## Categories
 * PCR
