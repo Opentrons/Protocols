@@ -1,0 +1,34 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs a post-amplification 1X Purification using AMPure Beads. For detailed protocol steps, please see below.",
+    "internal": "kapa-amp-cleanup",
+    "labware": "\nAgilent 96 Well Plate 270 \u00b5L\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nNEST 12 Well Reservoir 15 mL #360102\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/kapa-qubit/CLEANUP.png)\n\n\n\n",
+        "description": "This protocol performs a post-amplification 1X Purification using AMPure Beads. For detailed protocol steps, please see below.\n\n\n",
+        "internal": "kapa-amp-cleanup\n",
+        "labware": "* Agilent 96 Well Plate 270 \u00b5L\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",
+        "modules": "* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/magnetic-module-gen2/)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Premix beads, 200ul, 15-20x\n2. Add 90ul (50ul sample in there), Mix at 110ul, 7-10x\n3. 5 minute incubation\n4. Engage magnet, delay 3 minutes\n5. Remove 140ul supernatant into waste. Go down again.\n6. 200ul ethanol washes x2. Use one set of tips to add ethanol from top of the well.\n7. 2-3 minute dry time.\n8. Disengage magnet\n9. Resuspend beads with eb, mix 20 times, aspirate low dispense high, default flow rate.\n10. Incubate 2 minutes.\n11. Engage magnet\n12. 20ul to pcr strip tube plate\n\n\n\n",
+        "title": "Kapa Bead Clean Up"
+    },
+    "modules": [
+        "Opentrons Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nPremix beads, 200ul, 15-20x\nAdd 90ul (50ul sample in there), Mix at 110ul, 7-10x\n5 minute incubation\nEngage magnet, delay 3 minutes\nRemove 140ul supernatant into waste. Go down again.\n200ul ethanol washes x2. Use one set of tips to add ethanol from top of the well.\n2-3 minute dry time.\nDisengage magnet\nResuspend beads with eb, mix 20 times, aspirate low dispense high, default flow rate.\nIncubate 2 minutes.\nEngage magnet\n20ul to pcr strip tube plate\n",
+    "title": "Kapa Bead Clean Up"
+}

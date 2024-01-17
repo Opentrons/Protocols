@@ -270,12 +270,19 @@ def run(ctx):
     m300.drop_tip()
 
     try:
-        ctx.pause('Place lid on plate on heater shaker')
-        heater_shaker.set_and_wait_for_temperature(37)
-        ctx.delay(minutes=10)
-        heater_shaker.deactivate_heater()
-        ctx.delay(minutes=5)
-        ctx.pause('Remove lid on plate on heater shaker')
+        if user_input_pause:
+            ctx.pause('Place lid on plate on heater shaker')
+            heater_shaker.set_and_wait_for_temperature(37)
+            ctx.delay(minutes=10)
+            heater_shaker.deactivate_heater()
+            ctx.delay(minutes=5)
+            ctx.pause('Remove lid on plate on heater shaker')
+        else:
+            heater_shaker.set_and_wait_for_temperature(37)
+            ctx.delay(minutes=10)
+            heater_shaker.deactivate_heater()
+            ctx.delay(minutes=5)
+
     except:
         ctx.delay(minutes=10)
 
