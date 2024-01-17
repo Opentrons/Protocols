@@ -3,7 +3,7 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](library.opentrons.com/p/illumina-nextera-xt-library-prep-part2). This page won’t be available after January 31st, 2024.
+# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](https://library.opentrons.com/p/illumina-nextera-xt-library-prep-part2). This page won’t be available after March 31st, 2024.
 
 ## Categories
 * Featured
