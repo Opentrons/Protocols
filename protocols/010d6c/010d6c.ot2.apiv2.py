@@ -1,10 +1,5 @@
 # flake8: noqa
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv_samp":"source slot,source well,dest well\\n8,A1,A4\\n8,A1,A5","plate_standard":true,"diluent_buff_col":1,"duplicate_plating":true,"user_input_pause":true,"m300_mount":"right","p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'Ribogreen Assay',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -15,28 +10,28 @@ metadata = {
 
 def run(ctx):
 
-    # [csv_samp, plate_standard, diluent_buff_col,
-    #     duplicate_plating, user_input_pause, m300_mount, p300_mount] = get_values(  # noqa: F821
-    #     "csv_samp", "plate_standard", "diluent_buff_col",
-    #         "duplicate_plating", "user_input_pause", "m300_mount", "p300_mount")
+    [csv_samp, plate_standard, diluent_buff_col,
+        duplicate_plating, user_input_pause, m300_mount, p300_mount] = get_values(  # noqa: F821
+        "csv_samp", "plate_standard", "diluent_buff_col",
+            "duplicate_plating", "user_input_pause", "m300_mount", "p300_mount")
 
-    p300_mount = 'left'
-    m300_mount = 'right'
-    plate_standard = True
-    diluent_buff_col = 4
-    duplicate_plating = False
-    csv_samp = """
+    # p300_mount = 'left'
+    # m300_mount = 'right'
+    # plate_standard = True
+    # diluent_buff_col = 4
+    # duplicate_plating = False
+    # csv_samp = """
 
 
-
-    source slot, source well, dest well
-    7, A1, A1
-    8, A1, A2
-    7, A3, A3
-
-    """
-
-    user_input_pause = True
+    #
+    # source slot, source well, dest well
+    # 7, A1, A1
+    # 8, A1, A2
+    # 7, A3, A3
+    #
+    # """
+    #
+    # user_input_pause = True
 
     def Transfer_With_TT(Pipette, Source, Destination, Vol, Dispense_Top):
         # Split transfer up to allow for more control over touch tip height

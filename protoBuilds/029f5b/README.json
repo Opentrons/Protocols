@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "SAMPLE PREP": [
             "Custom Sample Transfer"
@@ -10,7 +10,7 @@
     "internal": "029f5b",
     "labware": "\nAxygen 96well minitube system corning 96 wellplate 1320\u00b5L\nOpentrons 96 Tip Rack 300 \u00b5L\n[Opentrons Nest 1 well Reservoir 290 mL]\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* SAMPLE PREP\n\t* Custom Sample Transfer\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/029f5b/Layout.jpg)\n\n\n",
         "description": "With this Protocol you can add lysis buffer, chloroform, and wash with Isopropanol to samples. This protocol is set up to do 384 samples across 4 different plates.  \n\n\n",

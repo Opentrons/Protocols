@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/kapa-qubit/CLEANUP.png)\n\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/kapa-amp/Screen+Shot+2024-01-25+at+11.44.39+AM.png)\n\n\n\n",
         "description": "This protocol performs a post-amplification 1X Purification using AMPure Beads. For detailed protocol steps, please see below.\n\n\n",
         "internal": "kapa-amp-cleanup\n",
         "labware": "* Agilent 96 Well Plate 270 \u00b5L\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* Opentrons 96 Filter Tip Rack 200 \u00b5L\n\n\n",

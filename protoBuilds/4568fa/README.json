@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "Sample Prep": [
             "Normalization"
@@ -10,7 +10,7 @@
     "internal": "4568fa",
     "labware": "\nNEST 12 Well Reservoir 15 mL\nMicroAmp EnduraPlate Optical 96-Well Clear Reaction Plates with Barcode\nOpentrons 24 Tube Rack with Eppendorf 2 mL Snapcap Tubes or equivalent\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* Sample Prep\n    * Normalization\n\n",
         "deck-setup": "This example starting deck state shows the layout for 24 samples:  \n![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck4.png)\n\n* green on tuberacks: starting samples at various concentrations (specified in .csv file)\n* blue on reservoir A1: water\n* pink on reservoir A2: blank solution\n* orange on reservoir A11-A12: buffer for final plate (optional)\n* purple on tuberack B6-D6: HS diluent\n\n---\n\n",
         "description": "\nThis is a flexible normalization protocol a 2-fold dilution to an input desired concentration followed by sample aliquoting in triplicate. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template **including headers line**:\n\n```\nsample number,sample name,sample concentration (>0.25 mg/ml)\n1,007007009-403-1,1.569\n2,007007009-403-2,0.984\n3,007007009-403-3,2.128\n4,007007009-403-4,2.413\n5,007007009-403-5,2.303\n6,007007009-403-6,1.541\n7,007007009-403-7,2.404\n8,007007009-403-8,2.352\n9,007007009-403-9,2.763\n10,007007009-403-10,1.763\n11,007007009-403-11,2.094\n12,007007009-403-12,0.906\n13,007007009-403-13,0.715\n```\n\nYou can also access this template for download [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/ex.csv)\n\n---\n\n",
