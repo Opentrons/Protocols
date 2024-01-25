@@ -30,7 +30,7 @@ This protocol performs a post-amplification 1X Purification using AMPure Beads. 
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/kapa-qubit/CLEANUP.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/kapa-amp/Screen+Shot+2024-01-25+at+11.44.39+AM.png)
 
 
 

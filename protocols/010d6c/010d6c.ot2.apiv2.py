@@ -1,5 +1,10 @@
 # flake8: noqa
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":"source slot,source well,dest well\\n8,A1,A4\\n8,A1,A5","plate_standard":true,"diluent_buff_col":1,"duplicate_plating":true,"user_input_pause":true,"m300_mount":"right","p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'Ribogreen Assay',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -10,24 +15,28 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp, plate_standard, diluent_buff_col,
-        duplicate_plating, m300_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp", "plate_standard", "diluent_buff_col",
-            "duplicate_plating", "m300_mount", "p300_mount")
+    # [csv_samp, plate_standard, diluent_buff_col,
+    #     duplicate_plating, user_input_pause, m300_mount, p300_mount] = get_values(  # noqa: F821
+    #     "csv_samp", "plate_standard", "diluent_buff_col",
+    #         "duplicate_plating", "user_input_pause", "m300_mount", "p300_mount")
 
-    # p300_mount = 'left'
-    # m300_mount = 'right'
-    # plate_standard = True
-    # diluent_buff_col = 4
-    # duplicate_plating = False
-    # csv_samp = """
-    #
-    # source slot, source well, dest well
-    # 7, A1, A1
-    # 8, A1, A2
-    # 7, A3, A3
-    #
-    # """
+    p300_mount = 'left'
+    m300_mount = 'right'
+    plate_standard = True
+    diluent_buff_col = 4
+    duplicate_plating = False
+    csv_samp = """
+
+
+
+    source slot, source well, dest well
+    7, A1, A1
+    8, A1, A2
+    7, A3, A3
+
+    """
+
+    user_input_pause = True
 
     def Transfer_With_TT(Pipette, Source, Destination, Vol, Dispense_Top):
         # Split transfer up to allow for more control over touch tip height
@@ -169,7 +178,7 @@ def run(ctx):
         m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
-            m300.dispense(50, well.bottom(z = 3))
+            m300.dispense(50, well.bottom(z = 4))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
@@ -191,13 +200,14 @@ def run(ctx):
         m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
-            m300.dispense(50, well.bottom(z = 3))
+            m300.dispense(50, well.bottom(z = 4))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
             m300.touch_tip(v_offset=1)
 
         m300.drop_tip()
+
 
     ctx.comment('\n------------ADDING SAMPLE------------\n\n')
 
@@ -216,11 +226,19 @@ def run(ctx):
 
         # Only pick up tip and aspirate if start of new replicate batch
         if index%reps == 0:
-            p300.pick_up_tip()
-            p300.mix(1, 50*reps, source_well.bottom(z = 4)) # Added in pre-wet
-            p300.aspirate(50*reps, source_well.bottom(z = 4))
-            p300.move_to(source_well.top(-3))
-            p300.touch_tip(v_offset=1)
+            if csv_slot == 8:  # DIFFERENT Z HEIGHTS DEPENDING ON SLOT
+                print('going to 2mL on 8')
+                p300.pick_up_tip()
+                p300.mix(1, 50*reps, source_well.bottom(z = 4))
+                p300.aspirate(50*reps, source_well.bottom(z = 4))
+                p300.move_to(source_well.top(-3))
+                p300.touch_tip(v_offset=1)
+            elif csv_slot == 7:
+                print('going to 5mL on 7')
+                p300.mix(1, 50*reps, source_well.bottom(z=1)) # CHANGED ASPIRATION HEIGHT BACK TO DEFAULT FOR 5ML TUBES
+                p300.aspirate(50*reps, source_well.bottom(z=1))
+                p300.move_to(source_well.top(-3))
+                p300.touch_tip(v_offset=1)
 
         p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 3)) # Set z offset
         p300.move_to(hs_plate.wells_by_name()[dest_well].top(-3))
@@ -284,7 +302,7 @@ def run(ctx):
             ctx.delay(minutes=5)
 
     except:
-        ctx.delay(minutes=10)
+        ctx.pause('The protocol did not do the heater shaker steps - please cancel')
 
     ctx.comment('\n------------PLATING DYE------------\n\n')
 
