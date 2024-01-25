@@ -19,7 +19,7 @@ def run(ctx):
     # mag_mod = ctx.load_module('magnetic module gen2', 1)
     mag_stand = ctx.load_labware('genericmagnet_96_wellplate_1500ul', 1)
     mag_plate = ctx.load_labware('generic_96_wellplate_1500ul', 4)
-    # mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
+    # mag_plate = mag_mod.load_labware('nest_wellplate_100ul_pcr_full_skirt')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 3)
     elute_plate = ctx.load_labware('agilent_96_wellplate_270ul', 2)
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
