@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "Sample Prep": [
             "Plate Filling"
@@ -8,7 +8,7 @@
     "description": "Automates third JSON portion of protocol 7e4c3e\n\n\n\nOpentrons P300-multi channel electronic pipettes (GEN2)\nOpentrons 200ul Filter Tips\nBiorad hard shell 96 well PCR plates low-profile thin-wall skirted\nOpentrons Aluminum Block Set\n",
     "internal": "7e4c3e-3",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
         "description": "Automates third JSON portion of protocol [7e4c3e](https://docs.google.com/document/d/1odr2TfSuiJhDRY0qyfBs5fz-swU-nJTulUdvRRDV4ec/edit?ts=5fbbeb03)\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons P300-multi channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Biorad hard shell 96 well PCR plates low-profile thin-wall skirted](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)\n* [Opentrons Aluminum Block Set](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set)\n\n",
         "internal": "7e4c3e-3\n",

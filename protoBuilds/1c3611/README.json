@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "1c3611",
     "labware": "\nOpentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap\nCorning 384 Well Plate 112 \u00b5L Flat #3640\nBio-Rad 96 Well Plate 200 \u00b5L PCR #hsp9601\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1c3611/deck2.png)\n\n\n",
         "description": "This protocol performs a custom 384-well PCR preparation. The user has the option to enter the following parameters:\n* number of samples\n* volume of sample\n* number of mastermixes\n* volume of mastermix\n* number of replicates per sample + mastermix combination\n\nMastermixes should be pre-mixed and loaded into individual tubes as shown below. For efficiency, the mastermixes will first be plated from their source tubes into distribution columns using a single channel pipette, before being loaded into the 384-well plate with an 8-channel pipette.\n\nFor sample traceability, an output .csv file will be written to the robot's Jupyter notebook server for each protocol run. The user has the option to input a `run ID` to distinguish each run. To find these output files, please refer to [this support article](https://support.opentrons.com/s/article/Uploading-files-through-Jupyter-Notebook).\n\n\n",

@@ -14,7 +14,7 @@
         "internal": "[Link To Google Doc](https://docs.google.com/presentation/d/1T90uIaz3ci-UPK3x-OkrLX0x0_hDDQClusc5U2qAYWs/edit#slide=id.p7)",
         "modules": "* [MagDeck](https://shop.opentrons.com/collections/labware/products/magdeck)\n* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)\n* [HeatDeck](https://shop.opentrons.com/collections/labware/products/heat-deck)\n\n",
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.\n\n\n\n",
-        "partner": "[Stanford](https://www.stanford.edu/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "partner": "[Stanford](https://www.stanford.edu/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
         "process": "1. Suspendisse ultrices elit ex, sit amet porttitor justo convallis eget. Integer quis felis eleifend, venenatis.\n2. Sed ultricies lacus eu justo laoreet, sed maximus libero faucibus. Nulla sit amet imperdiet erat. Pellentesque ultrices, felis at auctor.\n\n\n",
         "reagents": "* [Reagent Name](url)\n* [Reagent Name](url)\n\n",
         "robot": "* [OT PRO](https://opentrons.com/ot-one-pro)\n* [OT Standard](https://opentrons.com/ot-one-standard)  \n* [OT Hood](https://opentrons.com/ot-one-hood) \n\n",
@@ -27,7 +27,7 @@
         "HeatDeck"
     ],
     "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.",
-    "partner": "Stanford\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "partner": "Stanford\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
     "process": "\nSuspendisse ultrices elit ex, sit amet porttitor justo convallis eget. Integer quis felis eleifend, venenatis.\nSed ultricies lacus eu justo laoreet, sed maximus libero faucibus. Nulla sit amet imperdiet erat. Pellentesque ultrices, felis at auctor.\n",
     "reagents": [
         "Reagent Name",

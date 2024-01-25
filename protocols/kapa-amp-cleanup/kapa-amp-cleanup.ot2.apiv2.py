@@ -16,8 +16,10 @@ def run(ctx):
     # m300_mount = 'left'
 
     # labware
-    mag_mod = ctx.load_module('magnetic module gen2', 1)
-    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
+    # mag_mod = ctx.load_module('magnetic module gen2', 1)
+    mag_stand = ctx.load_labware('genericmagnet_96_wellplate_1500ul', 1)
+    mag_plate = ctx.load_labware('generic_96_wellplate_1500ul', 4)
+    # mag_plate = mag_mod.load_labware('nest_wellplate_100ul_pcr_full_skirt')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 3)
     elute_plate = ctx.load_labware('agilent_96_wellplate_270ul', 2)
     tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
@@ -33,6 +35,7 @@ def run(ctx):
     trash = reservoir['A12'].top()
 
     sample_cols = mag_plate.rows()[0][:num_col]
+    sample_cols_stand = mag_stand.rows()[0][:num_col]
 
     def slow_tip_withdrawal(pipette, well_location, to_center=False):
         if pipette.mount == 'right':
@@ -61,12 +64,12 @@ def run(ctx):
 
     ctx.delay(minutes=5)
 
-    mag_mod.engage()
+    ctx.pause('Move plate to magnetic stand, then select resume')
 
     ctx.delay(minutes=3)
 
     ctx.comment('\n---------------REMOVING SUPER----------------\n\n')
-    for col in sample_cols:
+    for col in sample_cols_stand:
         m300.pick_up_tip()
         m300.aspirate(140, col, rate=0.1)
         m300.aspirate(20, col.bottom(z=0.6), rate=0.1)
@@ -77,7 +80,7 @@ def run(ctx):
     for _ in range(2):
 
         m300.pick_up_tip()
-        for col in sample_cols:
+        for col in sample_cols_stand:
             m300.aspirate(200, ethanol)
             slow_tip_withdrawal(m300, ethanol)
             m300.dispense(200, col.top())
@@ -86,7 +89,7 @@ def run(ctx):
 
         ctx.delay(seconds=30)
 
-        for col in sample_cols:
+        for col in sample_cols_stand:
             if not m300.has_tip:
                 m300.pick_up_tip()
             m300.aspirate(180, col, rate=0.1)
@@ -98,7 +101,7 @@ def run(ctx):
 
     ctx.delay(minutes=bead_dry_time)
 
-    mag_mod.disengage()
+    ctx.pause('Move magplate to slot 4, then select resume')
 
     ctx.comment('\n---------------Resuspend----------------\n\n')
     for col in sample_cols:
@@ -108,10 +111,10 @@ def run(ctx):
         m300.mix(15, 19, col.bottom(z=0.7))
         m300.drop_tip()
 
-    mag_mod.engage()
+    ctx.pause('Move plate to magnetic stand, then select resume')
     ctx.delay(minutes=3)
 
-    ctx.comment('\n---------------REMOVING SUPER----------------\n\n')
+    ctx.comment('\n---------------Transfer Elute----------------\n\n')
     for s, d in zip(sample_cols, elute_plate.rows()[0]):
         m300.pick_up_tip()
         m300.aspirate(20, s.bottom(z=0.7), rate=0.1)
