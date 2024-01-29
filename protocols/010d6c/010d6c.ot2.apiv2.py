@@ -221,23 +221,15 @@ def run(ctx):
 
         # Only pick up tip and aspirate if start of new replicate batch
         if index%reps == 0:
-            if csv_slot == 8:  # DIFFERENT Z HEIGHTS DEPENDING ON SLOT
-                print('going to 2mL on 8')
-                p300.pick_up_tip()
-                p300.mix(1, 50*reps, source_well.bottom(z = 4))
-                p300.aspirate(50*reps, source_well.bottom(z = 4))
-                p300.move_to(source_well.top(-3))
-                p300.touch_tip(v_offset=1)
-            elif csv_slot == 7:
-                print('going to 5mL on 7')
-                p300.mix(1, 50*reps, source_well.bottom(z=1)) # CHANGED ASPIRATION HEIGHT BACK TO DEFAULT FOR 5ML TUBES
-                p300.aspirate(50*reps, source_well.bottom(z=1))
-                p300.move_to(source_well.top(-3))
-                p300.touch_tip(v_offset=1)
+            p300.pick_up_tip()
+            p300.mix(1, 50*reps, source_well.bottom(z = 4)) # Added in pre-wet
+            p300.aspirate(50*reps, source_well.bottom(z = 4))
+            p300.move_to(source_well.top(-3))
+            p300.touch_tip()
 
-        p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 3)) # Set z offset
+        p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 4)) # Set z offset
         p300.move_to(hs_plate.wells_by_name()[dest_well].top(-3))
-        p300.touch_tip(v_offset=1)
+        p300.touch_tip()
 
         # Only drop up tip if end of new replicate batch
         if index%reps == reps - 1:
