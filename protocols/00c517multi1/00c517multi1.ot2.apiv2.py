@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'VIB UGENT - Multi-channel Workflow Part 1',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.15'
+    'apiLevel': '2.13'
 }
 
 
@@ -24,14 +24,14 @@ def run(ctx):
     reagent_plate = ctx.load_labware('nest_12_reservoir_15ml', 4)
     # agilent_500 = [ctx.load_labware('agilent_96_wellplate_500ul', slot)
     #                for slot in [7, 8, 9, 11]]
-    try:
+    if not ctx.is_simulating:
         hs_mod = ctx.load_module('heaterShakerModuleV1', 10)
         hs_plate = hs_mod.load_labware('agilent_96_wellplate_1400ul')
         hs_mod.close_labware_latch()
-    except ValueError:
+    else:
         hs_plate = ctx.load_labware('agilent_96_wellplate_1400ul', 10)
         hs_plate = hs_plate
-    tips20 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+    tips20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
               for slot in [5]]
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in [6]]
@@ -64,26 +64,39 @@ def run(ctx):
         m20.dispense(7, col)
         m20.mix(3, 20, col)
         m20.drop_tip()
-
     # step 30
+
     if not test_mode:
-        hs_mod.set_and_wait_for_temperature(95)
+        if not ctx.is_simulating:
+            hs_mod.set_and_wait_for_temperature(95)
     else:
         ctx.comment('skipping temperature to 95 for test mode')
-    hs_mod.open_labware_latch()
+
+    if not ctx.is_simulating:
+        hs_mod.open_labware_latch()
+
     ctx.pause('''
                  Wrap plate with tin foil and transfer plate to heater-shaker
                  at 95°C. Incubate for 10 min on heater-shaker.
                  TCEP/CAA can be removed from slot 1
     ''')
-    hs_mod.close_labware_latch()
-    hs_mod.set_and_wait_for_shake_speed(750)
+
+    try:
+
+        hs_mod.close_labware_latch()
+        hs_mod.set_and_wait_for_shake_speed(750)
+    except UnboundLocalError:
+        pass
+
     if not test_mode:
         ctx.delay(minutes=10)
     else:
         ctx.comment('skipping 10 minute delay for test mode')
-    hs_mod.deactivate_heater()
-    hs_mod.deactivate_shaker()
+    try:
+        hs_mod.deactivate_heater()
+        hs_mod.deactivate_shaker()
+    except UnboundLocalError:
+        pass
 
     ctx.pause('''
     Put plate containing reduced and alkylated samples on ice for 1 min.

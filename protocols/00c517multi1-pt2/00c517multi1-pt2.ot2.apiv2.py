@@ -112,7 +112,7 @@ def run(ctx):
                    )):
         pick_up_c18()
         for _ in range(3):
-            m300.aspirate(100, equil_buffer[0 if i < 6 else 1], rate=0.2)  # ONE COLUMN PER 6 SAMPLES
+            m300.aspirate(100, equil_buffer[0 if i < 6 else 1], rate=0.2)
             m300.dispense(100, waste.top())
 
         for _ in range(5):
