@@ -1,32 +1,28 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Broad Category": [
-            "Specific Category"
+        "Sample Prep": [
+            "Plate Filling"
         ]
     },
     "deck-setup": "",
-    "description": "This protocol does stuff!",
+    "description": "This protocol performs steps 41.2-end of this SOP. One reservoir well of wash buffer should be used for each column of samples. One equilibration buffer reservoir well is used per 6 columns of sample. One elution buffer reservoir well is used per elution buffer plate.",
     "internal": "00c517multi1-pt2",
     "labware": "\nAgilent 96 C18 OMIX 200 \u00b5l #C18_OMIX_200uL\n3DPrint 96 Tube Rack with Nippon 0.2 mL #U0014\nAgilent 96 Well Plate 1200 \u00b5L #round well\nProtifi_S-trap 96 Well Plate 400 \u00b5L #S-trap\nAgilent 96 Well Plate 500 \u00b5L #5042-1385\nAgilent 96 Well Plate 1400 \u00b5L #204355-100\nNEST 12 Well Reservoir 15 mL #360102\nNEST 1 Well Reservoir 195 mL #360103\nOpentrons 96 Tip Rack 300 \u00b5L\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
-        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
-        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1-pt2/deck.png)\n\n\n",
-        "description": "This protocol does stuff!\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/pt2.png)\n\n\n\n\n",
+        "description": "[This protocol performs steps 41.2-end of this SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/VIB-UGENT_Customized_protocol_S-trap_steps_Multi.xlsx). One reservoir well of wash buffer should be used for each column of samples. One equilibration buffer reservoir well is used per 6 columns of sample. One elution buffer reservoir well is used per elution buffer plate.\n\n\n",
         "internal": "00c517multi1-pt2\n",
         "labware": "* Agilent 96 C18 OMIX 200 \u00b5l #C18_OMIX_200uL\n* 3DPrint 96 Tube Rack with Nippon 0.2 mL #U0014\n* Agilent 96 Well Plate 1200 \u00b5L #round well\n* Protifi_S-trap 96 Well Plate 400 \u00b5L #S-trap\n* Agilent 96 Well Plate 500 \u00b5L #5042-1385\n* Agilent 96 Well Plate 1400 \u00b5L #204355-100\n* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
         "pipettes": "* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
-        "protocol-steps": "1. Step 1...\n\n\n",
-        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1-pt2/reagents.png)\n\n\n",
         "title": "VIB UGENT - Multi-channel Workflow Part 2"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8 Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
-    "protocol-steps": "\nStep 1...\n",
-    "reagent-setup": "",
     "title": "VIB UGENT - Multi-channel Workflow Part 2"
 }

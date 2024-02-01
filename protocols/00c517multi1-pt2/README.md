@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+[This protocol performs steps 41.2-end of this SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/VIB-UGENT_Customized_protocol_S-trap_steps_Multi.xlsx). One reservoir well of wash buffer should be used for each column of samples. One equilibration buffer reservoir well is used per 6 columns of sample. One elution buffer reservoir well is used per elution buffer plate.
 
 
 ### Labware
@@ -31,15 +31,9 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1-pt2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/pt2.png)
 
 
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1-pt2/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process

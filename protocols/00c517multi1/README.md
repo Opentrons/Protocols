@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+[This protocol performs steps 23-41.1 of this SOP](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/VIB-UGENT_Customized_protocol_S-trap_steps_Multi.xlsx)
 
 
 ### Labware
@@ -32,15 +32,9 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517-multi/pt1.png)
 
 
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00c517multi1/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
