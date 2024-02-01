@@ -725,8 +725,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,80
-m300_mount,110
+m20_mount,81
+m300_mount,112
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -910,7 +910,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,71
+num_samp,73
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -1471,7 +1471,7 @@ temperature2,1
 tempgen,1
 template_vol,1
 test_method,1
-test_mode,1
+test_mode,2
 test_mode_beads,1
 test_plates,1
 tfa_540,1
