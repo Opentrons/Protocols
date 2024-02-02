@@ -1,0 +1,32 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Broad Category": [
+            "Specific Category"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol does stuff!",
+    "internal": "019968",
+    "labware": "\nWaters 48 Tube Rack with ThermoFisher 0.3 mL #700011047\nOpentrons 24 Well Aluminum Block with Generic 2 mL Screwcap\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Tip Rack 1000 \u00b5L\nOpentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* Broad Category\n\t* Specific Category\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019968/deck.png)\n\n\n",
+        "description": "This protocol does stuff!\n\n\n",
+        "internal": "019968\n",
+        "labware": "* Waters 48 Tube Rack with ThermoFisher 0.3 mL #700011047\n* [Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 96 Tip Rack 1000 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)\n* [Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P1000 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Step 1...\n\n\n",
+        "reagent-setup": "![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019968/reagents.png)\n\n\n",
+        "title": "Methanol Dilution for LCMS Analysis"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P1000 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nStep 1...\n",
+    "reagent-setup": "",
+    "title": "Methanol Dilution for LCMS Analysis"
+}
