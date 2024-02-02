@@ -29,7 +29,7 @@ def run(ctx):
     # labware
     if single_dilution:
         waters_racks = [
-                       ctx.load_labware('opentrons_24_aluminumblock_generic_2ml_screwcap',  # change this
+                       ctx.load_labware('waters_48_tuberack_300ul',  # change this
                                         slot) for slot in [1, 2]]
 
         aluminum_racks = [

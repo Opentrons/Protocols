@@ -6,12 +6,12 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol either perfors single, or double dilution of sample with methanol and standard for LCMS analysis. For more details, please see below.
 
 
 ### Labware
@@ -28,15 +28,10 @@ This protocol does stuff!
 
 
 ### Deck Setup
+
+* This is the single dilution deck setup. For the double dilution workflow, replace the waters 48 racks on slots 1 and 2 with Opentrons 24 tuberack aluminum as seen in slots 4 and 5.
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019968/deck.png)
 
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019968/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
