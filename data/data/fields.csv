@@ -548,7 +548,7 @@ include_mastermix_step,1
 include_moving_fresh_plate,1
 include_multi,1
 include_ntc,2
-include_pause,1
+include_pause,2
 include_sample_step,1
 include_standards_only,1
 include_wash1,1
@@ -580,7 +580,9 @@ init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,2
+init_vol_meth,1
 init_vol_sds,2
+init_vol_standard,1
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
@@ -910,7 +912,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,73
+num_samp,74
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -967,7 +969,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,36
+p1000_mount,37
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -1003,7 +1005,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,156
+p300_mount,157
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1329,6 +1331,7 @@ shake_well,1
 side_x_radius,1
 single_channel_mount,1
 single_channel_type,1
+single_dilution,1
 single_pip_info,1
 size,1
 size_select,1
