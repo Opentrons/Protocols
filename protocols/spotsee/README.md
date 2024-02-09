@@ -6,16 +6,16 @@
 
 
 ## Categories
-* Broad Category
-	* Specific Category
+* Sample Prep
+	* Plate Filling
 
 
 ## Description
-This protocol does stuff!
+This protocol will add a specified amount of liquid to determined wells in a custom 80 well plate.
 
 
 ### Labware
-* 80 Well Plate
+* Custom 80 Well Plate
 * [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)
 * Opentrons 96 Filter Tip Rack 20 µL
 
@@ -25,15 +25,8 @@ This protocol does stuff!
 
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/spotsee/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/spotsee/Screen+Shot+2024-02-09+at+1.06.24+PM.png)
 
-
-### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/spotsee/reagents.png)
-
-
-### Protocol Steps
-1. Step 1...
 
 
 ### Process
