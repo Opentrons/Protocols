@@ -8,7 +8,7 @@ metadata = {
 
 def run(ctx):
 
-    [vol, pip, p20_mount, p300_mount] = get_values(  # noqa: F821
+    [vol, p20_mount, p300_mount] = get_values(  # noqa: F821
         "vol", "p20_mount", "p300_mount")
 
     # p20_mount = 'left'
