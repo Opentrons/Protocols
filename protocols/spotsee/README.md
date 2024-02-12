@@ -11,7 +11,7 @@
 
 
 ## Description
-This protocol will add a specified amount of liquid to determined wells in a custom 80 well plate.
+This protocol will add a specified amount of liquid to determined wells in a custom 80 well plate. If the volume is less than 20, the pipette selected will be a P20 single-channel pipette, otherwise, if the volume is greater than 20ul, then the pipette selected will be a P300 single-channel pipette. Please match the correct pipette with the tips loaded. 
 
 
 ### Labware
