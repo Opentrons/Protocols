@@ -8,16 +8,18 @@ metadata = {
 
 def run(ctx):
 
-    [vol, p20_mount] = get_values(  # noqa: F821
-        "vol", "p20_mount")
+    [vol, pip, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "vol", "p20_mount", "p300_mount")
 
     # p20_mount = 'left'
-    # vol = 15
+    # vol = 25
+    # p300_mount = 'right'
 
     # labware
+
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', 10)
     plate = ctx.load_labware('80_well_plate', 1)
-    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul' if vol < 20 else 'opentrons_96_tiprack_300ul', slot)  # noqa: E501
             for slot in [11]]
 
     red_wells = [
@@ -33,15 +35,21 @@ def run(ctx):
 
     # pipettes
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
+    pip = p20 if vol < 20 else p300
 
     # mapping
     buffer = reservoir.wells()[0]
 
     # protocol
     ctx.comment('\n---------------ADDING BUFFER TO PLATE----------------\n\n')
+    num_asp = pip.max_volume // vol
+    chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
+              num_asp)]
 
-    p20.pick_up_tip()
-    for well in red_wells:
-        p20.aspirate(vol, buffer)
-        p20.dispense(vol, plate.wells_by_name()[well])
-    p20.drop_tip()
+    pip.pick_up_tip()
+    for chunk in chunks:
+        pip.aspirate(num_asp*vol, buffer)
+        for well in chunk:
+            pip.dispense(vol, plate.wells_by_name()[well])
+    pip.drop_tip()
