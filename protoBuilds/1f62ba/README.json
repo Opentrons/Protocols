@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "1f62ba",
     "labware": "\nNest 12-well reservoir, 15mL\n20ul Filter Tips\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
         "deck-setup": "![deck layout]()\n\n\n---\n\n",
         "description": "This protocol preps one PCR plate with DNA, water, primer letter, primer number, and Kappa enzyme. New tips are granted for DNA and primers, whereas just one column of tips is used for the Kappa enzyme and water, respectively. The water is added via multi-dispensing.\n\n\nExplanation of complex parameters below:\n* `Number of Columns`: Specify the number of DNA columns for this protocol.\n* `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 multi-channel pipette.\n\n---\n\n",

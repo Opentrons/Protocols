@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "qPCR setup"
@@ -8,7 +8,7 @@
     "description": "This protocol automates the setup of a qPCR reaction using the Opentrons robots. It scales with quantity of samples, but has a practical lower limit of 24 samples. This is a pythonized version of a Protocol Designer protocol.\n\n\n\nOpentrons P300-single channel electronic pipettes (GEN2)\nOpentrons P20-multi channel electronic pipettes (GEN2)\nOpentrons 20ul Filter Tips\nOpentrons 200ul Filter Tips\nOpentrons Aluminum Block Set\n",
     "internal": "0a23c6",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* PCR\n\t* qPCR setup\n\n",
         "description": "This protocol automates the setup of a qPCR reaction using the Opentrons robots. It scales with quantity of samples, but has a practical lower limit of 24 samples. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2020-09-21/tm23shu/Full%20PCR%20Plate%20with%20Master%20Mix%20.json).\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons P300-single channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)\n* [Opentrons P20-multi channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n* [Opentrons 20ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Opentrons Aluminum Block Set](https://shop.opentrons.com/products/aluminum-block-set)\n\n",
         "internal": "0a23c6\n",

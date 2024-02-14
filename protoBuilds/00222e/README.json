@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Serial Dilution and Screening"
@@ -10,7 +10,7 @@
     "internal": "00222e",
     "labware": "\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\nOpentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical\nOpentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* Sample Prep\n\t* Serial Dilution and Screening\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/00222e/deck.png)\n\n\n",
         "description": "This protocol adds a serially diluted stock solution to 12 plasma filled vials. The serial dilution can be toggled on and off in the variables. This protocol also predicts diluent and plasma height based on known labware dimensions. The initial liquid level needs to be specified for this to be accurate.\n\n\n",

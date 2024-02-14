@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Plate Filling"
@@ -10,7 +10,7 @@
     "internal": "30450c-part-2",
     "labware": "\nOpentrons Tips for the p300 and p20 (https://shop.opentrons.com)\nNest 195 mL Reservoir\nCorning 96 Well Plate 360 \u00b5L Flat\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/screenshot2-deck.png)\n</br>\n</br>\n**Slots 1-5**: ELISA plates </br>\n**Slot 7**: Reagent Reservoir (195 mL Nest reservoir) </br>\n![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/screenshot2-reservoir.png)\n</br>\n</br>\n**Slot 8**: Sample Plate (96-Well PCR plate) </br>\n![sample plate layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/screenshot2-sampleplate.png)\n</br>\n</br>\n**Slot 9**: Empty Opentrons 300 uL tip box </br>\n**Slot 10**: Opentrons 20 uL tips </br>\n**Slot 11**: Opentrons 300 uL tips </br>\n\n\n---\n\n",
         "description": "This protocol uses 8-channel P300 and p20 pipettes to transfer samples and standard dilutions to a batch of 1-5 ELISA plates for the attached BioLegend Human IL-2 ELISA. User-determined parameters are available to specify the number of ELISA plates (1-5), to include or not include a tip touch following dispenses, the aspiration position in the large reservoir (in millimeters above the labware bottom), and to automate or not automate the placement and replenishment of tips in row H of the empty tip box in slot 9 (these tips will be used to transfer standard from row H of the sample plate to row H of the ELISA plate).\n\nLinks:\n* [BioLegend Human IL-2 ELISA MAX Deluxe Set - user manual](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/431804_R7_Human_IL-2_Deluxe+1.pdf)\n\n\n---\n\n\n\n",
