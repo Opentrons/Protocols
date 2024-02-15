@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "NGS LIBRARY PREP": [
             "Custom"
@@ -10,7 +10,7 @@
     "internal": "onsite-circlelabs",
     "labware": "\nBulldog 96 Aluminum Block 200 \u00b5L\nFisher 96 Aluminum Block 200 \u00b5L\nBulldog 96 Well Plate 200 \u00b5L\nFisher 96 Well Plate 200 \u00b5L\nNEST 12 Well Reservoir 15 mL #360102\nNEST 96 Deepwell Plate 2mL #503001\nOpentrons 24 Well Aluminum Block with NEST 2 mL Snapcap\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Tip Rack 20 \u00b5L\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* NGS LIBRARY PREP\n\t* Custom\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-circlelabs/deck.png)\n\n\n\n",
         "description": "This protocol performs an extraction for up to 96 samples, and for 3 plate types. Plates should be consistent for slots 1, 3, and 6. For protocol details and parameters, please see below.\n\n",

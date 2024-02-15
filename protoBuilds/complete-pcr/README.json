@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "Complete PCR Workflow"
@@ -8,7 +8,7 @@
     "description": "Part 1 of 2: Master Mix Assembly\nLinks:\n Part 1: Master Mix Assembly\n Part 2: Master Mix Distribution and DNA Transfer\n* Part 3: Thermocycler\nThis protocol allows your robot to create a master mix solution using any reagents stored in a 2 mL Eppendorf tube rack or a 2 mL screwcap tube rack. The master mix will be created in well A1 of the trough. The ingredient information will be provided as a CSV file. See Additional Notes for more details.\n\nYou will need:\n 4-in-1 Tube Rack Set\n 12-well Trough",
     "internal": "OT-2 PCR Prep v2",
     "markdown": {
-        "author": "[Opentrons](http://www.opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](http://www.opentrons.com/)\n\n\n\n",
         "categories": "* PCR\n    * Complete PCR Workflow\n\n",
         "description": "Part 1 of 2: Master Mix Assembly\n\nLinks:\n* [Part 1: Master Mix Assembly](./pcr_prep_part_1)\n* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2)\n* [Part 3: Thermocycler](./thermocycler)\n\nThis protocol allows your robot to create a master mix solution using any reagents stored in a 2 mL Eppendorf tube rack or a 2 mL screwcap tube rack. The master mix will be created in well A1 of the trough. The ingredient information will be provided as a CSV file. See Additional Notes for more details.\n\n---\n\nYou will need:\n* [4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)\n* [12-well Trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)\n\n",
         "internal": "OT-2 PCR Prep v2\n",

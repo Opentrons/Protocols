@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "Syber Green Prep"
@@ -10,7 +10,7 @@
     "internal": "85b0dc",
     "labware": "\nThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate with Barcode, 0.1 mL #4346906\nOpentrons 20uL Filter Tips\nOpentrons 4-in-1 tuberack with 4x6 insert for 1.5ml Eppendorf tubes\nOpentrons 96-well aluminum block\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* PCR\n\t* Syber Green Prep\n\n",
         "deck-setup": "\n* green: starting DNA samples\n* blue: possible positions for mastermixes  \n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/85b0dc/deck.png)\n\n---\n\n",
         "description": "\nThis protocol performs a custom Syber Green PCR Prep for up to 96 samples. Mastermix is transferred from 1.5ml Eppendorf tubes, and samples are transferred from source strip tubes mounted in the Opentrons 96-well aluminum block into the MicroAmp PCR plate also mounted in the Opentrons 96-well aluminum block.\n\nThe input .csv file should be formatted in the following way, including the header line:\n\n```\nsource well (A1-H12),mastermix tube (A1-D6),destination well (A1-H12)\nA1,A1,A1\nA2,A2,A2\n...\n```\n\n---\n\n",

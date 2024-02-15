@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Nucleic Acid Extraction & Purification": [
             "DNA Extraction"
@@ -10,7 +10,7 @@
     "internal": "33a449",
     "labware": "\nOpentrons 200ul or 300ul tips\nNEST 12 Well Reservoir\nAbgene 96 Well Plate 700ul\nMacherey Nagel 96 Squarewell Block\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* Nucleic Acid Extraction & Purification\n\t* DNA Extraction\n\n",
         "deck-setup": "* Note: reagents in reservoirs are in the order of the colors from left to right.\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/33a449/Screen+Shot+2022-02-03+at+9.02.45+AM.png)\n\n\n\n",
         "description": "This protocol extracts DNA using the [Nucleomag blood DNA kit](https://www.mn-net.com/us/nucleomag-blood-200-l-for-dna-purification-from-blood-744501.4). Pro-k is added to sample, as well as bead buffer. Supernatant is removed with magnets engaged before a dispense of 200ul of mbl3. After supernatant is again removed, ethanol is dispensed and removed in wash before mbl5 is added to sample. The final product is moved to the elute plate on slot 2.\n\nExplanation of complex parameters below:\n* `Number of Columns`: Specify the number of sample columns to run.\n* `Use filter tips`: Specify whether this run will use filter tips or regular tips.\n* `mbl5 Volume`: Specify the mbl5 volume in microliters.\n* `Magnetic engage height (mm)`: Specify the engage height for the magnets to raise under the base of the magnetic plate. The engage height should be empirically tested.\n* `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 multi-channel pipette.\n\n\n\n---\n\n",

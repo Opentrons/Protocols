@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Nucleic Acid Extraction & Purification": [
             "DNA Extraction"
@@ -10,7 +10,7 @@
     "internal": "9778eb",
     "labware": "\nNEST 96 Wellplate 2mL\nNEST 12 Reservoir 15mL\nOpentrons 200uL Filter Tips\nThermofisher 96 Well, semi-skirted, black lettering mounted to deck with Opentrons 96 Aluminum block\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* Nucleic Acid Extraction & Purification\n\t* DNA Extraction\n\n",
         "deck-setup": "\n![reagent color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/color_code.png)\n\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/deck_state.png)\n\n",
         "description": "This is a custom implementation of the Mag-Bind Blood and Tissue kit. Specify the starting sample volume, final elution volume, and number of samples, allowing the OT-2 to automate the procedure with minimal intervention to empty trash and/or refill tip racks as alerted.\n\nExplanation of complex parameters below:\n* `Number of samples`: Specify the number of samples this run (1-96 and divisible by 8, i.e. whole columns at a time).\n* `Initial Volume`: Specify starting volume of sample (ul).\n* `Elution Volume`: Specify elution volume (ul) into final plate.\n* `Flash on Robot Pause`: Specify whether the robot will flash on pause. This includes trash or tip rack notifications\n* `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.\n\n---\n\n",

@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "9250d7",
     "labware": "\nCorning 96 Well Plate 360 ul Flat\nCustom 384 Well Plate 100 ul\nNEST 12-Well Reservoirs, 15 mL #999-00076\nOpentrons 20ul tips\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/925d07/deck_pla.png)\n* reservoir channel 1: lipofectamine 2000\n* reservoir channel 2: V141 plasmid\n* 96-wellplate: siRNA\n\n---\n\n",
         "description": "\nLinks:\n* [Random Aliquoting](./925d07-cp)\n<br></br>\n<br></br>\n* [Plasmind Luciferase Assay](./925d07-pla)\n<br></br>\n<br></br>\n* [QIAcuity Plate Transfer](./925d07-q)\n<br></br>\n<br></br>\n* [PCR Prep](./925d07-v3)\n<br></br>\n<br></br>\n\n\nThis protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.\n\n---\n\n",

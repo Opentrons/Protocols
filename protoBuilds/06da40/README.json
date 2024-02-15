@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Normalization & PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "06da40",
     "labware": "\nNEST 96-Well PCR Plate 100\u00b5L\nOpentrons 24 Tube Rack with Eppendorf 1.5mL Safe-Lock Snapcap\nOpentrons Tip Rack, 20\u00b5L\nOpentrons Tip Rack, 300\u00b5L\nSemi-skirted Plate on Aluminum Block\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* Sample Prep\n\t* Normalization & PCR Prep\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/06da40/Screen+Shot+2023-01-04+at+10.07.20+AM.png)\n\n\n",
         "description": "This protocol prepares plates for ddPCR with a normalization step beforehand.\n\nBased on a user-supplied CSV, the protocol begins by performing a normalization from the plate in deck slot 4 to the plate in deck slot 5 (allowing one to preserve their original samples).\n\nAfter the normalization step, there is an optional reaction mix creation step. Once reaction mix is ready, each well of the destination plate(s) receive 18\u00b5L of reaction mix.\n\nThe protocol finishes by adding 4\u00b5L of each sample to a well containing reaction mix, per replicate. For example, if 3 replicates are selected, 4\u00b5L of the normalized sample in A1 would be dispensed in A1, B1, and C1 of the destination plate, followed by 4\u00b5L of normalized sample from A2 to D1, E1, F1, etc.\n\n**Explanation of complex parameters below:**\n* **.CSV Input File**: Upload CSV file. Should include a header row and the first three rows: Well (A1), Sample Volume (\u00b5L), Dilutent Volume (\u00b5L)\n* **Automate Reaction Mix Creation**: Select whether to automate the creation of Reaction Mix.\n* **Number of Replicates**: Specify the number of replicates\n\n",

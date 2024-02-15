@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -10,7 +10,7 @@
     "internal": "2df9f8-pt3",
     "labware": "\nOpentrons 300ul tips\nNEST 2mL 96 well deep well plate\nNEST 195mL Reservoir\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
         "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.02.57+AM.png)\n\n\n\n---\n\n",
         "description": "This protocol preps multiple 96 deep well plates with 600ul of saline up to the specified number of plates. All plates are fully filled with 600ul of saline. The left and right multi-channel pipettes aspirate and dispense two columns at a time. \n\nExplanation of complex parameters below:\n* `Number of Plates`: Specify the number of plates to fill starting from slot 4.\n\n\n---\n\n",

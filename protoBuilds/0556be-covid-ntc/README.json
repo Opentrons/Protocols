@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Plate Filling"
@@ -9,7 +9,7 @@
     "description": "This protocol performs the transfer of nuclease-free water into multiple 2 mL tubes.\n\n\n\nP300 single-channel GEN2 electronic pipette\nOpentrons Aluminum Blocks\n\n\n",
     "internal": "0556be-covid-ntc",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
         "deck-setup": "* Opentrons 10 Tube Rack (Slot 10)\n* 24 Well Aluminum Block (Slot 11)\n* 1000uL Filter Tips (Slot 1)\n\n",
         "description": "This protocol performs the transfer of nuclease-free water into multiple 2 mL tubes.\n\n---\n\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [P300 single-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n* [Opentrons Aluminum Blocks](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set?_ga=2.44012454.2010707504.1610321113-1181961818.1604785212)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n",

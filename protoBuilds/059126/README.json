@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Reagent Addition"
@@ -10,7 +10,7 @@
     "internal": "059126",
     "labware": "\nGreiner 96 Well Plate 340uL\nGreiner 384 Well Plate 50uL\nCytive 24 Well Plate 2000uL used as Vial Holder\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after March 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* Sample Prep\n\t* Reagent Addition\n\n",
         "deck-setup": "* Starting Deck Setup for 2 Reagent Vials:\n![deck_setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/059126/deck_setup.png)\n\n---\n\n",
         "description": "This is a specialized reagent addition to add reagent from vials in a Cytiva well plate to a 96 well plate which are then transferred to a 384 well plate. The vials and transfer volumes are specified via a CSV file. The tips are picked up in a non-standard manner with a single tip picked up from the bottom of a specified column continuing up and to the left with each new tip pick-up. E.g. Column 11 is specified, first tip picked up will be H11, then G11, F11,.....H10, G10, etc. These single tips are used to add from the vials to the 96 well plate. The columns of the 96 well plate will then have a specified amount of each column added to the 384 well plate, reusing tips as much as possible. Transfer volumes from the vials to the 96 well plate, transfer volumes from the 96 well plate to the 384 well plate, and which vials will be used is specified by uploading a CSV. The specific format can be found in this [example CSV located here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/059126/example_trans.csv)\n\nExplanation of complex parameters below:\n* `Number of Columns in 384 Well Plate`: How many columns will be in the 384 well plate starting from the left side\n* `Starting Tip Column (1-12)`: Which tip will be picked up first. Number corresponds to column from left to right. Bottom tip will be picked up first in each column.\n* `P20 Multi GEN2 Mount`: Which mount the P20 multi-channel is connected to. The P300 will be connected to the opposite mount.\n* `Transfer .CSV File`: Upload the CSV file with vial list and transfer volumes.\n\n---\n\n",
