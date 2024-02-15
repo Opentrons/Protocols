@@ -728,7 +728,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,81
+m20_mount,82
 m300_mount,112
 m300_type,2
 m_mount,1
@@ -913,7 +913,7 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,74
+num_samp,75
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -1006,7 +1006,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,158
+p300_mount,159
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1

@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol creates mastermix according to the number of samples, then distributes the resultant mastermix to a final pcr plate along with sample. For detailed protocol steps, please see below.",
+    "internal": "04711e",
+    "labware": "\nPcr Plate 96 Well Plate 200 \u00b5L\nOpentrons 24 Tube Rack with starstedt 2 mL\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 96 Filter Tip Rack 20 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04711e/Screen+Shot+2024-02-15+at+12.10.56+PM.png)\n\n\n",
+        "description": "This protocol creates mastermix according to the number of samples, then distributes the resultant mastermix to a final pcr plate along with sample. For detailed protocol steps, please see below.\n\n\n",
+        "internal": "04711e\n",
+        "labware": "* Pcr Plate 96 Well Plate 200 \u00b5L\n* Opentrons 24 Tube Rack with starstedt 2 mL\n* [Opentrons 96 Tip Rack 300 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* Opentrons 96 Filter Tip Rack 20 \u00b5L\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n\n",
+        "pipettes": "* [Opentrons P20 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit \"Run\".\n\n\n",
+        "protocol-steps": "1. Mastermix is made in empty tube in tuberack according to the number of samples.\n2. Mastermix is distributed to the first column of the middle plate on slot 2 (single channel pipette).\n3. Mastermix is distributed to final plate (multi-channel pipette).\n4. Sample is added to final plate.\n\n\n",
+        "title": "PCR Prep"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 8 Channel Electronic Pipette (GEN2)\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nMastermix is made in empty tube in tuberack according to the number of samples.\nMastermix is distributed to the first column of the middle plate on slot 2 (single channel pipette).\nMastermix is distributed to final plate (multi-channel pipette).\nSample is added to final plate.\n",
+    "title": "PCR Prep"
+}
