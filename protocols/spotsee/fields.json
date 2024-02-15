@@ -7,6 +7,21 @@
   },
   {
     "type": "dropDown",
+    "label": "Labware Type",
+    "name": "labware",
+    "options": [
+      {"label": "80 well plate", "value": "80_well_plate"},
+      {"label": "40 well plate", "value": "40_well_plate"}
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Starting tip (1-96)",
+    "name": "start_tip",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
     "options": [
