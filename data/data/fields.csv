@@ -610,6 +610,7 @@ is_use_custom_block,1
 is_verbose,1
 ki_dil,1
 label,1
+labware,1
 labware1,1
 labware2,1
 labware3,1
@@ -1390,7 +1391,7 @@ start_buff_vol,1
 start_col,2
 start_column,1
 start_index_tip,1
-start_tip,2
+start_tip,3
 start_tip_p20,2
 start_tip_p300,2
 start_urea_vol,1

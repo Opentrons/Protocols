@@ -8,17 +8,19 @@ metadata = {
 
 def run(ctx):
 
-    [vol, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "vol", "p20_mount", "p300_mount")
+    [vol, labware, start_tip,
+        p20_mount, p300_mount] = get_values(  # noqa: F821
+        "vol", "labware", "start_tip", "p20_mount", "p300_mount")
 
     # p20_mount = 'left'
     # vol = 25
     # p300_mount = 'right'
+    # labware = '40_well_plate'
+    # start_tip = 4
 
     # labware
-
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', 10)
-    plate = ctx.load_labware('80_well_plate', 1)
+    plate = ctx.load_labware(labware, 1)
     tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul' if vol < 20 else 'opentrons_96_tiprack_300ul', slot)  # noqa: E501
             for slot in [11]]
 
@@ -43,13 +45,28 @@ def run(ctx):
 
     # protocol
     ctx.comment('\n---------------ADDING BUFFER TO PLATE----------------\n\n')
-    num_asp = pip.max_volume // vol
-    chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
-              num_asp)]
+    if labware == '80_well_plate':
+        num_asp = pip.max_volume // vol
+        chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
+                  num_asp)]
 
-    pip.pick_up_tip()
-    for chunk in chunks:
-        pip.aspirate(num_asp*vol, buffer)
-        for well in chunk:
-            pip.dispense(vol, plate.wells_by_name()[well])
-    pip.drop_tip()
+        pip.pick_up_tip(tips[0].wells()[start_tip-1])
+        for chunk in chunks:
+            pip.aspirate(num_asp*vol, buffer)
+            for well in chunk:
+                pip.dispense(vol, plate.wells_by_name()[well])
+                pip.move_to(plate.wells_by_name()[well].top(z=5))
+        pip.drop_tip()
+    else:
+        num_asp = pip.max_volume // vol
+        chunks = [plate.wells()[i:i+num_asp] for i in range(0,
+                  len(plate.wells()),
+                  num_asp)]
+
+        pip.pick_up_tip(tips[0].wells()[start_tip-1])
+        for chunk in chunks:
+            pip.aspirate(num_asp*vol, buffer)
+            for well in chunk:
+                pip.dispense(vol, well)
+                pip.move_to(well.top(z=5))
+        pip.drop_tip()
