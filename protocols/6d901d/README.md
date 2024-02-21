@@ -16,11 +16,11 @@
 ## Description
 ![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)
 
-Concentration normalization is a key component of many genomic and proteomic applications, such as NGS library preparation. With this protocol, you can easily normalize the concentrations of samples in a 96 or 384 microwell plate without worrying about missing a well or adding the wrong volume. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol. This protocol is a modified version of our [Normalization Protocol](https://protocols.opentrons.com/protocol/normalization), that instead uses a multi-channel pipette as single channel pipette by picking up one tip at a time.
+Concentration Normalization is a key component of many genomic and proteomic applications, such as NGS library preparation. With this protocol, you can easily normalize the concentrations of samples in a 96 or 384 microwell plate without worrying about missing a well or adding the wrong volume. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol. This protocol is a modified version of our [Normalization Protocol](https://protocols.opentrons.com/protocol/normalization), that instead uses a multi-channel pipette as single channel pipette by picking up one tip at a time.
 
 There is an optional [Part 2: Cherrypicking Protocol](https://protocols.opentrons.com/protocol/6d901d-2) to this protocol which performs cherrypicking using a multi-channel pipette in the same way.
 
-**Note**: This protocol was updated for a change in our software stack and will require app 6.0 or greater.
+**Note**: This protocol was updated for a change in our software stack and will require app 7.0 or greater.
 
 Using the customization fields below, set up your protocol.
 * `Volumes CSV`: Your input CSV specifying the normalization volumes. See the Setup section below for details.

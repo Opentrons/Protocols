@@ -1,5 +1,6 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import OutOfTipsError
+from opentrons.types import Mount
 
 
 metadata = {
@@ -83,11 +84,19 @@ def run(ctx: protocol_api.ProtocolContext):
     # load pipette
     pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)
 
-    if 'p20' in pipette_type:
-        pick_up_current = 0.15
-        ctx._hw_manager.hardware._attached_instruments[
-          pip._implementation.get_mount()].update_config_item(
-          'pick_up_current', pick_up_current)
+    if not ctx.is_simulating():
+        pick_up_current = 0.1  # 100 mA for single tip
+        # Uncomment the next two lines if using Opentrons Robot Software version 7.1.x. # noqa: E501
+        # Comment them if NOT using 7.1.x
+
+        ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(  # noqa: E501
+              {'pick_up_current': {8: pick_up_current}})
+
+        # Uncomment the next two lines if using Opentrons Robot Software version 7.2.x # noqa: E501
+        # Comment them if NOT using 7.2.x
+
+        # ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(
+        #       {'pick_up_current': pick_up_current})
 
     # Tip_map has the columns reversed, pipette always picks up the
     # bottom-most tip in a given column until the column is depleted, and then

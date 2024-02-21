@@ -18,7 +18,7 @@ A protocol based on our most robust [cherrypicking protocol](https://protocols.o
 
 This is an optional Part 2 protocol to its corresponding [Part 1: Normalization protocol using a multi-channel pipette](https://protocols.opentrons.com/protocol/6d901d)
 
-**Note**: This protocol was updated for a change in our software stack and will require app 6.0 or greater.
+**Note**: This protocol was updated for a change in our software stack and will require app 7.0 or greater.
 
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
 
