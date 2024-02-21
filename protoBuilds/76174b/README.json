@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sample Prep": [
             "Plate Filling"
@@ -10,7 +10,7 @@
     "internal": "76174b",
     "labware": "\nOpentrons Tips for P20 (Standard)\n96-Well Low-Binding Corning Costar Microplate 3363\n384-Well Perkin Elmer OptiPlate (Example)\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-deck-statementofwork.png)\n</br>\n</br>\n**Slot 1**: 384-Well Perkin Elmer OptiPlate </br>\n![slot 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-slot1-statementofwork.png) </br>\n**Slot 2**: 384-Well Perkin Elmer OptiPlate </br>\n![slot 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-slot2-statementofwork.png) </br>\n**Slot 3**: 96-Well Low-Binding Microplate </br>\n![slot 3](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-slot3-statementofwork.png) </br>\n**Slot 5**: 96-Well Low-Binding Microplate </br>\n![slot 5](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-slot5-statementofwork.png) </br>\n**Slot 6**: 96-Well Low-Binding Microplate </br>\n![slot 6](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76174b/screenshot-slot6-statementofwork.png) </br>\n**Slots 4,7,8,9**: Opentrons 20 uL Tips\n\n\n---\n\n",
         "description": "This protocol performs an AlphaLISA [Perkin Elmer AlphaLISA](https://resources.perkinelmer.com/lab-solutions/resources/docs/GDE_Quick_AlphaLISA_conversion.pdf) based on the attached experimental protocol with user determined parameters (described below).\n\n\n\n---\n\n\n\n",

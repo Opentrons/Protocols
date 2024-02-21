@@ -548,7 +548,7 @@ include_mastermix_step,1
 include_moving_fresh_plate,1
 include_multi,1
 include_ntc,2
-include_pause,1
+include_pause,2
 include_sample_step,1
 include_standards_only,1
 include_wash1,1
@@ -580,7 +580,9 @@ init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
 init_vol_dil,2
+init_vol_meth,1
 init_vol_sds,2
+init_vol_standard,1
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
@@ -608,6 +610,7 @@ is_use_custom_block,1
 is_verbose,1
 ki_dil,1
 label,1
+labware,1
 labware1,1
 labware2,1
 labware3,1
@@ -725,8 +728,8 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,80
-m300_mount,110
+m20_mount,83
+m300_mount,112
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -910,7 +913,9 @@ num_rounds,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,71
+num_samp,75
+num_samp_lysis,1
+num_samp_mmx,1
 num_samp_p1,1
 num_samp_p2,1
 num_samp_plate1,1
@@ -967,7 +972,7 @@ output_labware,1
 overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,36
+p1000_mount,37
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -986,7 +991,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,136
+p20_mount,137
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1003,7 +1008,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,156
+p300_mount,160
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1329,6 +1334,7 @@ shake_well,1
 side_x_radius,1
 single_channel_mount,1
 single_channel_type,1
+single_dilution,1
 single_pip_info,1
 size,1
 size_select,1
@@ -1387,7 +1393,7 @@ start_buff_vol,1
 start_col,2
 start_column,1
 start_index_tip,1
-start_tip,2
+start_tip,3
 start_tip_p20,2
 start_tip_p300,2
 start_urea_vol,1
@@ -1471,7 +1477,7 @@ temperature2,1
 tempgen,1
 template_vol,1
 test_method,1
-test_mode,1
+test_mode,2
 test_mode_beads,1
 test_plates,1
 tfa_540,1
@@ -1623,7 +1629,7 @@ v_0_tube2,1
 v_csv,2
 vhb_vol,1
 vial_map,1
-vol,2
+vol,3
 vol_a_to_b,1
 vol_aliqout,1
 vol_aliquot,1
@@ -1659,6 +1665,7 @@ vol_h_lysate,1
 vol_ic,1
 vol_initial,1
 vol_lys_buffer,1
+vol_lysis_mix,1
 vol_media_tubes,1
 vol_meoh,1
 vol_mix,2
@@ -1666,10 +1673,12 @@ vol_mm,3
 vol_mobile_phase,1
 vol_mq,1
 vol_neutralization_buffer,1
+vol_pcr_mix,1
 vol_peptide1,1
 vol_peptide2,1
 vol_peptide3,1
 vol_pma_ca,1
+vol_primer,1
 vol_reagent,1
 vol_refill,1
 vol_removal,1

@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "PCR": [
             "PCR Prep"
@@ -8,7 +8,7 @@
     "description": "This protocol performs mastermix and DNA sample transfer to a custom 384-well plate. All DNA samples are transferred in quadruplicate in adjacent wells forming 2x2 well squares on the 384-well plate (12x8 squares mapping to the 12x8 input from the 96-well DNA plate), as in the following image:  \n\n\n\n\nMicroAmp Optical 384-well plate\nUSA Scientific 96 Well Plate 100 \u00b5L\nCustom single-channel reservoir 25ml (will span slots 4 and 1)\nOpentrons P10 multi-channel GEN1 pipette\nOpentrons 10\u00b5l tiprack\n\n\n",
     "internal": "131de0",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "*  PCR\n\t* PCR Prep\n\n",
         "description": "This protocol performs mastermix and DNA sample transfer to a custom 384-well plate. All DNA samples are transferred in quadruplicate in adjacent wells forming 2x2 well squares on the 384-well plate (12x8 squares mapping to the 12x8 input from the 96-well DNA plate), as in the following image:  \n\n![transfer scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/131de0/transfer_scheme.png)\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* MicroAmp Optical 384-well plate\n* USA Scientific 96 Well Plate 100 \u00b5L\n* Custom single-channel reservoir 25ml (will span slots 4 and 1)\n* [Opentrons P10 multi-channel GEN1 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)\n* [Opentrons 10\u00b5l tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n",
         "internal": "131de0\n",

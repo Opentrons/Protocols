@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. Submit a request to add this protocol to the new library.",
+    "author": "Opentrons",
     "categories": {
         "Sterile Workflows": [
             "Cell Culture"
@@ -10,7 +10,7 @@
     "internal": "37190e",
     "labware": "\nCorning 96 Well Plate 360 \u00b5L Flat, 3650\nOpentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical\nOpentrons 200\u00b5L Filter Tips\nOpentrons 20\u00b5L Filter Tips\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n\n# Opentrons has launched a new Protocol Library. This page won\u2019t be available after January 31st, 2024. [Submit a request](https://docs.google.com/forms/d/e/1FAIpQLSdYYp9QCKow4nn0KlCVsMS3HX0eJ0N9O7-erajKvcpT0lWbSg/viewform) to add this protocol to the new library.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n\n",
         "categories": "* Sterile Workflows\n\t* Cell Culture\n\n",
         "deck-setup": "\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/37190e/deck.png)  \n\nTuberack on slot 9:\n* tube A1: drug A\n* tube A2: drug B\n* tube A3: media\n\n---\n\n",
         "description": "\nThis protocol performs a custom cell culture assay on up to 8 flat well plates. Please see [these instructions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/37190e/opentrons_media_table.xlsx) for the exact transfer scheme.\n\n---\n\n",

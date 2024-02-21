@@ -11,9 +11,9 @@ metadata = {
 def run(ctx):
 
     [csv_samp, plate_standard, diluent_buff_col,
-        duplicate_plating, m300_mount, p300_mount] = get_values(  # noqa: F821
+        duplicate_plating, user_input_pause, m300_mount, p300_mount] = get_values(  # noqa: F821
         "csv_samp", "plate_standard", "diluent_buff_col",
-            "duplicate_plating", "m300_mount", "p300_mount")
+            "duplicate_plating", "user_input_pause", "m300_mount", "p300_mount")
 
     # p300_mount = 'left'
     # m300_mount = 'right'
@@ -21,6 +21,8 @@ def run(ctx):
     # diluent_buff_col = 4
     # duplicate_plating = False
     # csv_samp = """
+
+
     #
     # source slot, source well, dest well
     # 7, A1, A1
@@ -28,6 +30,8 @@ def run(ctx):
     # 7, A3, A3
     #
     # """
+    #
+    # user_input_pause = True
 
     def Transfer_With_TT(Pipette, Source, Destination, Vol, Dispense_Top):
         # Split transfer up to allow for more control over touch tip height
@@ -169,7 +173,7 @@ def run(ctx):
         m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
-            m300.dispense(50, well.bottom(z = 3))
+            m300.dispense(50, well.bottom(z = 4))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
@@ -191,13 +195,14 @@ def run(ctx):
         m300.touch_tip(v_offset=1)
 
         for well in dispense_wells:
-            m300.dispense(50, well.bottom(z = 3))
+            m300.dispense(50, well.bottom(z = 4))
 
             # Added in touch tip
             m300.move_to(well.top(z = -3))
             m300.touch_tip(v_offset=1)
 
         m300.drop_tip()
+
 
     ctx.comment('\n------------ADDING SAMPLE------------\n\n')
 
@@ -220,11 +225,11 @@ def run(ctx):
             p300.mix(1, 50*reps, source_well.bottom(z = 4)) # Added in pre-wet
             p300.aspirate(50*reps, source_well.bottom(z = 4))
             p300.move_to(source_well.top(-3))
-            p300.touch_tip(v_offset=1)
+            p300.touch_tip()
 
-        p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 3)) # Set z offset
+        p300.dispense(50, hs_plate.wells_by_name()[dest_well].bottom(z = 4)) # Set z offset
         p300.move_to(hs_plate.wells_by_name()[dest_well].top(-3))
-        p300.touch_tip(v_offset=1)
+        p300.touch_tip()
 
         # Only drop up tip if end of new replicate batch
         if index%reps == reps - 1:
@@ -284,7 +289,7 @@ def run(ctx):
             ctx.delay(minutes=5)
 
     except:
-        ctx.delay(minutes=10)
+        ctx.pause('The protocol did not do the heater shaker steps - please cancel')
 
     ctx.comment('\n------------PLATING DYE------------\n\n')
 
