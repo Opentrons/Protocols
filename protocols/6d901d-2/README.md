@@ -38,7 +38,7 @@ Explanation of complex parameters below:
 ---
 
 ### Labware
-* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate) and some additional microplates (see plate options for source and destination plates parameters below, e.g. Greiner Bio-One plates)
+* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate) and some additional microplates (see plate options for source and destination plates parameters below, e.g. Greiner Bio-One plates).
 
 ### Pipettes
 * [P20 Multi GEN2 Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)

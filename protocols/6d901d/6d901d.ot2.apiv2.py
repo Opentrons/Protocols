@@ -22,7 +22,7 @@ def flatten_matrix(m):
 
 def well_csv_to_list(csv_string):
     """
-    Takes a csv string and flattens it to a list, re-ordering to match
+    Takes a csv string and flattens to a list, re-ordering to match
     Opentrons well order convention (A1, B1, C1, ..., A2, B2, B2, ...)
     """
     data = [
