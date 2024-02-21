@@ -53,7 +53,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Parse csv
     # Format: Source Well, Source Aspiration Height Above Bottom (in mm),
-    # Dest Well, Volume (in ul)
+    # Dest Well, Vol (in ul)
     transfer_info = [[val.strip().lower() for val in line.split(',')]
                      for line in transfer_csv.splitlines()
                      if line.split(',')[0].strip()][1:]

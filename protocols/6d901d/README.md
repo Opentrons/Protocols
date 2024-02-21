@@ -20,7 +20,7 @@ Concentration Normalization is a key component of many genomic and proteomic app
 
 There is an optional [Part 2: Cherrypicking Protocol](https://protocols.opentrons.com/protocol/6d901d-2) to this protocol which performs cherrypicking using a multi-channel pipette in the same way.
 
-**Note**: This protocol was updated for a change in our software stack and will require app 7.0 or greater.
+**Note**: This protocol was updated for a change in our software stack and requires app 7.0 or greater.
 
 Using the customization fields below, set up your protocol.
 * `Volumes CSV`: Your input CSV specifying the normalization volumes. See the Setup section below for details.
