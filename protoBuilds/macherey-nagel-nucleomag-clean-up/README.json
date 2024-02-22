@@ -10,7 +10,7 @@
     "internal": "macherey-nagel-nucleomag-clean-up",
     "labware": "\n96 Well PCR Plate\nOpentrons 96 Tip Rack 300 \u00b5L\nOpentrons 24 Tube Rack with Generic 2 mL Screwcap\nUSA Scientific 12 Well Reservoir 22 mL #1061-8150\nOpentrons 96 Tip Rack 1000 \u00b5L\n96 Deepwell Plate 2mL\nAgilent 1 Well Reservoir 290 mL #201252-100\n",
     "markdown": {
-        "author": "[MACHEREY-NAGEL](https://www.mn-net.com/us)\n\n",
+        "author": "[MACHEREY-NAGEL](https://www.mn-net.com/us)\n",
         "categories": "* NGS Library Prep\n\t* MACHEREY-NAGEL Clean-Up\n\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/mn-size-select-deck.png)\n\n\n",
         "description": "![MACHEREY-NAGEL](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/macherey-nagel/MN_Logo_50.jpeg)\n\nThis protocol automates the MACHEREY-NAGEL NucleoMag\u00ae NGS Clean-Up and allows for flexible parameterization.\n\nBefore beginning the protocol on the OT-2, the following preparation steps are needed:</br>\n1. Fill the 12-Well Buffer Reservoir according to the table below.\n2. Resuspend the NucleoMag\u00ae NGS Bead suspension by vortexing.\n3. Load the instrument deck according to the displayed positions.\n4. Place the Square-well Block containing the lysates on the Magnetic Module and start the run.\n\nYou can access the full descripition of this workflow on the OT-2 by visiting this link: [link](https://insights.opentrons.com/hubfs/Partners/Macherey-Nagel/NucleoMag%20NGS%20clean-up%20on%20OT-2%20Protocol%20Info.pdf)\n\n\n",
