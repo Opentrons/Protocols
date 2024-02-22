@@ -1,5 +1,5 @@
 {
-    "author": "Opentrons\nOpentrons has launched a new Protocol Library. You should use the new page for this protocol. This page won\u2019t be available after March 31st, 2024.",
+    "author": "Opentrons",
     "categories": {
         "Featured": [
             "Cherrypicking"
@@ -10,7 +10,7 @@
     "internal": "cherrypicking",
     "labware": "\nAny verified labware found in our Labware Library\n",
     "markdown": {
-        "author": "[Opentrons](https://opentrons.com/)\n\n# Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](https://library.opentrons.com/p/cherrypicking). This page won\u2019t be available after March 31st, 2024.\n\n",
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* Featured\n\t* Cherrypicking\n\n",
         "deck-setup": "* Example deck setup - tip racks loaded onto remining slots.\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/Screen+Shot+2021-04-29+at+3.10.02+PM.png)\n\n---\n\n",
         "description": "\nOur most robust cherrypicking protocol. Specify aspiration height, labware, pipette, as well as source and destination wells with this all inclusive cherrypicking protocol.\n\n![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)\n\nExplanation of complex parameters below:\n\n* `input .csv file`: Here, you should upload a .csv file formatted in the [following way](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.\n* `Pipette Model`: Select which pipette you will use for this protocol.\n* `Pipette Mount`: Specify which mount your single-channel pipette is on (left or right)\n* `Tip Type`: Specify whether you want to use filter tips.\n* `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.\n\n\n\n---\n\n\n",

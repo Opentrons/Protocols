@@ -3,7 +3,6 @@
 
 ### Author
 [MACHEREY-NAGEL](https://www.mn-net.com/us)
-
 ### Partner
 [Opentrons](https://opentrons.com/)
 
