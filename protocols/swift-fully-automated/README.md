@@ -3,7 +3,6 @@
 ### Author
 [Opentrons (verified)](https://opentrons.com/)
 
-### Partner
 [Swift Biosciences](https://swiftbiosci.com/)
 
 # Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](https://library.opentrons.com/p/swift-fully-automated). This page won’t be available after March 31st, 2024.
