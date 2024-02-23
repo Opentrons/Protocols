@@ -1,5 +1,5 @@
 from opentrons import protocol_api
-from opentrons import types
+from opentrons.types import Mount
 
 metadata = {
     'protocolName': 'Normalization with a multi-channel pipette \
@@ -22,7 +22,7 @@ def flatten_matrix(m):
 
 def well_csv_to_list(csv_string):
     """
-    Takes a csv string and flattens it to a list, re-ordering to match
+    Takes a csv string and flattens to a list, re-ordering to match
     Opentrons well order convention (A1, B1, C1, ..., A2, B2, B2, ...)
     """
     data = [
@@ -70,12 +70,19 @@ def run(ctx: protocol_api.ProtocolContext):
     m300 = ctx.load_instrument('p300_multi_gen2', p300_mount)
     m20 = ctx.load_instrument('p20_multi_gen2', p20_mount)
 
-    mounted_on = {"left": types.Mount.LEFT, "right": types.Mount.RIGHT}
+    if not ctx.is_simulating():
+        pick_up_current = 0.1  # 100 mA for single tip
+        # Uncomment the next two lines if using Opentrons Robot Software version 7.1.x. # noqa:E501
+        # Comment them if NOT using 7.1.x
+        for pipette in [m20, m300]:
+            ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(  # noqa:E501
+                  {'pick_up_current': {8: pick_up_current}})
 
-    pick_up_current = 0.15  # 150 mA for single tip
-    ctx._hw_manager.hardware._attached_instruments[
-      mounted_on[m20.mount]].update_config_item(
-      'pick_up_current', pick_up_current)
+        # Uncomment the next two lines if using Opentrons Robot Software version 7.2.x # noqa:E501
+        # Comment them if NOT using 7.2.x
+        # for pipette in [m20, m300]:
+        #     ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(
+        #           {'pick_up_current': pick_up_current})
 
     tip300ctr = 95
     tip20ctr = 95

@@ -18,7 +18,7 @@ A protocol based on our most robust [cherrypicking protocol](https://protocols.o
 
 This is an optional Part 2 protocol to its corresponding [Part 1: Normalization protocol using a multi-channel pipette](https://protocols.opentrons.com/protocol/6d901d)
 
-**Note**: This protocol was updated for a change in our software stack and will require app 6.0 or greater.
+**Note**: This protocol was updated for a change in our software stack and will require app 7.0 or greater.
 
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
 
@@ -38,7 +38,7 @@ Explanation of complex parameters below:
 ---
 
 ### Labware
-* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate) and some additional microplates (see plate options for source and destination plates parameters below, e.g. Greiner Bio-One plates)
+* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate) and some additional microplates (see plate options for source and destination plates parameters below, e.g. Greiner Bio-One plates).
 
 ### Pipettes
 * [P20 Multi GEN2 Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)

@@ -3,7 +3,6 @@
 ### Author
 [Opentrons (verified)](https://opentrons.com/)
 
-### Partner
 [Omega Bio-tek](http://omegabiotek.com/store/)
 
 # Opentrons has launched a new Protocol Library. You should use the [new page for this protocol](https://library.opentrons.com/p/omega_biotek_magbind_totalpure_ngs). This page won’t be available after March 31st, 2024.
