@@ -11,7 +11,7 @@ Vasudha Nair
 
 
 ## Description
-This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96-well plate format and both assays can be processed in the same plate. In the case of K562 cells, the protocol is broken down into 2 main parts: a) Seeding/ Plating of K562 cells and bortezomib additions to the cells b) After 72 hours, completion of both the assays in the same plate i.e. sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay.
+This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96 well plate format and both assays can be processed in the same plate. In the case of K562 cells, the protocol is broken down into 2 main parts: a) Seeding/ Plating of K562 cells and bortezomib additions to the cells b) After 72 hours, completion of both the assays in the same plate i.e. sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay.
 
 
 ### Labware
