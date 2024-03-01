@@ -13,7 +13,7 @@ Opentrons
 
 
 ## Description
-This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96-well plate format and both assays can be processed in the same plate. In the case of A549 cells, the protocol is broken down into 3 main parts: a) Seeding/ Plating of A549 cells on Day 1 followed by b) treatment with thapsigargin on the second day c) After 72 hours of treatment, completion of both the assays in the same plate i.e., sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay
+This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96-well plate format and both assays can be processed in the same plate. In the case of A549 cells, the protocol is broken down into 3 main parts: a) Seeding/ Plating of A549 cells on Day 1 followed by b) treatment with thapsigargin on the second day c) After 72 hours of treatment, completion of both the assays in the same plate i.e., sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay.
 
 
 ### Labware
@@ -29,11 +29,13 @@ This protocol can be used to measure the viability and cytotoxicity of two diffe
 
 
 ### Deck Setup
-[deck](![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dz1j39/deck.png))
+[Day 1 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day1.docx.pdf)
+[Day 1 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day1.docx.pdf)
+[Day 4 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day4.docx.pdf)
 
 
 ### Reagent Setup
-[reagents](![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dz1j39/reagents.png))
+* [Please find the reagent setup here](![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dz1j39/reagents.png))
 
 
 ### Protocol Steps
@@ -44,7 +46,7 @@ Clean the inside of the robot with 70 % ethanol and turn on the HEPA filter at l
 1.	Take a 24–48 hours old T-75 flask of A549 cells. Take a cell count using the automated Countess 3 machine (Thermofisher Scientific) after treating the cells with Tryple Express enzyme and dislodging the adherent cells.
 2.	8000 cells are to be seeded in each well of the 96 well plate. Adjust the cell volume in 10% Ham’s F12K medium in such a way that 60 microL of cells contain the cell number mentioned above.
 3.	The cell suspension was then dispensed in ten 1.5mL snap-capped tubes and placed in Slot 6 in the tube rack(225microL).
-4.	The medium was added in wells A5 to C5 as negative control 
+4.	The medium was added in wells A5 to C5 as negative control
 5.	On the second day, roughly after 12 to 16 hours of seeding, the drug dilutions and additions are completed.
 6.	The first tube A1 in Slot 7 contains 35microL of 1mM Thapsigargin.
 7.	Next, prepare dilutions of various concentrations of thapsigargin in 10% Ham’s F12K medium (4X concentrations) after preparing the initial stocks ranging from 10nM to 100microM. The molar concentrations of stocks in tubes in positions are - A1 1mM, A2 100microM, A3 10microM, A4 1microM, A5 100nM, A6 50nM and B1 10nM.
@@ -53,7 +55,7 @@ Clean the inside of the robot with 70 % ethanol and turn on the HEPA filter at l
 10.Once the 4X concentrations are prepared, prepare 2X concentrations of the   drug. First, 100microL of medium is added to tubes C1, C3, C5 and D1 to D6  in Slot 6. Next 100microL of 4X concentration of thapsigargin is transferred from tubes in Slot7 to tubes in Slot 6 to result in 2X concentration.  
 11.For each concentration, mix the drug several times by aspirating and dispensing in the same tube. Add the equal volume of 2X thapsigargin to each well of 96 well plate in triplicate for one concentration in which cells are seeded. This will result in 1X concentration of the drug used for the study. Continue adding column-wise the increasing concentrations of thapsigargin. Namely A1, B1, C1 of 96 well plate contains control cells. D1, E1 and F1 contains 0.39nM concentration of thapsigargin treated cells. The wells in D4, E4 and F4 contains cells with 500nM thapsigargin concentration. The wells from A5 to C5 contain medium without any cells (medium control).
 After 72 hours of drug treatment, carry out the following steps.
-1.	Pick up 20microL tip from Slot 10. Transfer 15microL of CellTox Green reagent from 
+1.	Pick up 20microL tip from Slot 10. Transfer 15microL of CellTox Green reagent from
 B2 of the Opentrons 10 tube rack with Falcon 4X50 mL, 6X15mL Conical-Rack to A1 of 96 well plate placed on the Heater Shaker. Repeat this step to add the reagent to wells B1 to H1, A2 to H2, A3 to H3, A4 to F4, A5 to C5.
 2.	After the addition of the reagent, set the Heater Shaker to orbital shaking for 2 minutes at 500 rpm.
 3.	After the orbital shaking of the heater shaker is complete, incubate the plate at RT for 15 min.
@@ -61,7 +63,7 @@ B2 of the Opentrons 10 tube rack with Falcon 4X50 mL, 6X15mL Conical-Rack to A1 
 5.	Place the plate back on the heater shaker and start with additions for the cell viability assay.
 6.	Pick up 200microL tip from Slot 4. Aspirate 80microL of Cell Titer Glo 2.0 reagent from B1 of the Opentrons 10 tube rack and dispense it into A1 well of the 96 well white TC plate on Heater Shaker module. Repeat this step to add the reagent to wells B1 to H1, A2 to H2, A3 to H3, A4 to F4 and A5 to C5.
 7.	Once the reagent addition is complete, set the Heater shaker to orbital shaking at 500 rpm for 2 minutes. Incubate at RT for 10 minutes.
-8.	Remove the plate from heater shaker and read the plate for luminescence using the Biotek microplate reader. 
+8.	Remove the plate from heater shaker and read the plate for luminescence using the Biotek microplate reader.
 
 ### Process
 
