@@ -27,14 +27,8 @@ This protocol can be used to measure the viability and cytotoxicity of two diffe
 
 
 ### Deck Setup
-* Deck set up at Day 4 when the Viability and Cytotoxicity Assay is carried out
-[deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/Screen+Shot+2024-03-01+at+9.13.29+AM.png)
-
-* Deck Setup after 72 hours when the Cell Toxicity and Viability assays are to be carried out
-Slot 1 Heater Shaker Module- Plate at 23°C(deactivated) and after reagent addition, the orbital shaking is set to 500 rpm for 2 min.
-Slot 4 Opentrons 96 Filter Tip rack 200μl
-Slot 10 Opentrons 96 Filter Tip rack 20μl
-Slot 11 Opentrons 10 Tube Rack with Falcon 4 X 50 mL, 6X15mL Conical-Rack for holding Cell Titer Glo 2.0 Reagent and CellTox Green reagent.
+* [Deck setup for Day 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/day1.pdf)
+* [Deck setup for Day 4](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/day4.pdf)
 
 
 
