@@ -29,13 +29,13 @@ This protocol can be used to measure the viability and cytotoxicity of two diffe
 
 
 ### Deck Setup
-[Day 1 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day1.docx.pdf)
-[Day 1 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day1.docx.pdf)
-[Day 4 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day4.docx.pdf)
+* [Day 1 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day1.docx.pdf)
+* [Day 2 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/day2.pdf)
+* [Day 4 Deck Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Cell+Viability+and+Cytotoxicity+Assay_A549_Day4.docx.pdf)
 
 
 ### Reagent Setup
-* [Please find the reagent setup here](![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dz1j39/reagents.png))
+* [Please find the reagent setup here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/reagents.pdf)
 
 
 ### Protocol Steps
