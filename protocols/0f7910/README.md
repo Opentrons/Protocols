@@ -37,7 +37,7 @@ Source plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Desti
 
 
 ### Protocol Steps
-1. Protocol will input the global transfer volume from source plates to destination plates according to the csv.
+1. Protocol will input the global transfer volume from source plates to destination plates in accordance with the csv.
 
 
 ### Process

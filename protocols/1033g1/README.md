@@ -5,15 +5,13 @@
 Vasudha Nair
 
 
-
-
 ## Categories
 * Cell and Tissue Culture
 	* Cell and Tissue Culture
 
 
 ## Description
-This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96-well plate format and both assays can be processed in the same plate. In the case of K562 cells, the protocol is broken down into 2 main parts: a) Seeding/ Plating of K562 cells and bortezomib additions to the cells b) After 72 hours, completion of both the assays in the same plate i.e. sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay.
+This protocol can be used to measure the viability and cytotoxicity of two different cell types (suspension and adherent) that have been treated with respective drugs, using Cell Viability assay kit (Cell Titer Glo 2.0) and Cytotoxicity assay kit (CellTox Green) from Promega on the OT-2. This protocol is designed for the 96 well plate format and both assays can be processed in the same plate. In the case of K562 cells, the protocol is broken down into 2 main parts: a) Seeding/ Plating of K562 cells and bortezomib additions to the cells b) After 72 hours, completion of both the assays in the same plate i.e. sequential multiplexing of CellTox Green Cytotoxicity Assay and CellTiter Glo 2.0 Assay.
 
 
 ### Labware
@@ -29,11 +27,30 @@ This protocol can be used to measure the viability and cytotoxicity of two diffe
 
 
 ### Deck Setup
-[deck](https://drive.google.com/open?id=1vvyaQvEp-MFuKYR9x25cYHy11sXaXxJm, https://drive.google.com/open?id=1FxNxAm_1GPeJA24OzmhPK7ofKM-ku2A3)
+* [Deck setup for Day 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/day1.pdf)
+* [Deck setup for Day 4](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1033g1/day4.pdf)
+
 
 
 ### Reagent Setup
-[reagents](https://drive.google.com/open?id=1neP2mDjaYDHCUGTFo6s-uut9PhTfN0oP)
+[CellTiter-Glo 2.0 100mL Cat No. G9242](https://www.promega.com/products/cell-health-assays/cell-viability-and-cytotoxicity-assays/celltiter_glo-2_0-assay/?catNum=G9242)
+
+[CellTox Green Cytotoxicity assay, 50 mL Cat No. G8742](https://www.promega.com/products/cell-health-assays/cell-viability-and-cytotoxicity-assays/celltox-green-cytotoxicity-assay/?catNum=G8742)
+
+[K562 lymphoblast cells (ATCC, Manassas, VA, USA) (Cat No. CCL243)](https://www.atcc.org/products/ccl-243)
+
+[A549 lung carcinoma cells (ATCC, Manassas, VA, USA) (Cat No. CCL185)](https://www.atcc.org/products/ccl-185)
+
+[Phenol Red Free RPMI 1640 medium (ThermoFisher Scientific 11835030)](https://www.thermofisher.com/order/catalog/product/11835030)
+
+[Phenol Red Free Ham’s F12-K medium (Crystalgen SKU-226-062)](https://crystalgen.com/226-062.html)
+
+[Fetal Bovine Serum (FBS) Not Heat Inactivated (ATCC, Cat No. 30-2020)](https://www.atcc.org/products/30-2020)
+
+Bortezomib 10mM (1mL in DMSO (PS 341) (Selleckchem) Cat No. S1013
+
+Thapsigargin 1mg (Selleckchem) Cat No. 7895
+
 
 
 ### Protocol Steps
@@ -48,10 +65,10 @@ Clean the inside of the robot with 70 % ethanol and turn on the HEPA filter at l
 6.	The 4X concentrations of bortezomib are prepared in tubes C1 to C6 and D1 to D3 with the following concentrations in the tubes C1 0.4nM, C2 4nM, C3 40nM, C4 159.2nM, C5 200nM, C6 280nM, D1 400nM, D2 (158.95 X 4) nM and D3 (630.95 X 4) nM
 7.	For both the initial stocks and the 4X working concentrations, the RPMI diluent in added to respective tubes. Then the bortezomib is added to the tubes and for each dilution, the mix is first pipetted 3-4 times before aspirating the required volume of bortezomib and transferring to the next adjacent tube to get the required concentration.
 8.	Once the bortezomib concentrations are prepared, add 4X concentration to the tubes in which cells are already added to result in 1X concentration of the drug (in Slot 7)
-9.	For each concentration, mix the cells and drug mix several times. Add the cells-bortezomib mix to each well of 96 well plate in triplicate for one concentration. Continue adding column-wise increasing bortezomib concentrations. Namely A1, B1, C1 of 96 well plate contains control cells. D1, E1 and F1 contains 0.1nM concentration of bortezomib treated cells. The wells in D4, E4 and F4 contains cells with 630.95nM bortezomib concentration. The wells from A5 to C5 contain medium without any cells (medium control). 
+9.	For each concentration, mix the cells and drug mix several times. Add the cells-bortezomib mix to each well of 96 well plate in triplicate for one concentration. Continue adding column-wise increasing bortezomib concentrations. Namely A1, B1, C1 of 96 well plate contains control cells. D1, E1 and F1 contains 0.1nM concentration of bortezomib treated cells. The wells in D4, E4 and F4 contains cells with 630.95nM bortezomib concentration. The wells from A5 to C5 contain medium without any cells (medium control).
 
   After 72 hours of drug treatment, carry out the following steps.
-1.	Pick up 20L tip from Slot 10. Transfer 15L of CellTox Green reagent from 
+1.	Pick up 20L tip from Slot 10. Transfer 15L of CellTox Green reagent from
 B2 of the Opentrons 10 tube rack with Falcon 4X50 mL, 6X15mL Conical-Rack to A1 of 96 well plate placed on the Heater Shaker. Repeat this step to add the reagent to wells B1 to H1, A2 to H2, A3 to H3, A4 to F4, A5 to C5.
 2.	After the addition of the reagent, set the Heater Shaker to orbital shaking for 2 minutes at 500 rpm.
 3.	After the orbital shaking of the heater shaker is complete, incubate the plate at RT for 15 min.
@@ -59,7 +76,7 @@ B2 of the Opentrons 10 tube rack with Falcon 4X50 mL, 6X15mL Conical-Rack to A1 
 5.	Place the plate back on the heater shaker and start with additions for the cell viability assay.
 6.	Pick up 200L tip from Slot 4. Aspirate 80L of Cell Titer Glo 2.0 reagent from B1 of the Opentrons 10 tube rack and dispense it into A1 well of the 96 well white TC plate on Heater Shaker module. Repeat this step to add the reagent to wells B1 to H1, A2 to H2, A3 to H3, A4 to F4 and A5 to C5.
 7.	Once the reagent addition is complete, set the Heater shaker to orbital shaking at 500 rpm for 2 minutes. Incubate at RT for 10 minutes.
-8.	Remove the plate from heater shaker and read the plate for luminescence using the Biotek microplate reader. 
+8.	Remove the plate from heater shaker and read the plate for luminescence using the Biotek microplate reader.
 
 ### Process
 
