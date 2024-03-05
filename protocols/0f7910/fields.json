@@ -25,9 +25,9 @@
   },
   {
     "type": "float",
-    "label": "Transfer Volume",
+    "label": "Transfer Volume (ul)",
     "name": "transfer_vol",
-    "default": 12
+    "default": 12.0
   },
   {
     "type": "int",
