@@ -98,8 +98,11 @@ def run(ctx):
         dest = dest_plate.wells_by_name()[dest_well_name]
 
         pick_up(pip)
-        pip.transfer(pip_transfer_vol, source.bottom(z=0.2), dest,
-                     new_tip='never',
-                     blow_out=True, blowout_location='destination well')
+        pip.mix(1, pip_transfer_vol, source.bottom(z=0.2))
+        pip.aspirate(pip_transfer_vol, source.bottom(z=0.2))
+        pip.dispense(pip_transfer_vol, dest)
+        pip.move_to(dest.top(z=-3))
+        ctx.delay(seconds=1)
+        pip.blow_out()
         pip.drop_tip()
         ctx.comment('\n\n')
