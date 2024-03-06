@@ -16,7 +16,7 @@
 Select the format for the source and destination plates. See diagram below. If a 384 plate is selected for destination plate, it should always be in slot 2. If a 96 plate is selected for destination, it should always be in slot 1. Source plates always start from slot 3 to 9, and tip racks are always the same. You can select which tip the protocol will start on in the fields below. If the global transfer volume is over 20ul, then the P300 will be used. If the transfer volume is 20 or less, the P20 will be used. A value of "8" for the starting position of the tip would mean to start H1 of the tip rack, and a value of 10 would mean to start at B2 of the tip rack, since it iterates down by column. The csv should be formatted as such in the header:
 
 ```
-Source plate barcode, Source plate slot (3-9), Source well (A1, B1, etc.), Destination plate barcode, Destination well
+Source plate barcode, Source plate slot (3-9), Source well, Dest plate barcode, Dest well, Transfer Vol (ul)
 ```
 
 
