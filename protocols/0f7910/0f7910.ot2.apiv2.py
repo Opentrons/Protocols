@@ -92,15 +92,14 @@ def run(ctx):
         source_plate_slot = int(row[1])
         source_well_name = row[2]
         dest_well_name = row[4]
-        pip_transfer_vol = float(row[5])
 
         source = ctx.loaded_labwares[source_plate_slot].wells_by_name()[source_well_name]  # noqa: E501
         dest = dest_plate.wells_by_name()[dest_well_name]
 
         pick_up(pip)
-        pip.mix(1, pip_transfer_vol, source.bottom(z=0.2))
-        pip.aspirate(pip_transfer_vol, source.bottom(z=0.2))
-        pip.dispense(pip_transfer_vol, dest)
+        pip.mix(1, transfer_vol, source.bottom(z=0.2))
+        pip.aspirate(transfer_vol, source.bottom(z=0.2))
+        pip.dispense(transfer_vol, dest)
         pip.move_to(dest.top(z=-3))
         ctx.delay(seconds=1)
         pip.blow_out()
