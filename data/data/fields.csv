@@ -438,7 +438,7 @@ empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
-engage_height,19
+engage_height,20
 engage_offset,4
 engage_time,17
 enz_asp_rate,1
