@@ -56,6 +56,9 @@ def run(ctx):
     total_vol = num_samp*(primer_vol+mmx_vol)
     p300.pick_up_tip()
     p300.transfer(primer_vol*num_samp*1.15, primer, final_mmx, new_tip='never')
+    for _ in range(20):
+        p300.aspirate(total_vol if total_vol < 300 else 300, final_mmx)
+        p300.dispense(total_vol if total_vol < 300 else 300, final_mmx.top(z=-3))
     p300.mix(20, total_vol if total_vol < 300 else 300, final_mmx)
     p300.drop_tip()
 

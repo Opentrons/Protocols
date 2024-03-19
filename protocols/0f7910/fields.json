@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": ".CSV File",
     "name": "csv_samp",
-    "default": "Source plate Barcode,Source plate location,Source well,Destination plate Barcode,Destination well\nDDDD,3,C1,ABCD,A1\nEEEE,3,A1,BBBD,B1"
+    "default": "Source plate Barcode,Source plate location,Source well,Destination plate Barcode,Destination well\nDDDD,3,C1,ABCD,A1,12.4\nEEEE,3,A1,BBBD,B1,12.4"
   },
   {
     "type": "dropDown",
@@ -22,12 +22,6 @@
       {"label": "96", "value": "96"},
       {"label": "384", "value": "384"}
     ]
-  },
-  {
-    "type": "float",
-    "label": "Transfer Volume (ul)",
-    "name": "transfer_vol",
-    "default": 12.0
   },
   {
     "type": "int",

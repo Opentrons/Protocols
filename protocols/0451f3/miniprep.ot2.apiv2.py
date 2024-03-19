@@ -16,8 +16,10 @@ TEST_MODE_AIRDRY = False
 def run(ctx):
 
     [num_samples, mixreps, time_airdry_minutes, vol_final_elution,
-     mount_m300] = get_values(  # noqa: F821
+     engage_height,
+        mount_m300] = get_values(  # noqa: F821
         'num_samples', 'mixreps', 'time_airdry_minutes', 'vol_final_elution',
+        'engage_height',
         'mount_m300')
 
     if TEST_MODE_BEADS:
@@ -29,7 +31,7 @@ def run(ctx):
     radial_offset_fraction = 0.6  # fraction of radius
     vol_cleared_lysate = 750.0
     vol_elution = 40
-    engage_height = 7.6
+    # engage_height = 4.9
     time_incubation_deep_blue_minutes = 5.0
     time_incubation_elution_minutes = 5.0
 
