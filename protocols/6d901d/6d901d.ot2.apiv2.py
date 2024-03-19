@@ -1,3 +1,4 @@
+# flake8: noqa
 from opentrons import protocol_api
 from opentrons.types import Mount
 
@@ -12,7 +13,6 @@ metadata = {
 
 def transpose_matrix(m):
     return [[r[i] for r in reversed(m)] for i in range(len(m[0]))]
-
 
 def flatten_matrix(m):
     """ Converts a matrix to a 1D array, e.g. [[1,2],[3,4]] -> [1,2,3,4]
