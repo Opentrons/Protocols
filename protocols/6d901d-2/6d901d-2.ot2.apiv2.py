@@ -89,14 +89,14 @@ def run(ctx: protocol_api.ProtocolContext):
         # Uncomment the next two lines if using Opentrons Robot Software version 7.1.x. # noqa: E501
         # Comment them if NOT using 7.1.x
 
-        ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(  # noqa: E501
-              {'pick_up_current': {8: pick_up_current}})
+        # ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(  # noqa: E501
+        #       {'pick_up_current': {8: pick_up_current}})
 
         # Uncomment the next two lines if using Opentrons Robot Software version 7.2.x # noqa: E501
         # Comment them if NOT using 7.2.x
 
-        # ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(
-        #       {'pick_up_current': pick_up_current})
+        ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pip.mount)).update_config_item(  # noqa: E501
+              {'pick_up_current': pick_up_current})
 
     # Tip_map has the columns reversed, pipette always picks up the
     # bottom-most tip in a given column until the column is depleted, and then
