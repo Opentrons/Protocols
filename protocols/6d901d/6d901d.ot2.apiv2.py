@@ -74,15 +74,15 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up_current = 0.1  # 100 mA for single tip
         # Uncomment the next two lines if using Opentrons Robot Software version 7.1.x. # noqa:E501
         # Comment them if NOT using 7.1.x
-        for pipette in [m20, m300]:
-            ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(  # noqa:E501
-                  {'pick_up_current': {8: pick_up_current}})
+        # for pipette in [m20, m300]:
+        #     ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(  # noqa:E501
+        #           {'pick_up_current': {8: pick_up_current}})
 
         # Uncomment the next two lines if using Opentrons Robot Software version 7.2.x # noqa:E501
         # Comment them if NOT using 7.2.x
-        # for pipette in [m20, m300]:
-        #     ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(
-        #           {'pick_up_current': pick_up_current})
+        for pipette in [m20, m300]:
+            ctx._hw_manager.hardware.get_pipette(Mount.string_to_mount(pipette.mount)).update_config_item(
+                  {'pick_up_current': pick_up_current})
 
     tip300ctr = 95
     tip20ctr = 95
