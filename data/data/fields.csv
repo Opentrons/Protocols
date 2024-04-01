@@ -890,6 +890,7 @@ num_col,10
 num_cols,3
 num_columns,1
 num_curves,1
+num_cycles,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1

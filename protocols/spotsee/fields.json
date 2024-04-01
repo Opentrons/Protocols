@@ -1,7 +1,13 @@
 [
   {
     "type": "int",
-    "label": "Volume to each well (1-20ul)",
+    "label": "Number of cycles before new tip",
+    "name": "num_cycles",
+    "default": 20
+  },
+  {
+    "type": "int",
+    "label": "Volume to each well",
     "name": "vol",
     "default": 15
   },
