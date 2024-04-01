@@ -45,12 +45,15 @@ def run(ctx):
 
     # protocol
     pip.pick_up_tip(tips[0].wells()[start_tip-1])
+
     for _ in range(num_cycles):
         ctx.comment('\n-------------ADDING BUFFER TO PLATE-------------\n\n')
         if labware == '80_well_plate':
             num_asp = pip.max_volume // vol
+
             chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
                       num_asp)]
+
             for chunk in chunks:
                 pip.aspirate(num_asp*vol, buffer)
                 for well in chunk:
@@ -68,5 +71,6 @@ def run(ctx):
                 for well in chunk:
                     pip.dispense(vol, well)
                     pip.move_to(well.top(z=5))
+        pip.dispense(pip.current_volume, buffer.top())
         ctx.pause('Change Sheet on Deck')
     pip.drop_tip()
