@@ -46,7 +46,7 @@ def run(ctx):
     # protocol
     pip.pick_up_tip(tips[0].wells()[start_tip-1])
 
-    for _ in range(num_cycles):
+    for cycle in range(num_cycles):
         ctx.comment('\n-------------ADDING BUFFER TO PLATE-------------\n\n')
         if labware == '80_well_plate':
             num_asp = pip.max_volume // vol
@@ -59,6 +59,7 @@ def run(ctx):
                 for well in chunk:
                     pip.dispense(vol, plate.wells_by_name()[well])
                     pip.move_to(plate.wells_by_name()[well].top(z=5))
+                    ctx.comment(f'This is sheet number {cycle+1} out of total {num_cycles} sheets')  # noqa: E501
 
         else:
             num_asp = pip.max_volume // vol
@@ -71,6 +72,8 @@ def run(ctx):
                 for well in chunk:
                     pip.dispense(vol, well)
                     pip.move_to(well.top(z=5))
+                    ctx.comment(f'This is sheet number {cycle+1} out of total {num_cycles} sheets')  # noqa: E501
+
         pip.dispense(pip.current_volume, buffer.top())
         ctx.pause('Change Sheet on Deck')
     pip.drop_tip()
