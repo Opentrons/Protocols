@@ -9,8 +9,9 @@ metadata = {
 def run(ctx):
 
     [num_cycles, vol, labware, start_tip,
-        p20_mount, p300_mount] = get_values(  # noqa: F821
-        "num_cycles", "vol", "labware", "start_tip", "p20_mount", "p300_mount")
+        p20_mount, use_p20, p300_mount, use_p300] = get_values(  # noqa: F821
+        "num_cycles", "vol", "labware", "start_tip", "p20_mount", "use_p20",
+            "p300_mount", "use_p300")
 
     # p20_mount = 'left'
     # vol = 25
@@ -36,8 +37,13 @@ def run(ctx):
     ]
 
     # pipettes
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
+    if use_p20:
+        p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
+                                  tip_racks=tips)
+    if use_p300:
+        p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+                                   tip_racks=tips)
+
     pip = p20 if vol < 10 else p300
 
     # mapping

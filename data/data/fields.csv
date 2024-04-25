@@ -1614,6 +1614,8 @@ use_filter_tips_left,2
 use_filter_tips_right,2
 use_middle_2,2
 use_nacl,1
+use_p20,1
+use_p300,1
 use_single_source,1
 use_temp,1
 use_tuberack_a,1
