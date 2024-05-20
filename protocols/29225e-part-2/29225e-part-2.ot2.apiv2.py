@@ -1,16 +1,19 @@
+
+
 from operator import itemgetter
 from opentrons.protocol_api.labware import Well, OutOfTipsError
 # import from python types module
 from types import MethodType
 # import types from opentrons module
 from opentrons import types
+from opentrons import APIVersion
 import math
 import csv
 
 metadata = {
     'title': 'qRT-PCR Reaction Setup',
     'author': 'Steve Plonk',
-    'apiLevel': '2.10'
+    'apiLevel': '2.13'
 }
 
 
@@ -76,7 +79,7 @@ def run(ctx):
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
-            super().__init__(well._impl)
+            super().__init__(well.parent, well._core, APIVersion(2, 13))
             self.well = well
             self.min_height = min_height
             self.comp_coeff = comp_coeff
@@ -292,6 +295,7 @@ def run(ctx):
             for chunk in create_chunks(current_transfers['vol'], math.floor(
              tips300[0].wells()[0].max_volume / 20)):
                 asp_vol = sum(chunk)
+                print(asp_vol)
                 p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
                 p300s.aspirate(
                  asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
@@ -300,7 +304,7 @@ def run(ctx):
                 p300s.touch_tip(mm_source, radius=0.75, v_offset=-2, speed=10)
                 for vol in chunk:
                     d = pcr_plate.wells_by_name()[next(dest)]
-                    p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
+                    p300s.dispense(vol+15, d.bottom(clearance_pcr), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, d)
             try:
@@ -333,7 +337,8 @@ def run(ctx):
                      mm_source, radius=0.75, v_offset=-2, speed=10)
                     for vol in chunk:
                         d = pcr_plate.wells_by_name()[next(dest)]
-                        p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
+                        p300s.dispense(vol+15, d.bottom(clearance_pcr),
+                                       rate=0.3)
                         p300s.delay(1)
                         p300s.slow_tip_withdrawal(10, d)
     if p300s.has_tip:
