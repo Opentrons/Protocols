@@ -1,5 +1,6 @@
 from opentrons import protocol_api
 
+
 metadata = {
     'protocolName': 'Plate Filling with CSV Import',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -13,14 +14,12 @@ def run(ctx):
     [csv_samp,
      source_format,
      dest_format,
-     transfer_vol,
      starting_tip,
      p300_mount,
      p20_mount] = get_values(  # noqa: F821
         "csv_samp",
         "source_format",
         "dest_format",
-        "transfer_vol",
         "starting_tip",
         "p300_mount",
         "p20_mount")
@@ -52,6 +51,7 @@ def run(ctx):
                      else "corning_384_wellplate_112ul_flat", 2
                      if dest_format == "384"
                      else 1)
+    transfer_vol = float(csv_lines[0][5])
 
     if transfer_vol > 20:
         tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -78,13 +78,16 @@ def run(ctx):
             pick_up(pip)
 
     # protocol
+
     pip = p20 if transfer_vol <= 20 else p300
     pip.flow_rate.aspirate = 1
     pip.flow_rate.dispense = 2
+
     if transfer_vol > 20:
         pip.starting_tip = tips300[0].wells()[starting_tip]
     else:
         pip.starting_tip = tips20[0].wells()[starting_tip]
+
     for row in csv_lines:
         source_plate_slot = int(row[1])
         source_well_name = row[2]
@@ -94,7 +97,11 @@ def run(ctx):
         dest = dest_plate.wells_by_name()[dest_well_name]
 
         pick_up(pip)
-        pip.transfer(transfer_vol, source.bottom(z=0.2), dest, new_tip='never',
-                     blow_out=True, blowout_location='destination well')
+        pip.mix(1, transfer_vol, source.bottom(z=0.2))
+        pip.aspirate(transfer_vol, source.bottom(z=0.2))
+        pip.dispense(transfer_vol, dest)
+        pip.move_to(dest.top(z=-3))
+        ctx.delay(seconds=1)
+        pip.blow_out()
         pip.drop_tip()
         ctx.comment('\n\n')

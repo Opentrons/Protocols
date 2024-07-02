@@ -438,7 +438,7 @@ empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
-engage_height,19
+engage_height,20
 engage_offset,4
 engage_time,17
 enz_asp_rate,1
@@ -575,7 +575,7 @@ init_vol,3
 init_vol_50,1
 init_vol_bca,1
 init_vol_bsa,1
-init_vol_buff,2
+init_vol_buff,1
 init_vol_buff1,1
 init_vol_buff2,1
 init_vol_buff3,1
@@ -586,7 +586,7 @@ init_vol_standard,1
 init_vols_csv,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,23
+input_csv,22
 input_file,10
 input_file2,6
 input_labware,1
@@ -643,7 +643,6 @@ labware_collect_plate,1
 labware_cultureplate,1
 labware_deep_well,1
 labware_dest,2
-labware_dna_plate,1
 labware_dna_sample_plate,1
 labware_elisa_plate,3
 labware_firstrna,1
@@ -655,7 +654,7 @@ labware_p300_tips,1
 labware_parent,2
 labware_patient_samples,1
 labware_pcr,1
-labware_pcr_plate,11
+labware_pcr_plate,10
 labware_plate,1
 labware_plates,9
 labware_pool,1
@@ -891,6 +890,7 @@ num_col,10
 num_cols,3
 num_columns,1
 num_curves,1
+num_cycles,1
 num_daughter_plates,1
 num_drug_plates,1
 num_extracts,1
@@ -991,7 +991,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,137
+p20_mount,136
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -1008,7 +1008,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,160
+p300_mount,159
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1450,7 +1450,7 @@ te_well,2
 temp,2
 temp_gen,1
 temp_lysate,1
-temp_mod,3
+temp_mod,2
 temp_mod_lname,2
 temp_mod_on,2
 temp_mod_s1_lname,1
@@ -1471,7 +1471,7 @@ tempblock,1
 tempdeck_gen,1
 tempdeck_name,1
 tempdeck_slot,1
-temperature,13
+temperature,12
 temperature1,1
 temperature2,1
 tempgen,1
@@ -1554,7 +1554,7 @@ transfer2,1
 transfer_csv,21
 transfer_scheme,2
 transfer_to_storage,1
-transfer_vol,10
+transfer_vol,9
 transfer_volume,3
 transfercsv,2
 transfervol,1
@@ -1614,6 +1614,8 @@ use_filter_tips_left,2
 use_filter_tips_right,2
 use_middle_2,2
 use_nacl,1
+use_p20,1
+use_p300,1
 use_single_source,1
 use_temp,1
 use_tuberack_a,1

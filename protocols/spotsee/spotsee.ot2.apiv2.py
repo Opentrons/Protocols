@@ -8,9 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    [vol, labware, start_tip,
-        p20_mount, p300_mount] = get_values(  # noqa: F821
-        "vol", "labware", "start_tip", "p20_mount", "p300_mount")
+    [num_cycles, vol, labware, start_tip,
+        p20_mount, use_p20, p300_mount, use_p300] = get_values(  # noqa: F821
+        "num_cycles", "vol", "labware", "start_tip", "p20_mount", "use_p20",
+            "p300_mount", "use_p300")
 
     # p20_mount = 'left'
     # vol = 25
@@ -21,7 +22,7 @@ def run(ctx):
     # labware
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', 10)
     plate = ctx.load_labware(labware, 1)
-    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul' if vol < 20 else 'opentrons_96_tiprack_300ul', slot)  # noqa: E501
+    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul' if vol < 10 else 'opentrons_96_tiprack_300ul', slot)  # noqa: E501
             for slot in [11]]
 
     red_wells = [
@@ -36,37 +37,49 @@ def run(ctx):
     ]
 
     # pipettes
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=tips)
-    pip = p20 if vol < 20 else p300
+    if use_p20:
+        p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
+                                  tip_racks=tips)
+    if use_p300:
+        p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+                                   tip_racks=tips)
+
+    pip = p20 if vol < 10 else p300
 
     # mapping
     buffer = reservoir.wells()[0]
 
     # protocol
-    ctx.comment('\n---------------ADDING BUFFER TO PLATE----------------\n\n')
-    if labware == '80_well_plate':
-        num_asp = pip.max_volume // vol
-        chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
-                  num_asp)]
+    pip.pick_up_tip(tips[0].wells()[start_tip-1])
 
-        pip.pick_up_tip(tips[0].wells()[start_tip-1])
-        for chunk in chunks:
-            pip.aspirate(num_asp*vol, buffer)
-            for well in chunk:
-                pip.dispense(vol, plate.wells_by_name()[well])
-                pip.move_to(plate.wells_by_name()[well].top(z=5))
-        pip.drop_tip()
-    else:
-        num_asp = pip.max_volume // vol
-        chunks = [plate.wells()[i:i+num_asp] for i in range(0,
-                  len(plate.wells()),
-                  num_asp)]
+    for cycle in range(num_cycles):
+        ctx.comment('\n-------------ADDING BUFFER TO PLATE-------------\n\n')
+        if labware == '80_well_plate':
+            num_asp = pip.max_volume // vol
 
-        pip.pick_up_tip(tips[0].wells()[start_tip-1])
-        for chunk in chunks:
-            pip.aspirate(num_asp*vol, buffer)
-            for well in chunk:
-                pip.dispense(vol, well)
-                pip.move_to(well.top(z=5))
-        pip.drop_tip()
+            chunks = [red_wells[i:i+num_asp] for i in range(0, len(red_wells),
+                      num_asp)]
+
+            for chunk in chunks:
+                pip.aspirate(num_asp*vol, buffer)
+                for well in chunk:
+                    pip.dispense(vol, plate.wells_by_name()[well])
+                    pip.move_to(plate.wells_by_name()[well].top(z=5))
+                    ctx.comment(f'This is sheet number {cycle+1} out of total {num_cycles} sheets')  # noqa: E501
+
+        else:
+            num_asp = pip.max_volume // vol
+            chunks = [plate.wells()[i:i+num_asp] for i in range(0,
+                      len(plate.wells()),
+                      num_asp)]
+
+            for chunk in chunks:
+                pip.aspirate(num_asp*vol, buffer)
+                for well in chunk:
+                    pip.dispense(vol, well)
+                    pip.move_to(well.top(z=5))
+                    ctx.comment(f'This is sheet number {cycle+1} out of total {num_cycles} sheets')  # noqa: E501
+
+        pip.dispense(pip.current_volume, buffer.top())
+        ctx.pause('Change Sheet on Deck')
+    pip.drop_tip()

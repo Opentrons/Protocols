@@ -73,7 +73,7 @@ def run(ctx):
 
     sample_vols = [80, 50, 120, 80, 50, 80, 50, 80, 50, 120, 80, 50]
 
-    concs_init = [1, 1, 10, 10, 10, 100, 100, 1000, 1000, 1000, 10000, 10000]
+    concs_init = [1, 1, 10, 10, 10, 100, 100, 1000, 1000, 10000, 10000, 10000]
     dil_formulae = {
         conc: {'diluent_vol': diluent_vol,
                'sample_vol': sample_vol,
