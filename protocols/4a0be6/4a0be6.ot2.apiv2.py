@@ -109,7 +109,8 @@ def run(protocol):
 
         # Protocol: Tube filling
         pip.pick_up_tip()
-        all_wells = [well for tuberack in destRacks for well in tuberack.wells()]
+        all_wells = [well
+                     for tuberack in destRacks for well in tuberack.wells()]
         if dispMode == 'Transfer':
             for dest in all_wells:
                 pip.transfer(
