@@ -266,7 +266,6 @@ csv3_samp,1
 csv3_urea,1
 csv_aq,1
 csv_buff,1
-csv_factors,1
 csv_file,2
 csv_file_1,1
 csv_file_2,1
@@ -1202,7 +1201,7 @@ relative_height,1
 remove_empty_racks,1
 remove_tube_vol,1
 replenish_tips_manually,1
-reps_mix,2
+reps_mix,1
 res,2
 res12_type,1
 res1_type,1
@@ -1602,7 +1601,6 @@ twelve_well_resv_lname,1
 type_matrix,1
 type_molecule,1
 type_pip,2
-type_pipette_small,1
 type_sample_rack,1
 type_tc,1
 udi_start_col,1
@@ -1668,9 +1666,8 @@ vol_ic,1
 vol_initial,1
 vol_lys_buffer,1
 vol_lysis_mix,1
-vol_media_tubes,1
 vol_meoh,1
-vol_mix,2
+vol_mix,1
 vol_mm,3
 vol_mobile_phase,1
 vol_mq,1

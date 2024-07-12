@@ -33,91 +33,93 @@ def run(protocol):
             2, 2+numRacks)]
 
     # Functions and Class creation
-    class WellH(Well):
-        def __init__(self, well, min_height=5, comp_coeff=1.15,
-                     current_volume=0):
-            super().__init__(well._impl)
-            self.well = well
-            self.min_height = min_height
-            self.comp_coeff = comp_coeff
-            self.current_volume = current_volume
-            if self.diameter is not None:
-                self.radius = self.diameter/2
-                cse = math.pi*(self.radius**2)
-            elif self.length is not None:
-                cse = self.length*self.width
-            self.height = (
-             current_volume/cse) - (0.2*pip._tip_racks[0].wells()[0].depth)
-            if self.height < min_height:
-                self.height = min_height
-            elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+    if not protocol.is_simulating:
+        class WellH(Well):
+            def __init__(self, well, min_height=5, comp_coeff=1.15,
+                         current_volume=0):
+                super().__init__(well._impl)
+                self.well = well
+                self.min_height = min_height
+                self.comp_coeff = comp_coeff
+                self.current_volume = current_volume
+                if self.diameter is not None:
+                    self.radius = self.diameter/2
+                    cse = math.pi*(self.radius**2)
+                elif self.length is not None:
+                    cse = self.length*self.width
+                self.height = (
+                 current_volume/cse) - (0.2*pip._tip_racks[0].wells()[0].depth)
+                if self.height < min_height:
+                    self.height = min_height
+                elif self.height > well.parent.highest_z:
+                    raise Exception("""Specified liquid volume
+                    can not exceed the height of the labware.""")
 
-        def height_dec(self, vol):
-            if self.diameter is not None:
-                cse = math.pi*(self.radius**2)
-            elif self.length is not None:
-                cse = self.length*self.width
-            dh = (vol/cse)*self.comp_coeff
-            if self.height - dh > self.min_height:
-                self.height = self.height - dh
-            else:
-                self.height = self.min_height
-            if self.current_volume - vol > 0:
-                self.current_volume = self.current_volume - vol
-            else:
-                self.current_volume = 0
-            return(self.well.bottom(self.height))
-
-        def height_inc(self, vol, top=False):
-            if self.diameter is not None:
-                cse = math.pi*(self.radius**2)
-            elif self.length is not None:
-                cse = self.length*self.width
-            ih = (vol/cse)*self.comp_coeff
-            if self.height < self.min_height:
-                self.height = self.min_height
-            if self.height + ih < self.depth:
-                self.height = self.height + ih
-            else:
-                self.height = self.depth
-            self.current_volume += vol
-            if top is False:
+            def height_dec(self, vol):
+                if self.diameter is not None:
+                    cse = math.pi*(self.radius**2)
+                elif self.length is not None:
+                    cse = self.length*self.width
+                dh = (vol/cse)*self.comp_coeff
+                if self.height - dh > self.min_height:
+                    self.height = self.height - dh
+                else:
+                    self.height = self.min_height
+                if self.current_volume - vol > 0:
+                    self.current_volume = self.current_volume - vol
+                else:
+                    self.current_volume = 0
                 return(self.well.bottom(self.height))
-            else:
-                return(self.well.top())
 
-    def yield_groups(list, num):
-        """
-        yield lists based on number of items
-        """
-        for i in range(0, len(list), num):
-            yield list[i:i+num]
+            def height_inc(self, vol, top=False):
+                if self.diameter is not None:
+                    cse = math.pi*(self.radius**2)
+                elif self.length is not None:
+                    cse = self.length*self.width
+                ih = (vol/cse)*self.comp_coeff
+                if self.height < self.min_height:
+                    self.height = self.min_height
+                if self.height + ih < self.depth:
+                    self.height = self.height + ih
+                else:
+                    self.height = self.depth
+                self.current_volume += vol
+                if top is False:
+                    return(self.well.bottom(self.height))
+                else:
+                    return(self.well.top())
 
-    # get number of distributes pipette can handle
-    distribute_num = pip.max_volume // transferVol
-    if distribute_num < 1:
-        # if transfer volume is greater than pipette max volume,
-        # use Transfer mode
-        dispMode = 'Transfer'
+        def yield_groups(list, num):
+            """
+            yield lists based on number of items
+            """
+            for i in range(0, len(list), num):
+                yield list[i:i+num]
 
-    # create source location with WellH
-    source = WellH(
-        srcLabware.wells()[0], min_height=3, current_volume=srcVol*1000)
+        # get number of distributes pipette can handle
+        distribute_num = pip.max_volume // transferVol
+        if distribute_num < 1:
+            # if transfer volume is greater than pipette max volume,
+            # use Transfer mode
+            dispMode = 'Transfer'
 
-    # Protocol: Tube filling
-    pip.pick_up_tip()
-    all_wells = [well for tuberack in destRacks for well in tuberack.wells()]
-    if dispMode == 'Transfer':
-        for dest in all_wells:
-            pip.transfer(
-                transferVol, source.height_dec(transferVol), dest,
-                touch_tip=touchTip, new_tip='never')
-    else:
-        well_groups = list(yield_groups(all_wells, int(distribute_num)))
-        for wells in well_groups:
-            pip.distribute(
-                transferVol, source.height_dec(transferVol), wells,
-                blow_out=source, touch_tip=touchTip, new_tip='never')
-    pip.drop_tip()
+        # create source location with WellH
+        source = WellH(
+            srcLabware.wells()[0], min_height=3, current_volume=srcVol*1000)
+
+        # Protocol: Tube filling
+        pip.pick_up_tip()
+        all_wells = [well
+                     for tuberack in destRacks for well in tuberack.wells()]
+        if dispMode == 'Transfer':
+            for dest in all_wells:
+                pip.transfer(
+                    transferVol, source.height_dec(transferVol), dest,
+                    touch_tip=touchTip, new_tip='never')
+        else:
+            well_groups = list(yield_groups(all_wells, int(distribute_num)))
+            for wells in well_groups:
+                pip.distribute(
+                    transferVol, source.height_dec(transferVol), wells,
+                    blow_out=source, touch_tip=touchTip, new_tip='never')
+        pip.drop_tip()
