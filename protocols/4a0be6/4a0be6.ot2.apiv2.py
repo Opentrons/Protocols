@@ -1,11 +1,13 @@
 import math
 from opentrons.protocol_api.labware import Well
 
+from opentrons import APIVersion
+
 metadata = {
     'protocolName': 'Tube Filling',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.13'
 }
 
 
@@ -35,32 +37,19 @@ def run(protocol):
     # Functions and Class creation
     if not protocol.is_simulating:
         class WellH(Well):
-            def __init__(self, well, min_height=5, comp_coeff=1.15,
+            def __init__(self, well, height=0, min_height=5, comp_coeff=1.15,
                          current_volume=0):
-                super().__init__(well._impl)
+                # Change one is that we deprecated well._impl
+                super().__init__(well.parent, well._core, APIVersion(2, 13))
                 self.well = well
+                self.height = height
                 self.min_height = min_height
                 self.comp_coeff = comp_coeff
+                self.radius = self.diameter / 2
                 self.current_volume = current_volume
-                if self.diameter is not None:
-                    self.radius = self.diameter/2
-                    cse = math.pi*(self.radius**2)
-                elif self.length is not None:
-                    cse = self.length*self.width
-                self.height = (
-                 current_volume/cse) - (0.2*pip._tip_racks[0].wells()[0].depth)
-                if self.height < min_height:
-                    self.height = min_height
-                elif self.height > well.parent.highest_z:
-                    raise Exception("""Specified liquid volume
-                    can not exceed the height of the labware.""")
 
             def height_dec(self, vol):
-                if self.diameter is not None:
-                    cse = math.pi*(self.radius**2)
-                elif self.length is not None:
-                    cse = self.length*self.width
-                dh = (vol/cse)*self.comp_coeff
+                dh = (vol / (math.pi * (self.radius ** 2))) * self.comp_coeff
                 if self.height - dh > self.min_height:
                     self.height = self.height - dh
                 else:
@@ -69,25 +58,16 @@ def run(protocol):
                     self.current_volume = self.current_volume - vol
                 else:
                     self.current_volume = 0
-                return(self.well.bottom(self.height))
+                return (self.well.bottom(self.height))
 
-            def height_inc(self, vol, top=False):
-                if self.diameter is not None:
-                    cse = math.pi*(self.radius**2)
-                elif self.length is not None:
-                    cse = self.length*self.width
-                ih = (vol/cse)*self.comp_coeff
-                if self.height < self.min_height:
-                    self.height = self.min_height
-                if self.height + ih < self.depth:
-                    self.height = self.height + ih
+            def height_inc(self, vol):
+                dh = (vol / (math.pi * (self.radius ** 2))) * self.comp_coeff
+                if self.height + dh < self.depth:
+                    self.height = self.height + dh
                 else:
                     self.height = self.depth
                 self.current_volume += vol
-                if top is False:
-                    return(self.well.bottom(self.height))
-                else:
-                    return(self.well.top())
+                return (self.well.bottom(self.height + 20))
 
         def yield_groups(list, num):
             """
@@ -109,8 +89,7 @@ def run(protocol):
 
         # Protocol: Tube filling
         pip.pick_up_tip()
-        all_wells = [well
-                     for tuberack in destRacks for well in tuberack.wells()]
+        all_wells = [well for tuberack in destRacks for well in tuberack.wells()]
         if dispMode == 'Transfer':
             for dest in all_wells:
                 pip.transfer(
