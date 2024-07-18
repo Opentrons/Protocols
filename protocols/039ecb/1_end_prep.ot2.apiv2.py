@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from opentrons import protocol_api
 from opentrons.types import Point
 import math
@@ -12,8 +14,8 @@ Illumina',
 
 def run(ctx):
 
-    [num_samples, mount_m300, mount_p20] = get_values(  # noqa: F821
-        'num_samples', 'mount_m300', 'mount_p20')
+    [num_samples, start_place, mount_m300, mount_p20] = get_values(  # noqa: F821
+        'num_samples', "start_place", 'mount_m300', 'mount_p20')
 
     # tuning parameters
     ctx.max_speeds['X'] = 200
@@ -50,7 +52,7 @@ def run(ctx):
 
     liquid_trash = ctx.loaded_labwares[12].wells()[0].top()
 
-    # reagents and variables
+    # reagents and variabless
     mm = tuberack.wells()[0]
 
     num_cols = math.ceil(num_samples/8)
@@ -89,15 +91,26 @@ resuming.\n\n\n\n")
                 pip.pick_up_tip()
 
     def remove_supernatant(vol, pip=m300, z_asp=0.2):
-        pip.flow_rate.aspirate /= 5
+
+        ###############################
+
+        # USER TO ADJUST THESE VARIABLES
+        left_or_right_distance = 2
+        mm_from_bottom = 0
+        aspirate_flow_rate = 10  # the larger the number, the slower it will be
+
+        ###############################
+
+        pip.flow_rate.aspirate /= aspirate_flow_rate
         for i, s in enumerate(samples_m_mag):
             if not pip.has_tip:
                 pick_up(pip)
             pip.move_to(s.top())
             ctx.max_speeds['A'] = 25
             ctx.max_speeds['Z'] = 25
-            side = -1 if samples_m_mag.index(s) % 2 == 0 else 1
-            pip.aspirate(vol, s.bottom().move(Point(x=side, z=z_asp)))
+
+            side = -left_or_right_distance if samples_m_mag.index(s) % 2 == 0 else left_or_right_distance  # ADJUST MM IN THE X, CHANGE LEFT_OR_RIGHT_DISTANCE
+            pip.aspirate(vol, s.bottom(z=mm_from_bottom).move(Point(x=side, z=z_asp)))
             pip.move_to(s.top())
             del ctx.max_speeds['A']
             del ctx.max_speeds['Z']
@@ -181,49 +194,57 @@ MagDeck for {time_settling} minutes.')
     vol_mm = 4.5
     vol_reaction = 17.5
 
-    for s in samples_s:
-        pick_up(p20)
-        p20.aspirate(vol_mm, mm)
-        slow_withdraw(p20, mm)
-        p20.dispense(vol_mm, s.bottom(1))
-        p20.blow_out(s.bottom(1))
-        ctx.delay(seconds=2)
-        slow_withdraw(p20, s)
-        p20.drop_tip()
+    if start_place < 1:
 
-    for m in samples_m:
-        pick_up(m300)
-        m300.mix(10, 10, m)
-        m300.blow_out(m.bottom(1))
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, m)
-        m300.drop_tip()
+        for s in samples_s_tc:
+            pick_up(p20)
+            p20.aspirate(vol_mm, mm)
+            slow_withdraw(p20, mm)
+            p20.dispense(vol_mm, s.bottom(1))
+            p20.blow_out(s.bottom(1))
+            ctx.delay(seconds=2)
+            slow_withdraw(p20, s)
+            p20.drop_tip()
 
-    ctx.pause('\n\n\n\nCentrifugre PCR plate if necessary. Resume once \
-plate is returned to slot 2.\n\n\n\n')
+        for m in samples_m_tc:
+            pick_up(m300)
+            m300.mix(10, 10, m)
+            m300.blow_out(m)
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, m)
+            m300.drop_tip()
 
-    tc.open_lid()
-    tc.set_lid_temperature(75)
+        ctx.pause('\n\n\n\nCentrifugre PCR plate if necessary. Resume once \
+    plate is returned to slot 2.\n\n\n\n')
 
-    for s, d in zip(samples_m, samples_m_tc):
-        pick_up(m300)
-        m300.aspirate(vol_reaction, s.bottom(0.5))
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, s)
-        m300.dispense(vol_reaction, d.bottom(1))
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, d)
-        m300.drop_tip()
+        tc.open_lid()
+        tc.set_lid_temperature(75)
 
-    profile = [
-        {'temperature': 37, 'hold_time_minutes': 5},
-        {'temperature': 65, 'hold_time_minutes': 30}
-    ]
-    tc.close_lid()
-    tc.execute_profile(steps=profile, repetitions=1,
-                       block_max_volume=vol_reaction)
-    tc.set_block_temperature(4)
-    tc.open_lid()
+        for s, d in zip(samples_m, samples_m_tc):
+            pick_up(m300)
+            m300.aspirate(vol_reaction, s.bottom(0.5))
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, s)
+            m300.dispense(vol_reaction, d.bottom(1))
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, d)
+            m300.drop_tip()
+
+        profile = [
+            {'temperature': 37, 'hold_time_minutes': 5},
+            {'temperature': 65, 'hold_time_minutes': 30}
+        ]
+        tc.close_lid()
+        tc.execute_profile(steps=profile, repetitions=1,
+                           block_max_volume=vol_reaction)
+        tc.set_block_temperature(4)
+        tc.open_lid()
+
+        ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
+    plate is returned to Thermocycler.\n\n\n\n')
+
+
+
 
     """
 
@@ -235,66 +256,74 @@ plate is returned to slot 2.\n\n\n\n')
     vol_mm = 16.75
     vol_user = 1.5
 
-    tc.deactivate_lid()
+    if start_place < 2:
 
-    for s in samples_s_tc:
-        pick_up(p20)
-        p20.aspirate(vol_mm, mm)
-        slow_withdraw(p20, mm)
-        p20.dispense(vol_mm, s.bottom(1))
-        slow_withdraw(p20, s)
-        p20.drop_tip()
 
-    for m in samples_m_tc:
-        pick_up(m300)
-        m300.mix(10, 25, m)
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, m)
-        m300.drop_tip()
+        tc.deactivate_lid()
 
-    ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
-plate is returned to Thermocycler.\n\n\n\n')
+        for s in samples_s_tc:
+            pick_up(p20)
+            p20.aspirate(vol_mm, mm)
+            slow_withdraw(p20, mm)
+            p20.dispense(vol_mm, s.bottom(1))
+            slow_withdraw(p20, s)
+            p20.drop_tip()
 
-    tc.close_lid()
-    tc.set_block_temperature(20, hold_time_minutes=15)
-    tc.open_lid()
+        for m in samples_m_tc:
+            pick_up(m300)
+            m300.mix(10, 25, m)
+            m300.blow_out()
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, m)
+            m300.drop_tip()
 
-    ctx.pause('\n\n\n\nPlace USER enzyme in position C1 of tuberack on \
-temprature module. Resume once finished.\n\n\n\n')
+        ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
+    plate is returned to Thermocycler.\n\n\n\n')
 
-    for s in samples_s_tc:
-        pick_up(p20)
-        p20.aspirate(vol_user, user)
-        slow_withdraw(p20, user)
-        p20.dispense(vol_user, s.bottom(1))
-        slow_withdraw(p20, s)
-        p20.drop_tip()
+        tc.close_lid()
+        tc.set_block_temperature(20, hold_time_minutes=15)
+        tc.open_lid()
 
-    for m in samples_m_tc:
-        pick_up(m300)
-        m300.mix(10, 25, m)
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, m)
-        m300.drop_tip()
+        ctx.pause('\n\n\n\nPlace USER enzyme in position C1 of tuberack on \
+    temprature module. Resume once finished.\n\n\n\n')
 
-    ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
-plate is returned to Thermocycler.\n\n\n\n')
+        for s in samples_s_tc:
+            pick_up(p20)
+            p20.aspirate(vol_user, user, rate=0.4)
+            slow_withdraw(p20, user)
+            p20.dispense(vol_user, s.bottom(1))
+            p20.mix(1, 15, s.bottom(1))
+            p20.blow_out()
+            slow_withdraw(p20, s)
+            p20.drop_tip()
 
-    tc.set_lid_temperature(47)
-    tc.close_lid()
+        for m in samples_m_tc:
+            pick_up(m300)
+            m300.mix(10, 25, m)
+            m300.blow_out()
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, m)
+            m300.drop_tip()
 
-    tc.set_block_temperature(37, hold_time_minutes=15)
-    tc.set_block_temperature(4)
-    tc.open_lid()
+        ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
+    plate is returned to Thermocycler.\n\n\n\n')
 
-    ctx.pause('\n\n\n\nMove Thermocycler plate to magnetic module.\n\n\n\n')
+        tc.set_lid_temperature(47)
+        tc.close_lid()
+
+        tc.set_block_temperature(37, hold_time_minutes=15)
+        tc.set_block_temperature(4)
+        tc.open_lid()
+
+        ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Move Thermocycler plate to magnetic module.\n\n\n')
+
+
 
     """
 
     3. Cleanup of Adaptor-Ligated DNA
 
     """
-
     samples_s_tc = tc_plate.wells()[num_samples:num_samples*2]
     samples_m_tc = tc_plate.rows()[0][num_cols:num_cols*2]
 
@@ -306,64 +335,77 @@ plate is returned to Thermocycler.\n\n\n\n')
     vol_water = 9.0
     vol_elution = 7.5
 
-    for i, s in enumerate(samples_m_mag):
-        pick_up(m300)
-        if i == 0:
-            m300.mix(10, 20, vahts_beads)
-        m300.aspirate(vol_vahts_beads, vahts_beads)
-        slow_withdraw(m300, vahts_beads)
-        m300.dispense(vol_vahts_beads, s)
-        m300.mix(10, 20, s)
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, s)
-        m300.drop_tip()
+    if start_place < 3:
 
-    ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
-plate is returned to Thermocycler.\n\n\n\n')
 
-    ctx.delay(minutes=5, msg='\n\n\n\nIncubating\n\n\n\n')
-    magdeck.engage()
-    ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
 
-    ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
-    remove_supernatant(62)
 
-    # washes
-    for _ in range(2):
-        pick_up(m300)
+
+        for i, s in enumerate(samples_m_mag):
+            pick_up(m300)
+            if i == 0:
+                m300.mix(10, 20, vahts_beads)
+                m300.blow_out()
+            m300.aspirate(vol_vahts_beads, vahts_beads)
+            slow_withdraw(m300, vahts_beads)
+            m300.dispense(vol_vahts_beads, s)
+            m300.mix(10, 20, s)
+            m300.blow_out()
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, s)
+            m300.drop_tip()
+
+        ctx.pause('\n\n\n\nCentrifuge PCR plate if necessary. Resume once \
+    plate is returned to Thermocycler.\n\n\n\n')
+
+        ctx.delay(minutes=5, msg='\n\n\n\nIncubating\n\n\n\n')
+        magdeck.engage()
+        ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
+
+        ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
+        remove_supernatant(62)
+
+        # washes
+        for _ in range(2):
+            pick_up(m300)
+            for s in samples_m_mag:
+                if not m300.has_tip:
+                    pick_up(m300)
+                m300.aspirate(vol_etoh, etoh)
+                slow_withdraw(m300, etoh)
+                m300.dispense(vol_etoh, s.top())
+                m300.drop_tip()
+
+            if not m300.has_tip:
+                m300.pick_up_tip()
+            ctx.delay(seconds=30, msg='\n\n\n\nIncubating\n\n\n\n')
+            remove_supernatant(102)
+
+        ctx.pause('Resume once beads are dry.')
+        magdeck.disengage()
+
         for s in samples_m_mag:
-            m300.aspirate(vol_etoh, etoh)
-            slow_withdraw(m300, etoh)
-            m300.dispense(vol_etoh, s.top())
+            pick_up(m300)
+            m300.aspirate(vol_water, nuclease_free_water)
+            slow_withdraw(m300, nuclease_free_water)
+            m300.dispense(vol_water, s)
+            resuspend(s, reps=10, vol=7, samples=samples_m_mag, speed_up=False)
+            m300.drop_tip()
 
-        ctx.delay(seconds=30, msg='\n\n\n\nIncubating\n\n\n\n')
-        remove_supernatant(102)
+        ctx.delay(minutes=2, msg='\n\n\n\nIncubating\n\n\n\n')
+        magdeck.engage()
+        ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
 
-    ctx.pause('Resume once beads are dry.')
-    magdeck.disengage()
+        ctx.pause('\n\n\n\nResume once supernatant is clear.\n\n\n\n')
 
-    for s in samples_m_mag:
-        pick_up(m300)
-        m300.aspirate(vol_water, nuclease_free_water)
-        slow_withdraw(m300, nuclease_free_water)
-        m300.dispense(vol_water, s)
-        resuspend(s, reps=10, vol=7, samples=samples_m_mag, speed_up=False)
-        m300.drop_tip()
+        for s, d in zip(samples_s_mag, samples_s_tc):
+            pick_up(p20)
+            p20.aspirate(vol_elution, s.bottom(0.2))
+            p20.dispense(vol_elution, d.bottom(0.2))
+            wick(p20, d)
+            p20.drop_tip()
 
-    ctx.delay(minutes=2, msg='\n\n\n\nIncubating\n\n\n\n')
-    magdeck.engage()
-    ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
-
-    ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
-
-    for s, d in zip(samples_s_mag, samples_s_tc):
-        pick_up(p20)
-        p20.aspirate(vol_elution, s.bottom(0.2))
-        p20.dispense(vol_elution, d.bottom(0.2))
-        wick(p20, d)
-        p20.drop_tip()
-
-    magdeck.disengage()
+        magdeck.disengage()
 
     """
 
@@ -374,32 +416,36 @@ plate is returned to Thermocycler.\n\n\n\n')
     mm = tuberack.wells()[3]
     vol_mm = 12.5
 
-    for s in samples_s_tc:
-        pick_up(p20)
-        p20.aspirate(vol_mm, mm)
-        slow_withdraw(p20, mm)
-        p20.dispense(vol_mm, s.bottom(1))
-        slow_withdraw(p20, s)
-        p20.drop_tip()
+    if start_place < 4:
 
-    ctx.pause('Add 5ul of Primer indexes, vortex and centrifuge manually. \
-Place back into the thermocycler block when finished.')
+        for s in samples_s_tc:
+            pick_up(p20)
+            p20.aspirate(vol_mm, mm)
+            slow_withdraw(p20, mm)
+            p20.dispense(vol_mm, s.bottom(1))
+            slow_withdraw(p20, s)
+            p20.drop_tip()
 
-    profile = [
-        {'temperature': 98, 'hold_time_seconds': 10},
-        {'temperature': 65, 'hold_time_seconds': 75}
-    ]
-    tc.close_lid()
-    tc.set_block_temperature(98, hold_time_seconds=30)
-    tc.execute_profile(profile, repetitions=6)
-    tc.set_block_temperature(65, hold_time_minutes=5)
-    tc.set_block_temperature(4)
-    tc.open_lid()
+        ctx.pause('Add 5ul of Primer indexes, vortex and centrifuge manually. \
+    Place back into the thermocycler block when finished.')
 
-    ctx.pause('\n\n\n\nRefill all tips and reagents, and move \
-Thermocycler plate to magnetic module.\n\n\n\n')
-    p20.reset_tipracks()
-    m300.reset_tipracks()
+        profile = [
+            {'temperature': 98, 'hold_time_seconds': 10},
+            {'temperature': 65, 'hold_time_seconds': 75}
+        ]
+        tc.close_lid()
+        tc.set_block_temperature(98, hold_time_seconds=30)
+        tc.execute_profile(profile, repetitions=6)
+        tc.set_block_temperature(65, hold_time_minutes=5)
+        tc.set_block_temperature(4)
+        tc.open_lid()
+
+        ctx.pause('\n\n\n\nRefill all tips and reagents, and move \
+    Thermocycler plate to magnetic module.\n\n\n\n')
+        p20.reset_tipracks()
+        m300.reset_tipracks()
+
+
 
     """
 
@@ -407,67 +453,75 @@ Thermocycler plate to magnetic module.\n\n\n\n')
 
     """
 
-    samples_s_mag = mag_plate.wells()[num_samples:num_samples*2]
-    samples_m_mag = mag_plate.rows()[0][num_cols:num_cols*2]
-    samples_m_eluton = pcr_plate.rows()[0][num_cols:num_cols*2]
+    samples_s_mag = mag_plate.wells()[num_samples:num_samples*3]
+    samples_m_mag = mag_plate.rows()[0][num_cols:num_cols*3]
+    samples_m_eluton = pcr_plate.rows()[0][:num_cols]
 
     vol_vahts_beads = 22.5
     vol_etoh = 100.0
     vol_water = 27.0
     vol_elution = 25.0
 
-    for i, s in enumerate(samples_m_mag):
-        pick_up(m300)
-        if i == 0:
-            m300.mix(10, 20, vahts_beads)
-        m300.aspirate(vol_vahts_beads, vahts_beads)
-        slow_withdraw(m300, vahts_beads)
-        m300.dispense(vol_vahts_beads, s)
-        m300.mix(10, 20, s)
-        ctx.delay(seconds=2)
-        slow_withdraw(m300, s)
-        m300.drop_tip()
+    if start_place < 5:
 
-    ctx.delay(minutes=5, msg='\n\n\n\nIncubating\n\n\n\n')
-    magdeck.engage()
-    ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
+        for i, s in enumerate(samples_m_mag):
+            pick_up(m300)
+            if i == 0:
+                m300.mix(10, 20, vahts_beads)
+                m300.blow_out()
+            m300.aspirate(vol_vahts_beads, vahts_beads)
+            slow_withdraw(m300, vahts_beads)
+            m300.dispense(vol_vahts_beads, s)
+            m300.mix(10, 20, s)
+            m300.blow_out()
+            ctx.delay(seconds=2)
+            slow_withdraw(m300, s)
+            m300.drop_tip()
 
-    ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
-    remove_supernatant(46)
+        ctx.delay(minutes=5, msg='\n\n\n\nIncubating\n\n\n\n')
+        magdeck.engage()
+        ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
 
-    # washes
-    for _ in range(2):
-        pick_up(m300)
+        ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
+        remove_supernatant(46)
+
+        # washes
+        for _ in range(2):
+            pick_up(m300)
+            for s in samples_m_mag:
+                if not m300.has_tip:
+                    pick_up(m300)
+                m300.aspirate(vol_etoh, etoh)
+                slow_withdraw(m300, etoh)
+                m300.dispense(vol_etoh, s.top())
+                m300.drop_tip()
+            if not m300.has_tip:
+                pick_up(m300)
+            ctx.delay(seconds=30, msg='\n\n\n\nIncubating\n\n\n\n')
+            remove_supernatant(102)
+
+        ctx.pause('Resume once beads are dry.')
+        magdeck.disengage()
+
         for s in samples_m_mag:
-            m300.aspirate(vol_etoh, etoh)
-            slow_withdraw(m300, etoh)
-            m300.dispense(vol_etoh, s.top())
+            pick_up(m300)
+            m300.aspirate(vol_water, nuclease_free_water)
+            slow_withdraw(m300, nuclease_free_water)
+            m300.dispense(vol_water, s)
+            resuspend(s, reps=10, vol=7, samples=samples_m_mag)
+            m300.drop_tip()
 
-        ctx.delay(seconds=30, msg='\n\n\n\nIncubating\n\n\n\n')
-        remove_supernatant(102)
+        ctx.delay(minutes=2, msg='\n\n\n\nIncubating\n\n\n\n')
+        magdeck.engage()
+        ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
 
-    ctx.pause('Resume once beads are dry.')
-    magdeck.disengage()
+        ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
 
-    for s in samples_m_mag:
-        pick_up(m300)
-        m300.aspirate(vol_water, nuclease_free_water)
-        slow_withdraw(m300, nuclease_free_water)
-        m300.dispense(vol_water, s)
-        resuspend(s, reps=10, vol=7, samples=samples_m_mag)
-        m300.drop_tip()
+        for s, d in zip(samples_m_mag, samples_m_eluton):
+            pick_up(m300)
+            m300.aspirate(vol_elution, s.bottom(0.2))
+            m300.dispense(vol_elution, d.bottom(0.2))
+            wick(m300, d)
+            m300.drop_tip()
 
-    ctx.delay(minutes=2, msg='\n\n\n\nIncubating\n\n\n\n')
-    magdeck.engage()
-    ctx.delay(minutes=5, msg='\n\n\n\nBeads separating\n\n\n\n')
-
-    ctx.pause('\n\n\n\nResume once supernatant is clear\n\n\n\n')
-
-    for s, d in zip(samples_m_mag, samples_m_eluton):
-        pick_up(m300)
-        m300.aspirate(vol_elution, s.bottom(0.2))
-        m300.dispense(vol_elution, d.bottom(0.2))
-        wick(m300, d)
-        m300.drop_tip()
-
-    magdeck.disengage()
+        magdeck.disengage()
