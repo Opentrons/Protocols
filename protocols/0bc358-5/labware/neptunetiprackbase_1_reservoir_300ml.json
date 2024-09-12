@@ -1,0 +1,64 @@
+{
+    "ordering": [
+        [
+            "A1"
+        ]
+    ],
+    "brand": {
+        "brand": "Neptune tiprack base",
+        "brandId": [
+            "Biotix"
+        ]
+    },
+    "metadata": {
+        "displayName": "Neptune Tiprack Base 1 Reservoir 300000 µL",
+        "displayCategory": "reservoir",
+        "displayVolumeUnits": "µL",
+        "tags": []
+    },
+    "dimensions": {
+        "xDimension": 127.76,
+        "yDimension": 85.47,
+        "zDimension": 40
+    },
+    "wells": {
+        "A1": {
+            "depth": 37,
+            "totalLiquidVolume": 300000,
+            "shape": "rectangular",
+            "xDimension": 106.6,
+            "yDimension": 70.6,
+            "x": 63.88,
+            "y": 42.74,
+            "z": 3
+        }
+    },
+    "groups": [
+        {
+            "metadata": {
+                "wellBottomShape": "flat"
+            },
+            "wells": [
+                "A1"
+            ]
+        }
+    ],
+    "parameters": {
+        "format": "irregular",
+        "quirks": [
+            "centerMultichannelOnWells",
+            "touchTipDisabled"
+        ],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "neptunetiprackbase_1_reservoir_300ml"
+    },
+    "namespace": "custom_beta",
+    "version": 1,
+    "schemaVersion": 2,
+    "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}

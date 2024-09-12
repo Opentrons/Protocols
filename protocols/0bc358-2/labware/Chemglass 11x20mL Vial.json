@@ -1,0 +1,205 @@
+{
+  "wells": {
+    "A1": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 17.6,
+      "y": 70.9,
+      "z": 4.2
+    },
+    "C1": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 17.6,
+      "y": 15.4,
+      "z": 4.2
+    },
+    "A2": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 48.1,
+      "y": 70.9,
+      "z": 4.2
+    },
+    "C2": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 48.1,
+      "y": 15.4,
+      "z": 4.2
+    },
+    "A3": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 78.6,
+      "y": 70.9,
+      "z": 4.2
+    },
+    "C3": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 78.6,
+      "y": 15.4,
+      "z": 4.2
+    },
+    "A4": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 109.1,
+      "y": 70.9,
+      "z": 4.2
+    },
+    "C4": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 109.1,
+      "y": 15.4,
+      "z": 4.2
+    },
+    "B1": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 33.3,
+      "y": 43,
+      "z": 4.2
+    },
+    "B2": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 63.8,
+      "y": 43,
+      "z": 4.2
+    },
+    "B3": {
+      "totalLiquidVolume": 20000,
+      "diameter": 26,
+      "shape": "circular",
+      "depth": 56.2,
+      "x": 94.3,
+      "y": 43,
+      "z": 4.2
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "displayName": "20 mL Scintillation Vial",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "flat"
+      },
+      "brand": {
+        "brand": " ",
+        "brandId": [
+          ""
+        ],
+        "links": [
+          ""
+        ]
+      },
+      "wells": [
+        "A1",
+        "C1",
+        "A2",
+        "C2",
+        "A3",
+        "C3",
+        "A4",
+        "C4"
+      ]
+    },
+    {
+      "metadata": {
+        "displayName": "20 mL Scintillation Vial",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "flat"
+      },
+      "brand": {
+        "brand": "",
+        "brandId": [
+          ""
+        ],
+        "links": [
+          ""
+        ]
+      },
+      "wells": [
+        "B1",
+        "B2",
+        "B3"
+      ]
+    }
+  ],
+  "brand": {
+    "brand": "chemglass",
+    "brandId": [],
+    "links": [
+      "https://chemglass.com/blocks-for-centrifugal-vacuum-evaporators-optichem?sku=OP-6600-11"
+    ]
+  },
+  "metadata": {
+    "displayName": "Chemglass 11x20mL Vial",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.05,
+    "yDimension": 85.86,
+    "zDimension": 60.4
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "chemglass_11x20ml"
+  },
+  "ordering": [
+    [
+      "A1",
+      "B1",
+      "C1"
+    ],
+    [
+      "A2",
+      "B2",
+      "C2"
+    ],
+    [
+      "A3",
+      "B3",
+      "C3"
+    ],
+    [
+      "A4",
+      "C4"
+    ]
+  ],
+  "namespace": "custom",
+  "version": 1,
+  "schemaVersion": 2,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  }
+}
