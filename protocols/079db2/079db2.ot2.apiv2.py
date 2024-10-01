@@ -34,7 +34,7 @@ def run(ctx):
     ctx.comment('\n---------------ADDING SAMPLE TO PLATE----------------\n\n')
     for s, d in zip(source_wells, dest_wells):
         p300.pick_up_tip()
-        p300.aspirate(volume, s)
+        p300.aspirate(volume, s.bottom(z=10))
         p300.dispense(volume, d)
         p300.drop_tip()
         ctx.comment('\n')
